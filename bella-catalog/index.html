@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Furniture Catalog — Bella Virtual | Select &amp; Save to Your Project</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#FDFCFA;--ink:#232120;--soft:#6E6A66;--faint:#9C978F;--line:#E8E4DE;--line-2:#F0EDE8;--dark:#1C1A18;--green:#3E6B4C;--pad:44px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:"Jost",system-ui,sans-serif;font-weight:300;font-size:16px;-webkit-font-smoothing:antialiased;padding-bottom:96px}
+  img{display:block;max-width:100%}
+  a{text-decoration:none;color:inherit}
+  h1,h2{font-weight:300;letter-spacing:-.012em;line-height:1.1}
+  .micro{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  header{position:sticky;top:0;z-index:70;background:rgba(253,252,250,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line-2)}
+  .nav{display:flex;align-items:center;gap:36px;height:66px;padding:0 var(--pad)}
+  .mark{font-size:15px;letter-spacing:.5em}
+  .nav .back{margin-left:auto;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+  .head{padding:44px var(--pad) 0}
+  .head h1{font-size:clamp(28px,3.2vw,42px);max-width:20ch;margin-top:10px}
+  .head p{margin-top:12px;font-size:15.5px;color:var(--soft);max-width:60ch}
+
+  /* filter bar */
+  .filters{position:sticky;top:66px;z-index:60;background:var(--bg);border-bottom:1px solid var(--line);
+    padding:20px var(--pad);display:flex;flex-direction:column;gap:12px}
+  .frow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .frow .lbl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);width:58px;flex:0 0 auto}
+  .chip{font-family:inherit;font-size:13px;letter-spacing:.02em;padding:8px 15px;border:1px solid var(--line);
+    background:#fff;color:var(--soft);cursor:pointer;transition:.15s;white-space:nowrap}
+  .chip:hover{border-color:var(--ink);color:var(--ink)}
+  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .search{margin-left:auto;font-family:inherit;font-size:13px;padding:9px 14px;border:1px solid var(--line);background:#fff;width:190px}
+  .count{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+
+  /* grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:5px;padding:24px var(--pad) 60px}
+  .card{position:relative;background:#fff;border:1px solid var(--line);cursor:pointer;overflow:hidden;transition:border-color .15s}
+  .card:hover{border-color:var(--ink)}
+  .card img{width:100%;aspect-ratio:1.45;object-fit:cover;background:#F1EEE9}
+  .card .meta{padding:11px 13px 13px}
+  .card .sku{font-size:12.5px;letter-spacing:.05em;color:var(--ink)}
+  .card .rs{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-top:3px}
+  .card .tick{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:50%;
+    border:1px solid var(--line);background:rgba(255,255,255,.9);display:grid;place-items:center;
+    font-size:13px;color:var(--soft);transition:.15s}
+  .card.sel{border-color:var(--ink);outline:1px solid var(--ink);outline-offset:-2px}
+  .card.sel .tick{background:var(--green);border-color:var(--green);color:#fff}
+  .empty{padding:60px var(--pad);color:var(--faint);font-size:15px}
+
+  /* project tray */
+  .tray{position:fixed;left:0;right:0;bottom:0;z-index:80;background:var(--dark);color:#fff;
+    display:flex;align-items:center;gap:20px;padding:14px var(--pad);transform:translateY(110%);
+    transition:transform .28s cubic-bezier(.2,.8,.2,1);box-shadow:0 -18px 40px -24px rgba(0,0,0,.55)}
+  .tray.show{transform:translateY(0)}
+  .tray .n{font-size:13px;color:#CFC9C1;white-space:nowrap}
+  .tray .n b{color:#fff;font-weight:400;font-size:16px}
+  .tray .thumbs{display:flex;gap:5px;flex:1;overflow:hidden}
+  .tray .thumbs img{width:40px;height:40px;object-fit:cover;flex:0 0 auto}
+  .tray button{font-family:inherit;font-size:12px;letter-spacing:.13em;text-transform:uppercase;cursor:pointer;
+    padding:12px 18px;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;flex:0 0 auto}
+  .tray button.primary{background:#fff;color:var(--ink);border-color:#fff}
+  .tray button:hover{border-color:#fff}
+  .toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(20px);z-index:90;
+    background:var(--ink);color:#fff;font-size:13px;letter-spacing:.04em;padding:12px 20px;opacity:0;
+    transition:.25s;pointer-events:none}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  @media(max-width:640px){.search{width:100%;margin:0}.tray .thumbs{display:none}}
+</style>
+</head>
+<body>
+<header><div class="nav">
+  <a class="mark" href="../bella-homepage-redesign.html">BELLA</a>
+  <a class="back" href="../bella-homepage-redesign.html">← Back to the studio</a>
+</div></header>
+
+<div class="head">
+  <span class="micro">Furniture catalog · 2024 lookbook</span>
+  <h1>Browse the furniture. Save the pieces you like.</h1>
+  <p>Every item our designers stage with, filterable by room and style. Select the looks you want, and we'll build your rooms around them. Your picks save to your project and send with your order.</p>
+</div>
+
+<div class="filters">
+  <div class="frow"><span class="lbl">Room</span><div id="roomChips"></div></div>
+  <div class="frow"><span class="lbl">Style</span><div id="styleChips"></div>
+    <input class="search" id="search" type="search" placeholder="Search SKU…" aria-label="Search by SKU">
+  </div>
+  <div class="count" id="count"></div>
+</div>
+
+<div class="grid" id="grid"></div>
+<div class="empty" id="empty" style="display:none">No pieces match those filters. Try widening them.</div>
+
+<div class="tray" id="tray">
+  <span class="n"><b id="tCount">0</b> pieces in your project</span>
+  <div class="thumbs" id="tThumbs"></div>
+  <button id="tCopy">Copy SKU list</button>
+  <button id="tSave" class="primary">Save to project</button>
+  <button id="tClear">Clear</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const ITEMS=[{"sku":"LR-CONT-L387","room":"Living Room","style":"Contemporary","img":"items/LR_CONT_L387.png"},{"sku":"LR-CONT-L391","room":"Living Room","style":"Contemporary","img":"items/LR_CONT_L391.png"},{"sku":"LR-CONT-L395","room":"Living Room","style":"Contemporary","img":"items/LR_CONT_L395.png"},{"sku":"LR-CONT-L409","room":"Living Room","style":"Contemporary","img":"items/LR_CONT_L409.png"},{"sku":"LR-CONT-L410","room":"Living Room","style":"Contemporary","img":"items/LR_CONT_L410.png"},{"sku":"LR-CONT-L437","room":"Living Room","style":"Contemporary","img":"items/LR_CONT_L437.png"},{"sku":"LR-CONT-L440","room":"Living Room","style":"Contemporary","img":"items/LR_CONT_L440.png"},{"sku":"LR-CONT-L463","room":"Living Room","style":"Contemporary","img":"items/LR_CONT_L463.png"},{"sku":"LR-CONT-L468","room":"Living Room","style":"Contemporary","img":"items/LR_CONT_L468.png"},{"sku":"LR-CONT-L504","room":"Living Room","style":"Contemporary","img":"items/LR_CONT_L504.png"},{"sku":"LR-CONT-L525","room":"Living Room","style":"Contemporary","img":"items/LR_CONT_L525.png"},{"sku":"LR-FARM-L382","room":"Living Room","style":"Farmhouse","img":"items/LR_FARM_L382.png"},{"sku":"LR-FARM-L461","room":"Living Room","style":"Farmhouse","img":"items/LR_FARM_L461.png"},{"sku":"LR-FARM-L474","room":"Living Room","style":"Farmhouse","img":"items/LR_FARM_L474.png"},{"sku":"LR-FARM-L494","room":"Living Room","style":"Farmhouse","img":"items/LR_FARM_L494.png"},{"sku":"LR-FARM-L500","room":"Living Room","style":"Farmhouse","img":"items/LR_FARM_L500.png"},{"sku":"LR-FARM-L510","room":"Living Room","style":"Farmhouse","img":"items/LR_FARM_L510.png"},{"sku":"LR-COAS-L347","room":"Living Room","style":"Hamptons Coastal","img":"items/LR_COAS_L347.png"},{"sku":"LR-COAS-L521","room":"Living Room","style":"Hamptons Coastal","img":"items/LR_COAS_L521.png"},{"sku":"LR-COAS-L522","room":"Living Room","style":"Hamptons Coastal","img":"items/LR_COAS_L522.png"},{"sku":"LR-COAS-L529","room":"Living Room","style":"Hamptons Coastal","img":"items/LR_COAS_L529.png"},{"sku":"LR-COAST-L521","room":"Living Room","style":"Hamptons Coastal","img":"items/LR_COAST_L521.png"},{"sku":"LR-COAST-L522","room":"Living Room","style":"Hamptons Coastal","img":"items/LR_COAST_L522.png"},{"sku":"LR-MCM-L446","room":"Living Room","style":"Midcentury Modern","img":"items/LR_MCM_L446.png"},{"sku":"LR-MCM-L457","room":"Living Room","style":"Midcentury Modern","img":"items/LR_MCM_L457.png"},{"sku":"LR-MCM-L477","room":"Living Room","style":"Midcentury Modern","img":"items/LR_MCM_L477.png"},{"sku":"LR-MCM-L497","room":"Living Room","style":"Midcentury Modern","img":"items/LR_MCM_L497.png"},{"sku":"LR-MCM-L499","room":"Living Room","style":"Midcentury Modern","img":"items/LR_MCM_L499.png"},{"sku":"LR-MCM-L502","room":"Living Room","style":"Midcentury Modern","img":"items/LR_MCM_L502.png"},{"sku":"LR-MCM-L520","room":"Living Room","style":"Midcentury Modern","img":"items/LR_MCM_L520.png"},{"sku":"LR-MCM-L528","room":"Living Room","style":"Midcentury Modern","img":"items/LR_MCM_L528.png"},{"sku":"LR-MCM-L530","room":"Living Room","style":"Midcentury Modern","img":"items/LR_MCM_L530.png"},{"sku":"LR-MCM-L531","room":"Living Room","style":"Midcentury Modern","img":"items/LR_MCM_L531.png"},{"sku":"LR-MDRN-L148","room":"Living Room","style":"Modern","img":"items/LR_MDRN_L148.png"},{"sku":"LR-MDRN-L338","room":"Living Room","style":"Modern","img":"items/LR_MDRN_L338.png"},{"sku":"LR-MDRN-L376","room":"Living Room","style":"Modern","img":"items/LR_MDRN_L376.png"},{"sku":"LR-MDRN-L412","room":"Living Room","style":"Modern","img":"items/LR_MDRN_L412.png"},{"sku":"LR-MDRN-L422","room":"Living Room","style":"Modern","img":"items/LR_MDRN_L422.png"},{"sku":"LR-MDRN-L432","room":"Living Room","style":"Modern","img":"items/LR_MDRN_L432.png"},{"sku":"LR-MDRN-L433","room":"Living Room","style":"Modern","img":"items/LR_MDRN_L433.png"},{"sku":"LR-MDRN-L485","room":"Living Room","style":"Modern","img":"items/LR_MDRN_L485.png"},{"sku":"LR-MDRN-L490","room":"Living Room","style":"Modern","img":"items/LR_MDRN_L490.png"},{"sku":"LR-MDRN-L493","room":"Living Room","style":"Modern","img":"items/LR_MDRN_L493.png"},{"sku":"LR-MDRN-L495","room":"Living Room","style":"Modern","img":"items/LR_MDRN_L495.png"},{"sku":"LR-MDRN-L505","room":"Living Room","style":"Modern","img":"items/LR_MDRN_L505.png"},{"sku":"LR-MDRN-L511","room":"Living Room","style":"Modern","img":"items/LR_MDRN_L511.png"},{"sku":"LR-NDBH-L398A","room":"Living Room","style":"Nordic Boho","img":"items/LR_NDBH_L398A.png"},{"sku":"LR-NDBH-L454","room":"Living Room","style":"Nordic Boho","img":"items/LR_NDBH_L454.png"},{"sku":"LR-NDBH-L465","room":"Living Room","style":"Nordic Boho","img":"items/LR_NDBH_L465.png"},{"sku":"LR-NDBH-L488","room":"Living Room","style":"Nordic Boho","img":"items/LR_NDBH_L488.png"},{"sku":"LR-NDBH-L491","room":"Living Room","style":"Nordic Boho","img":"items/LR_NDBH_L491.png"},{"sku":"LR-NDBH-L531","room":"Living Room","style":"Nordic Boho","img":"items/LR_NDBH_L531.png"},{"sku":"LR-SCND-L381","room":"Living Room","style":"Scandinavian","img":"items/LR_SCND_L381.png"},{"sku":"LR-SCND-L390","room":"Living Room","style":"Scandinavian","img":"items/LR_SCND_L390.png"},{"sku":"LR-SCND-L392","room":"Living Room","style":"Scandinavian","img":"items/LR_SCND_L392.png"},{"sku":"LR-SCND-L448","room":"Living Room","style":"Scandinavian","img":"items/LR_SCND_L448.png"},{"sku":"LR-SCND-L449","room":"Living Room","style":"Scandinavian","img":"items/LR_SCND_L449.png"},{"sku":"LR-SCND-L450","room":"Living Room","style":"Scandinavian","img":"items/LR_SCND_L450.png"},{"sku":"LR-TRNS-L396","room":"Living Room","style":"Transitional","img":"items/LR_TRNS_L396.png"},{"sku":"LR-TRNS-L405","room":"Living Room","style":"Transitional","img":"items/LR_TRNS_L405.png"},{"sku":"LR-TRNS-L438","room":"Living Room","style":"Transitional","img":"items/LR_TRNS_L438.png"},{"sku":"LR-TRNS-L515","room":"Living Room","style":"Transitional","img":"items/LR_TRNS_L515.png"},{"sku":"LR-TRNS-L519","room":"Living Room","style":"Transitional","img":"items/LR_TRNS_L519.png"},{"sku":"DR-CONT-D310","room":"Dining Room","style":"Contemporary","img":"items/DR_CONT_D310.png"},{"sku":"DR-CONT-D314","room":"Dining Room","style":"Contemporary","img":"items/DR_CONT_D314.png"},{"sku":"DR-CONT-D325","room":"Dining Room","style":"Contemporary","img":"items/DR_CONT_D325.png"},{"sku":"DR-CONT-D328","room":"Dining Room","style":"Contemporary","img":"items/DR_CONT_D328.png"},{"sku":"DR-CONT-D342","room":"Dining Room","style":"Contemporary","img":"items/DR_CONT_D342.png"},{"sku":"DR-CONT-D346","room":"Dining Room","style":"Contemporary","img":"items/DR_CONT_D346.png"},{"sku":"DR-CONT-D348","room":"Dining Room","style":"Contemporary","img":"items/DR_CONT_D348.png"},{"sku":"DR-CONT-D371","room":"Dining Room","style":"Contemporary","img":"items/DR_CONT_D371.png"},{"sku":"DR-CONT-D375","room":"Dining Room","style":"Contemporary","img":"items/DR_CONT_D375.png"},{"sku":"DR-CONT-D377","room":"Dining Room","style":"Contemporary","img":"items/DR_CONT_D377.png"},{"sku":"DR-CONT-D378","room":"Dining Room","style":"Contemporary","img":"items/DR_CONT_D378.png"},{"sku":"DR-CONT-D380","room":"Dining Room","style":"Contemporary","img":"items/DR_CONT_D380.png"},{"sku":"DR-CONT-D384","room":"Dining Room","style":"Contemporary","img":"items/DR_CONT_D384.png"},{"sku":"DR-CONT-D408","room":"Dining Room","style":"Contemporary","img":"items/DR_CONT_D408.png"},{"sku":"DR-CONT-D410","room":"Dining Room","style":"Contemporary","img":"items/DR_CONT_D410.png"},{"sku":"DR-CONT-D413","room":"Dining Room","style":"Contemporary","img":"items/DR_CONT_D413.png"},{"sku":"DR-CONT-D90","room":"Dining Room","style":"Contemporary","img":"items/DR_CONT_D90.png"},{"sku":"DR-FARM-","room":"Dining Room","style":"Farmhouse","img":"items/DR_FARM_.png"},{"sku":"DR-FARM-D318C","room":"Dining Room","style":"Farmhouse","img":"items/DR_FARM_D318C.png"},{"sku":"DR-FARM-D349","room":"Dining Room","style":"Farmhouse","img":"items/DR_FARM_D349.png"},{"sku":"DR-FARM-D358","room":"Dining Room","style":"Farmhouse","img":"items/DR_FARM_D358.png"},{"sku":"DR-COAS-D1117","room":"Dining Room","style":"Hamptons Coastal","img":"items/DR_COAS_D1117.png"},{"sku":"DR-COAS-D319","room":"Dining Room","style":"Hamptons Coastal","img":"items/DR_COAS_D319.png"},{"sku":"DR-COAS-D335","room":"Dining Room","style":"Hamptons Coastal","img":"items/DR_COAS_D335.png"},{"sku":"DR-COAS-D386","room":"Dining Room","style":"Hamptons Coastal","img":"items/DR_COAS_D386.png"},{"sku":"DR-COAS-D392","room":"Dining Room","style":"Hamptons Coastal","img":"items/DR_COAS_D392.png"},{"sku":"DR-MCM-316","room":"Dining Room","style":"Midcentury Modern","img":"items/DR_MCM_316.png"},{"sku":"DR-MCM-D320","room":"Dining Room","style":"Midcentury Modern","img":"items/DR_MCM_D320.png"},{"sku":"DR-MCM-D365","room":"Dining Room","style":"Midcentury Modern","img":"items/DR_MCM_D365.png"},{"sku":"DR-MCM-D372","room":"Dining Room","style":"Midcentury Modern","img":"items/DR_MCM_D372.png"},{"sku":"DR-MCM-D387","room":"Dining Room","style":"Midcentury Modern","img":"items/DR_MCM_D387.png"},{"sku":"DR-MCM-D71","room":"Dining Room","style":"Midcentury Modern","img":"items/DR_MCM_D71.png"},{"sku":"DR-MDRN-D107","room":"Dining Room","style":"Modern","img":"items/DR_MDRN_D107.png"},{"sku":"DR-MDRN-D114","room":"Dining Room","style":"Modern","img":"items/DR_MDRN_D114.png"},{"sku":"DR-MDRN-D328","room":"Dining Room","style":"Modern","img":"items/DR_MDRN_D328.png"},{"sku":"DR-MDRN-D332","room":"Dining Room","style":"Modern","img":"items/DR_MDRN_D332.png"},{"sku":"DR-MDRN-D336","room":"Dining Room","style":"Modern","img":"items/DR_MDRN_D336.png"},{"sku":"DR-MDRN-D338","room":"Dining Room","style":"Modern","img":"items/DR_MDRN_D338.png"},{"sku":"DR-MDRN-D343","room":"Dining Room","style":"Modern","img":"items/DR_MDRN_D343.png"},{"sku":"DR-MDRN-D357","room":"Dining Room","style":"Modern","img":"items/DR_MDRN_D357.png"},{"sku":"DR-MDRN-D366","room":"Dining Room","style":"Modern","img":"items/DR_MDRN_D366.png"},{"sku":"DR-MDRN-D374","room":"Dining Room","style":"Modern","img":"items/DR_MDRN_D374.png"},{"sku":"DR-MDRN-D379","room":"Dining Room","style":"Modern","img":"items/DR_MDRN_D379.png"},{"sku":"DR-MDRN-D390","room":"Dining Room","style":"Modern","img":"items/DR_MDRN_D390.png"},{"sku":"DR-MDRN-D398","room":"Dining Room","style":"Modern","img":"items/DR_MDRN_D398.png"},{"sku":"DR-MDRN-D400","room":"Dining Room","style":"Modern","img":"items/DR_MDRN_D400.png"},{"sku":"DR-MDRN-D405","room":"Dining Room","style":"Modern","img":"items/DR_MDRN_D405.png"},{"sku":"DR-MDRN-D407","room":"Dining Room","style":"Modern","img":"items/DR_MDRN_D407.png"},{"sku":"DR-MDRN-D414","room":"Dining Room","style":"Modern","img":"items/DR_MDRN_D414.png"},{"sku":"DR-MDRN-D418","room":"Dining Room","style":"Modern","img":"items/DR_MDRN_D418.png"},{"sku":"DR-SCND-D350","room":"Dining Room","style":"Scandinavian","img":"items/DR_SCND_D350.png"},{"sku":"DR-SCND-D351","room":"Dining Room","style":"Scandinavian","img":"items/DR_SCND_D351.png"},{"sku":"DR-SCND-D357","room":"Dining Room","style":"Scandinavian","img":"items/DR_SCND_D357.png"},{"sku":"DR-SCND-D366","room":"Dining Room","style":"Scandinavian","img":"items/DR_SCND_D366.png"},{"sku":"DR-SCND-D416","room":"Dining Room","style":"Scandinavian","img":"items/DR_SCND_D416.png"},{"sku":"DR-SCND-D61","room":"Dining Room","style":"Scandinavian","img":"items/DR_SCND_D61.png"},{"sku":"DR-TRAD-D296","room":"Dining Room","style":"Traditional","img":"items/DR_TRAD_D296.png"},{"sku":"DR-TRAD-D319","room":"Dining Room","style":"Traditional","img":"items/DR_TRAD_D319.png"},{"sku":"DR-TRAD-D73","room":"Dining Room","style":"Traditional","img":"items/DR_TRAD_D73.png"},{"sku":"DR-TRAN-D359","room":"Dining Room","style":"Transitional","img":"items/DR_TRAN_D359.png"},{"sku":"DR-TRAN-D368","room":"Dining Room","style":"Transitional","img":"items/DR_TRAN_D368.png"},{"sku":"DR-TRAN-D370","room":"Dining Room","style":"Transitional","img":"items/DR_TRAN_D370.png"},{"sku":"DR-TRAN-D409","room":"Dining Room","style":"Transitional","img":"items/DR_TRAN_D409.png"},{"sku":"DR-TRAN-D412","room":"Dining Room","style":"Transitional","img":"items/DR_TRAN_D412.png"},{"sku":"BD-CONT-428","room":"Bedroom","style":"Contemporary","img":"items/BD_CONT_428.png"},{"sku":"BD-CONT-431","room":"Bedroom","style":"Contemporary","img":"items/BD_CONT_431.png"},{"sku":"BD-CONT-B335","room":"Bedroom","style":"Contemporary","img":"items/BD_CONT_B335.png"},{"sku":"BD-CONT-B360","room":"Bedroom","style":"Contemporary","img":"items/BD_CONT_B360.png"},{"sku":"BD-CONT-B362","room":"Bedroom","style":"Contemporary","img":"items/BD_CONT_B362.png"},{"sku":"BD-CONT-B400","room":"Bedroom","style":"Contemporary","img":"items/BD_CONT_B400.png"},{"sku":"BD-CONT-B414","room":"Bedroom","style":"Contemporary","img":"items/BD_CONT_B414.png"},{"sku":"BD-CONT-B417","room":"Bedroom","style":"Contemporary","img":"items/BD_CONT_B417.png"},{"sku":"BD-CONT-B420","room":"Bedroom","style":"Contemporary","img":"items/BD_CONT_B420.png"},{"sku":"BD-CONT-B432","room":"Bedroom","style":"Contemporary","img":"items/BD_CONT_B432.png"},{"sku":"BD-CONT-B438","room":"Bedroom","style":"Contemporary","img":"items/BD_CONT_B438.png"},{"sku":"BD-CONT-B440","room":"Bedroom","style":"Contemporary","img":"items/BD_CONT_B440.png"},{"sku":"BD-CONT-B445","room":"Bedroom","style":"Contemporary","img":"items/BD_CONT_B445.png"},{"sku":"BD-CONT-B461","room":"Bedroom","style":"Contemporary","img":"items/BD_CONT_B461.png"},{"sku":"BD-CONT-B465","room":"Bedroom","style":"Contemporary","img":"items/BD_CONT_B465.png"},{"sku":"BD-FARM-B394","room":"Bedroom","style":"Farmhouse","img":"items/BD_FARM_B394.png"},{"sku":"BD-FARM-B398","room":"Bedroom","style":"Farmhouse","img":"items/BD_FARM_B398.png"},{"sku":"BD-FARM-B422","room":"Bedroom","style":"Farmhouse","img":"items/BD_FARM_B422.png"},{"sku":"BD-FARM-B435","room":"Bedroom","style":"Farmhouse","img":"items/BD_FARM_B435.png"},{"sku":"BD-FARM-B441","room":"Bedroom","style":"Farmhouse","img":"items/BD_FARM_B441.png"},{"sku":"BD-FARM-B443","room":"Bedroom","style":"Farmhouse","img":"items/BD_FARM_B443.png"},{"sku":"BD-FARM-B450","room":"Bedroom","style":"Farmhouse","img":"items/BD_FARM_B450.png"},{"sku":"BD-COAS-B390","room":"Bedroom","style":"Hamptons Coastal","img":"items/BD_COAS_B390.png"},{"sku":"BD-COAS-B391","room":"Bedroom","style":"Hamptons Coastal","img":"items/BD_COAS_B391.png"},{"sku":"BD-COAS-B449","room":"Bedroom","style":"Hamptons Coastal","img":"items/BD_COAS_B449.png"},{"sku":"BD-MCM-B444","room":"Bedroom","style":"Midcentury Modern","img":"items/BD_MCM_B444.png"},{"sku":"BD-MCM-B457","room":"Bedroom","style":"Midcentury Modern","img":"items/BD_MCM_B457.png"},{"sku":"BD-MDRN-","room":"Bedroom","style":"Modern","img":"items/BD_MDRN_.png"},{"sku":"BD-MDRN-B403","room":"Bedroom","style":"Modern","img":"items/BD_MDRN_B403.png"},{"sku":"BD-MDRN-B421","room":"Bedroom","style":"Modern","img":"items/BD_MDRN_B421.png"},{"sku":"BD-MDRN-B423","room":"Bedroom","style":"Modern","img":"items/BD_MDRN_B423.png"},{"sku":"BD-MDRN-B425","room":"Bedroom","style":"Modern","img":"items/BD_MDRN_B425.png"},{"sku":"BD-MDRN-B427","room":"Bedroom","style":"Modern","img":"items/BD_MDRN_B427.png"},{"sku":"BD-MDRN-B430","room":"Bedroom","style":"Modern","img":"items/BD_MDRN_B430.png"},{"sku":"BD-MDRN-B434","room":"Bedroom","style":"Modern","img":"items/BD_MDRN_B434.png"},{"sku":"BD-MDRN-B448","room":"Bedroom","style":"Modern","img":"items/BD_MDRN_B448.png"},{"sku":"BD-MDRN-B451","room":"Bedroom","style":"Modern","img":"items/BD_MDRN_B451.png"},{"sku":"BD-MFRM-B443","room":"Bedroom","style":"Modern Farmhouse","img":"items/BD_MFRM_B443.png"},{"sku":"BD-MFRM-B443B","room":"Bedroom","style":"Modern Farmhouse","img":"items/BD_MFRM_B443B.png"},{"sku":"BD-NDBH-B395","room":"Bedroom","style":"Nordic Boho","img":"items/BD_NDBH_B395.png"},{"sku":"BD-NDBH-B396","room":"Bedroom","style":"Nordic Boho","img":"items/BD_NDBH_B396.png"},{"sku":"BD-NDBH-B397","room":"Bedroom","style":"Nordic Boho","img":"items/BD_NDBH_B397.png"},{"sku":"BD-NDBH-B406","room":"Bedroom","style":"Nordic Boho","img":"items/BD_NDBH_B406.png"},{"sku":"BD-NDBH-B413","room":"Bedroom","style":"Nordic Boho","img":"items/BD_NDBH_B413.png"},{"sku":"BD-NDBH-B426","room":"Bedroom","style":"Nordic Boho","img":"items/BD_NDBH_B426.png"},{"sku":"BD-NDBH-B454","room":"Bedroom","style":"Nordic Boho","img":"items/BD_NDBH_B454.png"},{"sku":"BD-SCND-B355","room":"Bedroom","style":"Scandinavian","img":"items/BD_SCND_B355.png"},{"sku":"BD-SCND-B407","room":"Bedroom","style":"Scandinavian","img":"items/BD_SCND_B407.png"},{"sku":"BD-SCND-B411B","room":"Bedroom","style":"Scandinavian","img":"items/BD_SCND_B411B.png"},{"sku":"BD-SCND-B412","room":"Bedroom","style":"Scandinavian","img":"items/BD_SCND_B412.png"},{"sku":"BD-SCND-B419","room":"Bedroom","style":"Scandinavian","img":"items/BD_SCND_B419.png"},{"sku":"BD-SCND-B421","room":"Bedroom","style":"Scandinavian","img":"items/BD_SCND_B421.png"},{"sku":"BD-TRNS-B363","room":"Bedroom","style":"Transitional","img":"items/BD_TRNS_B363.png"},{"sku":"BD-TRNS-B422","room":"Bedroom","style":"Transitional","img":"items/BD_TRNS_B422.png"},{"sku":"BD-TRNS-B452","room":"Bedroom","style":"Transitional","img":"items/BD_TRNS_B452.png"},{"sku":"BD-TRNS-B453","room":"Bedroom","style":"Transitional","img":"items/BD_TRNS_B453.png"},{"sku":"BD-TRNS-B459","room":"Bedroom","style":"Transitional","img":"items/BD_TRNS_B459.png"},{"sku":"BD-TRNS-B460","room":"Bedroom","style":"Transitional","img":"items/BD_TRNS_B460.png"},{"sku":"KT-CONT-K101","room":"Kitchen","style":"Contemporary","img":"items/KT_CONT_K101.png"},{"sku":"KT-CONT-K102","room":"Kitchen","style":"Contemporary","img":"items/KT_CONT_K102.png"},{"sku":"KT-CONT-K109","room":"Kitchen","style":"Contemporary","img":"items/KT_CONT_K109.png"},{"sku":"KT-CONT-K110","room":"Kitchen","style":"Contemporary","img":"items/KT_CONT_K110.png"},{"sku":"KT-CONT-K121","room":"Kitchen","style":"Contemporary","img":"items/KT_CONT_K121.png"},{"sku":"KT-FARM-K112","room":"Kitchen","style":"Farmhouse","img":"items/KT_FARM_K112.png"},{"sku":"KT-FARM-K118","room":"Kitchen","style":"Farmhouse","img":"items/KT_FARM_K118.png"},{"sku":"KT-FARM-K39","room":"Kitchen","style":"Farmhouse","img":"items/KT_FARM_K39.png"},{"sku":"KT-FARMT-K117","room":"Kitchen","style":"Farmhouse","img":"items/KT_FARMT_K117.png"},{"sku":"KT-MCM-K107","room":"Kitchen","style":"Midcentury Modern","img":"items/KT_MCM_K107.png"},{"sku":"KT-MCM-K120","room":"Kitchen","style":"Midcentury Modern","img":"items/KT_MCM_K120.png"},{"sku":"KT-MDRN-K100","room":"Kitchen","style":"Modern","img":"items/KT_MDRN_K100.png"},{"sku":"KT-MDRN-K106","room":"Kitchen","style":"Modern","img":"items/KT_MDRN_K106.png"},{"sku":"KT-MDRN-K108","room":"Kitchen","style":"Modern","img":"items/KT_MDRN_K108.png"},{"sku":"KT-MDRN-K109","room":"Kitchen","style":"Modern","img":"items/KT_MDRN_K109.png"},{"sku":"KT-MDRN-K115","room":"Kitchen","style":"Modern","img":"items/KT_MDRN_K115.png"},{"sku":"KT-MDRN-K116","room":"Kitchen","style":"Modern","img":"items/KT_MDRN_K116.png"},{"sku":"OF-FARM-277","room":"Office","style":"Farmhouse","img":"items/OF_FARM_277.png"},{"sku":"OF-FARM-687","room":"Office","style":"Farmhouse","img":"items/OF_FARM_687.png"},{"sku":"OF-MCM-678","room":"Office","style":"Midcentury Modern","img":"items/OF_MCM_678.png"},{"sku":"OF-MCM-698","room":"Office","style":"Midcentury Modern","img":"items/OF_MCM_698.png"},{"sku":"OF-MCM-699","room":"Office","style":"Midcentury Modern","img":"items/OF_MCM_699.png"},{"sku":"OF-MDRN-675","room":"Office","style":"Modern","img":"items/OF_MDRN_675.png"},{"sku":"OF-MDRN-679","room":"Office","style":"Modern","img":"items/OF_MDRN_679.png"},{"sku":"OF-MDRN-680","room":"Office","style":"Modern","img":"items/OF_MDRN_680.png"},{"sku":"OF-MDRN-681","room":"Office","style":"Modern","img":"items/OF_MDRN_681.png"},{"sku":"OF-MDRN-682A","room":"Office","style":"Modern","img":"items/OF_MDRN_682A.png"},{"sku":"OF-MDRN-685","room":"Office","style":"Modern","img":"items/OF_MDRN_685.png"},{"sku":"OF-MDRN-700","room":"Office","style":"Modern","img":"items/OF_MDRN_700.png"},{"sku":"OF-MDRN-702","room":"Office","style":"Modern","img":"items/OF_MDRN_702.png"},{"sku":"OF-MFRM-703","room":"Office","style":"Modern Farmhouse","img":"items/OF_MFRM_703.png"},{"sku":"OF-SCND-694","room":"Office","style":"Scandinavian","img":"items/OF_SCND_694.png"},{"sku":"OF-SCND-696","room":"Office","style":"Scandinavian","img":"items/OF_SCND_696.png"},{"sku":"OF-SCND-697","room":"Office","style":"Scandinavian","img":"items/OF_SCND_697.png"},{"sku":"TS-L382","room":"Top Seller","style":"Top Seller","img":"items/TS_L382.png"}];
+const ROOMS=["Living Room", "Dining Room", "Bedroom", "Kitchen", "Office"];
+const STYLES=["Contemporary", "Farmhouse", "Hamptons Coastal", "Midcentury Modern", "Modern", "Modern Farmhouse", "Nordic Boho", "Scandinavian", "Traditional", "Transitional"];
+const KEY='bella_project_skus';
+let fRoom='All', fStyle='All', q='';
+let sel=new Set(JSON.parse(localStorage.getItem(KEY)||'[]'));
+
+const grid=document.getElementById('grid'), empty=document.getElementById('empty'), countEl=document.getElementById('count');
+
+function chip(txt,active){const b=document.createElement('button');b.className='chip'+(active?' on':'');b.textContent=txt;return b;}
+function buildChips(host,vals,cur,cb){
+  host.innerHTML='';
+  ['All',...vals].forEach(v=>{const c=chip(v,v===cur);c.onclick=()=>cb(v);host.appendChild(c);});
+}
+function renderChips(){
+  buildChips(document.getElementById('roomChips'),ROOMS,fRoom,v=>{fRoom=v;renderChips();render();});
+  buildChips(document.getElementById('styleChips'),STYLES,fStyle,v=>{fStyle=v;renderChips();render();});
+}
+
+function visible(){
+  return ITEMS.filter(it=>
+    (fRoom==='All'||it.room===fRoom)&&
+    (fStyle==='All'||it.style===fStyle)&&
+    (!q||it.sku.toLowerCase().includes(q)));
+}
+
+function render(){
+  const list=visible();
+  countEl.textContent=list.length+' of '+ITEMS.length+' pieces';
+  grid.innerHTML='';
+  empty.style.display=list.length?'none':'block';
+  const frag=document.createDocumentFragment();
+  list.forEach(it=>{
+    const c=document.createElement('div');
+    c.className='card'+(sel.has(it.sku)?' sel':'');
+    c.innerHTML='<div class="tick">'+(sel.has(it.sku)?'✓':'+')+'</div>'+
+      '<img loading="lazy" src="'+it.img+'" alt="'+it.style+' '+it.room+'">'+
+      '<div class="meta"><div class="sku">'+it.sku+'</div><div class="rs">'+it.room+' · '+it.style+'</div></div>';
+    c.onclick=()=>{toggle(it.sku);c.classList.toggle('sel');c.querySelector('.tick').textContent=sel.has(it.sku)?'✓':'+';};
+    frag.appendChild(c);
+  });
+  grid.appendChild(frag);
+}
+
+function toggle(sku){sel.has(sku)?sel.delete(sku):sel.add(sku);persist();tray();}
+function persist(){localStorage.setItem(KEY,JSON.stringify([...sel]));}
+
+const tray=el=>{};
+const trayEl=document.getElementById('tray');
+function updTray(){
+  document.getElementById('tCount').textContent=sel.size;
+  trayEl.classList.toggle('show',sel.size>0);
+  const th=document.getElementById('tThumbs');th.innerHTML='';
+  const byS=Object.fromEntries(ITEMS.map(i=>[i.sku,i]));
+  [...sel].slice(0,14).forEach(s=>{const im=document.createElement('img');im.src=byS[s].img;th.appendChild(im);});
+}
+window.tray=updTray;
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1900);}
+
+document.getElementById('search').addEventListener('input',e=>{q=e.target.value.trim().toLowerCase();render();});
+document.getElementById('tCopy').onclick=()=>{
+  const list=[...sel].join(', ');
+  navigator.clipboard&&navigator.clipboard.writeText(list);
+  toast(sel.size+' SKUs copied to clipboard');
+};
+document.getElementById('tSave').onclick=()=>{
+  const byS=Object.fromEntries(ITEMS.map(i=>[i.sku,i]));
+  const lines=[...sel].map(s=>byS[s].sku+'\t'+byS[s].room+'\t'+byS[s].style);
+  const blob=new Blob(['SKU\tRoom\tStyle\n'+lines.join('\n')],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='bella-project-selection.txt';a.click();
+  toast('Project saved · '+sel.size+' pieces');
+};
+document.getElementById('tClear').onclick=()=>{sel.clear();persist();render();updTray();toast('Project cleared');};
+
+// redefine toggle to also update tray
+const _toggle=toggle;toggle=function(s){_toggle(s);updTray();};
+renderChips();render();updTray();
+</script>
+</body>
+</html>

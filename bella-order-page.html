@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Order Listing Visuals — Bella Virtual | Staging, Renders, Floor Plans</title>
+<meta name="description" content="Order virtual staging, 3D renders, floor plans, and photo edits in one place. Listing bundles for agents from $349. Pre-sale render packs for home builders.">
+<meta name="robots" content="index,follow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FDFCFA; --ink:#232120; --soft:#6E6A66; --faint:#9C978F;
+    --line:#E8E4DE; --line-2:#F0EDE8; --dark:#1C1A18; --green:#3E6B4C;
+    --pad:44px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:"Jost",system-ui,sans-serif;
+    font-weight:300;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;padding-bottom:90px}
+  img{display:block;max-width:100%}
+  a{text-decoration:none;color:inherit}
+  h1,h2,h3{font-weight:300;letter-spacing:-.012em;line-height:1.1}
+  .micro{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+  header{position:sticky;top:0;z-index:70;background:rgba(253,252,250,.9);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line-2)}
+  .nav{display:flex;align-items:center;gap:40px;height:68px;padding:0 var(--pad)}
+  .mark{font-size:15px;letter-spacing:.5em;font-weight:400}
+  .nav .back{margin-left:auto;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+  .nav .back:hover{color:var(--ink)}
+
+  .btn{display:inline-block;background:var(--ink);color:#fff;font-size:12.5px;letter-spacing:.14em;
+    text-transform:uppercase;padding:13px 22px;transition:opacity .2s;border:0;cursor:pointer;font-family:inherit}
+  .btn:hover{opacity:.82}
+  .btn-line{background:transparent;color:var(--ink);border:1px solid var(--ink);padding:12px 21px}
+  .btn-line:hover{background:var(--ink);color:#fff;opacity:1}
+  .btn-wht{background:#fff;color:var(--ink)}
+
+  /* ---------- head + segment toggle ---------- */
+  .head{padding:56px var(--pad) 0}
+  .head h1{font-size:clamp(30px,3.6vw,48px);max-width:22ch;margin-top:12px}
+  .head p{margin-top:14px;font-size:16px;color:var(--soft);max-width:56ch}
+  .seg{display:inline-flex;border:1px solid var(--line);margin:34px var(--pad) 0}
+  .seg button{font-family:inherit;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;
+    padding:14px 26px;background:#fff;color:var(--soft);border:0;cursor:pointer}
+  .seg button.on{background:var(--ink);color:#fff}
+
+  /* ---------- bundles ---------- */
+  .sec{padding:44px var(--pad) 64px}
+  .sec-label{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);
+    border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:28px}
+  .bundles{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+  @media(max-width:960px){.bundles{grid-template-columns:1fr}}
+  .bundle{background:#fff;border:1px solid var(--line);padding:34px 30px;position:relative;
+    display:flex;flex-direction:column}
+  .bundle.star{border:1px solid var(--ink)}
+  .bundle.star .flag{position:absolute;top:-11px;left:30px;background:var(--ink);color:#fff;
+    font-size:10px;letter-spacing:.15em;text-transform:uppercase;padding:5px 12px}
+  .bundle h3{font-size:21px}
+  .bundle .for{font-size:13px;color:var(--faint);margin-top:4px}
+  .bundle .price{margin-top:20px;display:flex;align-items:baseline;gap:12px}
+  .bundle .price b{font-size:38px;font-weight:300;letter-spacing:-.03em}
+  .bundle .price s{font-size:15px;color:var(--faint)}
+  .bundle .save{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-top:2px}
+  .bundle ul{list-style:none;margin:22px 0 26px;display:grid;gap:0;flex:1}
+  .bundle li{padding:11px 0;border-bottom:1px solid var(--line-2);font-size:14.5px;color:var(--soft);
+    display:flex;gap:10px}
+  .bundle li:last-child{border:0}
+  .bundle li::before{content:"—";color:var(--faint);flex:0 0 14px}
+  .bundle .btn{width:100%;text-align:center}
+  .bundle.picked{outline:2px solid var(--ink);outline-offset:-2px}
+  .bundle.picked .btn{background:var(--green)}
+
+  /* ---------- flagship staging (the hero product) ---------- */
+  .flagship-sec{padding:46px var(--pad) 12px}
+  .fl-head{max-width:620px;margin-bottom:8px}
+  .fl-head h2{font-size:clamp(24px,2.7vw,34px);margin-top:8px}
+  .fl-head p{font-size:14.5px;color:var(--soft);margin-top:10px}
+  .fcards{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:26px}
+  @media(max-width:820px){.fcards{grid-template-columns:1fr}}
+  .fcard{background:#fff;border:1px solid var(--line);padding:28px 26px;display:flex;flex-direction:column;position:relative}
+  .fcard.star2{border:1.5px solid var(--ink)}
+  .fcard .flag2{position:absolute;top:-11px;left:26px;background:var(--ink);color:#fff;
+    font-size:10px;letter-spacing:.13em;text-transform:uppercase;padding:5px 12px}
+  .fcard h3{font-size:20px}
+  .fcard .fdesc{font-size:13.5px;color:var(--faint);margin-top:6px;flex:1}
+  .fcard .fprice{font-size:36px;font-weight:300;letter-spacing:-.03em;margin:16px 0 2px}
+  .fcard .fprice span{font-size:14px;color:var(--faint);letter-spacing:0}
+  .fcard .fact{margin-top:18px;display:flex;align-items:center;gap:10px}
+  .fcard .add{flex:1;text-align:center;background:var(--ink);color:#fff;border:0;padding:13px;
+    font-size:12px;letter-spacing:.13em;text-transform:uppercase;cursor:pointer;font-family:inherit;transition:.15s}
+  .fcard .add:hover{opacity:.85}
+  .fcard.in{outline:2px solid var(--green);outline-offset:-2px}
+  .fcard .qty{border:1px solid var(--line)}
+  .fcard .qty button{padding:11px 14px;background:#fff;border:0;cursor:pointer;font-family:inherit;font-size:15px}
+  .fcard .qty .q{padding:0 4px;font-size:15px}
+
+  /* ---------- premium (immersive) package ---------- */
+  .bundle.premium{background:var(--dark);border-color:var(--dark);color:#EDEAE5}
+  .bundle.premium h3{color:#fff}
+  .bundle.premium .for{color:#9B958C}
+  .bundle.premium .price b{color:#fff}
+  .bundle.premium .price s{color:#7d766c}
+  .bundle.premium .save{color:#D3AE52}
+  .bundle.premium li{color:#D8D3CC;border-bottom-color:rgba(255,255,255,.1)}
+  .bundle.premium li::before{color:#8FB89A}
+  .bundle.premium .flag{background:#E7C36A;color:#231F1B}
+  .bundle.premium .btn{background:#fff;color:var(--ink)}
+  .bundle.premium.picked{outline-color:#E7C36A}
+
+  /* ---------- a la carte ---------- */
+  .carte{display:grid;grid-template-columns:repeat(2,1fr);gap:5px}
+  @media(max-width:820px){.carte{grid-template-columns:1fr}}
+  .cat{background:#fff;border:1px solid var(--line);padding:26px 28px}
+  .cat h3{font-size:16px;letter-spacing:.03em;padding-bottom:14px;border-bottom:1px solid var(--line)}
+  .item{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--line-2)}
+  .item:last-child{border:0}
+  .item .n{flex:1;font-size:14.5px;color:var(--soft)}
+  .item .n small{display:block;font-size:12px;color:var(--faint)}
+  .item .p{font-size:14.5px;white-space:nowrap}
+  .item button{font-family:inherit;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    border:1px solid var(--line);background:#fff;padding:7px 13px;cursor:pointer;transition:.15s}
+  .item button:hover{border-color:var(--ink)}
+  .item.in button{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .qty{display:inline-flex;align-items:center;gap:8px}
+  .qty button{padding:7px 10px}
+  .qty span{min-width:18px;text-align:center;font-size:14px}
+
+  /* ---------- builders ---------- */
+  .b-hero{background:var(--dark);color:#EDEAE5;padding:44px 38px;display:grid;
+    grid-template-columns:1.2fr 1fr;gap:44px;align-items:center}
+  @media(max-width:860px){.b-hero{grid-template-columns:1fr}}
+  .b-hero h2{color:#fff;font-size:clamp(26px,3vw,40px)}
+  .b-hero p{color:#9B958C;margin-top:14px;font-size:15.5px;max-width:48ch}
+  .b-hero img{width:100%;aspect-ratio:1.5;object-fit:cover}
+  .b-hero .row{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+  .b-hero .btn-ghost{border:1px solid rgba(255,255,255,.5);color:#fff;background:transparent;
+    font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;padding:12px 21px}
+  .b-hero .btn-ghost:hover{background:#fff;color:var(--ink)}
+  .b-packs{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:5px}
+  @media(max-width:860px){.b-packs{grid-template-columns:1fr}}
+
+  /* ---------- summary bar ---------- */
+  .bar{position:fixed;left:0;right:0;bottom:0;z-index:80;background:var(--dark);color:#fff;
+    display:flex;align-items:center;gap:22px;padding:16px var(--pad);transform:translateY(110%);
+    transition:transform .28s cubic-bezier(.2,.8,.2,1);box-shadow:0 -18px 40px -24px rgba(0,0,0,.5)}
+  .bar.show{transform:translateY(0)}
+  .bar .items{flex:1;font-size:13px;color:#CFC9C1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bar .total{font-size:22px;font-weight:300;white-space:nowrap}
+  .bar .total small{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#9B958C;display:block}
+  .bar .btn{background:#fff;color:var(--ink);flex:0 0 auto}
+  .note{padding:0 var(--pad) 60px;font-size:13px;color:var(--faint);max-width:74ch}
+  .hide{display:none !important}
+
+  /* ---------- saved styles panel ---------- */
+  .styles-row{display:flex;flex-wrap:wrap;gap:8px}
+  .style-chip{display:inline-flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--ink);
+    padding:9px 9px 9px 14px;font-size:13px;letter-spacing:.02em}
+  .style-chip b{font-weight:400}
+  .style-chip button{border:0;background:transparent;color:var(--faint);cursor:pointer;font-family:inherit;
+    font-size:15px;line-height:1;padding:2px 4px}
+  .style-chip button:hover{color:var(--ink)}
+  .styles-hint{margin-top:14px;font-size:13px;color:var(--faint)}
+  .styles-hint a{text-decoration:underline;text-underline-offset:3px;color:var(--soft)}
+  .styles-hint a:hover{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a class="mark" href="bella-homepage-redesign.html">BELLA</a>
+    <a class="back" href="bella-homepage-redesign.html">← Back to the studio</a>
+  </div>
+</header>
+
+<!-- ================= HEAD ================= -->
+<div class="head">
+  <span class="micro">Order</span>
+  <h1>What does your listing need to go live?</h1>
+  <p>Staging, floor plans, renders, tours, and photo edits from one studio, composed by real interior designers. Pick a bundle or build your own. Everything ships in 24–48 hours with a rework-or-refund guarantee.</p>
+</div>
+
+<div class="seg" role="tablist">
+  <button class="on" id="segAgent" type="button">For agents</button>
+  <button id="segBuilder" type="button">For home builders</button>
+</div>
+
+<!-- ================= SAVED STYLES (from lookbook) ================= -->
+<section class="sec styles-sec hide" id="stylesSec" style="padding-bottom:0">
+  <div class="sec-label">Your saved styles · from the lookbook</div>
+  <div class="styles-row" id="stylesRow"></div>
+  <p class="styles-hint">We'll build your rooms around these. <a href="bella-lookbook.html" id="editStyles">Edit in the lookbook →</a></p>
+</section>
+
+<!-- ================= AGENT VIEW ================= -->
+<div id="agentView">
+
+  <!-- 1 · FLAGSHIP: virtual staging is the main event -->
+  <section class="flagship-sec">
+    <div class="fl-head">
+      <span class="micro">Start here</span>
+      <h2>It starts with virtual staging.</h2>
+      <p>Our core product, priced per photo and composed by a real interior designer. Add the number of photos you need — volume discounts apply automatically.</p>
+    </div>
+    <div class="fcards">
+      <div class="fcard item" data-name="Virtual staging" data-price="45" data-qty="1">
+        <h3>Empty room</h3>
+        <div class="fdesc">Vacant rooms, furnished by a designer.</div>
+        <div class="fprice">$45 <span>/ photo</span></div>
+        <div class="fact">
+          <button type="button" class="add">Add photo</button>
+          <span class="qty hide"><button type="button" class="minus">−</button><span class="q">1</span><button type="button" class="plus">+</button></span>
+        </div>
+      </div>
+      <div class="fcard item star2" data-name="Furniture removal + staging" data-price="55" data-qty="1">
+        <span class="flag2">Most ordered</span>
+        <h3>Furniture removal + staging</h3>
+        <div class="fdesc">Occupied or cluttered? We clear the room first, then stage it.</div>
+        <div class="fprice">$55 <span>/ photo</span></div>
+        <div class="fact">
+          <button type="button" class="add">Add photo</button>
+          <span class="qty hide"><button type="button" class="minus">−</button><span class="q">1</span><button type="button" class="plus">+</button></span>
+        </div>
+      </div>
+      <div class="fcard item" data-name="Renovation + staging" data-price="95" data-qty="1">
+        <h3>Renovation + staging</h3>
+        <div class="fdesc">Dated finishes, refreshed and then staged.</div>
+        <div class="fprice">$95 <span>/ photo</span></div>
+        <div class="fact">
+          <button type="button" class="add">Add photo</button>
+          <span class="qty hide"><button type="button" class="minus">−</button><span class="q">1</span><button type="button" class="plus">+</button></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · PACKAGES: good / better / premium -->
+  <section class="sec">
+    <div class="sec-label">Or package the whole listing &amp; save</div>
+    <div class="bundles">
+
+      <div class="bundle" data-bundle="Essential Listing" data-price="349">
+        <h3>Essential</h3>
+        <div class="for">Everything a vacant listing needs to go live</div>
+        <div class="price"><b>$349</b><s>$397 itemized</s></div>
+        <div class="save">Save $48</div>
+        <ul>
+          <li>8 photos virtually staged</li>
+          <li>Colored 2D floor plan</li>
+          <li>Day-to-dusk hero shot</li>
+          <li>Unlimited revisions for two weeks</li>
+        </ul>
+        <button class="btn" type="button">Choose Essential</button>
+      </div>
+
+      <div class="bundle star" data-bundle="Complete Listing" data-price="499">
+        <span class="flag">Most popular</span>
+        <h3>Complete</h3>
+        <div class="for">The full marketing set, occupied or vacant</div>
+        <div class="price"><b>$499</b><s>$587 itemized</s></div>
+        <div class="save">Save $88</div>
+        <ul>
+          <li>8 photos staged, furniture removal included</li>
+          <li>3D floor plan</li>
+          <li>Virtual house tour</li>
+          <li>Day-to-dusk + HDR polish</li>
+        </ul>
+        <button class="btn" type="button">Choose Complete</button>
+      </div>
+
+      <div class="bundle premium" data-bundle="Immersive 360" data-price="799">
+        <span class="flag">Premium</span>
+        <h3>Immersive 360</h3>
+        <div class="for">The closest thing to walking the home in person</div>
+        <div class="price"><b>$799</b><s>$948 itemized</s></div>
+        <div class="save">Save $149</div>
+        <ul>
+          <li>We stitch your 3D photos into a fully staged, walkable 360° tour</li>
+          <li>10 photos staged, furniture removal included</li>
+          <li>3D floor plan + virtual house tour</li>
+          <li>Day-to-dusk + HDR polish</li>
+        </ul>
+        <button class="btn" type="button">Choose Immersive</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 3 · À LA CARTE: everything else -->
+  <section class="sec" style="padding-top:0">
+    <div class="sec-label">Add anything else · à la carte</div>
+    <div class="carte">
+
+      <div class="cat">
+        <h3>Floor plans</h3>
+        <div class="item" data-name="2D floor plan" data-price="24" data-qty="1">
+          <span class="n">2D floor plan <small>Standard, black &amp; white</small></span>
+          <span class="p">$24</span>
+          <span class="qty hide"><button type="button" class="minus">−</button><span class="q">1</span><button type="button" class="plus">+</button></span>
+          <button type="button" class="add">Add</button>
+        </div>
+        <div class="item" data-name="2D floor plan (colored/textured)" data-price="30" data-qty="1">
+          <span class="n">2D floor plan, colored <small>Colored or textured finish</small></span>
+          <span class="p">$30</span>
+          <span class="qty hide"><button type="button" class="minus">−</button><span class="q">1</span><button type="button" class="plus">+</button></span>
+          <button type="button" class="add">Add</button>
+        </div>
+        <div class="item" data-name="3D floor plan" data-price="84" data-qty="1">
+          <span class="n">3D floor plan <small>Furnished, buyers read it instantly</small></span>
+          <span class="p">$84</span>
+          <span class="qty hide"><button type="button" class="minus">−</button><span class="q">1</span><button type="button" class="plus">+</button></span>
+          <button type="button" class="add">Add</button>
+        </div>
+      </div>
+
+      <div class="cat">
+        <h3>Tours &amp; 3D</h3>
+        <div class="item" data-name="Virtual house tour" data-price="46" data-qty="1">
+          <span class="n">Virtual house tour <small>Walkthrough built from your photos</small></span>
+          <span class="p">$46</span>
+          <span class="qty hide"><button type="button" class="minus">−</button><span class="q">1</span><button type="button" class="plus">+</button></span>
+          <button type="button" class="add">Add</button>
+        </div>
+        <div class="item" data-name="3D staged tour (per space)" data-price="149" data-qty="1">
+          <span class="n">3D staged tour <small>Per space · 3D photos stitched &amp; staged</small></span>
+          <span class="p">$149</span>
+          <span class="qty hide"><button type="button" class="minus">−</button><span class="q">1</span><button type="button" class="plus">+</button></span>
+          <button type="button" class="add">Add</button>
+        </div>
+        <div class="item" data-name="Interior 3D render" data-price="630" data-qty="1">
+          <span class="n">Interior 3D render <small>From $630 · photoreal room</small></span>
+          <span class="p">$630</span>
+          <span class="qty hide"><button type="button" class="minus">−</button><span class="q">1</span><button type="button" class="plus">+</button></span>
+          <button type="button" class="add">Add</button>
+        </div>
+      </div>
+
+      <div class="cat">
+        <h3>Photo edits</h3>
+        <div class="item" data-name="Day-to-dusk edit" data-price="7" data-qty="1">
+          <span class="n">Day-to-dusk <small>The twilight hero shot, no reshoot</small></span>
+          <span class="p">$7</span>
+          <span class="qty hide"><button type="button" class="minus">−</button><span class="q">1</span><button type="button" class="plus">+</button></span>
+          <button type="button" class="add">Add</button>
+        </div>
+        <div class="item" data-name="HDR editing (minor)" data-price="7" data-qty="1">
+          <span class="n">HDR editing, minor <small>Exposure &amp; color cleanup</small></span>
+          <span class="p">$7</span>
+          <span class="qty hide"><button type="button" class="minus">−</button><span class="q">1</span><button type="button" class="plus">+</button></span>
+          <button type="button" class="add">Add</button>
+        </div>
+        <div class="item" data-name="HDR editing (major)" data-price="14" data-qty="1">
+          <span class="n">HDR editing, major <small>Heavier retouching</small></span>
+          <span class="p">$14</span>
+          <span class="qty hide"><button type="button" class="minus">−</button><span class="q">1</span><button type="button" class="plus">+</button></span>
+          <button type="button" class="add">Add</button>
+        </div>
+        <div class="item" data-name="Furniture removal (edit)" data-price="14" data-qty="1">
+          <span class="n">Furniture removal <small>Clear a room, no staging</small></span>
+          <span class="p">$14</span>
+          <span class="qty hide"><button type="button" class="minus">−</button><span class="q">1</span><button type="button" class="plus">+</button></span>
+          <button type="button" class="add">Add</button>
+        </div>
+      </div>
+
+      <div class="cat">
+        <h3>Design &amp; extras</h3>
+        <div class="item" data-name="Design My Room" data-price="119" data-qty="1">
+          <span class="n">Design My Room <small>A designer's plan for a real space</small></span>
+          <span class="p">$119</span>
+          <span class="qty hide"><button type="button" class="minus">−</button><span class="q">1</span><button type="button" class="plus">+</button></span>
+          <button type="button" class="add">Add</button>
+        </div>
+        <div class="item" data-name="3D modelling" data-price="60" data-qty="1">
+          <span class="n">3D modelling <small>Custom furniture or feature builds</small></span>
+          <span class="p">$60</span>
+          <span class="qty hide"><button type="button" class="minus">−</button><span class="q">1</span><button type="button" class="plus">+</button></span>
+          <button type="button" class="add">Add</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <p class="note">Volume pricing kicks in automatically: 5% off 3+ staged photos, 10% off 6–10, 15% off 10–20, 20% off 21–30. Every order includes unlimited revisions for two weeks. Don't love it? We rework it or refund it.</p>
+</div>
+
+<!-- ================= BUILDER VIEW ================= -->
+<div id="builderView" class="hide">
+  <section class="sec">
+    <div class="b-hero">
+      <div>
+        <span class="micro" style="color:#9B958C">For home builders &amp; developers</span>
+        <h2>Sell it before you build it.</h2>
+        <p>Pre-sales don't wait for framing. We turn drawings into photoreal exteriors, interiors, and furnished floor plans your sales office can list with, from one studio that already speaks MLS.</p>
+        <div class="row">
+          <a class="btn btn-wht" href="#">Book a 15-minute scope call</a>
+          <a class="btn-ghost" href="#">Email us your plans</a>
+        </div>
+      </div>
+      <!-- PLACEHOLDER: swap for a real Bella rendering sample -->
+      <img src="https://www.bellavirtual.com/cdn/shop/files/Calvin_Theme_Image_Nov_16_2025.jpg?width=1200" alt="A photoreal 3D rendering of a residential interior">
+    </div>
+
+    <div class="b-packs">
+      <div class="bundle star" data-bundle="Pre-Sale Render Pack" data-price="1950">
+        <span class="flag">Most builders start here</span>
+        <h3>Pre-Sale Render Pack</h3>
+        <div class="for">One home, ready to pre-sell from drawings</div>
+        <div class="price"><b>$1,950</b><s>$2,184 itemized</s></div>
+        <div class="save">Save $234</div>
+        <ul>
+          <li>1 photoreal exterior render (single home)</li>
+          <li>2 interior renders, staged by our designers</li>
+          <li>3D floor plan, furnished</li>
+          <li>Revisions included at every milestone</li>
+        </ul>
+        <button class="btn" type="button">Start with this pack</button>
+      </div>
+
+      <div class="bundle">
+        <h3>Community &amp; Development</h3>
+        <div class="for">Townhomes, multi-building, streetscapes, aerials</div>
+        <div class="price"><b>Custom</b></div>
+        <div class="save" style="color:var(--faint)">Scoped to your site plan</div>
+        <ul>
+          <li>Exterior, streetscape &amp; aerial renders</li>
+          <li>Interior packages per model or floorplan</li>
+          <li>Model-unit virtual staging at volume rates</li>
+          <li>A dedicated designer across the project</li>
+        </ul>
+        <a class="btn btn-line" href="#" style="text-align:center">Talk to us about your project</a>
+      </div>
+    </div>
+  </section>
+
+  <p class="note">À la carte: interior renders from $630 · exteriors from $840 · streetscape and aerial from $1,120 · commercial from $490. Every render is milestone-reviewed, so you approve the angle and the light before we go final.</p>
+</div>
+
+<!-- ================= SUMMARY BAR ================= -->
+<div class="bar" id="bar">
+  <div class="total"><small>Your order</small><span id="barTotal">$0</span></div>
+  <div class="items" id="barItems"></div>
+  <button class="btn" type="button" id="barGo">Continue to upload</button>
+</div>
+
+<script>
+(function(){
+  var picked={bundle:null,items:{},styles:[]};
+  var bar=document.getElementById('bar'),
+      tot=document.getElementById('barTotal'),
+      its=document.getElementById('barItems');
+
+  /* ---- saved styles from the lookbook (?styles=Modern,Luxury) ---- */
+  var stylesSec=document.getElementById('stylesSec'),
+      stylesRow=document.getElementById('stylesRow'),
+      editStyles=document.getElementById('editStyles');
+  (function(){
+    var raw=new URLSearchParams(location.search).get('styles');
+    if(!raw)return;
+    picked.styles=raw.split(',').map(function(s){return s.trim();}).filter(Boolean);
+  })();
+  function renderStyles(){
+    if(!picked.styles.length){stylesSec.classList.add('hide');return;}
+    stylesSec.classList.remove('hide');
+    stylesRow.innerHTML=picked.styles.map(function(s){
+      return '<span class="style-chip"><b>'+s+'</b><button type="button" data-x="'+s+'" aria-label="Remove '+s+'">×</button></span>';
+    }).join('');
+    editStyles.href='bella-lookbook.html?styles='+encodeURIComponent(picked.styles.join(','));
+    stylesRow.querySelectorAll('button[data-x]').forEach(function(b){
+      b.addEventListener('click',function(){
+        picked.styles=picked.styles.filter(function(s){return s!==b.getAttribute('data-x');});
+        renderStyles();render();
+      });
+    });
+  }
+
+  function money(n){return '$'+n.toLocaleString('en-US');}
+  function render(){
+    var total=0,parts=[];
+    if(picked.bundle){total+=picked.bundle.price;parts.push(picked.bundle.name);}
+    Object.keys(picked.items).forEach(function(k){
+      var it=picked.items[k];total+=it.price*it.qty;
+      parts.push(it.qty>1?it.qty+'× '+k:k);
+    });
+    if(picked.styles.length) parts.push(picked.styles.length+(picked.styles.length===1?' style':' styles'));
+    tot.textContent=money(total);
+    its.textContent=parts.join(' · ');
+    bar.classList.toggle('show', total>0 || picked.styles.length>0);
+  }
+  renderStyles();render();
+
+  /* bundles: pick one */
+  document.querySelectorAll('.bundle[data-price]').forEach(function(b){
+    var btn=b.querySelector('button.btn');
+    if(!btn)return;
+    btn.addEventListener('click',function(){
+      var was=b.classList.contains('picked');
+      document.querySelectorAll('.bundle').forEach(function(x){x.classList.remove('picked');});
+      picked.bundle=null;
+      if(!was){
+        b.classList.add('picked');
+        picked.bundle={name:b.getAttribute('data-bundle'),price:+b.getAttribute('data-price')};
+      }
+      render();
+    });
+  });
+
+  /* a la carte */
+  document.querySelectorAll('.item').forEach(function(it){
+    var name=it.getAttribute('data-name'),price=+it.getAttribute('data-price');
+    var add=it.querySelector('.add'),qty=it.querySelector('.qty'),q=it.querySelector('.q');
+    function set(n){
+      if(n<=0){delete picked.items[name];it.classList.remove('in');qty.classList.add('hide');add.classList.remove('hide');}
+      else{picked.items[name]={price:price,qty:n};it.classList.add('in');qty.classList.remove('hide');add.classList.add('hide');q.textContent=n;}
+      render();
+    }
+    add.addEventListener('click',function(){set(1);});
+    it.querySelector('.plus').addEventListener('click',function(){set((picked.items[name]?picked.items[name].qty:0)+1);});
+    it.querySelector('.minus').addEventListener('click',function(){set((picked.items[name]?picked.items[name].qty:0)-1);});
+  });
+
+  /* segment toggle */
+  var a=document.getElementById('segAgent'),bu=document.getElementById('segBuilder');
+  function seg(agent){
+    a.classList.toggle('on',agent);bu.classList.toggle('on',!agent);
+    document.getElementById('agentView').classList.toggle('hide',!agent);
+    document.getElementById('builderView').classList.toggle('hide',agent);
+  }
+  a.addEventListener('click',function(){seg(true);});
+  bu.addEventListener('click',function(){seg(false);});
+  if(location.hash==='#builders') seg(false);
+
+  document.getElementById('barGo').addEventListener('click',function(){
+    alert('Mockup: this continues to photo upload & checkout on the live site.');
+  });
+})();
+</script>
+</body>
+</html>

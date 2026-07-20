@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Lookbook — Bella Virtual | Browse &amp; save furniture styles</title>
+<meta name="description" content="Browse Bella's designer furniture catalog by room and style. Flip through the book, save the pieces you love, and send the SKUs to your project.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FDFCFA; --ink:#232120; --soft:#6E6A66; --faint:#9C978F;
+    --line:#E8E4DE; --line-2:#F0EDE8; --dark:#1C1A18; --gold:#E7C36A; --heart:#B5493B;
+    --pad:36px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:"Jost",system-ui,sans-serif;
+    font-weight:300;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  img{display:block;max-width:100%}
+  a{text-decoration:none;color:inherit}
+  h1,h2,h3{font-weight:300;letter-spacing:-.012em;line-height:1.1}
+  .micro{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .ico{width:19px;height:19px;stroke:currentColor;stroke-width:1.3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+  header{position:sticky;top:0;z-index:80;background:rgba(253,252,250,.92);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line-2)}
+  .nav{display:flex;align-items:center;gap:24px;height:64px;padding:0 var(--pad)}
+  .mark{font-size:15px;letter-spacing:.5em;font-weight:400}
+  .nav .sp{margin-left:auto}
+  .nav a.back{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--soft)}
+  .nav a.back:hover{color:var(--ink)}
+  .proj-btn{display:inline-flex;align-items:center;gap:9px;background:var(--ink);color:#fff;border:0;cursor:pointer;
+    font-family:inherit;font-size:12px;letter-spacing:.13em;text-transform:uppercase;padding:12px 18px}
+  .proj-btn .ico{stroke:#fff;width:16px;height:16px}
+  .proj-btn b{font-weight:400}
+
+  /* ---------- intro + filters ---------- */
+  .intro{padding:34px var(--pad) 0;text-align:center}
+  .intro h1{font-size:clamp(28px,3.4vw,44px);margin-top:8px}
+  .intro p{color:var(--soft);font-size:15px;max-width:56ch;margin:12px auto 0}
+  .filters{position:sticky;top:64px;z-index:60;background:var(--bg);padding:26px var(--pad) 20px;
+    border-bottom:1px solid var(--line)}
+  .frow{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:11px}
+  .frow:last-child{margin-bottom:0}
+  .frow .flabel{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-right:4px}
+  .chip{font-family:inherit;font-size:13px;letter-spacing:.02em;background:#fff;border:1px solid var(--line);
+    color:var(--soft);padding:8px 15px;border-radius:999px;cursor:pointer;transition:.15s;white-space:nowrap}
+  .chip:hover{border-color:var(--ink);color:var(--ink)}
+  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .chip .n{opacity:.55;font-size:11px;margin-left:5px}
+  .browseby{margin-top:2px}
+  .seg2{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+  .segbtn{font-family:inherit;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;
+    background:#fff;color:var(--soft);border:0;padding:8px 18px;cursor:pointer;transition:.15s}
+  .segbtn.on{background:var(--ink);color:#fff}
+  .chapters{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:14px;
+    padding-top:14px;border-top:1px solid var(--line-2)}
+  .chapters .flabel{width:100%;text-align:center;font-size:10.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--faint);margin-bottom:2px}
+  .chap{font-family:inherit;font-size:12px;letter-spacing:.03em;background:transparent;border:0;
+    color:var(--soft);cursor:pointer;padding:5px 11px;border-radius:999px;transition:.15s}
+  .chap:hover{background:var(--line-2);color:var(--ink)}
+  .chap.on{background:var(--ink);color:#fff}
+  .chap .cn{opacity:.5;font-size:10px;margin-left:4px}
+  @media(max-width:640px){.chapters{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:none}
+    .chapters::-webkit-scrollbar{display:none}}
+
+  /* ---------- book ---------- */
+  .stage{position:relative;padding:30px 0 12px}
+  .booktrack{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;
+    padding:10px calc(50vw - min(46vw,620px)) 26px;scrollbar-width:none;perspective:2400px}
+  .booktrack::-webkit-scrollbar{display:none}
+  .spread{flex:0 0 min(92vw,1240px);scroll-snap-align:center;display:grid;grid-template-columns:1fr 1fr;
+    background:#fff;border:1px solid var(--line);box-shadow:0 40px 80px -50px rgba(26,24,22,.55);
+    margin:0 14px;min-height:64vh;position:relative}
+  .spread::after{content:"";position:absolute;top:0;bottom:0;left:50%;width:40px;transform:translateX(-50%);
+    pointer-events:none;background:linear-gradient(to right,transparent,rgba(26,24,22,.07) 46%,rgba(26,24,22,.11) 50%,rgba(26,24,22,.07) 54%,transparent)}
+  .page{padding:22px;display:flex;flex-direction:column}
+  .page.l{border-right:1px solid var(--line-2)}
+  .page-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;
+    padding-bottom:10px;border-bottom:1px solid var(--line-2)}
+  .page-head .rm{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink)}
+  .page-head .no{font-size:11px;color:var(--faint)}
+  .pgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;flex:1;align-content:start}
+  @media(max-width:900px){.pgrid{grid-template-columns:1fr 1fr}}
+
+  .item{position:relative;cursor:pointer;background:#F7F5F1;overflow:hidden}
+  .item .ph{position:relative;aspect-ratio:1.5;overflow:hidden;background:#EFECE8}
+  .item img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+  .item:hover img{transform:scale(1.05)}
+  .item .sku{padding:8px 9px 9px;font-size:10px;letter-spacing:.06em;color:var(--soft);
+    display:flex;justify-content:space-between;align-items:center;gap:6px}
+  .item .sku .st{color:var(--faint);text-transform:uppercase;letter-spacing:.1em;font-size:9px}
+  .heart{position:absolute;top:7px;right:7px;z-index:3;width:30px;height:30px;border:0;cursor:pointer;
+    background:rgba(253,252,250,.9);backdrop-filter:blur(3px);display:grid;place-items:center;
+    border-radius:999px;transition:.15s;padding:0}
+  .heart svg{width:15px;height:15px;fill:none;stroke:var(--ink);stroke-width:1.6}
+  .heart:hover{background:#fff}
+  .item.saved .heart{background:var(--heart)}
+  .item.saved .heart svg{fill:#fff;stroke:#fff}
+  .item.saved::after{content:"";position:absolute;inset:0;border:2px solid var(--heart);pointer-events:none;z-index:2}
+
+  .page.cover,.page.end{align-items:flex-start;justify-content:center}
+  .page.cover .in,.page.end .in{margin:auto 0;padding:10px 6px}
+  .page.cover h2,.page.end h2{font-size:clamp(24px,2.6vw,38px);max-width:15ch}
+  .page.cover p,.page.end p{color:var(--soft);font-size:14.5px;margin-top:12px;max-width:34ch}
+  .page.cover .big{font-family:inherit;font-size:64px;font-weight:300;letter-spacing:-.03em;line-height:1;margin:6px 0}
+  .btn{display:inline-block;background:var(--ink);color:#fff;font-size:12px;letter-spacing:.13em;
+    text-transform:uppercase;padding:13px 22px;margin-top:20px;cursor:pointer;border:0;font-family:inherit}
+  .btn:hover{opacity:.85}
+  .empty{grid-column:1/-1;text-align:center;color:var(--faint);padding:60px 20px;font-size:15px;margin:auto}
+
+  .arrow{position:fixed;top:54%;transform:translateY(-50%);z-index:70;width:52px;height:52px;
+    border:1px solid var(--line);background:rgba(253,252,250,.95);cursor:pointer;font-size:20px;color:var(--ink);
+    display:grid;place-items:center;transition:.18s;border-radius:999px;box-shadow:0 6px 24px -10px rgba(0,0,0,.3)}
+  .arrow:hover{background:var(--ink);color:#fff}
+  .arrow[disabled]{opacity:.25;pointer-events:none}
+  .arrow.prev{left:16px}.arrow.next{right:16px}
+  .counter{text-align:center;padding:6px 0 34px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .gbl{margin-left:22px}
+  /* ---------- grid view ---------- */
+  .gridview{display:none;padding:8px var(--pad) 100px;max-width:1240px;margin:0 auto}
+  .gridview.on{display:block}
+  .stage.off,.counter.off{display:none}
+  .gsec{margin-top:40px}
+  .gsec:first-child{margin-top:6px}
+  .gsec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+    padding-bottom:12px;margin-bottom:16px;border-bottom:1px solid var(--line)}
+  .gsec-name{font-size:19px}
+  .gsec-n{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint)}
+  .ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:5px}
+  .gridview .empty{padding:80px 0;text-align:center;color:var(--faint);font-size:15px}
+  .counter .dots{display:inline-flex;gap:6px;margin:0 14px;vertical-align:middle;flex-wrap:wrap;max-width:60vw}
+  .counter .dot{width:6px;height:6px;border-radius:999px;background:var(--line);transition:.2s;cursor:pointer}
+  .counter .dot.on{background:var(--ink);width:20px}
+
+  .scrim{position:fixed;inset:0;z-index:90;background:rgba(26,24,22,.4);opacity:0;pointer-events:none;transition:.25s}
+  .scrim.open{opacity:1;pointer-events:auto}
+  .drawer{position:fixed;top:0;right:0;bottom:0;z-index:95;width:min(440px,92vw);background:var(--bg);
+    transform:translateX(100%);transition:transform .3s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;
+    box-shadow:-20px 0 60px -30px rgba(0,0,0,.5)}
+  .drawer.open{transform:none}
+  .dhead{padding:22px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+  .dhead h3{font-size:20px}
+  .dhead .x{background:0;border:0;font-size:22px;cursor:pointer;color:var(--soft);line-height:1}
+  .dlist{flex:1;overflow-y:auto;padding:8px 16px}
+  .drow{display:flex;gap:12px;align-items:center;padding:11px 6px;border-bottom:1px solid var(--line-2)}
+  .drow img{width:64px;height:44px;object-fit:cover;flex:0 0 auto;background:#eee}
+  .drow .meta{flex:1;min-width:0}
+  .drow .meta b{font-weight:400;font-size:13px;display:block}
+  .drow .meta span{font-size:11px;color:var(--faint);letter-spacing:.08em;text-transform:uppercase}
+  .drow .rm{background:0;border:0;color:var(--faint);cursor:pointer;font-size:17px;flex:0 0 auto}
+  .drow .rm:hover{color:var(--heart)}
+  .dempty{text-align:center;color:var(--faint);padding:60px 20px;font-size:14px}
+  .dfoot{border-top:1px solid var(--line);padding:18px 24px;display:grid;gap:10px}
+  .dfoot .btn{margin:0;text-align:center;width:100%}
+  .dfoot .ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .dfoot .ghost:hover{background:var(--line-2);opacity:1}
+  .dfoot .clear{background:0;border:0;color:var(--faint);font-size:12px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;padding:4px}
+  .dfoot .clear:hover{color:var(--heart)}
+
+  /* ---------- lightbox ---------- */
+  .lb{position:fixed;inset:0;z-index:120;background:rgba(16,14,12,.94);display:none;
+    align-items:center;justify-content:center;padding:3vw}
+  .lb.open{display:flex}
+  .lb-fig{margin:0;max-width:min(1100px,92vw);width:100%;display:flex;flex-direction:column;gap:14px}
+  .lb-imgwrap{background:#0d0b0a;display:flex;align-items:center;justify-content:center;
+    max-height:80vh;overflow:hidden}
+  .lb-imgwrap img{max-width:100%;max-height:80vh;object-fit:contain;display:block}
+  .lb-cap{display:flex;align-items:center;gap:18px;color:#EDE9E2;flex-wrap:wrap}
+  .lb-meta{flex:1;min-width:0}
+  .lb-meta b{font-weight:400;font-size:17px;letter-spacing:.04em}
+  .lb-meta span{display:block;font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:#9B958C;margin-top:3px}
+  .lb-save{display:inline-flex;align-items:center;gap:8px;background:transparent;border:1px solid rgba(255,255,255,.35);
+    color:#fff;cursor:pointer;font-family:inherit;font-size:12px;letter-spacing:.13em;text-transform:uppercase;padding:11px 18px}
+  .lb-save .ico{width:16px;height:16px;stroke:#fff;fill:none}
+  .lb-save:hover{border-color:#fff}
+  .lb-save.on{background:var(--heart);border-color:var(--heart)}
+  .lb-save.on .ico{fill:#fff}
+  .lb-count{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:#9B958C}
+  .lb-x{position:absolute;top:20px;right:24px;background:0;border:0;color:#fff;font-size:34px;line-height:1;cursor:pointer;opacity:.8}
+  .lb-x:hover{opacity:1}
+  .lb-arw{position:absolute;top:50%;transform:translateY(-50%);width:56px;height:56px;border:1px solid rgba(255,255,255,.3);
+    background:rgba(255,255,255,.06);color:#fff;font-size:24px;cursor:pointer;border-radius:999px;display:grid;place-items:center;
+    transition:.15s}
+  .lb-arw:hover{background:rgba(255,255,255,.16)}
+  .lb-prev{left:20px}.lb-next{right:20px}
+  @media(max-width:640px){.lb-arw{width:44px;height:44px}.lb-prev{left:8px}.lb-next{right:8px}}
+
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);z-index:99;
+    background:var(--dark);color:#fff;font-size:13px;letter-spacing:.04em;padding:12px 20px;border-radius:999px;
+    opacity:0;pointer-events:none;transition:.25s}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  footer{border-top:1px solid var(--line);padding:26px var(--pad);font-size:12px;color:var(--faint);
+    display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.35-9.3-8.3C1.2 9 2.3 5.7 5.4 5.1c1.9-.4 3.7.5 4.6 2 .9-1.5 2.7-2.4 4.6-2 3.1.6 4.2 3.9 2.7 6.6C19 15.65 12 20 12 20z"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6.5h6l2 2h10v9a1 1 0 0 1-1 1H3z"/></symbol>
+</svg>
+
+<header>
+  <div class="nav">
+    <a class="mark" href="bella-homepage-redesign.html">BELLA</a>
+    <a class="back" href="bella-homepage-redesign.html">← Studio</a>
+    <span class="sp"></span>
+    <button class="proj-btn" id="openProj"><svg class="ico"><use href="#i-folder"/></svg> My Project <b>(<span id="projCount">0</span>)</b></button>
+  </div>
+</header>
+
+<div class="intro">
+  <span class="micro">The lookbook</span>
+  <h1>Browse the catalog. Save what you love.</h1>
+  <p>Filter by room and style, browse the grid or flip through the book, and tap the heart on any piece. We stage your listing with the exact SKUs you pick.</p>
+</div>
+
+<div class="filters">
+  <div class="frow" id="roomRow"><span class="flabel">Room</span></div>
+  <div class="frow" id="styleRow"><span class="flabel">Style</span></div>
+  <div class="frow browseby">
+    <span class="flabel">View</span>
+    <div class="seg2">
+      <button class="segbtn on" data-view="grid" type="button">Grid</button>
+      <button class="segbtn" data-view="book" type="button">Book</button>
+    </div>
+    <span class="flabel gbl">Group by</span>
+    <div class="seg2">
+      <button class="segbtn on" data-gb="room" type="button">Room</button>
+      <button class="segbtn" data-gb="style" type="button">Style</button>
+    </div>
+  </div>
+  <div class="chapters" id="chapters"></div>
+</div>
+
+<div class="stage">
+  <button class="arrow prev" id="prev" aria-label="Previous">‹</button>
+  <div class="booktrack" id="track"></div>
+  <button class="arrow next" id="next" aria-label="Next">›</button>
+</div>
+<div class="counter" id="counter"></div>
+<div class="gridview" id="grid"></div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="My project">
+  <div class="dhead"><h3>My Project</h3><button class="x" id="closeProj" aria-label="Close">×</button></div>
+  <div class="dlist" id="dlist"></div>
+  <div class="dfoot">
+    <a class="btn" href="bella-order-page.html">Send these to my order</a>
+    <button class="btn ghost" id="copySkus">Copy SKU list</button>
+    <button class="clear" id="clearProj">Clear all</button>
+  </div>
+</aside>
+
+<div class="toast" id="toast"></div>
+
+<div class="lb" id="lb" aria-hidden="true">
+  <button class="lb-x" id="lbClose" aria-label="Close">×</button>
+  <button class="lb-arw lb-prev" id="lbPrev" aria-label="Previous">‹</button>
+  <figure class="lb-fig">
+    <div class="lb-imgwrap"><img id="lbImg" src="" alt=""></div>
+    <figcaption class="lb-cap">
+      <div class="lb-meta"><b id="lbSku"></b><span id="lbInfo"></span></div>
+      <button class="lb-save" id="lbSave"><svg class="ico"><use href="#i-heart"/></svg><span id="lbSaveTxt">Save</span></button>
+      <span class="lb-count" id="lbCount"></span>
+    </figcaption>
+  </figure>
+  <button class="lb-arw lb-next" id="lbNext" aria-label="Next">›</button>
+</div>
+
+<footer>
+  <span>© Bella Virtual Staging · Designer furniture catalog</span>
+  <span>Redesign mockup · not the live site</span>
+</footer>
+
+<script>
+const DATA = [{"s":"BD-FARM-B435","r":"Bedroom","y":"Farmhouse","i":"bella-catalog/items/BD_FARM_B435.jpg"},{"s":"BD-NDBH-B406","r":"Bedroom","y":"Nordic Boho","i":"bella-catalog/items/BD_NDBH_B406.jpg"},{"s":"BD-TRNS-B452","r":"Bedroom","y":"Transitional","i":"bella-catalog/items/BD_TRNS_B452.jpg"},{"s":"BD-CONT-B465","r":"Bedroom","y":"Contemporary","i":"bella-catalog/items/BD_CONT_B465.jpg"},{"s":"BD-CONT-B335","r":"Bedroom","y":"Contemporary","i":"bella-catalog/items/BD_CONT_B335.jpg"},{"s":"BD-CONT-B414","r":"Bedroom","y":"Contemporary","i":"bella-catalog/items/BD_CONT_B414.jpg"},{"s":"BD-CONT-B360","r":"Bedroom","y":"Contemporary","i":"bella-catalog/items/BD_CONT_B360.jpg"},{"s":"BD-CONT-B417","r":"Bedroom","y":"Contemporary","i":"bella-catalog/items/BD_CONT_B417.jpg"},{"s":"BD-CONT-B420","r":"Bedroom","y":"Contemporary","i":"bella-catalog/items/BD_CONT_B420.jpg"},{"s":"BD-CONT-428","r":"Bedroom","y":"Contemporary","i":"bella-catalog/items/BD_CONT_428.jpg"},{"s":"BD-CONT-B440","r":"Bedroom","y":"Contemporary","i":"bella-catalog/items/BD_CONT_B440.jpg"},{"s":"BD-CONT-B461","r":"Bedroom","y":"Contemporary","i":"bella-catalog/items/BD_CONT_B461.jpg"},{"s":"BD-CONT-B445","r":"Bedroom","y":"Contemporary","i":"bella-catalog/items/BD_CONT_B445.jpg"},{"s":"BD-CONT-B432","r":"Bedroom","y":"Contemporary","i":"bella-catalog/items/BD_CONT_B432.jpg"},{"s":"BD-CONT-B362","r":"Bedroom","y":"Contemporary","i":"bella-catalog/items/BD_CONT_B362.jpg"},{"s":"BD-CONT-B400","r":"Bedroom","y":"Contemporary","i":"bella-catalog/items/BD_CONT_B400.jpg"},{"s":"BD-CONT-431","r":"Bedroom","y":"Contemporary","i":"bella-catalog/items/BD_CONT_431.jpg"},{"s":"BD-CONT-B438","r":"Bedroom","y":"Contemporary","i":"bella-catalog/items/BD_CONT_B438.jpg"},{"s":"BD-FARM-B450","r":"Bedroom","y":"Farmhouse","i":"bella-catalog/items/BD_FARM_B450.jpg"},{"s":"BD-FARM-B441","r":"Bedroom","y":"Farmhouse","i":"bella-catalog/items/BD_FARM_B441.jpg"},{"s":"BD-FARM-B443","r":"Bedroom","y":"Farmhouse","i":"bella-catalog/items/BD_FARM_B443.jpg"},{"s":"BD-FARM-B398","r":"Bedroom","y":"Farmhouse","i":"bella-catalog/items/BD_FARM_B398.jpg"},{"s":"BD-FARM-B422","r":"Bedroom","y":"Farmhouse","i":"bella-catalog/items/BD_FARM_B422.jpg"},{"s":"BD-FARM-B394","r":"Bedroom","y":"Farmhouse","i":"bella-catalog/items/BD_FARM_B394.jpg"},{"s":"BD-COAS-B449","r":"Bedroom","y":"Hamptons Coastal","i":"bella-catalog/items/BD_COAS_B449.jpg"},{"s":"BD-COAS-B390","r":"Bedroom","y":"Hamptons Coastal","i":"bella-catalog/items/BD_COAS_B390.jpg"},{"s":"BD-COAS-B391","r":"Bedroom","y":"Hamptons Coastal","i":"bella-catalog/items/BD_COAS_B391.jpg"},{"s":"BD-MDRN-","r":"Bedroom","y":"Modern","i":"bella-catalog/items/BD_MDRN_.jpg"},{"s":"BD-MDRN-B403","r":"Bedroom","y":"Modern","i":"bella-catalog/items/BD_MDRN_B403.jpg"},{"s":"BD-MDRN-B421","r":"Bedroom","y":"Modern","i":"bella-catalog/items/BD_MDRN_B421.jpg"},{"s":"BD-MDRN-B451","r":"Bedroom","y":"Modern","i":"bella-catalog/items/BD_MDRN_B451.jpg"},{"s":"BD-MDRN-B448","r":"Bedroom","y":"Modern","i":"bella-catalog/items/BD_MDRN_B448.jpg"},{"s":"BD-MDRN-B427","r":"Bedroom","y":"Modern","i":"bella-catalog/items/BD_MDRN_B427.jpg"},{"s":"BD-MDRN-B434","r":"Bedroom","y":"Modern","i":"bella-catalog/items/BD_MDRN_B434.jpg"},{"s":"BD-MDRN-B425","r":"Bedroom","y":"Modern","i":"bella-catalog/items/BD_MDRN_B425.jpg"},{"s":"BD-MDRN-B430","r":"Bedroom","y":"Modern","i":"bella-catalog/items/BD_MDRN_B430.jpg"},{"s":"BD-MDRN-B423","r":"Bedroom","y":"Modern","i":"bella-catalog/items/BD_MDRN_B423.jpg"},{"s":"BD-MCM-B457","r":"Bedroom","y":"Midcentury Modern","i":"bella-catalog/items/BD_MCM_B457.jpg"},{"s":"BD-MCM-B444","r":"Bedroom","y":"Midcentury Modern","i":"bella-catalog/items/BD_MCM_B444.jpg"},{"s":"BD-MFRM-B443","r":"Bedroom","y":"Modern Farmhouse","i":"bella-catalog/items/BD_MFRM_B443.jpg"},{"s":"BD-MFRM-B443B","r":"Bedroom","y":"Modern Farmhouse","i":"bella-catalog/items/BD_MFRM_B443B.jpg"},{"s":"BD-TRNS-B460","r":"Bedroom","y":"Transitional","i":"bella-catalog/items/BD_TRNS_B460.jpg"},{"s":"BD-TRNS-B459","r":"Bedroom","y":"Transitional","i":"bella-catalog/items/BD_TRNS_B459.jpg"},{"s":"BD-TRNS-B422","r":"Bedroom","y":"Transitional","i":"bella-catalog/items/BD_TRNS_B422.jpg"},{"s":"BD-TRNS-B363","r":"Bedroom","y":"Transitional","i":"bella-catalog/items/BD_TRNS_B363.jpg"},{"s":"BD-TRNS-B453","r":"Bedroom","y":"Transitional","i":"bella-catalog/items/BD_TRNS_B453.jpg"},{"s":"BD-NDBH-B396","r":"Bedroom","y":"Nordic Boho","i":"bella-catalog/items/BD_NDBH_B396.jpg"},{"s":"BD-NDBH-B426","r":"Bedroom","y":"Nordic Boho","i":"bella-catalog/items/BD_NDBH_B426.jpg"},{"s":"BD-NDBH-B395","r":"Bedroom","y":"Nordic Boho","i":"bella-catalog/items/BD_NDBH_B395.jpg"},{"s":"BD-NDBH-B413","r":"Bedroom","y":"Nordic Boho","i":"bella-catalog/items/BD_NDBH_B413.jpg"},{"s":"BD-NDBH-B454","r":"Bedroom","y":"Nordic Boho","i":"bella-catalog/items/BD_NDBH_B454.jpg"},{"s":"BD-NDBH-B397","r":"Bedroom","y":"Nordic Boho","i":"bella-catalog/items/BD_NDBH_B397.jpg"},{"s":"BD-SCND-B419","r":"Bedroom","y":"Scandinavian","i":"bella-catalog/items/BD_SCND_B419.jpg"},{"s":"BD-SCND-B407","r":"Bedroom","y":"Scandinavian","i":"bella-catalog/items/BD_SCND_B407.jpg"},{"s":"BD-SCND-B355","r":"Bedroom","y":"Scandinavian","i":"bella-catalog/items/BD_SCND_B355.jpg"},{"s":"BD-SCND-B421","r":"Bedroom","y":"Scandinavian","i":"bella-catalog/items/BD_SCND_B421.jpg"},{"s":"BD-SCND-B412","r":"Bedroom","y":"Scandinavian","i":"bella-catalog/items/BD_SCND_B412.jpg"},{"s":"BD-SCND-B411B","r":"Bedroom","y":"Scandinavian","i":"bella-catalog/items/BD_SCND_B411B.jpg"},{"s":"LR-COAST-L521","r":"Living Room","y":"Hamptons Coastal","i":"bella-catalog/items/LR_COAST_L521.jpg"},{"s":"LR-COAST-L522","r":"Living Room","y":"Hamptons Coastal","i":"bella-catalog/items/LR_COAST_L522.jpg"},{"s":"LR-MCM-L530","r":"Living Room","y":"Midcentury Modern","i":"bella-catalog/items/LR_MCM_L530.jpg"},{"s":"LR-MDRN-L338","r":"Living Room","y":"Modern","i":"bella-catalog/items/LR_MDRN_L338.jpg"},{"s":"LR-MDRN-L148","r":"Living Room","y":"Modern","i":"bella-catalog/items/LR_MDRN_L148.jpg"},{"s":"LR-SCND-L381","r":"Living Room","y":"Scandinavian","i":"bella-catalog/items/LR_SCND_L381.jpg"},{"s":"TS-L382","r":"Top Seller","y":"Top Seller","i":"bella-catalog/items/TS_L382.jpg"},{"s":"LR-NDBH-L488","r":"Living Room","y":"Nordic Boho","i":"bella-catalog/items/LR_NDBH_L488.jpg"},{"s":"LR-SCND-L449","r":"Living Room","y":"Scandinavian","i":"bella-catalog/items/LR_SCND_L449.jpg"},{"s":"LR-CONT-L468","r":"Living Room","y":"Contemporary","i":"bella-catalog/items/LR_CONT_L468.jpg"},{"s":"LR-CONT-L463","r":"Living Room","y":"Contemporary","i":"bella-catalog/items/LR_CONT_L463.jpg"},{"s":"LR-CONT-L437","r":"Living Room","y":"Contemporary","i":"bella-catalog/items/LR_CONT_L437.jpg"},{"s":"LR-CONT-L440","r":"Living Room","y":"Contemporary","i":"bella-catalog/items/LR_CONT_L440.jpg"},{"s":"LR-CONT-L410","r":"Living Room","y":"Contemporary","i":"bella-catalog/items/LR_CONT_L410.jpg"},{"s":"LR-CONT-L409","r":"Living Room","y":"Contemporary","i":"bella-catalog/items/LR_CONT_L409.jpg"},{"s":"LR-CONT-L395","r":"Living Room","y":"Contemporary","i":"bella-catalog/items/LR_CONT_L395.jpg"},{"s":"LR-CONT-L391","r":"Living Room","y":"Contemporary","i":"bella-catalog/items/LR_CONT_L391.jpg"},{"s":"LR-CONT-L387","r":"Living Room","y":"Contemporary","i":"bella-catalog/items/LR_CONT_L387.jpg"},{"s":"LR-CONT-L525","r":"Living Room","y":"Contemporary","i":"bella-catalog/items/LR_CONT_L525.jpg"},{"s":"LR-CONT-L504","r":"Living Room","y":"Contemporary","i":"bella-catalog/items/LR_CONT_L504.jpg"},{"s":"LR-FARM-L510","r":"Living Room","y":"Farmhouse","i":"bella-catalog/items/LR_FARM_L510.jpg"},{"s":"LR-FARM-L461","r":"Living Room","y":"Farmhouse","i":"bella-catalog/items/LR_FARM_L461.jpg"},{"s":"LR-FARM-L382","r":"Living Room","y":"Farmhouse","i":"bella-catalog/items/LR_FARM_L382.jpg"},{"s":"LR-FARM-L474","r":"Living Room","y":"Farmhouse","i":"bella-catalog/items/LR_FARM_L474.jpg"},{"s":"LR-FARM-L494","r":"Living Room","y":"Farmhouse","i":"bella-catalog/items/LR_FARM_L494.jpg"},{"s":"LR-FARM-L500","r":"Living Room","y":"Farmhouse","i":"bella-catalog/items/LR_FARM_L500.jpg"},{"s":"LR-COAS-L529","r":"Living Room","y":"Hamptons Coastal","i":"bella-catalog/items/LR_COAS_L529.jpg"},{"s":"LR-COAS-L521","r":"Living Room","y":"Hamptons Coastal","i":"bella-catalog/items/LR_COAS_L521.jpg"},{"s":"LR-COAS-L522","r":"Living Room","y":"Hamptons Coastal","i":"bella-catalog/items/LR_COAS_L522.jpg"},{"s":"LR-COAS-L347","r":"Living Room","y":"Hamptons Coastal","i":"bella-catalog/items/LR_COAS_L347.jpg"},{"s":"LR-MCM-L528","r":"Living Room","y":"Midcentury Modern","i":"bella-catalog/items/LR_MCM_L528.jpg"},{"s":"LR-MCM-L520","r":"Living Room","y":"Midcentury Modern","i":"bella-catalog/items/LR_MCM_L520.jpg"},{"s":"LR-MCM-L502","r":"Living Room","y":"Midcentury Modern","i":"bella-catalog/items/LR_MCM_L502.jpg"},{"s":"LR-MCM-L499","r":"Living Room","y":"Midcentury Modern","i":"bella-catalog/items/LR_MCM_L499.jpg"},{"s":"LR-MCM-L497","r":"Living Room","y":"Midcentury Modern","i":"bella-catalog/items/LR_MCM_L497.jpg"},{"s":"LR-MCM-L477","r":"Living Room","y":"Midcentury Modern","i":"bella-catalog/items/LR_MCM_L477.jpg"},{"s":"LR-MCM-L457","r":"Living Room","y":"Midcentury Modern","i":"bella-catalog/items/LR_MCM_L457.jpg"},{"s":"LR-MCM-L531","r":"Living Room","y":"Midcentury Modern","i":"bella-catalog/items/LR_MCM_L531.jpg"},{"s":"LR-MCM-L446","r":"Living Room","y":"Midcentury Modern","i":"bella-catalog/items/LR_MCM_L446.jpg"},{"s":"LR-MDRN-L490","r":"Living Room","y":"Modern","i":"bella-catalog/items/LR_MDRN_L490.jpg"},{"s":"LR-MDRN-L376","r":"Living Room","y":"Modern","i":"bella-catalog/items/LR_MDRN_L376.jpg"},{"s":"LR-MDRN-L511","r":"Living Room","y":"Modern","i":"bella-catalog/items/LR_MDRN_L511.jpg"},{"s":"LR-MDRN-L505","r":"Living Room","y":"Modern","i":"bella-catalog/items/LR_MDRN_L505.jpg"},{"s":"LR-MDRN-L495","r":"Living Room","y":"Modern","i":"bella-catalog/items/LR_MDRN_L495.jpg"},{"s":"LR-MDRN-L493","r":"Living Room","y":"Modern","i":"bella-catalog/items/LR_MDRN_L493.jpg"},{"s":"LR-MDRN-L485","r":"Living Room","y":"Modern","i":"bella-catalog/items/LR_MDRN_L485.jpg"},{"s":"LR-MDRN-L433","r":"Living Room","y":"Modern","i":"bella-catalog/items/LR_MDRN_L433.jpg"},{"s":"LR-MDRN-L412","r":"Living Room","y":"Modern","i":"bella-catalog/items/LR_MDRN_L412.jpg"},{"s":"LR-MDRN-L432","r":"Living Room","y":"Modern","i":"bella-catalog/items/LR_MDRN_L432.jpg"},{"s":"LR-MDRN-L422","r":"Living Room","y":"Modern","i":"bella-catalog/items/LR_MDRN_L422.jpg"},{"s":"LR-NDBH-L491","r":"Living Room","y":"Nordic Boho","i":"bella-catalog/items/LR_NDBH_L491.jpg"},{"s":"LR-NDBH-L531","r":"Living Room","y":"Nordic Boho","i":"bella-catalog/items/LR_NDBH_L531.jpg"},{"s":"LR-NDBH-L454","r":"Living Room","y":"Nordic Boho","i":"bella-catalog/items/LR_NDBH_L454.jpg"},{"s":"LR-NDBH-L465","r":"Living Room","y":"Nordic Boho","i":"bella-catalog/items/LR_NDBH_L465.jpg"},{"s":"LR-NDBH-L398A","r":"Living Room","y":"Nordic Boho","i":"bella-catalog/items/LR_NDBH_L398A.jpg"},{"s":"LR-SCND-L392","r":"Living Room","y":"Scandinavian","i":"bella-catalog/items/LR_SCND_L392.jpg"},{"s":"LR-SCND-L450","r":"Living Room","y":"Scandinavian","i":"bella-catalog/items/LR_SCND_L450.jpg"},{"s":"LR-SCND-L448","r":"Living Room","y":"Scandinavian","i":"bella-catalog/items/LR_SCND_L448.jpg"},{"s":"LR-SCND-L390","r":"Living Room","y":"Scandinavian","i":"bella-catalog/items/LR_SCND_L390.jpg"},{"s":"LR-TRNS-L519","r":"Living Room","y":"Transitional","i":"bella-catalog/items/LR_TRNS_L519.jpg"},{"s":"LR-TRNS-L438","r":"Living Room","y":"Transitional","i":"bella-catalog/items/LR_TRNS_L438.jpg"},{"s":"LR-TRNS-L405","r":"Living Room","y":"Transitional","i":"bella-catalog/items/LR_TRNS_L405.jpg"},{"s":"LR-TRNS-L515","r":"Living Room","y":"Transitional","i":"bella-catalog/items/LR_TRNS_L515.jpg"},{"s":"LR-TRNS-L396","r":"Living Room","y":"Transitional","i":"bella-catalog/items/LR_TRNS_L396.jpg"},{"s":"DR-FARM-D318C","r":"Dining Room","y":"Farmhouse","i":"bella-catalog/items/DR_FARM_D318C.jpg"},{"s":"DR-MCM-D372","r":"Dining Room","y":"Midcentury Modern","i":"bella-catalog/items/DR_MCM_D372.jpg"},{"s":"DR-FARM-D349","r":"Dining Room","y":"Farmhouse","i":"bella-catalog/items/DR_FARM_D349.jpg"},{"s":"DR-CONT-D408","r":"Dining Room","y":"Contemporary","i":"bella-catalog/items/DR_CONT_D408.jpg"},{"s":"DR-CONT-D328","r":"Dining Room","y":"Contemporary","i":"bella-catalog/items/DR_CONT_D328.jpg"},{"s":"DR-CONT-D413","r":"Dining Room","y":"Contemporary","i":"bella-catalog/items/DR_CONT_D413.jpg"},{"s":"DR-CONT-D384","r":"Dining Room","y":"Contemporary","i":"bella-catalog/items/DR_CONT_D384.jpg"},{"s":"DR-CONT-D375","r":"Dining Room","y":"Contemporary","i":"bella-catalog/items/DR_CONT_D375.jpg"},{"s":"DR-CONT-D410","r":"Dining Room","y":"Contemporary","i":"bella-catalog/items/DR_CONT_D410.jpg"},{"s":"DR-CONT-D348","r":"Dining Room","y":"Contemporary","i":"bella-catalog/items/DR_CONT_D348.jpg"},{"s":"DR-CONT-D371","r":"Dining Room","y":"Contemporary","i":"bella-catalog/items/DR_CONT_D371.jpg"},{"s":"DR-CONT-D90","r":"Dining Room","y":"Contemporary","i":"bella-catalog/items/DR_CONT_D90.jpg"},{"s":"DR-CONT-D380","r":"Dining Room","y":"Contemporary","i":"bella-catalog/items/DR_CONT_D380.jpg"},{"s":"DR-CONT-D378","r":"Dining Room","y":"Contemporary","i":"bella-catalog/items/DR_CONT_D378.jpg"},{"s":"DR-CONT-D325","r":"Dining Room","y":"Contemporary","i":"bella-catalog/items/DR_CONT_D325.jpg"},{"s":"DR-CONT-D346","r":"Dining Room","y":"Contemporary","i":"bella-catalog/items/DR_CONT_D346.jpg"},{"s":"DR-CONT-D314","r":"Dining Room","y":"Contemporary","i":"bella-catalog/items/DR_CONT_D314.jpg"},{"s":"DR-CONT-D310","r":"Dining Room","y":"Contemporary","i":"bella-catalog/items/DR_CONT_D310.jpg"},{"s":"DR-CONT-D342","r":"Dining Room","y":"Contemporary","i":"bella-catalog/items/DR_CONT_D342.jpg"},{"s":"DR-CONT-D377","r":"Dining Room","y":"Contemporary","i":"bella-catalog/items/DR_CONT_D377.jpg"},{"s":"DR-FARM-","r":"Dining Room","y":"Farmhouse","i":"bella-catalog/items/DR_FARM_.jpg"},{"s":"DR-FARM-D358","r":"Dining Room","y":"Farmhouse","i":"bella-catalog/items/DR_FARM_D358.jpg"},{"s":"DR-COAS-D335","r":"Dining Room","y":"Hamptons Coastal","i":"bella-catalog/items/DR_COAS_D335.jpg"},{"s":"DR-COAS-D1117","r":"Dining Room","y":"Hamptons Coastal","i":"bella-catalog/items/DR_COAS_D1117.jpg"},{"s":"DR-COAS-D392","r":"Dining Room","y":"Hamptons Coastal","i":"bella-catalog/items/DR_COAS_D392.jpg"},{"s":"DR-COAS-D319","r":"Dining Room","y":"Hamptons Coastal","i":"bella-catalog/items/DR_COAS_D319.jpg"},{"s":"DR-COAS-D386","r":"Dining Room","y":"Hamptons Coastal","i":"bella-catalog/items/DR_COAS_D386.jpg"},{"s":"DR-MDRN-D336","r":"Dining Room","y":"Modern","i":"bella-catalog/items/DR_MDRN_D336.jpg"},{"s":"DR-MDRN-D407","r":"Dining Room","y":"Modern","i":"bella-catalog/items/DR_MDRN_D407.jpg"},{"s":"DR-MDRN-D114","r":"Dining Room","y":"Modern","i":"bella-catalog/items/DR_MDRN_D114.jpg"},{"s":"DR-MDRN-D107","r":"Dining Room","y":"Modern","i":"bella-catalog/items/DR_MDRN_D107.jpg"},{"s":"DR-MDRN-D418","r":"Dining Room","y":"Modern","i":"bella-catalog/items/DR_MDRN_D418.jpg"},{"s":"DR-MDRN-D414","r":"Dining Room","y":"Modern","i":"bella-catalog/items/DR_MDRN_D414.jpg"},{"s":"DR-MDRN-D405","r":"Dining Room","y":"Modern","i":"bella-catalog/items/DR_MDRN_D405.jpg"},{"s":"DR-MDRN-D398","r":"Dining Room","y":"Modern","i":"bella-catalog/items/DR_MDRN_D398.jpg"},{"s":"DR-MDRN-D400","r":"Dining Room","y":"Modern","i":"bella-catalog/items/DR_MDRN_D400.jpg"},{"s":"DR-MDRN-D390","r":"Dining Room","y":"Modern","i":"bella-catalog/items/DR_MDRN_D390.jpg"},{"s":"DR-MDRN-D374","r":"Dining Room","y":"Modern","i":"bella-catalog/items/DR_MDRN_D374.jpg"},{"s":"DR-MDRN-D366","r":"Dining Room","y":"Modern","i":"bella-catalog/items/DR_MDRN_D366.jpg"},{"s":"DR-MDRN-D357","r":"Dining Room","y":"Modern","i":"bella-catalog/items/DR_MDRN_D357.jpg"},{"s":"DR-MDRN-D338","r":"Dining Room","y":"Modern","i":"bella-catalog/items/DR_MDRN_D338.jpg"},{"s":"DR-MDRN-D332","r":"Dining Room","y":"Modern","i":"bella-catalog/items/DR_MDRN_D332.jpg"},{"s":"DR-MDRN-D379","r":"Dining Room","y":"Modern","i":"bella-catalog/items/DR_MDRN_D379.jpg"},{"s":"DR-MDRN-D343","r":"Dining Room","y":"Modern","i":"bella-catalog/items/DR_MDRN_D343.jpg"},{"s":"DR-MDRN-D328","r":"Dining Room","y":"Modern","i":"bella-catalog/items/DR_MDRN_D328.jpg"},{"s":"DR-MCM-D365","r":"Dining Room","y":"Midcentury Modern","i":"bella-catalog/items/DR_MCM_D365.jpg"},{"s":"DR-MCM-D387","r":"Dining Room","y":"Midcentury Modern","i":"bella-catalog/items/DR_MCM_D387.jpg"},{"s":"DR-MCM-D320","r":"Dining Room","y":"Midcentury Modern","i":"bella-catalog/items/DR_MCM_D320.jpg"},{"s":"DR-MCM-316","r":"Dining Room","y":"Midcentury Modern","i":"bella-catalog/items/DR_MCM_316.jpg"},{"s":"DR-MCM-D71","r":"Dining Room","y":"Midcentury Modern","i":"bella-catalog/items/DR_MCM_D71.jpg"},{"s":"DR-SCND-D350","r":"Dining Room","y":"Scandinavian","i":"bella-catalog/items/DR_SCND_D350.jpg"},{"s":"DR-SCND-D61","r":"Dining Room","y":"Scandinavian","i":"bella-catalog/items/DR_SCND_D61.jpg"},{"s":"DR-SCND-D416","r":"Dining Room","y":"Scandinavian","i":"bella-catalog/items/DR_SCND_D416.jpg"},{"s":"DR-SCND-D366","r":"Dining Room","y":"Scandinavian","i":"bella-catalog/items/DR_SCND_D366.jpg"},{"s":"DR-SCND-D357","r":"Dining Room","y":"Scandinavian","i":"bella-catalog/items/DR_SCND_D357.jpg"},{"s":"DR-SCND-D351","r":"Dining Room","y":"Scandinavian","i":"bella-catalog/items/DR_SCND_D351.jpg"},{"s":"DR-TRAN-D412","r":"Dining Room","y":"Transitional","i":"bella-catalog/items/DR_TRAN_D412.jpg"},{"s":"DR-TRAN-D409","r":"Dining Room","y":"Transitional","i":"bella-catalog/items/DR_TRAN_D409.jpg"},{"s":"DR-TRAN-D370","r":"Dining Room","y":"Transitional","i":"bella-catalog/items/DR_TRAN_D370.jpg"},{"s":"DR-TRAN-D368","r":"Dining Room","y":"Transitional","i":"bella-catalog/items/DR_TRAN_D368.jpg"},{"s":"DR-TRAN-D359","r":"Dining Room","y":"Transitional","i":"bella-catalog/items/DR_TRAN_D359.jpg"},{"s":"DR-TRAD-D319","r":"Dining Room","y":"Traditional","i":"bella-catalog/items/DR_TRAD_D319.jpg"},{"s":"DR-TRAD-D296","r":"Dining Room","y":"Traditional","i":"bella-catalog/items/DR_TRAD_D296.jpg"},{"s":"DR-TRAD-D73","r":"Dining Room","y":"Traditional","i":"bella-catalog/items/DR_TRAD_D73.jpg"},{"s":"KT-CONT-K109","r":"Kitchen","y":"Contemporary","i":"bella-catalog/items/KT_CONT_K109.jpg"},{"s":"KT-MCM-K120","r":"Kitchen","y":"Midcentury Modern","i":"bella-catalog/items/KT_MCM_K120.jpg"},{"s":"KT-CONT-K110","r":"Kitchen","y":"Contemporary","i":"bella-catalog/items/KT_CONT_K110.jpg"},{"s":"KT-MCM-K107","r":"Kitchen","y":"Midcentury Modern","i":"bella-catalog/items/KT_MCM_K107.jpg"},{"s":"KT-MDRN-K100","r":"Kitchen","y":"Modern","i":"bella-catalog/items/KT_MDRN_K100.jpg"},{"s":"KT-CONT-K101","r":"Kitchen","y":"Contemporary","i":"bella-catalog/items/KT_CONT_K101.jpg"},{"s":"KT-CONT-K121","r":"Kitchen","y":"Contemporary","i":"bella-catalog/items/KT_CONT_K121.jpg"},{"s":"KT-CONT-K102","r":"Kitchen","y":"Contemporary","i":"bella-catalog/items/KT_CONT_K102.jpg"},{"s":"KT-FARM-K112","r":"Kitchen","y":"Farmhouse","i":"bella-catalog/items/KT_FARM_K112.jpg"},{"s":"KT-FARMT-K117","r":"Kitchen","y":"Farmhouse","i":"bella-catalog/items/KT_FARMT_K117.jpg"},{"s":"KT-FARM-K118","r":"Kitchen","y":"Farmhouse","i":"bella-catalog/items/KT_FARM_K118.jpg"},{"s":"KT-FARM-K39","r":"Kitchen","y":"Farmhouse","i":"bella-catalog/items/KT_FARM_K39.jpg"},{"s":"KT-MDRN-K116","r":"Kitchen","y":"Modern","i":"bella-catalog/items/KT_MDRN_K116.jpg"},{"s":"KT-MDRN-K106","r":"Kitchen","y":"Modern","i":"bella-catalog/items/KT_MDRN_K106.jpg"},{"s":"KT-MDRN-K108","r":"Kitchen","y":"Modern","i":"bella-catalog/items/KT_MDRN_K108.jpg"},{"s":"KT-MDRN-K109","r":"Kitchen","y":"Modern","i":"bella-catalog/items/KT_MDRN_K109.jpg"},{"s":"KT-MDRN-K115","r":"Kitchen","y":"Modern","i":"bella-catalog/items/KT_MDRN_K115.jpg"},{"s":"OF-MDRN-702","r":"Office","y":"Modern","i":"bella-catalog/items/OF_MDRN_702.jpg"},{"s":"OF-MFRM-703","r":"Office","y":"Modern Farmhouse","i":"bella-catalog/items/OF_MFRM_703.jpg"},{"s":"OF-FARM-277","r":"Office","y":"Farmhouse","i":"bella-catalog/items/OF_FARM_277.jpg"},{"s":"OF-FARM-687","r":"Office","y":"Farmhouse","i":"bella-catalog/items/OF_FARM_687.jpg"},{"s":"OF-MCM-699","r":"Office","y":"Midcentury Modern","i":"bella-catalog/items/OF_MCM_699.jpg"},{"s":"OF-MCM-698","r":"Office","y":"Midcentury Modern","i":"bella-catalog/items/OF_MCM_698.jpg"},{"s":"OF-MCM-678","r":"Office","y":"Midcentury Modern","i":"bella-catalog/items/OF_MCM_678.jpg"},{"s":"OF-MDRN-680","r":"Office","y":"Modern","i":"bella-catalog/items/OF_MDRN_680.jpg"},{"s":"OF-MDRN-679","r":"Office","y":"Modern","i":"bella-catalog/items/OF_MDRN_679.jpg"},{"s":"OF-MDRN-681","r":"Office","y":"Modern","i":"bella-catalog/items/OF_MDRN_681.jpg"},{"s":"OF-MDRN-700","r":"Office","y":"Modern","i":"bella-catalog/items/OF_MDRN_700.jpg"},{"s":"OF-MDRN-685","r":"Office","y":"Modern","i":"bella-catalog/items/OF_MDRN_685.jpg"},{"s":"OF-MDRN-682A","r":"Office","y":"Modern","i":"bella-catalog/items/OF_MDRN_682A.jpg"},{"s":"OF-MDRN-675","r":"Office","y":"Modern","i":"bella-catalog/items/OF_MDRN_675.jpg"},{"s":"OF-SCND-696","r":"Office","y":"Scandinavian","i":"bella-catalog/items/OF_SCND_696.jpg"},{"s":"OF-SCND-697","r":"Office","y":"Scandinavian","i":"bella-catalog/items/OF_SCND_697.jpg"},{"s":"OF-SCND-694","r":"Office","y":"Scandinavian","i":"bella-catalog/items/OF_SCND_694.jpg"}];
+const PER_PAGE = 6;
+const state = { room:'All', style:'All', groupBy:'room', view:'grid', saved:new Set() };
+let order=[], orderIndex={}, lbIndex=-1;
+const STYLE_ORDER=['Contemporary','Modern','Midcentury Modern','Scandinavian','Nordic Boho','Hamptons Coastal','Farmhouse','Modern Farmhouse','Transitional','Traditional','Top Seller'];
+const ROOM_ORDER=['Living Room','Dining Room','Bedroom','Kitchen','Office','Top Seller'];
+try{ (JSON.parse(localStorage.getItem('bellaProject')||'[]')).forEach(s=>state.saved.add(s)); }catch(e){}
+
+const track=document.getElementById('track');
+const counterEl=document.getElementById('counter');
+
+function counts(key){
+  const c={};
+  DATA.filter(d=> key==='room' ? (state.style==='All'||d.y===state.style) : (state.room==='All'||d.r===state.room))
+      .forEach(d=>{const v=d[key==='room'?'r':'y']; c[v]=(c[v]||0)+1;});
+  return c;
+}
+function buildChips(rowId, key, values){
+  const row=document.getElementById(rowId);
+  row.querySelectorAll('.chip').forEach(e=>e.remove());
+  const cur = key==='room'?state.room:state.style;
+  const cnts=counts(key);
+  const add=(label,val)=>{
+    const b=document.createElement('button'); b.className='chip'+(val===cur?' on':'');
+    const cnt = val==='All' ? '' : `<span class="n">${(cnts[val]||0)}</span>`;
+    b.innerHTML=label+cnt;
+    b.onclick=()=>{ if(key==='room')state.room=val; else state.style=val; renderFilters(); render(); };
+    row.appendChild(b);
+  };
+  add('All','All'); values.forEach(v=>add(v,v));
+}
+function renderFilters(){
+  buildChips('roomRow','room',[...new Set(DATA.map(d=>d.r))].sort());
+  buildChips('styleRow','style',[...new Set(DATA.map(d=>d.y))].sort());
+}
+function filtered(){
+  return DATA.filter(d=>(state.room==='All'||d.r===state.room)&&(state.style==='All'||d.y===state.style));
+}
+function itemCard(it){
+  const el=document.createElement('div');
+  el.className='item'+(state.saved.has(it.s)?' saved':'');
+  el.innerHTML=`
+    <button class="heart" aria-label="Save ${it.s}"><svg><use href="#i-heart"/></svg></button>
+    <div class="ph"><img src="${it.i}" alt="${it.y} furniture, ${it.r}" loading="lazy"></div>
+    <div class="sku"><span>${it.s}</span><span class="st">${it.y}</span></div>`;
+  el.querySelector('.heart').onclick=(e)=>{e.stopPropagation(); toggleSave(it);};
+  el.querySelector('.ph').onclick=()=>openLightbox(orderIndex[it.s]);
+  return el;
+}
+function makePage(items, room, pageNo, totalPages){
+  const p=document.createElement('div'); p.className='page';
+  p.innerHTML=`<div class="page-head"><span class="rm">${room}</span><span class="no">Page ${pageNo} / ${totalPages}</span></div>`;
+  const g=document.createElement('div'); g.className='pgrid';
+  items.forEach(it=>g.appendChild(itemCard(it)));
+  p.appendChild(g); return p;
+}
+function coverPage(n){
+  const p=document.createElement('div'); p.className='page cover';
+  const label=(state.room==='All'?'Every room':state.room)+' · '+(state.style==='All'?'Every style':state.style);
+  p.innerHTML=`<div class="in"><span class="micro">${label}</span>
+    <div class="big">${n}</div><span class="micro">pieces to browse</span>
+    <p>Tap the heart on any piece to save it. Flip with the arrows, your keyboard, or a swipe.</p></div>`;
+  return p;
+}
+function endPage(){
+  const p=document.createElement('div'); p.className='page end';
+  p.innerHTML=`<div class="in"><h2>That's the collection.</h2>
+    <p>Send your saved SKUs with your order and we'll stage your listing with those exact pieces.</p>
+    <a class="btn" href="bella-order-page.html">Stage my listing</a></div>`;
+  return p;
+}
+
+let spreads=0;
+function renderBook(){
+  const list=filtered();
+  track.innerHTML='';
+  if(!list.length){
+    const sp=document.createElement('div'); sp.className='spread';
+    sp.innerHTML='<div class="page l"><div class="empty">No pieces match that combination.<br>Try a different room or style.</div></div><div class="page"></div>';
+    track.appendChild(sp); spreads=1; buildDots(); track.scrollLeft=0; updateCounter(0); return;
+  }
+  const gb=state.groupBy;
+  const keyOf = d => gb==='style' ? d.y : d.r;
+  const byGroup={}; list.forEach(d=>{(byGroup[keyOf(d)]=byGroup[keyOf(d)]||[]).push(d);});
+  const pref = gb==='style' ? STYLE_ORDER : ROOM_ORDER;
+  const groups=pref.filter(g=>byGroup[g]);
+  Object.keys(byGroup).forEach(g=>{ if(!groups.includes(g)) groups.push(g); });
+  order=groups.flatMap(g=>byGroup[g]); orderIndex={}; order.forEach((d,i)=>orderIndex[d.s]=i);
+  const pages=[];
+  groups.forEach(g=>{ const arr=byGroup[g]; const tp=Math.ceil(arr.length/PER_PAGE);
+    for(let i=0;i<arr.length;i+=PER_PAGE) pages.push({items:arr.slice(i,i+PER_PAGE),group:g,no:i/PER_PAGE+1,tp}); });
+  const seq=[{cover:true}, ...pages, {end:true}];
+  const groupStart={}; groupSpreads=[];
+  for(let i=0;i<seq.length;i+=2){
+    const spreadIdx=i/2;
+    const sp=document.createElement('div'); sp.className='spread';
+    [seq[i], seq[i+1]].forEach((pg,idx)=>{
+      let el;
+      if(!pg){ el=document.createElement('div'); el.className='page'; }
+      else if(pg.cover) el=coverPage(list.length);
+      else if(pg.end) el=endPage();
+      else { el=makePage(pg.items, pg.group, pg.no, pg.tp);
+             if(!(pg.group in groupStart)) groupStart[pg.group]=spreadIdx; }
+      if(idx===0) el.classList.add('l');
+      sp.appendChild(el);
+    });
+    track.appendChild(sp);
+  }
+  spreads=track.querySelectorAll('.spread').length;
+  buildChapters(groups, groupStart, byGroup);
+  buildDots(); track.scrollLeft=0; updateCounter(0);
+}
+
+let groupSpreads=[], chapGroups=[], chapSecIds={}, chapStart={};
+function buildChapters(groups, groupStart, byGroup, secIds){
+  const box=document.getElementById('chapters'); if(!box) return;
+  chapGroups=groups; chapStart=groupStart||{}; chapSecIds=secIds||{};
+  groupSpreads=groups.map(g=>groupStart?groupStart[g]:0);
+  box.innerHTML='<span class="flabel">Jump to '+(state.groupBy==='style'?'style':'room')+'</span>'
+    + groups.map(g=>`<button class="chap" data-g="${g}">${g}<span class="cn">${byGroup[g].length}</span></button>`).join('');
+  box.querySelectorAll('.chap').forEach(b=>{
+    const g=b.getAttribute('data-g');
+    b.addEventListener('click',()=>{
+      if(state.view==='grid'){ const el=document.getElementById(chapSecIds[g]); if(el){ const y=el.getBoundingClientRect().top+scrollY-150; scrollTo({top:y,behavior:'smooth'}); } }
+      else go(chapStart[g]);
+    });
+  });
+}
+function highlightChapter(idx){
+  const box=document.getElementById('chapters'); if(!box||state.view!=='book') return;
+  let active=0; groupSpreads.forEach((s,i)=>{ if(idx>=s) active=i; });
+  box.querySelectorAll('.chap').forEach((b,i)=>b.classList.toggle('on', i===active));
+}
+function highlightGridChapter(){
+  const box=document.getElementById('chapters'); if(!box||state.view!=='grid') return;
+  let active=0;
+  chapGroups.forEach((g,i)=>{ const el=document.getElementById(chapSecIds[g]); if(el && el.getBoundingClientRect().top-170<=0) active=i; });
+  box.querySelectorAll('.chap').forEach((b,i)=>b.classList.toggle('on', i===active));
+}
+
+function groupData(){
+  const list=filtered();
+  const gb=state.groupBy;
+  const keyOf = d => gb==='style' ? d.y : d.r;
+  const byGroup={}; list.forEach(d=>{(byGroup[keyOf(d)]=byGroup[keyOf(d)]||[]).push(d);});
+  const pref = gb==='style' ? STYLE_ORDER : ROOM_ORDER;
+  const groups=pref.filter(g=>byGroup[g]);
+  Object.keys(byGroup).forEach(g=>{ if(!groups.includes(g)) groups.push(g); });
+  order=groups.flatMap(g=>byGroup[g]); orderIndex={}; order.forEach((d,i)=>orderIndex[d.s]=i);
+  return {list,groups,byGroup};
+}
+
+function render(){
+  const stage=document.querySelector('.stage'), counter=document.getElementById('counter'), grid=document.getElementById('grid');
+  if(state.view==='grid'){ stage.classList.add('off'); counter.classList.add('off'); grid.classList.add('on'); renderGrid(); }
+  else { stage.classList.remove('off'); counter.classList.remove('off'); grid.classList.remove('on'); renderBook(); }
+}
+
+function renderGrid(){
+  const grid=document.getElementById('grid');
+  const {list,groups,byGroup}=groupData();
+  grid.innerHTML='';
+  if(!list.length){ grid.innerHTML='<div class="empty">No pieces match that combination.<br>Try a different room or style.</div>'; buildChapters([], {}, {}, {}); return; }
+  const secIds={};
+  groups.forEach(g=>{
+    const id='sec-'+g.replace(/\s+/g,'-'); secIds[g]=id;
+    const sec=document.createElement('section'); sec.className='gsec'; sec.id=id;
+    const h=document.createElement('div'); h.className='gsec-head';
+    h.innerHTML=`<span class="gsec-name">${g}</span><span class="gsec-n">${byGroup[g].length} pieces</span>`;
+    sec.appendChild(h);
+    const gr=document.createElement('div'); gr.className='ggrid';
+    byGroup[g].forEach(it=>gr.appendChild(itemCard(it)));
+    sec.appendChild(gr); grid.appendChild(sec);
+  });
+  buildChapters(groups, null, byGroup, secIds);
+}
+
+function persist(){ try{localStorage.setItem('bellaProject', JSON.stringify([...state.saved]));}catch(e){} }
+function toggleSave(it){
+  if(state.saved.has(it.s)){ state.saved.delete(it.s); toast('Removed '+it.s); }
+  else { state.saved.add(it.s); toast('Saved '+it.s); }
+  persist();
+  document.querySelectorAll('.item').forEach(c=>{
+    if(c.querySelector('.sku span')?.textContent===it.s) c.classList.toggle('saved', state.saved.has(it.s));
+  });
+  updateProjCount(); renderDrawer();
+}
+function updateProjCount(){ document.getElementById('projCount').textContent=state.saved.size; }
+
+const drawer=document.getElementById('drawer'), scrim=document.getElementById('scrim');
+document.getElementById('openProj').onclick=()=>{ renderDrawer(); drawer.classList.add('open'); scrim.classList.add('open'); };
+function closeDrawer(){ drawer.classList.remove('open'); scrim.classList.remove('open'); }
+document.getElementById('closeProj').onclick=closeDrawer; scrim.onclick=closeDrawer;
+function renderDrawer(){
+  const dl=document.getElementById('dlist'); const saved=[...state.saved];
+  if(!saved.length){ dl.innerHTML='<div class="dempty">No pieces saved yet.<br>Tap the heart on any item to start your project.</div>'; return; }
+  const bySku={}; DATA.forEach(d=>bySku[d.s]=d); dl.innerHTML='';
+  saved.forEach(s=>{ const it=bySku[s]; if(!it)return;
+    const r=document.createElement('div'); r.className='drow';
+    r.innerHTML=`<img src="${it.i}" alt=""><div class="meta"><b>${it.s}</b><span>${it.r} · ${it.y}</span></div><button class="rm" aria-label="Remove">×</button>`;
+    r.querySelector('.rm').onclick=()=>{ state.saved.delete(s); persist(); updateProjCount(); renderDrawer();
+      document.querySelectorAll('.item').forEach(c=>{ if(c.querySelector('.sku span')?.textContent===s) c.classList.remove('saved'); }); };
+    dl.appendChild(r); });
+}
+document.getElementById('copySkus').onclick=()=>{
+  const list=[...state.saved].join(', '); if(!list){ toast('Nothing saved yet'); return; }
+  navigator.clipboard?.writeText(list).then(()=>toast('Copied '+state.saved.size+' SKUs')).catch(()=>toast('SKUs: '+list));
+};
+document.getElementById('clearProj').onclick=()=>{ state.saved.clear(); persist(); updateProjCount(); renderDrawer();
+  document.querySelectorAll('.item.saved').forEach(c=>c.classList.remove('saved')); toast('Project cleared'); };
+
+function spreadW(){ const s=track.querySelector('.spread'); return s? s.getBoundingClientRect().width+28 : track.clientWidth; }
+function curIndex(){ return Math.round(track.scrollLeft/spreadW()); }
+function go(i){ i=Math.max(0,Math.min(spreads-1,i)); track.scrollTo({left:i*spreadW(),behavior:'smooth'}); }
+document.getElementById('prev').onclick=()=>go(curIndex()-1);
+document.getElementById('next').onclick=()=>go(curIndex()+1);
+document.addEventListener('keydown',e=>{
+  if(drawer.classList.contains('open')){ if(e.key==='Escape')closeDrawer(); return; }
+  if(e.key==='ArrowRight')go(curIndex()+1); if(e.key==='ArrowLeft')go(curIndex()-1);
+});
+let st; track.addEventListener('scroll',()=>{ clearTimeout(st); st=setTimeout(()=>updateCounter(curIndex()),80); });
+function buildDots(){
+  const dots='<span class="dots">'+Array.from({length:spreads},(_,i)=>`<span class="dot" data-i="${i}"></span>`).join('')+'</span>';
+  counterEl.innerHTML=`<span id="cLabel"></span>${dots}`;
+  counterEl.querySelectorAll('.dot').forEach(d=>d.onclick=()=>go(+d.dataset.i));
+}
+function updateCounter(i){
+  const l=document.getElementById('cLabel'); if(l) l.textContent=`Spread ${i+1} of ${spreads}`;
+  counterEl.querySelectorAll('.dot').forEach((d,di)=>d.classList.toggle('on',di===i));
+  document.getElementById('prev').disabled=i<=0; document.getElementById('next').disabled=i>=spreads-1;
+  highlightChapter(i);
+}
+/* ---- lightbox ---- */
+const lb=document.getElementById('lb');
+function openLightbox(i){ lbIndex=i; renderLightbox(); lb.classList.add('open'); lb.setAttribute('aria-hidden','false'); }
+function closeLightbox(){ lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); lbIndex=-1; }
+function lbGo(step){ if(!order.length)return; lbIndex=(lbIndex+step+order.length)%order.length; renderLightbox(); }
+function renderLightbox(){
+  const it=order[lbIndex]; if(!it)return;
+  document.getElementById('lbImg').src=it.i;
+  document.getElementById('lbImg').alt=it.y+' furniture, '+it.r;
+  document.getElementById('lbSku').textContent=it.s;
+  document.getElementById('lbInfo').textContent=it.r+' · '+it.y;
+  document.getElementById('lbCount').textContent=(lbIndex+1)+' / '+order.length;
+  const saved=state.saved.has(it.s);
+  const btn=document.getElementById('lbSave');
+  btn.classList.toggle('on',saved);
+  document.getElementById('lbSaveTxt').textContent=saved?'Saved':'Save';
+}
+document.getElementById('lbClose').onclick=closeLightbox;
+document.getElementById('lbPrev').onclick=()=>lbGo(-1);
+document.getElementById('lbNext').onclick=()=>lbGo(1);
+document.getElementById('lbSave').onclick=()=>{ toggleSave(order[lbIndex]); renderLightbox(); };
+lb.addEventListener('click',e=>{ if(e.target===lb) closeLightbox(); });
+document.addEventListener('keydown',e=>{
+  if(!lb.classList.contains('open'))return;
+  if(e.key==='Escape')closeLightbox();
+  else if(e.key==='ArrowRight')lbGo(1);
+  else if(e.key==='ArrowLeft')lbGo(-1);
+});
+
+let tt; function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('show'),1600); }
+
+document.querySelectorAll('.segbtn[data-gb]').forEach(b=>b.addEventListener('click',()=>{
+  state.groupBy=b.dataset.gb;
+  document.querySelectorAll('.segbtn[data-gb]').forEach(x=>x.classList.toggle('on',x===b));
+  render();
+}));
+
+document.querySelectorAll('.segbtn[data-view]').forEach(b=>b.addEventListener('click',()=>{
+  state.view=b.dataset.view;
+  document.querySelectorAll('.segbtn[data-view]').forEach(x=>x.classList.toggle('on',x===b));
+  render(); scrollTo({top:0});
+}));
+window.addEventListener('scroll',()=>{ if(state.view==='grid') highlightGridChapter(); }, {passive:true});
+
+renderFilters(); render(); updateProjCount();
+window.addEventListener('resize',()=>updateCounter(curIndex()));
+</script>
+</body>
+</html>
