@@ -184,10 +184,11 @@
   .lb{position:fixed;inset:0;z-index:120;background:rgba(16,14,12,.94);display:none;
     align-items:center;justify-content:center;padding:3vw}
   .lb.open{display:flex}
-  .lb-fig{margin:0;max-width:min(1100px,92vw);width:100%;display:flex;flex-direction:column;gap:14px}
+  /* cap to ~native pixel size so a 520px catalog image renders crisp, not upscaled+soft */
+  .lb-fig{margin:0;max-width:min(660px,92vw);width:100%;display:flex;flex-direction:column;gap:14px}
   .lb-imgwrap{background:#0d0b0a;display:flex;align-items:center;justify-content:center;
-    max-height:80vh;overflow:hidden}
-  .lb-imgwrap img{max-width:100%;max-height:80vh;object-fit:contain;display:block}
+    max-height:min(70vh,460px);overflow:hidden}
+  .lb-imgwrap img{max-width:100%;max-height:min(70vh,460px);object-fit:contain;display:block}
   .lb-cap{display:flex;align-items:center;gap:18px;color:#EDE9E2;flex-wrap:wrap}
   .lb-meta{flex:1;min-width:0}
   .lb-meta b{font-weight:400;font-size:17px;letter-spacing:.04em}
