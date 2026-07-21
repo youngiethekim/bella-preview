@@ -44,7 +44,12 @@
   .step-head p{color:var(--soft);margin-top:8px;font-size:15.5px;max-width:56ch}
 
   /* step 1 choice cards */
-  .choices{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:32px}
+  .ptype{display:flex;align-items:center;gap:14px;margin-top:26px}
+  .ptlabel{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+  .segbtn{font-family:inherit;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;background:#fff;color:var(--soft);border:0;padding:9px 20px;cursor:pointer;transition:.15s}
+  .segbtn.on{background:var(--ink);color:#fff}
+  .choices{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:14px}
   @media(max-width:720px){.choices{grid-template-columns:1fr}}
   .choice{text-align:left;font-family:inherit;background:#fff;border:1px solid var(--line);padding:26px 26px;
     cursor:pointer;display:flex;gap:18px;align-items:flex-start;transition:border-color .15s,background .15s}
@@ -134,10 +139,17 @@
       <h2>What are you working on?</h2>
       <p>Pick the one that fits. We'll recommend the right services and price, whether you're an agent listing a home or a builder selling from plans.</p>
     </div>
+    <div class="ptype">
+      <span class="ptlabel">Property type</span>
+      <div class="seg">
+        <button class="segbtn on" data-ptype="res" type="button">Residential</button>
+        <button class="segbtn" data-ptype="com" type="button">Commercial</button>
+      </div>
+    </div>
     <div class="choices">
       <button class="choice" type="button" data-proj="empty"><svg class="ico"><use href="#i-empty"/></svg><span><b>An empty listing</b><span>Vacant rooms that need furniture</span></span></button>
       <button class="choice" type="button" data-proj="occupied"><svg class="ico"><use href="#i-sofa"/></svg><span><b>An occupied listing</b><span>Furnished or cluttered — we clear it first</span></span></button>
-      <button class="choice" type="button" data-proj="dated"><svg class="ico"><use href="#i-reno"/></svg><span><b>A dated property</b><span>Modernize the finishes before it lists</span></span></button>
+      <button class="choice" type="button" data-proj="dated"><svg class="ico"><use href="#i-reno"/></svg><span><b>A property that needs renovations</b><span>Modernize dated finishes, then stage</span></span></button>
       <button class="choice" type="button" data-proj="prebuild"><svg class="ico"><use href="#i-blue"/></svg><span><b>Not built yet</b><span>Sell from drawings with 3D renders</span></span></button>
     </div>
     <div class="wiz-foot">
@@ -196,8 +208,10 @@
           occupied:{unit:55,stage:'Furniture removal + staging',path:'listing',blurb:'We clear the room, then stage it'},
           dated:{unit:95,stage:'Virtual renovation + staging',path:'listing',blurb:'Modernized finishes, then staged'},
           prebuild:{path:'build'} };
-  var PR={FP2D:24,FP3D:84,TOUR:46,DUSK:7,RINT:630,REXT:840};
-  var state={ proj:null, photos:8, floor:false, tour:false, dusk:false,
+  var PR={FP2D:24,FP3D:84,TOUR:46,DUSK:7,RINT:630,REXT:840,RINT_C:490,REXT_C:980};
+  function rInt(){ return state.commercial?PR.RINT_C:PR.RINT; }
+  function rExt(){ return state.commercial?PR.REXT_C:PR.REXT; }
+  var state={ proj:null, commercial:false, photos:8, floor:false, tour:false, dusk:false,
               rint:1, rext:1, rfp:1, useInt:true, useExt:true, useFp:true };
 
   // saved lookbook pieces
@@ -220,8 +234,8 @@
       return {L:L,total:total,disc:disc};
     } else {
       var t=0;
-      if(state.useInt){ L.push(['Interior 3D render × '+state.rint, money(PR.RINT*state.rint)]); t+=PR.RINT*state.rint; }
-      if(state.useExt){ L.push(['Exterior 3D render × '+state.rext, money(PR.REXT*state.rext)]); t+=PR.REXT*state.rext; }
+      if(state.useInt){ L.push([(state.commercial?'Commercial interior render × ':'Interior 3D render × ')+state.rint, money(rInt()*state.rint)]); t+=rInt()*state.rint; }
+      if(state.useExt){ L.push([(state.commercial?'Commercial exterior render × ':'Exterior 3D render × ')+state.rext, money(rExt()*state.rext)]); t+=rExt()*state.rext; }
       if(state.useFp){ L.push(['3D floor plan × '+state.rfp, money(PR.FP3D*state.rfp)]); t+=PR.FP3D*state.rfp; }
       return {L:L,total:t,disc:0};
     }
@@ -256,8 +270,8 @@
       document.getElementById('s2title').textContent='What do you need to show?';
       document.getElementById('s2sub').textContent='Pick the visuals your sales office needs. We build them from your drawings, no finished home required.';
       box.innerHTML=
-        toggleStep('Interior 3D renders','Photoreal rooms from your plans','useInt','rint','+'+money(PR.RINT)+' each')
-       +toggleStep('Exterior 3D renders','Elevations, streetscapes, aerials','useExt','rext','+'+money(PR.REXT)+' each')
+        toggleStep((state.commercial?'Commercial interior renders':'Interior 3D renders'),'Photoreal rooms from your plans','useInt','rint','+'+money(rInt())+' each')
+       +toggleStep((state.commercial?'Commercial exterior renders':'Exterior 3D renders'),'Elevations, streetscapes, aerials','useExt','rext','+'+money(rExt())+' each')
        +toggleStep('Furnished 3D floor plans','Walk the layout','useFp','rfp','+'+money(PR.FP3D)+' each');
     }
     bind(); sync();
@@ -301,8 +315,8 @@
       if(!state.dusk) opts.push(['Add day-to-dusk edits','dusk','+'+money(PR.DUSK)+'/photo']);
     } else {
       if(!state.useFp) opts.push(['Add furnished floor plans','useFp','+'+money(PR.FP3D)]);
-      if(!state.useInt) opts.push(['Add interior renders','useInt','+'+money(PR.RINT)]);
-      if(!state.useExt) opts.push(['Add exterior renders','useExt','+'+money(PR.REXT)]);
+      if(!state.useInt) opts.push(['Add interior renders','useInt','+'+money(rInt())]);
+      if(!state.useExt) opts.push(['Add exterior renders','useExt','+'+money(rExt())]);
     }
     var box=document.getElementById('addonList');
     box.innerHTML = opts.length ? opts.map(function(o){return '<div class="opt"><span class="oname">'+o[0]+'</span><span class="op">'+o[2]+'</span><button class="toggle" data-tog3="'+o[1]+'"></button></div>';}).join('')
@@ -320,6 +334,12 @@
     if(n===3) buildSummary();
     scrollTo({top:0,behavior:'smooth'});
   }
+  document.querySelectorAll('.segbtn[data-ptype]').forEach(function(b){
+    b.onclick=function(){
+      state.commercial = b.getAttribute('data-ptype')==='com';
+      document.querySelectorAll('.segbtn[data-ptype]').forEach(function(x){x.classList.toggle('on',x===b);});
+    };
+  });
   document.querySelectorAll('.choice').forEach(function(c){
     c.onclick=function(){
       document.querySelectorAll('.choice').forEach(function(x){x.classList.remove('on');});
