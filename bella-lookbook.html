@@ -44,6 +44,11 @@
     border-bottom:1px solid var(--line)}
   .frow{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:11px}
   .frow:last-child{margin-bottom:0}
+  /* rooms live in a sticky bottom bar */
+  .roombar{position:sticky;bottom:0;z-index:55;background:rgba(253,252,250,.95);backdrop-filter:blur(10px);
+    border-top:1px solid var(--line);padding:14px var(--pad)}
+  .roombar .frow{margin-bottom:0}
+  @media(max-width:640px){.roombar{padding:12px 14px}.roombar .frow{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:none}.roombar .frow::-webkit-scrollbar{display:none}}
   .frow .flabel{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-right:4px}
   .chip{font-family:inherit;font-size:13px;letter-spacing:.02em;background:#fff;border:1px solid var(--line);
     color:var(--soft);padding:8px 15px;border-radius:999px;cursor:pointer;transition:.15s;white-space:nowrap}
@@ -222,8 +227,6 @@
 
 <div class="filters">
   <div class="frow" id="styleRow"><span class="flabel">Style</span></div>
-  <div class="frow" id="roomRow"><span class="flabel">Room</span></div>
-  <div class="chapters" id="chapters"></div>
 </div>
 
 <div class="stage">
@@ -233,6 +236,10 @@
 </div>
 <div class="counter" id="counter"></div>
 <div class="gridview" id="grid"></div>
+
+<div class="roombar">
+  <div class="frow" id="roomRow"><span class="flabel">Room</span></div>
+</div>
 
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="drawer" aria-label="My project">
