@@ -115,6 +115,18 @@
   details[open] summary::after{transform:rotate(45deg)}
   details p{padding:0 0 22px;color:var(--soft);font-size:15px;max-width:70ch}
 
+  /* stats band + credibility */
+  .stats{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg)}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);max-width:1200px;margin:0 auto}
+  .stats-grid div{padding:36px 20px;text-align:center;border-right:1px solid var(--line)}
+  .stats-grid div:last-child{border-right:0}
+  .stats-grid b{display:block;font-size:clamp(30px,3.2vw,44px);font-weight:300;letter-spacing:-.03em;color:var(--ink)}
+  .stats-grid span{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-top:8px;display:block}
+  @media(max-width:760px){.stats-grid{grid-template-columns:1fr 1fr}.stats-grid div{border-bottom:1px solid var(--line)}.stats-grid div:nth-child(2n){border-right:0}}
+  .logos{padding:52px var(--pad);text-align:center;border-top:1px solid var(--line);background:#fff}
+  .logos .lb{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:20px}
+  .logo-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:14px 40px;max-width:1020px;margin:0 auto}
+  .logo-row span{font-size:17px;letter-spacing:.04em;color:var(--soft);opacity:.72}
   footer{background:var(--dark);color:#6F6A63;padding:40px var(--pad) 30px;font-size:13px}
   .foot{max-width:1200px;margin:0 auto}
   .foot .seg{display:flex;flex-wrap:wrap;gap:8px 22px;padding-bottom:22px;border-bottom:1px solid #2E2B28;margin-bottom:20px}
@@ -161,6 +173,8 @@
   <div><b>On-brand</b> · consistent across agents</div>
   <div><b>24–48 hrs</b> · at any volume</div>
 </div>
+
+<section class="stats"><div class="stats-grid"><div><b>1,000+</b><span>Agents served</span></div><div><b>10,000+</b><span>Listings staged</span></div><div><b>4.9★</b><span>Rated on Google</span></div><div><b>24–48h</b><span>At any volume</span></div></div></section>
 
 <!-- WHY -->
 <section id="why"><div class="wrap">
@@ -239,6 +253,8 @@
     <details><summary>How fast is delivery at volume?</summary><p>Standard turnaround is 24 to 48 hours per order, and it holds at volume. Every order includes unlimited revisions for two weeks and a rework-or-refund guarantee.</p></details>
   </div>
 </div></section>
+
+<section class="logos"><p class="lb">As seen in</p><div class="logo-row"><span>FORTUNE</span><span>THE GLOBE AND MAIL</span><span>INMAN</span><span>MIAMI HERALD</span><span>REDFIN</span><span>STOREYS</span><span>BOB VILA</span></div></section>
 
 <footer>
   <div class="foot">

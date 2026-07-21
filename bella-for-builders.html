@@ -146,6 +146,18 @@
   .phase .tagn{display:inline-block;margin-top:12px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
   @media(max-width:820px){.cycle-track{grid-template-columns:1fr}.cycle-track::before{display:none}.phase{padding:22px 0 0;border-top:1px solid var(--line);margin-top:22px}.phase:first-child{border-top:0;margin-top:0;padding-top:0}}
 
+  /* stats band + credibility */
+  .stats{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg)}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);max-width:1200px;margin:0 auto}
+  .stats-grid div{padding:36px 20px;text-align:center;border-right:1px solid var(--line)}
+  .stats-grid div:last-child{border-right:0}
+  .stats-grid b{display:block;font-size:clamp(30px,3.2vw,44px);font-weight:300;letter-spacing:-.03em;color:var(--ink)}
+  .stats-grid span{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-top:8px;display:block}
+  @media(max-width:760px){.stats-grid{grid-template-columns:1fr 1fr}.stats-grid div{border-bottom:1px solid var(--line)}.stats-grid div:nth-child(2n){border-right:0}}
+  .logos{padding:52px var(--pad);text-align:center;border-top:1px solid var(--line);background:#fff}
+  .logos .lb{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:20px}
+  .logo-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:14px 40px;max-width:1020px;margin:0 auto}
+  .logo-row span{font-size:17px;letter-spacing:.04em;color:var(--soft);opacity:.72}
   footer{background:var(--dark);color:#6F6A63;padding:40px var(--pad) 30px;font-size:13px}
   .foot{max-width:1200px;margin:0 auto}
   .foot .seg{display:flex;flex-wrap:wrap;gap:8px 22px;padding-bottom:22px;border-bottom:1px solid #2E2B28;margin-bottom:20px}
@@ -193,6 +205,8 @@
   <div><b>Milestone reviews</b> · approve before final</div>
   <div><b>US &amp; Canada</b> · one dedicated designer</div>
 </div>
+
+<section class="stats"><div class="stats-grid"><div><b>10,000+</b><span>Homes staged & rendered</span></div><div><b>67%</b><span>Fewer days on market</span></div><div><b>24–48h</b><span>Model-unit staging</span></div><div><b>4.9★</b><span>Rated on Google</span></div></div></section>
 
 <!-- SERVICES -->
 <section id="services"><div class="wrap">
@@ -324,6 +338,8 @@
     <details><summary>Do you stage model units and spec homes?</summary><p>Yes. We virtually stage model units, spec homes, and empty inventory so your sales office can market finished-looking interiors before furniture is installed, using furniture chosen for your target buyer.</p></details>
   </div>
 </div></section>
+
+<section class="logos"><p class="lb">As seen in</p><div class="logo-row"><span>FORTUNE</span><span>THE GLOBE AND MAIL</span><span>INMAN</span><span>MIAMI HERALD</span><span>REDFIN</span><span>STOREYS</span><span>BOB VILA</span></div></section>
 
 <footer>
   <div class="foot">
