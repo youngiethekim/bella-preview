@@ -151,10 +151,18 @@
       </div>
     </div>
     <div class="choices">
-      <button class="choice" type="button" data-proj="empty"><svg class="ico"><use href="#i-empty"/></svg><span><b>An empty listing</b><span>Vacant rooms that need furniture</span></span></button>
-      <button class="choice" type="button" data-proj="occupied"><svg class="ico"><use href="#i-sofa"/></svg><span><b>An occupied listing</b><span>Furnished or cluttered — we clear it first</span></span></button>
-      <button class="choice" type="button" data-proj="dated"><svg class="ico"><use href="#i-reno"/></svg><span><b>A property that needs renovations</b><span>Modernize dated finishes, then stage</span></span></button>
-      <button class="choice" type="button" data-proj="prebuild"><svg class="ico"><use href="#i-blue"/></svg><span><b>Not built yet</b><span>Sell from drawings with 3D renders</span></span></button>
+      <button class="choice" type="button" data-proj="empty"
+        data-res-t="An empty listing" data-res-d="Vacant rooms that need furniture"
+        data-com-t="An empty business" data-com-d="Vacant office, retail, or suite to fill"><svg class="ico"><use href="#i-empty"/></svg><span><b>An empty listing</b><span>Vacant rooms that need furniture</span></span></button>
+      <button class="choice" type="button" data-proj="occupied"
+        data-res-t="An occupied listing" data-res-d="Furnished or cluttered — we clear it first"
+        data-com-t="A furnished space" data-com-d="In-use or cluttered — we clear it first"><svg class="ico"><use href="#i-sofa"/></svg><span><b>An occupied listing</b><span>Furnished or cluttered — we clear it first</span></span></button>
+      <button class="choice" type="button" data-proj="dated"
+        data-res-t="A property that needs renovations" data-res-d="Modernize dated finishes, then stage"
+        data-com-t="A space that needs renovations" data-com-d="Modernize dated finishes, then stage"><svg class="ico"><use href="#i-reno"/></svg><span><b>A property that needs renovations</b><span>Modernize dated finishes, then stage</span></span></button>
+      <button class="choice" type="button" data-proj="prebuild"
+        data-res-t="Not built yet" data-res-d="Sell from drawings with 3D renders"
+        data-com-t="Not built yet" data-com-d="Lease from plans with 3D renders"><svg class="ico"><use href="#i-blue"/></svg><span><b>Not built yet</b><span>Sell from drawings with 3D renders</span></span></button>
     </div>
     <div class="wiz-foot">
       <span></span>
@@ -265,7 +273,7 @@
     var p=P[state.proj], box=document.getElementById('config'); box.innerHTML='';
     if(p.path==='listing'){
       document.getElementById('s2title').textContent='How big is the job?';
-      document.getElementById('s2sub').textContent='Most listings run about 8 photos. Add a floor plan or tour if you want the full set.';
+      document.getElementById('s2sub').textContent=(state.commercial?'Most commercial spaces run about 8 photos. Add a floor plan or tour if you want the full set.':'Most listings run about 8 photos. Add a floor plan or tour if you want the full set.');
       box.innerHTML=
         row('How many photos to stage?', p.stage+' · '+money(stageUnit())+' each, volume discounts apply', stepper('photos'))
        +toggleRow('Add a 3D floor plan','Buyers see the layout, furnished','floor','+'+money(fp3d()))
@@ -359,10 +367,21 @@
     if(n===3) buildSummary();
     scrollTo({top:0,behavior:'smooth'});
   }
+  function relabelChoices(){
+    var com=state.commercial;
+    document.querySelectorAll('.choice').forEach(function(c){
+      var t=c.getAttribute(com?'data-com-t':'data-res-t');
+      var d=c.getAttribute(com?'data-com-d':'data-res-d');
+      var sp=c.querySelector('span>span'), b=c.querySelector('b');
+      if(b&&t) b.textContent=t;
+      if(sp&&d) sp.textContent=d;
+    });
+  }
   document.querySelectorAll('.segbtn[data-ptype]').forEach(function(b){
     b.onclick=function(){
       state.commercial = b.getAttribute('data-ptype')==='com';
       document.querySelectorAll('.segbtn[data-ptype]').forEach(function(x){x.classList.toggle('on',x===b);});
+      relabelChoices();
     };
   });
   document.querySelectorAll('.choice').forEach(function(c){
