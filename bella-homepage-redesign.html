@@ -244,6 +244,16 @@
   .door .go{margin-top:auto;padding-top:24px;font-size:12px;letter-spacing:.15em;text-transform:uppercase}
   .door .go span{border-bottom:1px solid var(--ink);padding-bottom:3px}
 
+  /* ---------- what we do (services list, below the segments — no prices) ---------- */
+  .what{padding-bottom:84px}
+  .svc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:40px}
+  @media(max-width:900px){.svc-grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.svc-grid{grid-template-columns:1fr}}
+  .svc-item{background:#fff;padding:26px 24px;display:flex;flex-direction:column;gap:10px}
+  .svc-item .ico{width:26px;height:26px;color:var(--ink);opacity:1;stroke-width:1.2}
+  .svc-item h3{font-size:16.5px;margin-top:2px}
+  .svc-item p{font-size:13.5px;color:var(--soft);line-height:1.5}
+
   /* ---------- work reel: snap-scrolling before/after film strip ---------- */
   .reel-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px}
   .reel-head .head{max-width:none;flex:1}
@@ -840,6 +850,27 @@
     </div>
   </a>
 </div>
+
+<!-- ================= WHAT WE DO (services list, no prices) ================= -->
+<section class="what" id="services">
+  <div class="head">
+    <p class="micro">What we do</p>
+    <h2>Everything a listing needs, from one studio.</h2>
+    <p>Real interior designers and 3D artists handle the full visual package, composed by hand and back in 24 to 48 hours.</p>
+  </div>
+  <div class="wrap">
+    <div class="svc-grid">
+      <div class="svc-item"><svg class="ico"><use href="#i-pen"/></svg><h3>Virtual staging</h3><p>Empty rooms furnished by real interior designers to match the home and the buyer.</p></div>
+      <div class="svc-item"><svg class="ico"><use href="#i-x"/></svg><h3>Furniture removal</h3><p>Clear occupied or cluttered rooms, then restage them clean.</p></div>
+      <div class="svc-item"><svg class="ico"><use href="#i-swatch"/></svg><h3>Virtual renovation</h3><p>Modernize dated finishes, floors, and fixtures before staging.</p></div>
+      <div class="svc-item"><svg class="ico"><use href="#i-doc"/></svg><h3>3D floor plans</h3><p>Furnished, to-scale layouts buyers can actually walk.</p></div>
+      <div class="svc-item"><svg class="ico"><use href="#i-image"/></svg><h3>Day-to-dusk edits</h3><p>Turn a flat daytime exterior into a warm twilight hero shot.</p></div>
+      <div class="svc-item"><svg class="ico"><use href="#i-eye"/></svg><h3>Virtual tours &amp; 360°</h3><p>Walkable tours and 360° rooms stitched from your photos.</p></div>
+      <div class="svc-item"><svg class="ico"><use href="#i-note"/></svg><h3>3D renders</h3><p>Photoreal interiors and exteriors from plans, before you build.</p></div>
+      <div class="svc-item"><svg class="ico"><use href="#i-plus"/></svg><h3>Sky swaps &amp; photo edits</h3><p>Sky replacement, item removal, and general image enhancement.</p></div>
+    </div>
+  </div>
+</section>
 
 <!-- ================= WORK ================= -->
 <section id="work">
