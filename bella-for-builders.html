@@ -132,6 +132,20 @@
   details[open] summary::after{transform:rotate(45deg)}
   details p{padding:0 0 22px;color:var(--soft);font-size:15px;max-width:70ch}
 
+  /* sales-cycle timeline */
+  .cycle{background:var(--bg);border-top:1px solid var(--line)}
+  .cycle-track{display:grid;grid-template-columns:repeat(4,1fr);margin-top:44px;position:relative}
+  .cycle-track::before{content:"";position:absolute;top:21px;left:6%;right:6%;height:1px;background:var(--line)}
+  .phase{padding:0 20px}.phase:first-child{padding-left:0}.phase:last-child{padding-right:0}
+  .phase .node{width:44px;height:44px;border-radius:50%;background:#fff;border:1px solid var(--line);display:grid;place-items:center;font-size:13px;color:var(--faint);position:relative;z-index:1}
+  .phase.bella .node{background:var(--green);border-color:var(--green);color:#fff}
+  .phase .when{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-top:18px}
+  .phase h3{font-size:18px;margin:6px 0 6px;font-weight:300}
+  .phase p{font-size:13.5px;color:var(--soft)}
+  .phase .tagb{display:inline-block;margin-top:12px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);border:1px solid var(--green);padding:5px 10px}
+  .phase .tagn{display:inline-block;margin-top:12px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  @media(max-width:820px){.cycle-track{grid-template-columns:1fr}.cycle-track::before{display:none}.phase{padding:22px 0 0;border-top:1px solid var(--line);margin-top:22px}.phase:first-child{border-top:0;margin-top:0;padding-top:0}}
+
   footer{background:var(--dark);color:#6F6A63;padding:40px var(--pad) 30px;font-size:13px}
   .foot{max-width:1200px;margin:0 auto}
   .foot .seg{display:flex;flex-wrap:wrap;gap:8px 22px;padding-bottom:22px;border-bottom:1px solid #2E2B28;margin-bottom:20px}
@@ -224,6 +238,21 @@
         <div class="price"><b>Tours from $46</b> · scoped per project</div>
       </div>
     </div>
+  </div>
+</div></section>
+
+<!-- SALES CYCLE -->
+<section class="cycle"><div class="wrap">
+  <div class="head">
+    <p class="micro">Where Bella fits in your sales cycle</p>
+    <h2>From blueprint to sold, we're in the sale the whole way.</h2>
+    <p>Renderings sell the home before you break ground. Staging finishes the story once it's standing.</p>
+  </div>
+  <div class="cycle-track">
+    <div class="phase bella"><div class="node">1</div><div class="when">Pre-construction</div><h3>Sell from the drawings</h3><p>Before you break ground, photoreal 3D exteriors, interiors, and furnished floor plans give your sales office something to sell.</p><span class="tagb">3D renders · floor plans</span></div>
+    <div class="phase bella"><div class="node">2</div><div class="when">Under construction</div><h3>Keep pre-sales moving</h3><p>While crews build, renders and 3D tours keep buyers reserving units off plan.</p><span class="tagb">Renders · 3D tours</span></div>
+    <div class="phase bella"><div class="node">3</div><div class="when">Move-in ready</div><h3>Stage the model units</h3><p>Once homes are standing, we virtually stage model units and spec inventory, with no rental furniture required.</p><span class="tagb">Virtual staging</span></div>
+    <div class="phase bella"><div class="node">4</div><div class="when">On the market</div><h3>Close the inventory</h3><p>MLS-ready staged photos and tours help your last units sell faster.</p><span class="tagb">Staging · tours</span></div>
   </div>
 </div></section>
 
