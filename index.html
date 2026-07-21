@@ -244,6 +244,17 @@
   .door .go{margin-top:auto;padding-top:24px;font-size:12px;letter-spacing:.15em;text-transform:uppercase}
   .door .go span{border-bottom:1px solid var(--ink);padding-bottom:3px}
 
+  /* ---------- what we do (services) ---------- */
+  .what{padding-bottom:76px}
+  .svc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:40px}
+  @media(max-width:900px){.svc-grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.svc-grid{grid-template-columns:1fr}}
+  .svc-item{background:#fff;padding:26px 24px;display:flex;flex-direction:column;gap:9px}
+  .svc-item .ico{width:26px;height:26px;color:var(--ink);opacity:1;stroke-width:1.2}
+  .svc-item h3{font-size:16.5px;margin-top:2px}
+  .svc-item p{font-size:13.5px;color:var(--soft);line-height:1.5;flex:1}
+  .svc-item .pr{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--green)}
+
   /* ---------- work reel: snap-scrolling before/after film strip ---------- */
   .reel-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px}
   .reel-head .head{max-width:none;flex:1}
@@ -745,6 +756,7 @@
   <div class="nav">
     <a class="mark" href="#">BELLA</a>
     <nav>
+      <a href="#services">Services</a>
       <a href="#work">Work</a>
       <a href="bella-lookbook.html">Lookbook</a>
       <a href="#pricing">Pricing</a>
@@ -795,6 +807,28 @@
     <span class="rating-txt"><b>4.9</b> on Google &middot; Trusted by real estate professionals across the US &amp; Canada</span>
   </div>
 </div>
+
+<!-- ================= TWO DOORS ================= -->
+<!-- ================= WHAT WE DO ================= -->
+<section class="what" id="services">
+  <div class="head">
+    <p class="micro">What we do</p>
+    <h2>Everything a listing needs, from one studio.</h2>
+    <p>Real interior designers and 3D artists handle the full visual package, composed by hand and back in 24 to 48 hours.</p>
+  </div>
+  <div class="wrap">
+    <div class="svc-grid">
+      <div class="svc-item"><svg class="ico"><use href="#i-pen"/></svg><h3>Virtual staging</h3><p>Empty rooms furnished by real interior designers to match the home and the buyer.</p><span class="pr">From $45 / photo</span></div>
+      <div class="svc-item"><svg class="ico"><use href="#i-x"/></svg><h3>Furniture removal</h3><p>Clear occupied or cluttered rooms, then restage them clean.</p><span class="pr">From $55 / photo</span></div>
+      <div class="svc-item"><svg class="ico"><use href="#i-swatch"/></svg><h3>Virtual renovation</h3><p>Modernize dated finishes, floors, and fixtures before staging.</p><span class="pr">From $95 / photo</span></div>
+      <div class="svc-item"><svg class="ico"><use href="#i-doc"/></svg><h3>3D floor plans</h3><p>Furnished, to-scale layouts buyers can actually walk.</p><span class="pr">From $84</span></div>
+      <div class="svc-item"><svg class="ico"><use href="#i-image"/></svg><h3>Day-to-dusk edits</h3><p>Turn a flat daytime exterior into a warm twilight hero shot.</p><span class="pr">From $7 / photo</span></div>
+      <div class="svc-item"><svg class="ico"><use href="#i-eye"/></svg><h3>Virtual tours &amp; 360°</h3><p>Walkable tours and 360° rooms stitched from your photos.</p><span class="pr">From $31 / photo</span></div>
+      <div class="svc-item"><svg class="ico"><use href="#i-note"/></svg><h3>3D renders</h3><p>Photoreal interiors and exteriors from plans, before you build.</p><span class="pr">From $630</span></div>
+      <div class="svc-item"><svg class="ico"><use href="#i-plus"/></svg><h3>Sky swaps &amp; photo edits</h3><p>Sky replacement, item removal, and general image enhancement.</p><span class="pr">Priced per photo</span></div>
+    </div>
+  </div>
+</section>
 
 <!-- ================= TWO DOORS ================= -->
 <div class="doors" id="segments">
