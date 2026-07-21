@@ -182,13 +182,13 @@
 
   /* ---------- lightbox ---------- */
   .lb{position:fixed;inset:0;z-index:120;background:rgba(16,14,12,.94);display:none;
-    align-items:center;justify-content:center;padding:3vw}
+    align-items:flex-start;justify-content:center;padding:3vw;overflow-y:auto}
   .lb.open{display:flex}
   /* cap to ~native pixel size so a 520px catalog image renders crisp, not upscaled+soft */
-  .lb-fig{margin:0;max-width:min(660px,92vw);width:100%;display:flex;flex-direction:column;gap:14px}
+  .lb-fig{margin:auto;max-width:min(660px,92vw);width:100%;display:flex;flex-direction:column;gap:14px}
   .lb-imgwrap{background:#0d0b0a;display:flex;align-items:center;justify-content:center;
-    max-height:min(70vh,460px);overflow:hidden}
-  .lb-imgwrap img{max-width:100%;max-height:min(70vh,460px);object-fit:contain;display:block}
+    max-height:min(62vh,440px);overflow:hidden}
+  .lb-imgwrap img{max-width:100%;max-height:min(62vh,440px);object-fit:contain;display:block}
   .lb-cap{display:flex;align-items:center;gap:18px;color:#EDE9E2;flex-wrap:wrap}
   .lb-meta{flex:1;min-width:0}
   .lb-meta b{font-weight:400;font-size:17px;letter-spacing:.04em}
@@ -200,6 +200,19 @@
   .lb-save.on{background:var(--heart);border-color:var(--heart)}
   .lb-save.on .ico{fill:#fff}
   .lb-count{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:#9B958C}
+  /* "used in these jobs" — SAMPLE data until Bella's SKU->job mapping is wired in */
+  .lb-jobs{border-top:1px solid rgba(255,255,255,.12);padding-top:15px}
+  .lb-jobs .jh{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .lb-jobs .jh b{color:#EDE9E2;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:400}
+  .lb-jobs .jh .smp{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#E7C36A;border:1px solid rgba(231,195,106,.5);padding:2px 7px;border-radius:99px}
+  .lb-jobs .jrow{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none}
+  .lb-jobs .jrow::-webkit-scrollbar{display:none}
+  .lb-jobs .job{flex:0 0 138px;background:#141210;border:1px solid rgba(255,255,255,.1)}
+  .lb-jobs .job img{width:100%;height:92px;object-fit:cover;display:block}
+  .lb-jobs .job .jt{padding:9px 10px}
+  .lb-jobs .job .jt b{display:block;color:#EDE9E2;font-size:12.5px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .lb-jobs .job .jt span{display:block;color:#9B958C;font-size:10.5px;letter-spacing:.05em;margin-top:3px}
+  .lb-jobs .note{color:#7d776e;font-size:10.5px;margin-top:11px;letter-spacing:.02em}
   .lb-x{position:absolute;top:20px;right:24px;background:0;border:0;color:#fff;font-size:34px;line-height:1;cursor:pointer;opacity:.8}
   .lb-x:hover{opacity:1}
   .lb-arw{position:absolute;top:50%;transform:translateY(-50%);width:56px;height:56px;border:1px solid rgba(255,255,255,.3);
@@ -282,6 +295,7 @@
       <button class="lb-save" id="lbSave"><svg class="ico"><use href="#i-heart"/></svg><span id="lbSaveTxt">Save</span></button>
       <span class="lb-count" id="lbCount"></span>
     </figcaption>
+    <div class="lb-jobs" id="lbJobs"></div>
   </figure>
   <button class="lb-arw lb-next" id="lbNext" aria-label="Next">›</button>
 </div>
@@ -534,6 +548,23 @@ function updateCounter(i){
 }
 /* ---- lightbox ---- */
 const lb=document.getElementById('lb');
+/* SAMPLE job history — real Bella staged photos with illustrative details.
+   Swap this for Bella's real SKU->job mapping (which listing each set was placed in). */
+const CDN='https://www.bellavirtual.com/cdn/shop/files/';
+const JOBS_SAMPLE=[
+  {i:CDN+'053-600-j-street.74270.p2k.027.print_ly_tb.jpg?width=420', t:'600 J Street', o:'Sold over asking'},
+  {i:CDN+'Josh_Goetz_-_Room_1_Den-Family_Room_Tung_TP_1.jpg?width=420', t:'Lodge estate den', o:'Sold · 9 days on market'},
+  {i:CDN+'Gareth_Roberts_-_Living_room_to_Dinning_Room_S210-120_Bayview_Ave-13_Tung_NAM.jpg?width=420', t:'120 Bayview Ave, Toronto', o:'Sold · 12 days'},
+  {i:CDN+'Unit_706_289_Drake_Street_Vancouver-dining_room-1_nhi_hb.jpg?width=420', t:'289 Drake St, Vancouver', o:'Leased · 30 days'},
+  {i:CDN+'Minimal_Scandinavian_Kitchen_2025.jpg?width=420', t:'Scandinavian model unit', o:'Staged for pre-sale'},
+  {i:CDN+'INT_201_Bedroom.jpg?width=420', t:'Model unit · Bedroom', o:'Sold from renders'}
+];
+function skuHash(s){ let h=0; for(let k=0;k<s.length;k++) h=(h*31+s.charCodeAt(k))>>>0; return h; }
+function jobsForSku(sku){
+  const h=skuHash(sku), n=2+(h%2);           // 2 or 3 sample jobs, stable per SKU
+  const out=[]; for(let k=0;k<n;k++) out.push(JOBS_SAMPLE[(h+k)%JOBS_SAMPLE.length]);
+  return out;
+}
 function openLightbox(i){ lbIndex=i; renderLightbox(); lb.classList.add('open'); lb.setAttribute('aria-hidden','false'); }
 function closeLightbox(){ lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); lbIndex=-1; }
 function lbGo(step){ if(!order.length)return; lbIndex=(lbIndex+step+order.length)%order.length; renderLightbox(); }
@@ -548,6 +579,14 @@ function renderLightbox(){
   const btn=document.getElementById('lbSave');
   btn.classList.toggle('on',saved);
   document.getElementById('lbSaveTxt').textContent=saved?'Saved':'Save';
+  // used-in-these-jobs (sample data)
+  const jobs=jobsForSku(it.s);
+  document.getElementById('lbJobs').innerHTML=
+    '<div class="jh"><b>Used in these jobs</b><span class="smp">Sample</span></div>'
+    +'<div class="jrow">'+jobs.map(j=>
+      '<div class="job"><img src="'+j.i+'" alt="" loading="lazy"><div class="jt"><b>'+j.t+'</b><span>'+j.o+'</span></div></div>'
+    ).join('')+'</div>'
+    +'<p class="note">Sample job history — real placements wire in from Bella’s records.</p>';
 }
 document.getElementById('lbClose').onclick=closeLightbox;
 document.getElementById('lbPrev').onclick=()=>lbGo(-1);
