@@ -1402,18 +1402,24 @@
 
 document.querySelectorAll('.compare').forEach(function(el){
   var clip=el.querySelector('.clip'), h=el.querySelector('.h'), down=false;
-  function set(x){
-    var r=el.getBoundingClientRect();
-    if(!r.width) return;
-    var p=Math.max(0,Math.min(100,((x-r.left)/r.width)*100));
-    clip.style.clipPath='inset(0 '+(100-p)+'% 0 0)';
-    h.style.left=p+'%';
+  function setPct(p){ p=Math.max(0,Math.min(100,p)); clip.style.clipPath='inset(0 '+(100-p)+'% 0 0)'; h.style.left=p+'%'; }
+  function set(x){ var r=el.getBoundingClientRect(); if(!r.width) return; setPct(((x-r.left)/r.width)*100); }
+
+  var isHero=el.closest('.hero'), auto=!!isHero, raf=null;
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* auto-play the hero before/after like a short looping video, until the visitor takes over */
+  function loop(t){
+    if(!auto) return;
+    var phase=(t%6000)/6000;                       // ~6s round trip
+    var e=0.5-0.5*Math.cos(phase*2*Math.PI);       // smooth ease 0..1..0
+    setPct(14+e*72);
+    raf=requestAnimationFrame(loop);
   }
-  el.addEventListener('pointerdown',function(e){
-    down=true;
-    var hero=el.closest('.hero'); if(hero) hero.classList.add('touched');
-    set(e.clientX); e.preventDefault();
-  });
+  function stopAuto(){ if(!auto)return; auto=false; if(raf)cancelAnimationFrame(raf); if(isHero)isHero.classList.add('touched'); }
+  if(auto && !reduce){ raf=requestAnimationFrame(loop); } else if(auto){ setPct(62); }
+
+  el.addEventListener('pointerdown',function(e){ down=true; stopAuto(); set(e.clientX); e.preventDefault(); });
+  el.addEventListener('mouseenter',function(){ stopAuto(); });   // hover takes control on desktop
   window.addEventListener('pointermove',function(e){ if(down) set(e.clientX); });
   window.addEventListener('pointerup',function(){ down=false; });
 });
