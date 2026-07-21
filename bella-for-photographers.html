@@ -62,8 +62,16 @@
   .hero .row{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
   .hero .btn-ghost{border-color:rgba(255,255,255,.5);color:#fff}.hero .btn-ghost:hover{background:#fff;color:var(--ink)}
   .hero figure{position:relative;overflow:hidden}
-  .hero figure img{width:100%;aspect-ratio:1.4;object-fit:cover}
-  .hero figure .tag{position:absolute;left:14px;bottom:14px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:rgba(20,18,16,.6);padding:6px 12px;backdrop-filter:blur(3px)}
+  .hero figure .tag{position:absolute;left:14px;bottom:14px;z-index:4;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:rgba(20,18,16,.6);padding:6px 12px;backdrop-filter:blur(3px)}
+  /* before/after slider — the result a photographer delivers */
+  .compare{position:relative;overflow:hidden;cursor:ew-resize;user-select:none;aspect-ratio:1.4;background:#26231F}
+  .compare img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+  .compare .clip{position:absolute;inset:0;z-index:2;clip-path:inset(0 50% 0 0);will-change:clip-path}
+  .compare .h{position:absolute;top:0;bottom:0;left:50%;width:1px;background:rgba(255,255,255,.92);z-index:3;pointer-events:none}
+  .compare .h::after{content:"";position:absolute;top:50%;left:50%;width:40px;height:40px;transform:translate(-50%,-50%);border-radius:50%;background:rgba(255,255,255,.95);box-shadow:0 3px 18px rgba(0,0,0,.32)}
+  .compare .h::before{content:"‹›";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:4;font-size:15px;color:var(--ink);letter-spacing:1px}
+  .compare .ct{position:absolute;top:14px;z-index:3;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.9);text-shadow:0 1px 8px rgba(0,0,0,.6)}
+  .compare .ct.l{left:16px}.compare .ct.r{right:16px}
 
   .strip{display:flex;border-bottom:1px solid var(--line);background:var(--bg)}
   .strip div{flex:1;padding:22px 18px;text-align:center;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);border-right:1px solid var(--line)}
@@ -161,8 +169,14 @@
       </div>
     </div>
     <figure>
-      <img src="https://www.bellavirtual.com/cdn/shop/files/053-600-j-street.74270.p2k.027.print_ly_tb.jpg?width=1200" alt="A room a photographer shot, virtually staged by Bella and delivered under the photographer's brand" fetchpriority="high" loading="eager">
-      <span class="tag">White-label · your brand</span>
+      <div class="compare" id="ba">
+        <img src="https://www.bellavirtual.com/cdn/shop/files/053-600-j-street.74270.p2k.027.print_ly_tb.jpg?width=1200" alt="A room a photographer shot, virtually staged by Bella and delivered under the photographer's brand" fetchpriority="high">
+        <div class="clip"><img src="https://www.bellavirtual.com/cdn/shop/files/053-600-j-street.74270.p2k.027.print.jpg?width=1200" alt="The same room before staging, straight off the shoot"></div>
+        <span class="ct l">Your shot</span>
+        <span class="ct r">What they see</span>
+        <div class="h"></div>
+      </div>
+      <span class="tag">Drag · your brand on the file</span>
     </figure>
   </div>
 </section>
@@ -273,5 +287,18 @@
     </div>
   </div>
 </footer>
+<script>
+(function(){
+  var el=document.getElementById('ba'); if(!el) return;
+  var clip=el.querySelector('.clip'), h=el.querySelector('.h'), down=false;
+  function setPct(p){ p=Math.max(0,Math.min(100,p)); clip.style.clipPath='inset(0 '+(100-p)+'% 0 0)'; h.style.left=p+'%'; }
+  function set(x){ var r=el.getBoundingClientRect(); if(!r.width) return; setPct(((x-r.left)/r.width)*100); }
+  setPct(52);
+  el.addEventListener('pointerdown',function(e){ down=true; set(e.clientX); e.preventDefault(); });
+  window.addEventListener('pointermove',function(e){ if(down) set(e.clientX); });
+  window.addEventListener('pointerup',function(){ down=false; });
+  el.addEventListener('mousemove',function(e){ if(!down) set(e.clientX); }); // hover-scrub on desktop
+})();
+</script>
 </body>
 </html>
