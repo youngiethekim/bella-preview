@@ -74,6 +74,10 @@
   .toggle.on{background:var(--green)}
   .toggle.on::after{transform:translateX(22px)}
   .qrow .price{font-size:14px;color:var(--soft);white-space:nowrap}
+  .pano{position:relative;height:230px;overflow:hidden;background:#111;cursor:grab;user-select:none;border:1px solid var(--line)}
+  .pano.grab{cursor:grabbing}
+  .pano-img{position:absolute;inset:0;background-image:url('https://pannellum.org/images/alma.jpg');background-size:auto 100%;background-repeat:repeat-x;background-position:0 center;will-change:background-position}
+  .pano-tag{position:absolute;left:12px;bottom:12px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.55);padding:6px 12px;backdrop-filter:blur(3px);pointer-events:none}
   .saved-note{background:#F5F2EC;border:1px solid var(--line);padding:16px 20px;font-size:14px;color:var(--soft);margin-top:5px;display:flex;gap:10px;align-items:center}
   .saved-note b{color:var(--ink);font-weight:400}
   .saved-note a{margin-left:auto;text-decoration:underline;text-underline-offset:3px;font-size:13px}
@@ -208,7 +212,7 @@
           occupied:{unit:55,stage:'Furniture removal + staging',path:'listing',blurb:'We clear the room, then stage it'},
           dated:{unit:95,stage:'Virtual renovation + staging',path:'listing',blurb:'Modernized finishes, then staged'},
           prebuild:{path:'build'} };
-  var PR={FP2D:24,FP3D:84,TOUR:46,DUSK:7,RINT:630,REXT:840,RINT_C:490,REXT_C:980};
+  var PR={FP2D:24,FP3D:84,TOUR:46,DUSK:7,RINT:630,REXT:840,RINT_C:490,REXT_C:980,PANO:31};
   function rInt(){ return state.commercial?PR.RINT_C:PR.RINT; }
   function rExt(){ return state.commercial?PR.REXT_C:PR.REXT; }
   /* PLACEHOLDER commercial rates for staging & floor plans — confirm real commercial pricing */
@@ -216,7 +220,7 @@
   var CFP3D=110;                             // commercial 3D floor plan
   function stageUnit(){ var p=P[state.proj]; if(!p||!p.unit) return 0; return state.commercial?(CU[state.proj]||p.unit):p.unit; }
   function fp3d(){ return state.commercial?CFP3D:PR.FP3D; }
-  var state={ proj:null, commercial:false, photos:8, floor:false, tour:false, dusk:false,
+  var state={ proj:null, commercial:false, photos:8, floor:false, tour:false, dusk:false, pano:0,
               rint:1, rext:1, rfp:1, useInt:true, useExt:true, useFp:true };
 
   // saved lookbook pieces
@@ -235,7 +239,8 @@
       if(state.floor) L.push(['3D floor plan', money(fp3d())]);
       if(state.tour) L.push(['Virtual house tour', money(PR.TOUR)]);
       if(state.dusk) L.push(['Day-to-dusk edits × '+state.photos, money(PR.DUSK*state.photos)]);
-      var total=sub-disc+(state.floor?fp3d():0)+(state.tour?PR.TOUR:0)+(state.dusk?PR.DUSK*state.photos:0);
+      if(state.pano) L.push(['360° virtual tour × '+state.pano, money(PR.PANO*state.pano)]);
+      var total=sub-disc+(state.floor?fp3d():0)+(state.tour?PR.TOUR:0)+(state.dusk?PR.DUSK*state.photos:0)+(state.pano?PR.PANO*state.pano:0);
       return {L:L,total:total,disc:disc};
     } else {
       var t=0;
@@ -265,12 +270,15 @@
         row('How many photos to stage?', p.stage+' · '+money(stageUnit())+' each, volume discounts apply', stepper('photos'))
        +toggleRow('Add a 3D floor plan','Buyers see the layout, furnished','floor','+'+money(fp3d()))
        +toggleRow('Add a virtual house tour','A walkable tour from your photos','tour','+'+money(PR.TOUR))
-       +toggleRow('Add day-to-dusk edits','Twilight hero shots','dusk','+'+money(PR.DUSK)+'/photo');
+       +toggleRow('Add day-to-dusk edits','Twilight hero shots','dusk','+'+money(PR.DUSK)+'/photo')
+       +'<div class="qrow"><span class="lbl"><b>360° virtual tour</b><span>Your photographer shoots 360° photos — we stitch and stage them into a walkable tour</span></span><span class="stepper" data-step="pano"><button data-d="-1">−</button><span class="v" id="v_pano"></span><button data-d="1">+</button></span><span class="price">$'+PR.PANO+' / 360° photo</span></div>'
+       +'<div class="pano" id="pano"><div class="pano-img" id="panoImg"></div><span class="pano-tag">Example 360° tour · drag to look around</span></div>';
       if(saved.length){
         box.insertAdjacentHTML('beforeend','<div class="saved-note"><span>You saved <b>'+saved.length+' style'+(saved.length>1?'s':'')+'</b> in the lookbook, and we will use them.</span><a href="bella-lookbook.html">Edit in lookbook →</a></div>');
       } else {
         box.insertAdjacentHTML('beforeend','<div class="saved-note"><span>Not sure on the look? Pick styles in the lookbook, or just tell us the buyer and our designers choose.</span><a href="bella-lookbook.html">Browse the lookbook →</a></div>');
       }
+      initPano();
     } else {
       document.getElementById('s2title').textContent='What do you need to show?';
       document.getElementById('s2sub').textContent='Pick the visuals your sales office needs. We build them from your drawings, no finished home required.';
@@ -300,7 +308,7 @@
     });
   }
   function sync(){
-    ['photos','rint','rext','rfp'].forEach(function(k){ var el=document.getElementById('v_'+k); if(el) el.textContent=state[k]; });
+    ['photos','rint','rext','rfp','pano'].forEach(function(k){ var el=document.getElementById('v_'+k); if(el) el.textContent=state[k]; });
     document.querySelectorAll('.toggle').forEach(function(t){ t.classList.toggle('on', !!state[t.getAttribute('data-tog')]); });
     document.getElementById('run2').textContent=money(lines().total);
   }
@@ -327,6 +335,18 @@
     box.innerHTML = opts.length ? opts.map(function(o){return '<div class="opt"><span class="oname">'+o[0]+'</span><span class="op">'+o[2]+'</span><button class="toggle" data-tog3="'+o[1]+'"></button></div>';}).join('')
       : '<div class="opt"><span class="oname">Everything is in your package.</span></div>';
     box.querySelectorAll('.toggle').forEach(function(t){ t.onclick=function(){ var k=t.getAttribute('data-tog3'); state[k]=!state[k]; buildSummary(); }; });
+  }
+
+  // ---- 360 example: drag to look around, gentle auto-rotate until touched ----
+  function initPano(){
+    var box=document.getElementById('pano'), img=document.getElementById('panoImg'); if(!box||!img) return;
+    var x=0, dragging=false, sx=0, base=0, auto=true, raf;
+    function apply(){ img.style.backgroundPositionX=x+'px'; }
+    function tick(){ if(!auto) return; x-=0.35; apply(); raf=requestAnimationFrame(tick); }
+    raf=requestAnimationFrame(tick);
+    box.addEventListener('pointerdown',function(e){ dragging=true; auto=false; cancelAnimationFrame(raf); sx=e.clientX; base=x; box.classList.add('grab'); });
+    window.addEventListener('pointermove',function(e){ if(dragging){ x=base+(e.clientX-sx); apply(); } });
+    window.addEventListener('pointerup',function(){ dragging=false; box.classList.remove('grab'); });
   }
 
   // ---- navigation ----
