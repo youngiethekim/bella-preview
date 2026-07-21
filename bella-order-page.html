@@ -78,6 +78,21 @@
   .pano.grab{cursor:grabbing}
   .pano-img{position:absolute;inset:0;background-image:url('https://pannellum.org/images/alma.jpg');background-size:auto 100%;background-repeat:repeat-x;background-position:0 center;will-change:background-position}
   .pano-tag{position:absolute;left:12px;bottom:12px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.55);padding:6px 12px;backdrop-filter:blur(3px);pointer-events:none}
+  .linkbtn{background:0;border:0;padding:0;font-family:inherit;font-size:13px;color:var(--green);text-decoration:underline;cursor:pointer}
+  .linkbtn:hover{opacity:.7}
+  /* revealed sub-row when the 360 add-on is switched on */
+  .qsub{background:var(--bg);border:1px solid var(--line);border-top:0;padding:16px 26px;display:none;align-items:center;gap:18px;flex-wrap:wrap}
+  .qsub.show{display:flex}
+  .qsub .lbl{flex:1;min-width:200px}
+  .qsub .lbl b{font-weight:400;font-size:15px;display:block}
+  .qsub .lbl span{font-size:12.5px;color:var(--faint)}
+  /* 360 example modal */
+  .pmodal{position:fixed;inset:0;z-index:120;background:rgba(16,14,12,.94);display:none;align-items:center;justify-content:center;padding:4vw}
+  .pmodal.open{display:flex}
+  .pmodal .box{max-width:900px;width:100%;position:relative}
+  .pmodal .pano{height:min(70vh,460px)}
+  .pmodal .pclose{position:fixed;top:20px;right:26px;background:0;border:0;color:#fff;font-size:34px;line-height:1;cursor:pointer}
+  .pmodal .pcap{color:#EDE9E2;font-size:12.5px;margin-top:14px;text-align:center;max-width:60ch;margin-left:auto;margin-right:auto}
   .saved-note{background:#F5F2EC;border:1px solid var(--line);padding:16px 20px;font-size:14px;color:var(--soft);margin-top:5px;display:flex;gap:10px;align-items:center}
   .saved-note b{color:var(--ink);font-weight:400}
   .saved-note a{margin-left:auto;text-decoration:underline;text-underline-offset:3px;font-size:13px}
@@ -214,6 +229,15 @@
   </section>
 </div>
 
+<!-- 360 example (opens from the "See an example" link on Step 2) -->
+<div class="pmodal" id="panoModal">
+  <button class="pclose" id="panoClose" type="button" aria-label="Close">×</button>
+  <div class="box">
+    <div class="pano" id="pano"><div class="pano-img" id="panoImg"></div><span class="pano-tag">Example 360° tour · drag to look around</span></div>
+    <p class="pcap">A sample stitched tour. Your photographer captures the 360° photos on site — we stitch and virtually stage them into one walkable tour like this.</p>
+  </div>
+</div>
+
 <script>
 (function(){
   var P={ empty:{unit:45,stage:'Virtual staging',path:'listing',blurb:'Vacant rooms, furnished by a designer'},
@@ -228,7 +252,7 @@
   var CFP3D=110;                             // commercial 3D floor plan
   function stageUnit(){ var p=P[state.proj]; if(!p||!p.unit) return 0; return state.commercial?(CU[state.proj]||p.unit):p.unit; }
   function fp3d(){ return state.commercial?CFP3D:PR.FP3D; }
-  var state={ proj:null, commercial:false, photos:8, floor:false, tour:false, dusk:false, pano:0,
+  var state={ proj:null, commercial:false, photos:8, floor:false, tour:false, dusk:false, pano360:false, pano:3,
               rint:1, rext:1, rfp:1, useInt:true, useExt:true, useFp:true };
 
   // saved lookbook pieces
@@ -247,8 +271,8 @@
       if(state.floor) L.push(['3D floor plan', money(fp3d())]);
       if(state.tour) L.push(['Virtual house tour', money(PR.TOUR)]);
       if(state.dusk) L.push(['Day-to-dusk edits × '+state.photos, money(PR.DUSK*state.photos)]);
-      if(state.pano) L.push(['360° virtual tour × '+state.pano, money(PR.PANO*state.pano)]);
-      var total=sub-disc+(state.floor?fp3d():0)+(state.tour?PR.TOUR:0)+(state.dusk?PR.DUSK*state.photos:0)+(state.pano?PR.PANO*state.pano:0);
+      if(state.pano360) L.push(['360° virtual tour × '+state.pano, money(PR.PANO*state.pano)]);
+      var total=sub-disc+(state.floor?fp3d():0)+(state.tour?PR.TOUR:0)+(state.dusk?PR.DUSK*state.photos:0)+(state.pano360?PR.PANO*state.pano:0);
       return {L:L,total:total,disc:disc};
     } else {
       var t=0;
@@ -279,14 +303,15 @@
        +toggleRow('Add a 3D floor plan','Buyers see the layout, furnished','floor','+'+money(fp3d()))
        +toggleRow('Add a virtual house tour','A walkable tour from your photos','tour','+'+money(PR.TOUR))
        +toggleRow('Add day-to-dusk edits','Twilight hero shots','dusk','+'+money(PR.DUSK)+'/photo')
-       +'<div class="qrow"><span class="lbl"><b>360° virtual tour</b><span>Your photographer shoots 360° photos — we stitch and stage them into a walkable tour</span></span><span class="stepper" data-step="pano"><button data-d="-1">−</button><span class="v" id="v_pano"></span><button data-d="1">+</button></span><span class="price">$'+PR.PANO+' / 360° photo</span></div>'
-       +'<div class="pano" id="pano"><div class="pano-img" id="panoImg"></div><span class="pano-tag">Example 360° tour · drag to look around</span></div>';
+       +'<div class="qrow"><span class="lbl"><b>360° virtual tour</b><span>Your photographer shoots 360° photos — we stitch and stage them into one walkable tour. <button type="button" class="linkbtn" id="panoExample">See an example →</button></span></span><span class="price">+$'+PR.PANO+' / photo</span><button class="toggle" data-tog="pano360"></button></div>'
+       +'<div class="qsub" id="panoSub"><span class="lbl"><b>How many 360° photos?</b><span>Usually one per room you want walkable</span></span>'+stepper('pano')+'</div>';
       if(saved.length){
         box.insertAdjacentHTML('beforeend','<div class="saved-note"><span>You saved <b>'+saved.length+' style'+(saved.length>1?'s':'')+'</b> in the lookbook, and we will use them.</span><a href="bella-lookbook.html">Edit in lookbook →</a></div>');
       } else {
         box.insertAdjacentHTML('beforeend','<div class="saved-note"><span>Not sure on the look? Pick styles in the lookbook, or just tell us the buyer and our designers choose.</span><a href="bella-lookbook.html">Browse the lookbook →</a></div>');
       }
-      initPano();
+      var pex=document.getElementById('panoExample');
+      if(pex) pex.onclick=function(){ document.getElementById('panoModal').classList.add('open'); };
     } else {
       document.getElementById('s2title').textContent='What do you need to show?';
       document.getElementById('s2sub').textContent='Pick the visuals your sales office needs. We build them from your drawings, no finished home required.';
@@ -306,7 +331,7 @@
     document.querySelectorAll('.stepper').forEach(function(s){
       var key=s.getAttribute('data-step');
       s.querySelectorAll('button').forEach(function(b){ b.onclick=function(){
-        var d=+b.getAttribute('data-d'); var min=(key==='photos')?1:0;
+        var d=+b.getAttribute('data-d'); var min=(key==='photos'||key==='pano')?1:0;
         state[key]=Math.max(min,(state[key]||0)+d); sync();
       };});
     });
@@ -318,6 +343,7 @@
   function sync(){
     ['photos','rint','rext','rfp','pano'].forEach(function(k){ var el=document.getElementById('v_'+k); if(el) el.textContent=state[k]; });
     document.querySelectorAll('.toggle').forEach(function(t){ t.classList.toggle('on', !!state[t.getAttribute('data-tog')]); });
+    var ps=document.getElementById('panoSub'); if(ps) ps.classList.toggle('show', !!state.pano360);
     document.getElementById('run2').textContent=money(lines().total);
   }
 
@@ -396,6 +422,16 @@
   document.getElementById('to3').onclick=function(){ goStep(3); };
   document.getElementById('back2').onclick=function(){ goStep(2); };
   document.getElementById('startOrder').onclick=function(){ alert('Mockup: this continues to photo upload and checkout on the live site.  Package: '+packName()+' — '+money(lines().total)); };
+
+  // 360 example modal: init the drag-to-look pano once, wire close
+  initPano();
+  (function(){
+    var pm=document.getElementById('panoModal');
+    function close(){ pm.classList.remove('open'); }
+    document.getElementById('panoClose').onclick=close;
+    pm.addEventListener('click',function(e){ if(e.target===pm) close(); });
+    window.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
+  })();
 })();
 </script>
 </body>
