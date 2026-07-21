@@ -150,8 +150,10 @@
   .hero .compare{position:absolute;inset:0}
   /* scrim: the room photos are bright, so white type needs a floor to sit on */
   .hero .scrim{position:absolute;inset:0;z-index:4;pointer-events:none;
-    background:linear-gradient(to top,rgba(18,16,14,.92) 0%,rgba(18,16,14,.72) 26%,rgba(18,16,14,.32) 50%,rgba(18,16,14,0) 78%)}
-  .hero-copy{position:absolute;left:var(--pad);right:var(--pad);bottom:40px;z-index:6;color:#fff}
+    background:linear-gradient(to top,rgba(16,14,12,.94) 0%,rgba(16,14,12,.82) 34%,rgba(16,14,12,.5) 58%,rgba(16,14,12,.12) 82%,transparent 100%)}
+  /* copy overlays the slider — let drags pass through it so the before/after handle stays grabbable; only the buttons stay clickable */
+  .hero-copy{position:absolute;left:var(--pad);right:var(--pad);bottom:40px;z-index:6;color:#fff;pointer-events:none}
+  .hero-copy .row a{pointer-events:auto}
   .hero-copy h1{font-size:clamp(32px,4.2vw,58px);max-width:15ch;font-weight:300;text-shadow:0 2px 24px rgba(0,0,0,.45)}
   .hero-copy p{margin-top:14px;font-size:16px;max-width:44ch;color:rgba(255,255,255,.95);text-shadow:0 1px 14px rgba(0,0,0,.5)}
   .hero-copy .row{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap;align-items:center}
