@@ -211,6 +211,11 @@
   var PR={FP2D:24,FP3D:84,TOUR:46,DUSK:7,RINT:630,REXT:840,RINT_C:490,REXT_C:980};
   function rInt(){ return state.commercial?PR.RINT_C:PR.RINT; }
   function rExt(){ return state.commercial?PR.REXT_C:PR.REXT; }
+  /* PLACEHOLDER commercial rates for staging & floor plans — confirm real commercial pricing */
+  var CU={empty:65,occupied:75,dated:130};   // commercial staging, per photo
+  var CFP3D=110;                             // commercial 3D floor plan
+  function stageUnit(){ var p=P[state.proj]; if(!p||!p.unit) return 0; return state.commercial?(CU[state.proj]||p.unit):p.unit; }
+  function fp3d(){ return state.commercial?CFP3D:PR.FP3D; }
   var state={ proj:null, commercial:false, photos:8, floor:false, tour:false, dusk:false,
               rint:1, rext:1, rfp:1, useInt:true, useExt:true, useFp:true };
 
@@ -224,19 +229,19 @@
   function lines(){
     var L=[], p=P[state.proj]; if(!p) return {L:L,total:0,disc:0};
     if(p.path==='listing'){
-      var sub=p.unit*state.photos, d=volDisc(state.photos), disc=sub*d;
+      var sub=stageUnit()*state.photos, d=volDisc(state.photos), disc=sub*d;
       L.push([p.stage+' × '+state.photos+' photos', money(sub)]);
       if(d) L.push(['Volume discount ('+(d*100)+'%)', '−'+money(disc)]);
-      if(state.floor) L.push(['3D floor plan', money(PR.FP3D)]);
+      if(state.floor) L.push(['3D floor plan', money(fp3d())]);
       if(state.tour) L.push(['Virtual house tour', money(PR.TOUR)]);
       if(state.dusk) L.push(['Day-to-dusk edits × '+state.photos, money(PR.DUSK*state.photos)]);
-      var total=sub-disc+(state.floor?PR.FP3D:0)+(state.tour?PR.TOUR:0)+(state.dusk?PR.DUSK*state.photos:0);
+      var total=sub-disc+(state.floor?fp3d():0)+(state.tour?PR.TOUR:0)+(state.dusk?PR.DUSK*state.photos:0);
       return {L:L,total:total,disc:disc};
     } else {
       var t=0;
       if(state.useInt){ L.push([(state.commercial?'Commercial interior render × ':'Interior 3D render × ')+state.rint, money(rInt()*state.rint)]); t+=rInt()*state.rint; }
       if(state.useExt){ L.push([(state.commercial?'Commercial exterior render × ':'Exterior 3D render × ')+state.rext, money(rExt()*state.rext)]); t+=rExt()*state.rext; }
-      if(state.useFp){ L.push(['3D floor plan × '+state.rfp, money(PR.FP3D*state.rfp)]); t+=PR.FP3D*state.rfp; }
+      if(state.useFp){ L.push(['3D floor plan × '+state.rfp, money(fp3d()*state.rfp)]); t+=fp3d()*state.rfp; }
       return {L:L,total:t,disc:0};
     }
   }
@@ -257,8 +262,8 @@
       document.getElementById('s2title').textContent='How big is the job?';
       document.getElementById('s2sub').textContent='Most listings run about 8 photos. Add a floor plan or tour if you want the full set.';
       box.innerHTML=
-        row('How many photos to stage?', p.stage+' · '+money(p.unit)+' each, volume discounts apply', stepper('photos'))
-       +toggleRow('Add a 3D floor plan','Buyers see the layout, furnished','floor','+'+money(PR.FP3D))
+        row('How many photos to stage?', p.stage+' · '+money(stageUnit())+' each, volume discounts apply', stepper('photos'))
+       +toggleRow('Add a 3D floor plan','Buyers see the layout, furnished','floor','+'+money(fp3d()))
        +toggleRow('Add a virtual house tour','A walkable tour from your photos','tour','+'+money(PR.TOUR))
        +toggleRow('Add day-to-dusk edits','Twilight hero shots','dusk','+'+money(PR.DUSK)+'/photo');
       if(saved.length){
@@ -272,7 +277,7 @@
       box.innerHTML=
         toggleStep((state.commercial?'Commercial interior renders':'Interior 3D renders'),'Photoreal rooms from your plans','useInt','rint','+'+money(rInt())+' each')
        +toggleStep((state.commercial?'Commercial exterior renders':'Exterior 3D renders'),'Elevations, streetscapes, aerials','useExt','rext','+'+money(rExt())+' each')
-       +toggleStep('Furnished 3D floor plans','Walk the layout','useFp','rfp','+'+money(PR.FP3D)+' each');
+       +toggleStep('Furnished 3D floor plans','Walk the layout','useFp','rfp','+'+money(fp3d())+' each');
     }
     bind(); sync();
   }
@@ -310,11 +315,11 @@
     // add-ons aside: show the toggles they didn't pick
     var opts=[], p=P[state.proj];
     if(p.path==='listing'){
-      if(!state.floor) opts.push(['Add a 3D floor plan','floor','+'+money(PR.FP3D)]);
+      if(!state.floor) opts.push(['Add a 3D floor plan','floor','+'+money(fp3d())]);
       if(!state.tour) opts.push(['Add a virtual tour','tour','+'+money(PR.TOUR)]);
       if(!state.dusk) opts.push(['Add day-to-dusk edits','dusk','+'+money(PR.DUSK)+'/photo']);
     } else {
-      if(!state.useFp) opts.push(['Add furnished floor plans','useFp','+'+money(PR.FP3D)]);
+      if(!state.useFp) opts.push(['Add furnished floor plans','useFp','+'+money(fp3d())]);
       if(!state.useInt) opts.push(['Add interior renders','useInt','+'+money(rInt())]);
       if(!state.useExt) opts.push(['Add exterior renders','useExt','+'+money(rExt())]);
     }
