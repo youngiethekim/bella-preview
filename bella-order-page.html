@@ -93,6 +93,15 @@
   .pmodal .pano{height:min(70vh,460px)}
   .pmodal .pclose{position:fixed;top:20px;right:26px;background:0;border:0;color:#fff;font-size:34px;line-height:1;cursor:pointer}
   .pmodal .pcap{color:#EDE9E2;font-size:12.5px;margin-top:14px;text-align:center;max-width:60ch;margin-left:auto;margin-right:auto}
+  /* volume-tier note under the config */
+  .tiers{font-size:12.5px;color:var(--soft);text-align:center;margin-top:8px;padding:2px 10px}
+  .tiers b{color:var(--ink);font-weight:500}
+  /* per-service example lightbox */
+  .exwrap{position:relative;background:#0d0b0a;overflow:hidden;max-height:min(70vh,520px);display:flex;align-items:center;justify-content:center}
+  .exwrap img{max-width:100%;max-height:min(70vh,520px);object-fit:contain;display:block}
+  .exba{position:absolute;top:14px;left:14px;z-index:2;background:rgba(0,0,0,.6);color:#fff;border:1px solid rgba(255,255,255,.4);font-family:inherit;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:8px 14px;cursor:pointer}
+  .exba:hover{background:rgba(0,0,0,.85)}
+  .exbadge{display:inline-block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(231,195,106,.55);padding:3px 8px;margin-right:8px;vertical-align:middle}
   .saved-note{background:#F5F2EC;border:1px solid var(--line);padding:16px 20px;font-size:14px;color:var(--soft);margin-top:5px;display:flex;gap:10px;align-items:center}
   .saved-note b{color:var(--ink);font-weight:400}
   .saved-note a{margin-left:auto;text-decoration:underline;text-underline-offset:3px;font-size:13px}
@@ -229,6 +238,15 @@
   </section>
 </div>
 
+<!-- per-service example lightbox (opens from any "See an example" link) -->
+<div class="pmodal" id="exModal">
+  <button class="pclose" id="exClose" type="button" aria-label="Close">×</button>
+  <div class="box">
+    <div class="exwrap"><button class="exba" id="exToggle" type="button">See before</button><img id="exImg" alt="Service example"></div>
+    <p class="pcap" id="exCap"></p>
+  </div>
+</div>
+
 <!-- 360 example (opens from the "See an example" link on Step 2) -->
 <div class="pmodal" id="panoModal">
   <button class="pclose" id="panoClose" type="button" aria-label="Close">×</button>
@@ -264,22 +282,24 @@
   // ---- line items + total for current state ----
   function lines(){
     var L=[], p=P[state.proj]; if(!p) return {L:L,total:0,disc:0};
+    // volume discount now scales EVERY quantity-based service, not just staging
     if(p.path==='listing'){
-      var sub=stageUnit()*state.photos, d=volDisc(state.photos), disc=sub*d;
-      L.push([p.stage+' × '+state.photos+' photos', money(sub)]);
-      if(d) L.push(['Volume discount ('+(d*100)+'%)', '−'+money(disc)]);
-      if(state.floor) L.push(['3D floor plan', money(fp3d())]);
-      if(state.tour) L.push(['Virtual house tour', money(PR.TOUR)]);
-      if(state.dusk) L.push(['Day-to-dusk edits × '+state.photos, money(PR.DUSK*state.photos)]);
-      if(state.pano360) L.push(['360° virtual tour × '+state.pano, money(PR.PANO*state.pano)]);
-      var total=sub-disc+(state.floor?fp3d():0)+(state.tour?PR.TOUR:0)+(state.dusk?PR.DUSK*state.photos:0)+(state.pano360?PR.PANO*state.pano:0);
+      var total=0, disc=0;
+      var stageCost=stageUnit()*state.photos, dStage=stageCost*volDisc(state.photos);
+      L.push([p.stage+' × '+state.photos+' photos', money(stageCost)]); total+=stageCost-dStage; disc+=dStage;
+      if(state.floor){ L.push(['3D floor plan', money(fp3d())]); total+=fp3d(); }
+      if(state.tour){ L.push(['Virtual house tour', money(PR.TOUR)]); total+=PR.TOUR; }
+      if(state.dusk){ var duskCost=PR.DUSK*state.photos, dDusk=duskCost*volDisc(state.photos); L.push(['Day-to-dusk edits × '+state.photos, money(duskCost)]); total+=duskCost-dDusk; disc+=dDusk; }
+      if(state.pano360){ var panoCost=PR.PANO*state.pano, dPano=panoCost*volDisc(state.pano); L.push(['360° virtual tour × '+state.pano, money(panoCost)]); total+=panoCost-dPano; disc+=dPano; }
+      if(disc) L.push(['Volume discount', '−'+money(disc)]);
       return {L:L,total:total,disc:disc};
     } else {
-      var t=0;
-      if(state.useInt){ L.push([(state.commercial?'Commercial interior render × ':'Interior 3D render × ')+state.rint, money(rInt()*state.rint)]); t+=rInt()*state.rint; }
-      if(state.useExt){ L.push([(state.commercial?'Commercial exterior render × ':'Exterior 3D render × ')+state.rext, money(rExt()*state.rext)]); t+=rExt()*state.rext; }
-      if(state.useFp){ L.push(['3D floor plan × '+state.rfp, money(fp3d()*state.rfp)]); t+=fp3d()*state.rfp; }
-      return {L:L,total:t,disc:0};
+      var t=0, bdisc=0;
+      if(state.useInt){ var ci=rInt()*state.rint, di=ci*volDisc(state.rint); L.push([(state.commercial?'Commercial interior render × ':'Interior 3D render × ')+state.rint, money(ci)]); t+=ci-di; bdisc+=di; }
+      if(state.useExt){ var ce=rExt()*state.rext, de=ce*volDisc(state.rext); L.push([(state.commercial?'Commercial exterior render × ':'Exterior 3D render × ')+state.rext, money(ce)]); t+=ce-de; bdisc+=de; }
+      if(state.useFp){ var cf=fp3d()*state.rfp, df=cf*volDisc(state.rfp); L.push(['3D floor plan × '+state.rfp, money(cf)]); t+=cf-df; bdisc+=df; }
+      if(bdisc) L.push(['Volume discount', '−'+money(bdisc)]);
+      return {L:L,total:t,disc:bdisc};
     }
   }
   function packName(){
@@ -299,10 +319,10 @@
       document.getElementById('s2title').textContent='How big is the job?';
       document.getElementById('s2sub').textContent=(state.commercial?'Most commercial spaces run about 8 photos. Add a floor plan or tour if you want the full set.':'Most listings run about 8 photos. Add a floor plan or tour if you want the full set.');
       box.innerHTML=
-        row('How many photos to stage?', p.stage+' · '+money(stageUnit())+' each, volume discounts apply', stepper('photos'))
-       +toggleRow('Add a 3D floor plan','Buyers see the layout, furnished','floor','+'+money(fp3d()))
-       +toggleRow('Add a virtual house tour','A walkable tour from your photos','tour','+'+money(PR.TOUR))
-       +toggleRow('Add day-to-dusk edits','Twilight hero shots','dusk','+'+money(PR.DUSK)+'/photo')
+        row('How many photos to stage?', p.stage+' · '+money(stageUnit())+' each, volume discounts apply', stepper('photos'), 'stage')
+       +toggleRow('Add a 3D floor plan','Buyers see the layout, furnished','floor','+'+money(fp3d()),'floor')
+       +toggleRow('Add a virtual house tour','A walkable tour from your photos','tour','+'+money(PR.TOUR),'tour')
+       +toggleRow('Add day-to-dusk edits','Twilight hero shots','dusk','+'+money(PR.DUSK)+'/photo','dusk')
        +'<div class="qrow"><span class="lbl"><b>360° virtual tour</b><span>Your photographer shoots 360° photos — we stitch and stage them into one walkable tour. <button type="button" class="linkbtn" id="panoExample">See an example →</button></span></span><span class="price">+$'+PR.PANO+' / photo</span><button class="toggle" data-tog="pano360"></button></div>'
        +'<div class="qsub" id="panoSub"><span class="lbl"><b>How many 360° photos?</b><span>Usually one per room you want walkable</span></span>'+stepper('pano')+'</div>';
       if(saved.length){
@@ -316,16 +336,18 @@
       document.getElementById('s2title').textContent='What do you need to show?';
       document.getElementById('s2sub').textContent='Pick the visuals your sales office needs. We build them from your drawings, no finished home required.';
       box.innerHTML=
-        toggleStep((state.commercial?'Commercial interior renders':'Interior 3D renders'),'Photoreal rooms from your plans','useInt','rint','+'+money(rInt())+' each')
-       +toggleStep((state.commercial?'Commercial exterior renders':'Exterior 3D renders'),'Elevations, streetscapes, aerials','useExt','rext','+'+money(rExt())+' each')
-       +toggleStep('Furnished 3D floor plans','Walk the layout','useFp','rfp','+'+money(fp3d())+' each');
+        toggleStep((state.commercial?'Commercial interior renders':'Interior 3D renders'),'Photoreal rooms from your plans','useInt','rint','+'+money(rInt())+' each','rint')
+       +toggleStep((state.commercial?'Commercial exterior renders':'Exterior 3D renders'),'Elevations, streetscapes, aerials','useExt','rext','+'+money(rExt())+' each','rext')
+       +toggleStep('Furnished 3D floor plans','Walk the layout','useFp','rfp','+'+money(fp3d())+' each','floor');
     }
+    box.insertAdjacentHTML('beforeend','<p class="tiers">Volume pricing, applied automatically to every service — <b>3+</b> save 5% · <b>6+</b> save 10% · <b>11+</b> save 15% · <b>21+</b> save 20%.</p>');
     bind(); sync();
   }
-  function row(name,sub,control){ return '<div class="qrow"><span class="lbl"><b>'+name+'</b><span>'+sub+'</span></span>'+control+'</div>'; }
+  function exLink(ex){ return ex? ' <button type="button" class="linkbtn" data-ex="'+ex+'">See an example →</button>' : ''; }
+  function row(name,sub,control,ex){ return '<div class="qrow"><span class="lbl"><b>'+name+'</b><span>'+sub+exLink(ex)+'</span></span>'+control+'</div>'; }
   function stepper(key){ return '<span class="stepper" data-step="'+key+'"><button data-d="-1">−</button><span class="v" id="v_'+key+'"></span><button data-d="1">+</button></span>'; }
-  function toggleRow(name,sub,key,price){ return '<div class="qrow"><span class="lbl"><b>'+name+'</b><span>'+sub+'</span></span><span class="price">'+price+'</span><button class="toggle" data-tog="'+key+'"></button></div>'; }
-  function toggleStep(name,sub,tkey,qkey,price){ return '<div class="qrow"><span class="lbl"><b>'+name+'</b><span>'+sub+'</span></span><span class="stepper" data-step="'+qkey+'"><button data-d="-1">−</button><span class="v" id="v_'+qkey+'"></span><button data-d="1">+</button></span><span class="price">'+price+'</span><button class="toggle" data-tog="'+tkey+'"></button></div>'; }
+  function toggleRow(name,sub,key,price,ex){ return '<div class="qrow"><span class="lbl"><b>'+name+'</b><span>'+sub+exLink(ex)+'</span></span><span class="price">'+price+'</span><button class="toggle" data-tog="'+key+'"></button></div>'; }
+  function toggleStep(name,sub,tkey,qkey,price,ex){ return '<div class="qrow"><span class="lbl"><b>'+name+'</b><span>'+sub+exLink(ex)+'</span></span><span class="stepper" data-step="'+qkey+'"><button data-d="-1">−</button><span class="v" id="v_'+qkey+'"></span><button data-d="1">+</button></span><span class="price">'+price+'</span><button class="toggle" data-tog="'+tkey+'"></button></div>'; }
 
   function bind(){
     document.querySelectorAll('.stepper').forEach(function(s){
@@ -422,6 +444,43 @@
   document.getElementById('to3').onclick=function(){ goStep(3); };
   document.getElementById('back2').onclick=function(){ goStep(2); };
   document.getElementById('startOrder').onclick=function(){ alert('Mockup: this continues to photo upload and checkout on the live site.  Package: '+packName()+' — '+money(lines().total)); };
+
+  // ---- per-service examples: real Bella work where available; nearest real image (flagged) as a stand-in otherwise ----
+  var CDN='https://www.bellavirtual.com/cdn/shop/files/', W='?width=1400';
+  var EX={
+    stage:{ before:CDN+'053-600-j-street.74270.p2k.027.print.jpg'+W, after:CDN+'053-600-j-street.74270.p2k.027.print_ly_tb.jpg'+W,
+            cap:'Virtual staging — a real Bella project at 600 J Street. Empty room, furnished by a designer.' },
+    dusk:{  before:CDN+'Calvin_Theme_Image_Nov_16_2025.jpg'+W, after:CDN+'Calvin_Theme_Dawn_Image.jpg'+W,
+            cap:'Day-to-dusk edit — real Bella work. A daytime exterior turned into a twilight hero shot.' },
+    rint:{  after:CDN+'INT_201_Bedroom.jpg'+W,
+            cap:'Interior 3D render — real Bella work, built from plans before the home exists.' },
+    /* PLACEHOLDER stand-ins: nearest real Bella image until true samples are supplied */
+    floor:{ after:CDN+'Living_Room_e6c83783-d966-4eca-b94d-1e7d1e6621cd.png'+W, placeholder:true,
+            cap:'A furnished 3D floor plan renders this layout from above so buyers can walk it. Real floor-plan sample coming.' },
+    tour:{  after:CDN+'Minimal_Scandinavian_Kitchen_2025.jpg'+W, placeholder:true,
+            cap:'A virtual house tour links your staged rooms into one walkthrough. Real tour sample coming.' },
+    rext:{  after:CDN+'INT_201_Bedroom.jpg'+W, placeholder:true,
+            cap:'Exterior renders show elevations, streetscapes and aerials from your drawings. Real exterior sample coming.' }
+  };
+  (function(){
+    var em=document.getElementById('exModal'), img=document.getElementById('exImg'),
+        cap=document.getElementById('exCap'), tog=document.getElementById('exToggle');
+    var cur=null, after=true;
+    function render(){ if(cur) img.src = after ? cur.after : (cur.before||cur.after); }
+    document.addEventListener('click',function(e){
+      var b=e.target.closest ? e.target.closest('[data-ex]') : null; if(!b) return;
+      cur=EX[b.getAttribute('data-ex')]; if(!cur) return;
+      after=true; render();
+      tog.style.display = cur.before ? '' : 'none'; tog.textContent='See before';
+      cap.innerHTML=(cur.placeholder?'<span class="exbadge">Illustrative</span>':'')+cur.cap;
+      em.classList.add('open');
+    });
+    tog.onclick=function(){ after=!after; render(); tog.textContent=after?'See before':'See after'; };
+    function close(){ em.classList.remove('open'); }
+    document.getElementById('exClose').onclick=close;
+    em.addEventListener('click',function(e){ if(e.target===em) close(); });
+    window.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
+  })();
 
   // 360 example modal: init the drag-to-look pano once, wire close
   initPano();
