@@ -367,6 +367,8 @@
       }
       var pex=document.getElementById('panoExample');
       if(pex) pex.onclick=function(){ document.getElementById('panoModal').classList.add('open'); };
+      // smart default: pre-pick the right package the first time we configure this project
+      if(defaultedFor!==state.proj){ applyPkg(state.proj==='dated'?'full':'ready'); defaultedFor=state.proj; }
     } else {
       document.getElementById('s2title').textContent='What do you need to show?';
       document.getElementById('s2sub').textContent='Pick the visuals your sales office needs. We build them from your drawings, no finished home required.';
@@ -387,6 +389,7 @@
   function toggleStep(name,sub,tkey,qkey,price,ex,ic){ return '<div class="qrow">'+qicon(ic)+'<span class="lbl"><b>'+name+'</b><span>'+sub+exLink(ex)+'</span></span><span class="stepper" data-step="'+qkey+'"><button data-d="-1">−</button><span class="v" id="v_'+qkey+'"></span><button data-d="1">+</button></span><span class="price">'+price+'</span><button class="toggle" data-tog="'+tkey+'"></button></div>'; }
 
   // add-on packages (presets over the à-la-carte toggles) — reduce decision fatigue
+  var defaultedFor=null;   // which project we've already pre-recommended a package for
   var PKG={ stage:{floor:false,tour:false,dusk:false,pano360:false},
             ready:{floor:true, tour:false,dusk:true, pano360:false},
             full: {floor:true, tour:true, dusk:true, pano360:true} };
