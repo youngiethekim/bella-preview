@@ -253,6 +253,17 @@
   .svc-item .ico{width:26px;height:26px;color:var(--ink);opacity:1;stroke-width:1.2}
   .svc-item h3{font-size:16.5px;margin-top:2px}
   .svc-item p{font-size:13.5px;color:var(--soft);line-height:1.5}
+  /* central showcase image that auto-scrolls through service examples */
+  .showcase{margin:40px 0 5px}
+  .sc-frame{position:relative;overflow:hidden;aspect-ratio:2.1;background:#EFECE8;border:1px solid var(--line)}
+  @media(max-width:640px){.sc-frame{aspect-ratio:1.5}}
+  .sc-track{display:flex;height:100%;transition:transform .8s cubic-bezier(.4,0,.2,1)}
+  .sc-slide{position:relative;flex:0 0 100%;height:100%}
+  .sc-slide img{width:100%;height:100%;object-fit:cover;display:block}
+  .sc-tag{position:absolute;left:18px;bottom:16px;background:rgba(20,18,16,.62);color:#fff;font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:8px 15px;backdrop-filter:blur(3px)}
+  .sc-dots{display:flex;gap:8px;justify-content:center;margin-top:16px}
+  .sc-dots button{width:7px;height:7px;border-radius:99px;border:0;background:var(--line);cursor:pointer;padding:0;transition:.25s}
+  .sc-dots button.on{background:var(--ink);width:22px}
 
   /* ---------- work reel: snap-scrolling before/after film strip ---------- */
   .reel-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px}
@@ -802,6 +813,37 @@
   </div>
 </div>
 
+<!-- ================= WHAT WE DO (showcase + services, no prices) ================= -->
+<section class="what" id="services">
+  <div class="head">
+    <p class="micro">What we do</p>
+    <h2>Everything a listing needs, from one studio.</h2>
+    <p>Real interior designers and 3D artists handle the full visual package, composed by hand and back in 24 to 48 hours.</p>
+  </div>
+  <div class="wrap">
+    <div class="showcase">
+      <div class="sc-frame"><div class="sc-track" id="scTrack">
+        <div class="sc-slide"><img src="https://www.bellavirtual.com/cdn/shop/files/053-600-j-street.74270.p2k.027.print_ly_tb.jpg?width=1400" alt="A living room virtually staged by Bella" loading="lazy"><span class="sc-tag">Virtual staging</span></div>
+        <div class="sc-slide"><img src="https://www.bellavirtual.com/cdn/shop/files/Calvin_Theme_Dawn_Image.jpg?width=1400" alt="A day-to-dusk twilight edit" loading="lazy"><span class="sc-tag">Day-to-dusk</span></div>
+        <div class="sc-slide"><img src="https://www.bellavirtual.com/cdn/shop/files/INT_201_Bedroom.jpg?width=1400" alt="A photoreal 3D interior render" loading="lazy"><span class="sc-tag">3D render</span></div>
+        <div class="sc-slide"><img src="https://www.bellavirtual.com/cdn/shop/files/Minimal_Scandinavian_Kitchen_2025.jpg?width=1400" alt="A Scandinavian kitchen staged by Bella" loading="lazy"><span class="sc-tag">Renovation &amp; staging</span></div>
+        <div class="sc-slide"><img src="https://www.bellavirtual.com/cdn/shop/files/Gareth_Roberts_-_Living_room_to_Dinning_Room_S210-120_Bayview_Ave-13_Tung_NAM.jpg?width=1400" alt="A suite staged with a sectional and dining area" loading="lazy"><span class="sc-tag">Furniture removal &amp; staging</span></div>
+      </div></div>
+      <div class="sc-dots" id="scDots"></div>
+    </div>
+    <div class="svc-grid">
+      <div class="svc-item"><svg class="ico"><use href="#i-sofa"/></svg><h3>Virtual staging</h3><p>Empty rooms furnished by real interior designers to match the home and the buyer.</p></div>
+      <div class="svc-item"><svg class="ico"><use href="#i-eraser"/></svg><h3>Furniture removal</h3><p>Clear occupied or cluttered rooms, then restage them clean.</p></div>
+      <div class="svc-item"><svg class="ico"><use href="#i-roller"/></svg><h3>Virtual renovation</h3><p>Modernize dated finishes, floors, and fixtures before staging.</p></div>
+      <div class="svc-item"><svg class="ico"><use href="#i-plan"/></svg><h3>3D floor plans</h3><p>Furnished, to-scale layouts buyers can actually walk.</p></div>
+      <div class="svc-item"><svg class="ico"><use href="#i-sun"/></svg><h3>Day-to-dusk edits</h3><p>Turn a flat daytime exterior into a warm twilight hero shot.</p></div>
+      <div class="svc-item"><svg class="ico"><use href="#i-360"/></svg><h3>Virtual tours &amp; 360°</h3><p>Walkable tours and 360° rooms stitched from your photos.</p></div>
+      <div class="svc-item"><svg class="ico"><use href="#i-cube"/></svg><h3>3D renders</h3><p>Photoreal interiors and exteriors from plans, before you build.</p></div>
+      <div class="svc-item"><svg class="ico"><use href="#i-cloud"/></svg><h3>Sky swaps &amp; photo edits</h3><p>Sky replacement, item removal, and general image enhancement.</p></div>
+    </div>
+  </div>
+</section>
+
 <!-- ================= TRUST BAND ================= -->
 <div class="quote quote-top">
   <p>“Bella is as good as I've seen.”</p>
@@ -858,27 +900,6 @@
     </div>
   </a>
 </div>
-
-<!-- ================= WHAT WE DO (services list, no prices) ================= -->
-<section class="what" id="services">
-  <div class="head">
-    <p class="micro">What we do</p>
-    <h2>Everything a listing needs, from one studio.</h2>
-    <p>Real interior designers and 3D artists handle the full visual package, composed by hand and back in 24 to 48 hours.</p>
-  </div>
-  <div class="wrap">
-    <div class="svc-grid">
-      <div class="svc-item"><svg class="ico"><use href="#i-sofa"/></svg><h3>Virtual staging</h3><p>Empty rooms furnished by real interior designers to match the home and the buyer.</p></div>
-      <div class="svc-item"><svg class="ico"><use href="#i-eraser"/></svg><h3>Furniture removal</h3><p>Clear occupied or cluttered rooms, then restage them clean.</p></div>
-      <div class="svc-item"><svg class="ico"><use href="#i-roller"/></svg><h3>Virtual renovation</h3><p>Modernize dated finishes, floors, and fixtures before staging.</p></div>
-      <div class="svc-item"><svg class="ico"><use href="#i-plan"/></svg><h3>3D floor plans</h3><p>Furnished, to-scale layouts buyers can actually walk.</p></div>
-      <div class="svc-item"><svg class="ico"><use href="#i-sun"/></svg><h3>Day-to-dusk edits</h3><p>Turn a flat daytime exterior into a warm twilight hero shot.</p></div>
-      <div class="svc-item"><svg class="ico"><use href="#i-360"/></svg><h3>Virtual tours &amp; 360°</h3><p>Walkable tours and 360° rooms stitched from your photos.</p></div>
-      <div class="svc-item"><svg class="ico"><use href="#i-cube"/></svg><h3>3D renders</h3><p>Photoreal interiors and exteriors from plans, before you build.</p></div>
-      <div class="svc-item"><svg class="ico"><use href="#i-cloud"/></svg><h3>Sky swaps &amp; photo edits</h3><p>Sky replacement, item removal, and general image enhancement.</p></div>
-    </div>
-  </div>
-</section>
 
 <!-- ================= WORK ================= -->
 <section id="work">
@@ -1506,6 +1527,22 @@ document.querySelectorAll('.compare').forEach(function(el){
   window.addEventListener('pointermove',function(e){ if(down) set(e.clientX); });
   window.addEventListener('pointerup',function(){ down=false; });
 });
+
+/* central showcase: auto-advance through service examples, pause on hover, dots to jump */
+(function(){
+  var track=document.getElementById('scTrack'); if(!track) return;
+  var n=track.children.length, i=0, dotsWrap=document.getElementById('scDots'), dots=[], timer;
+  for(var k=0;k<n;k++){ var b=document.createElement('button'); b.type='button'; b.setAttribute('aria-label','Show example '+(k+1));
+    (function(idx){ b.onclick=function(){ go(idx); restart(); }; })(k); dotsWrap.appendChild(b); dots.push(b); }
+  function render(){ track.style.transform='translateX(-'+(i*100)+'%)'; dots.forEach(function(d,x){ d.classList.toggle('on',x===i); }); }
+  function go(x){ i=(x+n)%n; render(); }
+  function start(){ timer=setInterval(function(){ go(i+1); }, 3400); }
+  function restart(){ clearInterval(timer); start(); }
+  var frame=track.closest('.sc-frame');
+  frame.addEventListener('mouseenter',function(){ clearInterval(timer); });
+  frame.addEventListener('mouseleave',start);
+  render(); start();
+})();
 </script>
 </body>
 </html>
