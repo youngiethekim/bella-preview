@@ -164,6 +164,36 @@
   .sec-q span{font-size:13px;color:var(--faint);display:block;margin-top:3px}
   .sec-price{font-size:13px;color:var(--faint);white-space:nowrap}
   .sec.on .sec-price{color:var(--green)}
+  .sec-chev{width:22px;height:22px;flex:0 0 22px;fill:none;stroke:var(--faint);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s cubic-bezier(.4,0,.2,1),stroke .15s}
+  .sec.open .sec-chev{transform:rotate(180deg);stroke:var(--ink)}
+  .sec.on .sec-chev{stroke:var(--green)}
+  .qtywrap{display:flex;align-items:center;gap:9px}
+  .qunit{font-size:12px;color:var(--faint);white-space:nowrap}
+  .subrow.off .qtywrap{opacity:.32;pointer-events:none}
+  /* inline "the look" chooser (under virtual staging) */
+  .stylebox{margin-top:18px;padding-top:18px;border-top:1px solid #DDE7DD}
+  .sb-lab{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:11px}
+  .sb-paths{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  @media(max-width:560px){.sb-paths{grid-template-columns:1fr}}
+  .sb-path{text-align:left;background:#fff;border:1px solid var(--line);padding:14px 16px;cursor:pointer;font-family:inherit;transition:.15s}
+  .sb-path:hover{border-color:var(--ink)}
+  .sb-path.on{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
+  .sb-path b{display:block;font-size:14.5px;font-weight:400}
+  .sb-path span{display:block;font-size:12px;color:var(--faint);margin-top:3px;line-height:1.4}
+  .sb-panel{display:none;margin-top:12px}
+  .sb-panel.show{display:block}
+  .sb-note{font-size:13px;color:var(--soft);line-height:1.55;max-width:62ch}
+  .sb-styles{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+  @media(max-width:640px){.sb-styles{grid-template-columns:repeat(3,1fr)}}
+  .sb-sty{background:#fff;border:1px solid var(--line);padding:0;cursor:pointer;font-family:inherit;overflow:hidden;transition:.15s}
+  .sb-sty:hover{border-color:var(--ink)}
+  .sb-sty.on{border-color:var(--green);box-shadow:inset 0 0 0 2px var(--green)}
+  .sb-sty .t{display:block;aspect-ratio:1.15;overflow:hidden;position:relative}
+  .sb-sty .t img{width:100%;height:100%;object-fit:cover;display:block}
+  .sb-sty .ck{position:absolute;top:5px;right:5px;width:18px;height:18px;border-radius:50%;background:var(--green);color:#fff;font-size:11px;display:none;place-items:center}
+  .sb-sty.on .ck{display:grid}
+  .sb-sty .nm{display:block;font-size:11.5px;padding:7px 6px;text-align:center}
+  .sb-panel .linkbtn{margin-top:12px;display:inline-block}
   .sectog{width:52px;height:30px;border-radius:99px;background:var(--line);border:0;cursor:pointer;position:relative;transition:background .2s;flex:0 0 52px}
   .sectog::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
   .sectog.on{background:var(--green)}
@@ -255,7 +285,10 @@
   .dz-s{display:block;font-size:11.5px;color:var(--faint);margin-top:2px}
   .req-fine{margin-top:18px;font-size:12.5px;color:var(--faint);line-height:1.5}
 
-  .wiz-foot{display:flex;justify-content:space-between;align-items:center;margin-top:30px;gap:14px;flex-wrap:wrap}
+  .wiz-foot{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+    position:sticky;bottom:0;z-index:15;margin:30px calc(var(--pad)*-1) 0;padding:16px var(--pad);
+    background:rgba(253,252,250,.94);backdrop-filter:blur(10px);border-top:1px solid var(--line);box-shadow:0 -10px 26px -18px rgba(0,0,0,.35)}
+  @media(max-width:560px){.wiz-foot{justify-content:center;text-align:center}}
   .wiz-foot .running{font-size:14px;color:var(--soft)}
   .wiz-foot .running b{color:var(--ink);font-weight:400;font-size:18px}
   .hide{display:none !important}
@@ -411,8 +444,9 @@
   var CFP3D=110;                             // commercial 3D floor plan
   function stageUnit(){ var p=P[state.proj]; if(!p||!p.unit) return 0; return state.commercial?(CU[state.proj]||p.unit):p.unit; }
   function fp3d(){ return state.commercial?CFP3D:PR.FP3D; }
-  var state={ proj:null, commercial:false, photos:8, mode:'ready', removal:false, reno:false, floor:false, fpn:1, floor2d:false, fp2dn:1, tour:false, dusk:false, sky:false, pano360:false, pano:3,
-              rint:1, rext:1, rfp:1, useInt:true, useExt:true, useFp:true };
+  var state={ proj:null, commercial:false, photos:8, mode:'ready', removal:false, reno:false, renoN:8, floor:false, fpn:1, floor2d:false, fp2dn:1, tour:false, dusk:false, duskN:8, sky:false, skyN:8, pano360:false, pano:3,
+              rint:1, rext:1, rfp:1, useInt:true, useExt:true, useFp:true,
+              styleMode:'pro', stylePick:null };
 
   // saved lookbook pieces
   var saved=[]; try{ saved=JSON.parse(localStorage.getItem('bellaProject')||'[]'); }catch(e){}
@@ -429,12 +463,12 @@
       var stageCost=stageUnit()*state.photos, dStage=stageCost*volDisc(state.photos);
       L.push(['Virtual staging × '+state.photos+' photos', money(stageCost)]); total+=stageCost-dStage; disc+=dStage;
       if(state.removal){ L.push(['Furniture removal', 'Free']); }
-      if(state.reno){ var renoCost=PR.RENO*state.photos, dReno=renoCost*volDisc(state.photos); L.push(['Virtual renovation × '+state.photos, money(renoCost)]); total+=renoCost-dReno; disc+=dReno; }
+      if(state.reno){ var renoCost=PR.RENO*state.renoN, dReno=renoCost*volDisc(state.renoN); L.push(['Virtual renovation × '+state.renoN, money(renoCost)]); total+=renoCost-dReno; disc+=dReno; }
       if(state.floor2d){ L.push(['2D floor plan × '+state.fp2dn+(state.fp2dn>1?' floors':' floor'), money(PR.FP2D*state.fp2dn)]); total+=PR.FP2D*state.fp2dn; }
       if(state.floor){ L.push(['3D floor plan × '+state.fpn+(state.fpn>1?' floors':' floor'), money(fp3d()*state.fpn)]); total+=fp3d()*state.fpn; }
       if(state.tour){ L.push(['Virtual house tour', money(PR.TOUR)]); total+=PR.TOUR; }
-      if(state.dusk){ var duskCost=PR.DUSK*state.photos, dDusk=duskCost*volDisc(state.photos); L.push(['Day-to-dusk edits × '+state.photos, money(duskCost)]); total+=duskCost-dDusk; disc+=dDusk; }
-      if(state.sky){ var skyCost=PR.SKY*state.photos, dSky=skyCost*volDisc(state.photos); L.push(['Sky replacement & retouching × '+state.photos, money(skyCost)]); total+=skyCost-dSky; disc+=dSky; }
+      if(state.dusk){ var duskCost=PR.DUSK*state.duskN, dDusk=duskCost*volDisc(state.duskN); L.push(['Day-to-dusk edits × '+state.duskN, money(duskCost)]); total+=duskCost-dDusk; disc+=dDusk; }
+      if(state.sky){ var skyCost=PR.SKY*state.skyN, dSky=skyCost*volDisc(state.skyN); L.push(['Sky replacement & retouching × '+state.skyN, money(skyCost)]); total+=skyCost-dSky; disc+=dSky; }
       if(state.pano360){ var panoCost=PR.PANO*state.pano, dPano=panoCost*volDisc(state.pano); L.push(['360° virtual tour × '+state.pano, money(panoCost)]); total+=panoCost-dPano; disc+=dPano; }
       if(disc) L.push(['Volume discount', '−'+money(disc)]);
       return {L:L,total:total,disc:disc};
@@ -475,19 +509,22 @@
          +'<span class="lbl"><b>Virtual staging</b><span>Empty rooms furnished by real interior designers · '+money(stageUnit())+' each, volume discounts apply'+exLink('stage')+'</span></span>'
          +stepper('photos')+'</div>'
          +'<div class="removal-row" id="removalRow"><span class="lbl"><b>Furniture removal</b><span>Occupied or cluttered? We clear the room first, then stage it clean.</span></span><span class="freeprice">Included free</span><button class="toggle" data-tog="removal"></button></div>'
+         +styleBox()
        +'</div>'
        // ACCORDION SECTIONS — each a plain-language question
        +'<div class="secs">'
-         +section('reno','Do you need to modernize it first?','Update dated floors, cabinets and finishes before staging — a virtual renovation.',
-             '<div class="sec-note">We modernize the finishes on <b>every staged photo</b>, then furnish. <b>+'+money(PR.RENO)+' / photo</b>. You provide photos of the dated space.</div>')
+         +section('reno','Do you need to virtually renovate it?','See what a modern renovation would look like — updated floors, cabinets and finishes — to show buyers the home’s full potential.',
+             subQty('Virtual renovation','Modernize the dated finishes, then furnish. Pick how many photos to renovate.','reno','renoN','photos','+'+money(PR.RENO)+' / photo','reno')
+            +'<div class="sec-note">Not every photo needs it — renovate just the dated rooms (like a tired kitchen or bath) and stage the rest as-is. You provide photos of the space.</div>')
          +section('edit','Do you need photo editing?','Small edits, big first impression — brighter, warmer, more clicks online.',
-             subRow('Day-to-dusk edits','Turn a daytime exterior into a twilight hero shot. You provide a daytime photo.','dusk','+'+money(PR.DUSK)+' / photo','dusk')
-            +subRow('Sky replacement &amp; retouching','Swap grey skies, clean up blemishes. You provide the exterior photos.','sky','+'+money(PR.SKY)+' / photo',''))
+             subQty('Day-to-dusk edits','Turn a daytime exterior into a twilight hero shot. You provide the daytime photos.','dusk','duskN','photos','+'+money(PR.DUSK)+' / photo','dusk')
+            +subQty('Sky replacement &amp; retouching','Swap grey skies, clean up blemishes. You provide the exterior photos.','sky','skyN','photos','+'+money(PR.SKY)+' / photo',''))
          +section('floor','Do you need floor plans?','Buyers understand the space before they visit. Priced per floor.',
              subStep('2D floor plan','A clean, labelled layout','floor2d','fp2dn','+'+money(PR.FP2D)+' / floor','floor2d')
             +subStep('3D floor plan','Furnished, so buyers can walk each level','floor','fpn','+'+money(fp3d())+' / floor','floor'))
          +section('tour','Do you need a 3D tour?','Keep buyers on your listing longer; out-of-town buyers can walk it without a showing.',
-             '<div class="subrow off" id="panoRow" data-substep="pano360"><span class="lbl"><b>360° virtual staging</b><span>We stitch and stage your 360° photos into one walkable tour. <button type="button" class="linkbtn" id="panoExample">See a sample &amp; what we need →</button></span></span><span class="stepper" data-step="pano"><button data-d="-1">−</button><span class="v" id="v_pano"></span><button data-d="1">+</button></span><span class="price">+$'+PR.PANO+' / photo</span><button class="toggle" data-tog="pano360"></button></div>'
+             subQty('360° virtual staging','We stitch and stage your 360° photos into one walkable tour','pano360','pano','rooms','+$'+PR.PANO+' / photo','')
+              .replace('</span></span><span class="qtywrap"','. <button type="button" class="linkbtn" id="panoExample">See a sample &amp; what we need →</button></span></span><span class="qtywrap"')
             +subRow('Virtual house tour','A walkable tour built from your listing photos','tour','+'+money(PR.TOUR),'tour'))
        +'</div>';
       if(saved.length){
@@ -514,7 +551,7 @@
        +toggleStep('Furnished 3D floor plans','Walk the layout','useFp','rfp','+'+money(fp3d())+' each','floor');
     }
     box.insertAdjacentHTML('beforeend','<p class="tiers">Volume pricing, applied automatically to every service — <b>3+</b> save 5% · <b>6+</b> save 10% · <b>11+</b> save 15% · <b>21+</b> save 20%.</p>');
-    bind(); sync();
+    bind(); bindStyle(); sync();
   }
   function exLink(ex){ return ex? ' <button type="button" class="linkbtn" data-ex="'+ex+'">See a sample &amp; what we need →</button>' : ''; }
   function qicon(ic){ return ic? '<svg class="qico"><use href="#i-'+ic+'"/></svg>' : ''; }
@@ -528,16 +565,51 @@
   function stepper(key){ return '<span class="stepper" data-step="'+key+'"><button data-d="-1">−</button><span class="v" id="v_'+key+'"></span><button data-d="1">+</button></span>'; }
   function toggleRow(name,sub,key,price,ex,ic){ return '<div class="qrow">'+qicon(ic)+'<span class="lbl"><b>'+name+'</b><span>'+sub+exLink(ex)+'</span></span><span class="price">'+price+'</span><button class="toggle" data-tog="'+key+'"></button></div>'; }
   function toggleStep(name,sub,tkey,qkey,price,ex,ic){ return '<div class="qrow">'+qicon(ic)+'<span class="lbl"><b>'+name+'</b><span>'+sub+exLink(ex)+'</span></span><span class="stepper" data-step="'+qkey+'"><button data-d="-1">−</button><span class="v" id="v_'+qkey+'"></span><button data-d="1">+</button></span><span class="price">'+price+'</span><button class="toggle" data-tog="'+tkey+'"></button></div>'; }
-  // accordion section (question-framed) + its sub-rows
+  // accordion section (question-framed). Click the header to open; choose the service inside.
   function section(key,q,sub,body){
     return '<div class="sec" data-sec="'+key+'"><div class="sec-head" data-sechead="'+key+'">'
       +'<span class="sec-q"><b>'+q+'</b><span>'+sub+'</span></span>'
       +'<span class="sec-price" id="sp_'+key+'"></span>'
-      +'<button class="sectog" data-sectog="'+key+'" type="button" aria-label="Toggle"></button></div>'
+      +'<svg class="sec-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></div>'
       +'<div class="sec-body"><div class="inner"><div class="sec-opts">'+body+'</div></div></div></div>';
   }
   function subRow(name,sub,tkey,price,ex){ return '<div class="subrow"><span class="lbl"><b>'+name+'</b><span>'+sub+exLink(ex)+'</span></span><span class="price">'+price+'</span><button class="toggle" data-tog="'+tkey+'"></button></div>'; }
-  function subStep(name,sub,tkey,qkey,price,ex){ return '<div class="subrow off" data-substep="'+tkey+'"><span class="lbl"><b>'+name+'</b><span>'+sub+exLink(ex)+'</span></span><span class="stepper" data-step="'+qkey+'"><button data-d="-1">−</button><span class="v" id="v_'+qkey+'"></span><button data-d="1">+</button></span><span class="price">'+price+'</span><button class="toggle" data-tog="'+tkey+'"></button></div>'; }
+  // sub-row with a quantity stepper (per photo/floor/room) — greyed until its toggle is on
+  function subQty(name,sub,tkey,qkey,unit,price,ex){
+    return '<div class="subrow off" data-substep="'+tkey+'"><span class="lbl"><b>'+name+'</b><span>'+sub+exLink(ex)+'</span></span>'
+      +'<span class="qtywrap"><span class="stepper" data-step="'+qkey+'"><button data-d="-1">−</button><span class="v" id="v_'+qkey+'"></span><button data-d="1">+</button></span><span class="qunit">'+unit+'</span></span>'
+      +'<span class="price">'+price+'</span><button class="toggle" data-tog="'+tkey+'"></button></div>';
+  }
+  function subStep(name,sub,tkey,qkey,price,ex){ return subQty(name,sub,tkey,qkey,'floors',price,ex); }
+  // ---- inline "the look" chooser: designers pick, or you pick a style + save room sets ----
+  var CAT='https://youngiethekim.github.io/bella-preview/bella-catalog/items/';
+  var STY=[{k:'modern',n:'Modern',im:'LR_MDRN_L148'},{k:'scandi',n:'Scandinavian',im:'LR_SCND_L381'},{k:'coastal',n:'Coastal',im:'LR_COAST_L521'},{k:'midcentury',n:'Mid-century',im:'LR_MCM_L446'},{k:'farmhouse',n:'Farmhouse',im:'LR_FARM_L382'},{k:'contemporary',n:'Contemporary',im:'LR_CONT_L387'}];
+  function styleBox(){
+    return '<div class="stylebox" id="stylebox"><div class="sb-lab">The look</div>'
+      +'<div class="sb-paths">'
+        +'<button class="sb-path" data-sm="pro" type="button"><b>Let our designers choose</b><span>We pick the style that sells for your buyer</span></button>'
+        +'<button class="sb-path" data-sm="self" type="button"><b>I’ll choose the look</b><span>Pick a style, save the room sets you like</span></button>'
+      +'</div>'
+      +'<div class="sb-panel" id="sbPro"><p class="sb-note">Tell us who’s buying — at checkout, or in your notes — and our interior designers match the style, palette and pieces to your market. You approve every staged photo before it goes live.</p></div>'
+      +'<div class="sb-panel" id="sbSelf"><div class="sb-styles">'
+        +STY.map(function(s){return '<button type="button" class="sb-sty" data-sk="'+s.k+'"><span class="t"><img src="'+CAT+s.im+'.jpg" alt="'+s.n+'" loading="lazy"><span class="ck">✓</span></span><span class="nm">'+s.n+'</span></button>';}).join('')
+        +'</div><a class="linkbtn" href="bella-lookbook.html">Save specific room sets in the lookbook →</a></div>'
+    +'</div>';
+  }
+  function bindStyle(){
+    var box=document.getElementById('stylebox'); if(!box) return;
+    box.querySelectorAll('.sb-path').forEach(function(b){ b.onclick=function(){ state.styleMode=b.getAttribute('data-sm'); syncStyle(); }; });
+    box.querySelectorAll('.sb-sty').forEach(function(b){ b.onclick=function(){ var k=b.getAttribute('data-sk'); state.stylePick=(state.stylePick===k?null:k); syncStyle(); }; });
+    syncStyle();
+  }
+  function syncStyle(){
+    var box=document.getElementById('stylebox'); if(!box) return;
+    box.querySelectorAll('.sb-path').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-sm')===state.styleMode); });
+    var pro=document.getElementById('sbPro'), self=document.getElementById('sbSelf');
+    if(pro) pro.classList.toggle('show', state.styleMode==='pro');
+    if(self) self.classList.toggle('show', state.styleMode==='self');
+    box.querySelectorAll('.sb-sty').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-sk')===state.stylePick); });
+  }
   // section grouping: which state fields each question controls
   var SECMAP={reno:['reno'],edit:['dusk','sky'],floor:['floor2d','floor'],tour:['pano360','tour']};
   var SECDEF={reno:'reno',edit:'dusk',floor:'floor',tour:'pano360'};
@@ -552,8 +624,8 @@
   }
   function secTotal(key){
     var n=0;
-    if(key==='reno'){ if(state.reno) n=PR.RENO*state.photos; }
-    else if(key==='edit'){ if(state.dusk)n+=PR.DUSK*state.photos; if(state.sky)n+=PR.SKY*state.photos; }
+    if(key==='reno'){ if(state.reno) n=PR.RENO*state.renoN; }
+    else if(key==='edit'){ if(state.dusk)n+=PR.DUSK*state.duskN; if(state.sky)n+=PR.SKY*state.skyN; }
     else if(key==='floor'){ if(state.floor2d)n+=PR.FP2D*state.fp2dn; if(state.floor)n+=fp3d()*state.fpn; }
     else if(key==='tour'){ if(state.pano360)n+=PR.PANO*state.pano; if(state.tour)n+=PR.TOUR; }
     return n;
@@ -578,35 +650,39 @@
   function bind(){
     document.querySelectorAll('.stepper').forEach(function(s){
       var key=s.getAttribute('data-step');
-      s.querySelectorAll('button').forEach(function(b){ b.onclick=function(){
-        var d=+b.getAttribute('data-d'); var min=(key==='photos'||key==='pano'||key==='fpn'||key==='fp2dn')?1:0;
-        state[key]=Math.max(min,(state[key]||0)+d); sync();
+      s.querySelectorAll('button').forEach(function(b){ b.onclick=function(e){ e.stopPropagation();
+        var d=+b.getAttribute('data-d'), perPhoto=(key==='renoN'||key==='duskN'||key==='skyN');
+        var min=(key==='photos'||key==='pano'||key==='fpn'||key==='fp2dn'||perPhoto)?1:0;
+        var nv=(state[key]||0)+d;
+        if(perPhoto) nv=Math.min(nv,state.photos);   // can’t edit more photos than you’re staging
+        state[key]=Math.max(min,nv); sync();
       };});
     });
     document.querySelectorAll('.toggle').forEach(function(t){
       var key=t.getAttribute('data-tog');
-      t.onclick=function(){ state[key]=!state[key]; reMode(); sync(); };
+      t.onclick=function(e){ e.stopPropagation();
+        state[key]=!state[key];
+        if(state[key]){ if(key==='reno')state.renoN=state.photos; if(key==='dusk')state.duskN=state.photos; if(key==='sky')state.skyN=state.photos; }
+        reMode(); sync();
+      };
     });
     document.querySelectorAll('.modechip[data-mode]').forEach(function(el){ el.onclick=function(){ applyMode(el.getAttribute('data-mode')); }; });
-    // accordion: click header to peek open/closed (without changing on-state)
+    // accordion: click the header to open it, then choose the service inside
     document.querySelectorAll('.sec-head').forEach(function(h){
-      h.onclick=function(e){ if(e.target.closest('.sectog')) return; var sec=h.parentNode; sec.classList.toggle('open'); };
-    });
-    // accordion: master toggle turns the whole question on/off
-    document.querySelectorAll('.sectog').forEach(function(t){
-      t.onclick=function(e){ e.stopPropagation(); toggleSec(t.getAttribute('data-sectog')); };
+      h.onclick=function(){ h.parentNode.classList.toggle('open'); };
     });
   }
   function sync(){
-    ['photos','rint','rext','rfp','pano','fpn','fp2dn'].forEach(function(k){ var el=document.getElementById('v_'+k); if(el) el.textContent=state[k]; });
+    // per-photo service counts default to all photos and never exceed the photo count
+    ['renoN','duskN','skyN'].forEach(function(k){ if(state[k]<1||state[k]>state.photos) state[k]=state.photos; });
+    ['photos','rint','rext','rfp','pano','fpn','fp2dn','renoN','duskN','skyN'].forEach(function(k){ var el=document.getElementById('v_'+k); if(el) el.textContent=state[k]; });
     document.querySelectorAll('.toggle').forEach(function(t){ t.classList.toggle('on', !!state[t.getAttribute('data-tog')]); });
     var ps=document.getElementById('panoSub'); if(ps) ps.classList.toggle('show', !!state.pano360);
-    // accordion section states + prices
+    // accordion section states + prices (no "Add" label — click the header to open)
     Object.keys(SECMAP).forEach(function(key){
       var sec=document.querySelector('.sec[data-sec="'+key+'"]'); if(!sec) return;
-      var on=secOn(key); sec.classList.toggle('on',on);
-      var tg=sec.querySelector('.sectog'); if(tg) tg.classList.toggle('on',on);
-      var sp=document.getElementById('sp_'+key); if(sp){ var tt=secTotal(key); sp.textContent= tt>0?('+'+money(tt)):(on?'':'Add'); }
+      sec.classList.toggle('on',secOn(key));
+      var sp=document.getElementById('sp_'+key); if(sp){ var tt=secTotal(key); sp.textContent= tt>0?('+'+money(tt)):''; }
     });
     // grey out a service's stepper until its own toggle is on
     document.querySelectorAll('.subrow[data-substep]').forEach(function(r){ r.classList.toggle('off', !state[r.getAttribute('data-substep')]); });
