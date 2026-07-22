@@ -1449,7 +1449,7 @@ document.querySelectorAll('.compare').forEach(function(el){
   // drag-to-reveal
   var dragging=false;
   function fromEvent(e){ var r=slider.getBoundingClientRect(); var cx=(e.touches?e.touches[0].clientX:e.clientX); setX((cx-r.left)/r.width*100); }
-  slider.addEventListener('pointerdown',function(e){ dragging=true; slider.setPointerCapture&&slider.setPointerCapture(e.pointerId); fromEvent(e); });
+  slider.addEventListener('pointerdown',function(e){ dragging=true; fromEvent(e); try{ if(e.pointerId!=null) slider.setPointerCapture(e.pointerId); }catch(_){} });
   slider.addEventListener('pointermove',function(e){ if(dragging) fromEvent(e); });
   window.addEventListener('pointerup',function(){ dragging=false; });
   // keyboard
