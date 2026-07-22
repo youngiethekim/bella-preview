@@ -181,14 +181,15 @@
   .dfoot .clear:hover{color:var(--heart)}
 
   /* ---------- lightbox ---------- */
-  .lb{position:fixed;inset:0;z-index:120;background:rgba(16,14,12,.94);display:none;
-    align-items:flex-start;justify-content:center;padding:3vw;overflow-y:auto}
+  .lb{position:fixed;inset:0;z-index:120;background:rgba(16,14,12,.55);display:none;
+    align-items:flex-start;justify-content:center;padding:6vh 4vw;overflow-y:auto}
   .lb.open{display:flex}
-  /* cap to ~native pixel size so a 520px catalog image renders crisp, not upscaled+soft */
-  .lb-fig{margin:auto;max-width:min(660px,92vw);width:100%;display:flex;flex-direction:column;gap:14px}
-  .lb-imgwrap{background:#0d0b0a;display:flex;align-items:center;justify-content:center;
-    max-height:min(62vh,440px);overflow:hidden}
-  .lb-imgwrap img{max-width:100%;max-height:min(62vh,440px);object-fit:contain;display:block}
+  /* contained card that floats over the page rather than filling the screen */
+  .lb-fig{position:relative;margin:auto;max-width:min(560px,92vw);width:100%;display:flex;flex-direction:column;gap:14px;
+    background:#1c1a18;padding:18px;border-radius:12px;box-shadow:0 30px 80px -24px rgba(0,0,0,.6)}
+  .lb-imgwrap{background:#0d0b0a;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    max-height:min(50vh,380px);overflow:hidden}
+  .lb-imgwrap img{max-width:100%;max-height:min(50vh,380px);object-fit:contain;display:block}
   .lb-cap{display:flex;align-items:center;gap:18px;color:#EDE9E2;flex-wrap:wrap}
   .lb-meta{flex:1;min-width:0}
   .lb-meta b{font-weight:400;font-size:17px;letter-spacing:.04em}
@@ -213,7 +214,7 @@
   .lb-jobs .job .jt b{display:block;color:#EDE9E2;font-size:12.5px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .lb-jobs .job .jt span{display:block;color:#9B958C;font-size:10.5px;letter-spacing:.05em;margin-top:3px}
   .lb-jobs .note{color:#7d776e;font-size:10.5px;margin-top:11px;letter-spacing:.02em}
-  .lb-x{position:absolute;top:20px;right:24px;background:0;border:0;color:#fff;font-size:34px;line-height:1;cursor:pointer;opacity:.8}
+  .lb-x{position:absolute;top:18px;right:18px;width:38px;height:38px;border-radius:50%;background:rgba(20,18,16,.72);border:0;color:#fff;font-size:24px;line-height:1;cursor:pointer;opacity:1;z-index:5}
   .lb-x:hover{opacity:1}
   .lb-arw{position:absolute;top:50%;transform:translateY(-50%);width:56px;height:56px;border:1px solid rgba(255,255,255,.3);
     background:rgba(255,255,255,.06);color:#fff;font-size:24px;cursor:pointer;border-radius:999px;display:grid;place-items:center;
