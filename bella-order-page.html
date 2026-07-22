@@ -185,6 +185,32 @@
   .aside .opt .oname{flex:1}
   .aside .opt .op{font-size:13px;color:var(--faint);white-space:nowrap}
 
+  /* what we'll need from you */
+  .reqpanel:empty{display:none}
+  .reqpanel{margin-top:26px;background:#fff;border:1px solid var(--line);padding:28px 30px}
+  .req-head{display:flex;gap:14px;align-items:flex-start;padding-bottom:20px;border-bottom:1px solid var(--line-2)}
+  .req-i{width:26px;height:26px;flex:0 0 26px;fill:none;stroke:var(--green);stroke-width:1.5;margin-top:1px}
+  .req-ht b{display:block;font-size:16px;letter-spacing:.01em}
+  .req-ht span{display:block;font-size:13.5px;color:var(--soft);margin-top:4px;max-width:64ch;line-height:1.5}
+  .reqgrid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:22px}
+  @media(max-width:720px){.reqgrid{grid-template-columns:1fr}}
+  .reqcard{border:1px solid var(--line-2);padding:18px 18px 18px;display:flex;flex-direction:column;gap:11px}
+  .reqcard-up{background:#F7FAF7;border-color:#DDE7DD}
+  .reqcard-h{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .reqsvc{font-size:13.5px;font-weight:600;letter-spacing:.02em}
+  .reqtag{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:var(--green);padding:4px 9px;white-space:nowrap}
+  .reqtag-soft{color:var(--soft);background:var(--line-2)}
+  .reqlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+  .reqlist li{position:relative;padding-left:18px;font-size:13px;color:var(--soft);line-height:1.45}
+  .reqlist li::before{content:"";position:absolute;left:0;top:7px;width:6px;height:6px;border-radius:50%;background:var(--green)}
+  .dropz{display:flex;align-items:center;gap:12px;margin-top:3px;padding:13px 14px;border:1px dashed #BFD2BF;background:#fff;cursor:pointer;transition:border-color .15s,background .15s}
+  .dropz:hover{border-color:var(--green);background:#F2F7F2}
+  .dropz.has{border-style:solid;border-color:var(--green);background:#EEF5EE}
+  .dz-i{width:22px;height:22px;flex:0 0 22px;fill:none;stroke:var(--green);stroke-width:1.5}
+  .dz-t b{display:block;font-size:12.5px;color:var(--ink)}
+  .dz-s{display:block;font-size:11.5px;color:var(--faint);margin-top:2px}
+  .req-fine{margin-top:18px;font-size:12.5px;color:var(--faint);line-height:1.5}
+
   .wiz-foot{display:flex;justify-content:space-between;align-items:center;margin-top:30px;gap:14px;flex-wrap:wrap}
   .wiz-foot .running{font-size:14px;color:var(--soft)}
   .wiz-foot .running b{color:var(--ink);font-weight:400;font-size:18px}
@@ -214,6 +240,8 @@
   <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></symbol>
   <symbol id="i-blue" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15"/><path d="M3.5 9h17M8 4.5V19.5"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 15V4"/><path d="M8 8l4-4 4 4"/><path d="M4 15v3.5a1.5 1.5 0 0 0 1.5 1.5h13a1.5 1.5 0 0 0 1.5-1.5V15"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 15.5h6M9 8.5h2"/></symbol>
 </svg>
 
 <div class="wiz">
@@ -295,6 +323,7 @@
         <div id="addonList"></div>
       </div>
     </div>
+    <div class="reqpanel" id="reqPanel"></div>
     <div class="wiz-foot">
       <button class="btn-line" id="back2">← Back</button>
       <span class="running">You can adjust quantities on the previous step.</span>
@@ -410,7 +439,7 @@
          +catHead('Photo editing','Make the photos you have pop','Small edits, big first impression. Bright skies and clean, warm rooms get more clicks and saves online.')
          +toggleRow('Day-to-dusk edits','Twilight hero shots that stop the scroll. You provide a daytime exterior photo.','dusk','+'+money(PR.DUSK)+'/photo','dusk','sun')
          +toggleRow('Sky replacement &amp; retouching','Swap grey skies, clean up blemishes. You provide the exterior photos.','sky','+'+money(PR.SKY)+'/photo','','cloud')
-         +catHead('Floor plans','We need: rough measurements or a sketch for each floor','Listings with a floor plan get more qualified showings — buyers understand the space before they visit. Priced per floor.')
+         +catHead('Floor plans','We need: architectural blueprints, or dimensions for each floor','Listings with a floor plan get more qualified showings — buyers understand the space before they visit. Priced per floor. You can upload your blueprints or measurements at checkout.')
          +toggleStep('2D floor plan','A clean, labelled layout — one per floor','floor2d','fp2dn','+'+money(PR.FP2D)+' / floor','floor2d','plan')
          +toggleStep('3D floor plan','Furnished, so buyers can walk each level','floor','fpn','+'+money(fp3d())+' / floor','floor','plan')
          +catHead('Tours','','A 360° tour keeps buyers on your listing longer, and out-of-town buyers can walk it without booking a showing.')
@@ -437,7 +466,8 @@
       document.getElementById('s2title').textContent='What do you need to show?';
       document.getElementById('s2sub').textContent='Pick the visuals your sales office needs. We build them from your drawings, no finished home required.';
       box.innerHTML=
-        toggleStep((state.commercial?'Commercial interior renders':'Interior 3D renders'),'Photoreal rooms from your plans','useInt','rint','+'+money(rInt())+' each','rint')
+        catHead('Built from your drawings','We need: architectural blueprints or plans (PDF/CAD) and property dimensions','Renders are built from your plans, so the drawings and dimensions are what make them accurate. You can upload them at checkout, or send them right after.')
+       +toggleStep((state.commercial?'Commercial interior renders':'Interior 3D renders'),'Photoreal rooms from your plans','useInt','rint','+'+money(rInt())+' each','rint')
        +toggleStep((state.commercial?'Commercial exterior renders':'Exterior 3D renders'),'Elevations, streetscapes, aerials','useExt','rext','+'+money(rExt())+' each','rext')
        +toggleStep('Furnished 3D floor plans','Walk the layout','useFp','rfp','+'+money(fp3d())+' each','floor');
     }
@@ -517,6 +547,49 @@
     box.innerHTML = opts.length ? opts.map(function(o){return '<div class="opt"><span class="oname">'+o[0]+'</span><span class="op">'+o[2]+'</span><button class="toggle" data-tog3="'+o[1]+'"></button></div>';}).join('')
       : '<div class="opt"><span class="oname">Everything is in your package.</span></div>';
     box.querySelectorAll('.toggle').forEach(function(t){ t.onclick=function(){ var k=t.getAttribute('data-tog3'); state[k]=!state[k]; buildSummary(); }; });
+    buildReqs();
+  }
+
+  // ---- what we'll need from you (requirements + uploads) ----
+  var REQ={
+    stage:  {svc:'Virtual staging', up:false, need:['Empty, well-lit photos of each room you want staged','Whole room in frame, shot at about eye level']},
+    reno:   {svc:'Virtual renovation', up:false, need:['Current photos of the dated space, in good light']},
+    dusk:   {svc:'Day-to-dusk edits', up:false, need:['One daytime exterior photo per shot you want edited']},
+    sky:    {svc:'Sky replacement & retouching', up:false, need:['The exterior photos you want cleaned up']},
+    floor2d:{svc:'2D floor plan', up:true, need:['Architectural blueprints or drawings (PDF or CAD), if you have them','Otherwise, dimensions / measurements for each floor','A rough sketch of the layout also works']},
+    floor:  {svc:'3D floor plan', up:true, need:['Architectural blueprints or drawings (PDF or CAD), if you have them','Otherwise, dimensions / measurements for each floor']},
+    pano360:{svc:'360° virtual staging', up:false, need:['360° (equirectangular) photos of each room you want walkable']},
+    tour:   {svc:'Virtual house tour', up:false, need:['Your finished listing photos, ideally in shooting order']},
+    useInt: {svc:'Interior 3D renders', up:true, need:['Architectural floor plans / blueprints (PDF or CAD)','Property dimensions','Any finish or material selections you want shown']},
+    useExt: {svc:'Exterior 3D renders', up:true, need:['Elevations & site drawings (PDF or CAD)','Lot dimensions','Any material, landscaping or lighting direction']},
+    useFp:  {svc:'Furnished 3D floor plans', up:true, need:['Architectural blueprints or floor plans (PDF or CAD)','Otherwise, dimensions for each floor']}
+  };
+  function buildReqs(){
+    var panel=document.getElementById('reqPanel'); if(!panel) return;
+    var path=P[state.proj].path, active=[];
+    if(path==='listing'){
+      if(state.photos>0) active.push('stage');
+      ['reno','dusk','sky','floor2d','floor','pano360','tour'].forEach(function(k){ if(state[k]) active.push(k); });
+    } else {
+      ['useInt','useExt','useFp'].forEach(function(k){ if(state[k]) active.push(k); });
+    }
+    if(!active.length){ panel.innerHTML=''; return; }
+    var anyUp=active.some(function(k){ return REQ[k].up; });
+    var cards=active.map(function(k){
+      var r=REQ[k];
+      return '<div class="reqcard'+(r.up?' reqcard-up':'')+'">'
+        +'<div class="reqcard-h"><span class="reqsvc">'+r.svc+'</span>'
+        +(r.up?'<span class="reqtag">Upload needed</span>':'<span class="reqtag reqtag-soft">You provide</span>')+'</div>'
+        +'<ul class="reqlist">'+r.need.map(function(n){return '<li>'+n+'</li>';}).join('')+'</ul>'
+        +(r.up?'<label class="dropz"><input type="file" multiple hidden><svg class="dz-i"><use href="#i-upload"/></svg><span class="dz-t"><b>Upload blueprints, plans or dimensions</b><span class="dz-s">PDF, CAD, JPG or PNG</span></span></label>':'')
+        +'</div>';
+    }).join('');
+    panel.innerHTML='<div class="req-head"><svg class="req-i"><use href="#i-doc"/></svg><div class="req-ht"><b>What we’ll need from you</b><span>'+(anyUp?'Floor plans and renders are built from your drawings. Upload your blueprints or property dimensions here, or send them right after checkout.':'Have these ready and our team confirms everything once you order.')+'</span></div></div>'
+      +'<div class="reqgrid">'+cards+'</div>'
+      +(anyUp?'<p class="req-fine">No files handy? You can still order now and upload from your project dashboard. We won’t start floor plans or renders until we have what we need.</p>':'');
+    panel.querySelectorAll('.dropz input').forEach(function(inp){
+      inp.onchange=function(){ var lbl=inp.closest('.dropz'), n=inp.files.length; if(!n) return; lbl.classList.add('has'); lbl.querySelector('b').textContent=n+' file'+(n>1?'s':'')+' ready to send'; lbl.querySelector('.dz-s').textContent='We’ll attach these to your order'; };
+    });
   }
 
   // ---- 360 example: drag to look around, gentle auto-rotate until touched ----
