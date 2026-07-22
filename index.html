@@ -310,6 +310,23 @@
   .reel-card.flat p{font-size:13.5px;color:#9B958C;margin-top:8px;max-width:34ch}
   .reel-card.flat .btn{margin-top:20px}
   .reel-hint{padding:14px var(--pad) 0;font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint)}
+  /* ---------- completed jobs gallery (before/after + services + customer) ---------- */
+  .jobs-sec{padding-top:84px}
+  .jobs{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:26px var(--pad) 12px;scrollbar-width:none}
+  .jobs::-webkit-scrollbar{display:none}
+  .job-card{flex:0 0 min(84vw,420px);scroll-snap-align:start;background:#fff;border:1px solid var(--line)}
+  .jc-img{position:relative;aspect-ratio:1.45;overflow:hidden;background:#EFECE8}
+  .jc-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .jc-before{opacity:0;transition:opacity .4s ease}
+  .job-card:hover .jc-before,.job-card.peek .jc-before{opacity:1}
+  .jc-badge{position:absolute;top:12px;right:12px;z-index:2;background:var(--green);color:#fff;font-size:11px;letter-spacing:.04em;font-weight:500;padding:5px 12px}
+  .jc-hint{position:absolute;left:12px;bottom:12px;z-index:2;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:rgba(20,18,16,.55);padding:5px 10px;backdrop-filter:blur(3px);transition:opacity .3s}
+  .job-card:hover .jc-hint,.job-card.peek .jc-hint{opacity:0}
+  .jc-body{padding:18px 20px 20px}
+  .jc-cust{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--green)}
+  .jc-body h3{font-size:19px;margin-top:6px}
+  .jc-svcs{display:flex;flex-wrap:wrap;gap:6px;margin-top:13px}
+  .jc-svcs span{font-size:11.5px;letter-spacing:.02em;color:var(--soft);border:1px solid var(--line);padding:5px 11px}
   @media(max-width:820px){.reel-card{flex-basis:86%}.reel-card.flat{flex-basis:74%}}
   @media(prefers-reduced-motion:reduce){.reel{scroll-behavior:auto}.reel-card .after{transition:none}}
 
@@ -782,7 +799,7 @@
     <nav>
       <a href="#work">Work</a>
       <a href="bella-lookbook.html">Lookbook</a>
-      <a href="#pricing">Pricing</a>
+      <a href="bella-pricing.html">Pricing</a>
       <a href="#process">Process</a>
       <a href="#press">Press</a>
       <a href="#faq">FAQ</a>
@@ -904,226 +921,18 @@
   </a>
 </div>
 
-<!-- ================= WORK ================= -->
-<section id="work">
+<!-- ================= COMPLETED JOBS ================= -->
+<section id="work" class="jobs-sec">
   <div class="reel-head">
     <div class="head" style="margin-bottom:0">
-      <span class="micro">Selected rooms</span>
-      <h2>Virtual staging before and after: every room composed by hand.</h2>
-      <p>Not a template, not an algorithm. A designer on our staff opens your photo, chooses furniture for the buyer your listing is actually courting, and builds the room in Photoshop and 3D Max.</p>
-    </div>
-    <div class="reel-nav">
-      <button type="button" id="reelPrev" aria-label="Previous project">‹</button>
-      <button type="button" id="reelNext" aria-label="Next project">›</button>
+      <span class="micro">Completed jobs</span>
+      <h2>Real listings. Real outcomes.</h2>
+      <p>Scroll through recent projects — see each room before and after, who it was for, and exactly what we made.</p>
     </div>
   </div>
-
-  <div class="reel" id="reel">
-    <div class="reel-card" tabindex="0">
-      <img src="https://www.bellavirtual.com/cdn/shop/files/Josh_Goetz_-_Room_1_Den-Family_Room_1.jpg?width=1400" alt="A lodge-style den with a stone fireplace, empty before staging" loading="lazy">
-      <img class="after" src="https://www.bellavirtual.com/cdn/shop/files/Josh_Goetz_-_Room_1_Den-Family_Room_Tung_TP_1.jpg?width=1400" alt="The same den staged with white sofas and a wool rug" loading="lazy">
-      <span class="chip">After · <s>hover for before</s></span>
-      <span class="sold">Sold</span>
-      <!-- SAMPLE outcome data — replace with this property's real numbers before launch -->
-      <div class="cap"><span>Den &amp; family room · Lodge estate</span><span class="outcome">Sold · 9 days on market</span></div>
-    </div>
-    <div class="reel-card" tabindex="0">
-      <img src="https://www.bellavirtual.com/cdn/shop/files/053-600-j-street.74270.p2k.027.print.jpg?width=1400" alt="An empty carpeted living room before staging" loading="lazy">
-      <img class="after" src="https://www.bellavirtual.com/cdn/shop/files/053-600-j-street.74270.p2k.027.print_ly_tb.jpg?width=1400" alt="The same living room staged for living and dining" loading="lazy">
-      <span class="chip">After · <s>hover for before</s></span>
-      <span class="sold">Sold</span>
-      <!-- SAMPLE outcome data — replace with this property's real numbers before launch -->
-      <div class="cap"><span>Living &amp; dining · 600 J Street</span><span class="outcome">Sold over asking · first weekend</span></div>
-    </div>
-    <div class="reel-card" tabindex="0">
-      <img src="https://www.bellavirtual.com/cdn/shop/files/Gareth_Roberts_-_Living_room_to_Dinning_Room_S210-120_Bayview_Ave-13.jpg?width=1400" alt="An empty suite with a band of windows before staging" loading="lazy">
-      <img class="after" src="https://www.bellavirtual.com/cdn/shop/files/Gareth_Roberts_-_Living_room_to_Dinning_Room_S210-120_Bayview_Ave-13_Tung_NAM.jpg?width=1400" alt="The same suite staged with a sectional and dining area" loading="lazy">
-      <span class="chip">After · <s>hover for before</s></span>
-      <span class="sold">Sold</span>
-      <!-- SAMPLE outcome data — replace with this property's real numbers before launch -->
-      <div class="cap"><span>Living room · 120 Bayview Ave, Toronto</span><span class="outcome">Sold · 12 days on market</span></div>
-    </div>
-
-    <div class="reel-card flat">
-      <span class="micro">The outcome</span>
-      <h3>67% fewer days on market.</h3>
-      <p>The average reduction across Bella-staged listings. Empty rooms make buyers hesitate; furnished ones make offers.</p>
-      <a class="btn btn-wht" href="bella-order-page.html">Stage my listing</a>
-    </div>
-
-    <div class="reel-card" tabindex="0">
-      <img src="https://www.bellavirtual.com/cdn/shop/files/Unit_706_289_Drake_Street_Vancouver-dining_room-1.jpg?width=1400" alt="An empty condo dining area before staging" loading="lazy">
-      <img class="after" src="https://www.bellavirtual.com/cdn/shop/files/Unit_706_289_Drake_Street_Vancouver-dining_room-1_nhi_hb.jpg?width=1400" alt="The same condo staged as a dining room" loading="lazy">
-      <span class="chip">After · <s>hover for before</s></span>
-      <span class="sold">Sold</span>
-      <!-- SAMPLE outcome data — replace with this property's real numbers before launch -->
-      <div class="cap"><span>Dining room · 289 Drake St, Vancouver</span><span class="outcome">Rented · 30 days to close</span></div>
-    </div>
-
-    <div class="reel-card flat">
-      <span class="micro">Next up</span>
-      <h3>Your listing, staged by Thursday.</h3>
-      <p>$45 a photo. Back in 24 to 48 hours, MLS-ready.</p>
-      <a class="btn btn-wht" href="bella-order-page.html">Get started</a>
-    </div>
-  </div>
-  <div class="reel-hint">Hover or tap a room to see it empty · drag to browse</div>
-</section>
-
-<!-- ================= LOOKBOOK ================= -->
-<section class="look" id="lookbook">
-  <div class="head">
-    <div>
-      <span class="micro">The lookbook</span>
-      <h2>Virtual staging styles for every buyer.</h2>
-      <p>Browse the styles our designers stage in. Add the ones that fit your listing, and we'll build the room around them. Not sure? Add a few, or just tell us who the buyer is.</p>
-    </div>
-  </div>
-
-  <div class="book-zone">
-    <button class="book-nav" id="bkPrev" type="button" aria-label="Previous spread">‹</button>
-    <div class="book" id="book">
-      <div class="base l"><div class="pad-in">
-        <span class="micro">The lookbook</span>
-        <h3>Eight styles, composed by hand.</h3>
-        <p>Flip through and add the looks that fit your buyer.</p>
-      </div></div>
-      <div class="base r"><div class="pad-in">
-        <span class="micro">Not sure?</span>
-        <h3>Tell us who the buyer is.</h3>
-        <p>Our designers pick the style that sells in your market.</p>
-        <a class="btn" href="bella-order-page.html">Stage my listing</a>
-      </div></div>
-    <div class="leaf">
-      <div class="face front look-card" data-style="Modern">
-        <button class="look-add" type="button"><svg class="ico"><use href="#i-plus"/></svg><span class="txt">Add</span></button>
-        <img src="https://www.bellavirtual.com/cdn/shop/files/INT_201_Bedroom.jpg?width=1100&height=734&crop=center" alt="A bedroom staged in a modern style" loading="lazy">
-        <div class="plate"><b>Modern</b><span>Clean lines · neutral palette</span></div>
-      </div>
-      <div class="face back look-card" data-style="Contemporary">
-        <button class="look-add" type="button"><svg class="ico"><use href="#i-plus"/></svg><span class="txt">Add</span></button>
-        <img src="https://www.bellavirtual.com/cdn/shop/files/Calvin_Theme_Image_Nov_16_2025.jpg?width=1100&height=734&crop=center" alt="A high-rise living room staged in a contemporary style" loading="lazy">
-        <div class="plate"><b>Contemporary</b><span>Current · softly luxe</span></div>
-      </div>
-    </div>
-    <div class="leaf">
-      <div class="face front look-card" data-style="Scandinavian">
-        <button class="look-add" type="button"><svg class="ico"><use href="#i-plus"/></svg><span class="txt">Add</span></button>
-        <img src="https://www.bellavirtual.com/cdn/shop/files/Minimal_Scandinavian_Kitchen_2025.jpg?width=1100&height=734&crop=center" alt="A kitchen staged in a Scandinavian style" loading="lazy">
-        <div class="plate"><b>Scandinavian</b><span>Warm wood · light and calm</span></div>
-      </div>
-      <div class="face back look-card" data-style="Mid-Century">
-        <button class="look-add" type="button"><svg class="ico"><use href="#i-plus"/></svg><span class="txt">Add</span></button>
-        <img src="https://www.bellavirtual.com/cdn/shop/files/Bedroom_3_2_1.png?width=1100&height=734&crop=center" alt="A bedroom staged in a mid-century style" loading="lazy">
-        <div class="plate"><b>Mid-Century</b><span>Retro warmth · organic forms</span></div>
-      </div>
-    </div>
-    <div class="leaf">
-      <div class="face front look-card" data-style="Coastal">
-        <button class="look-add" type="button"><svg class="ico"><use href="#i-plus"/></svg><span class="txt">Add</span></button>
-        <img src="https://www.bellavirtual.com/cdn/shop/files/Calvin_Theme_Dawn_Image.jpg?width=1100&height=734&crop=center" alt="An airy living space staged in a coastal style" loading="lazy">
-        <div class="plate"><b>Coastal</b><span>Airy · bright · textured</span></div>
-      </div>
-      <div class="face back look-card" data-style="Minimalist">
-        <button class="look-add" type="button"><svg class="ico"><use href="#i-plus"/></svg><span class="txt">Add</span></button>
-        <img src="https://www.bellavirtual.com/cdn/shop/files/after_2.png?width=1100&height=734&crop=center" alt="An open-plan condo staged in a minimalist style" loading="lazy">
-        <div class="plate"><b>Minimalist</b><span>Uncluttered · essential</span></div>
-      </div>
-    </div>
-    <div class="leaf">
-      <div class="face front look-card" data-style="Transitional">
-        <button class="look-add" type="button"><svg class="ico"><use href="#i-plus"/></svg><span class="txt">Add</span></button>
-        <img src="https://www.bellavirtual.com/cdn/shop/files/Elizabeth_Ramos_-_Webster_from_Dining_nhi_tb-transformed.jpg?width=1100&height=734&crop=center" alt="A dining room staged in a transitional style" loading="lazy">
-        <div class="plate"><b>Transitional</b><span>Classic meets current</span></div>
-      </div>
-      <div class="face back look-card" data-style="Luxury">
-        <button class="look-add" type="button"><svg class="ico"><use href="#i-plus"/></svg><span class="txt">Add</span></button>
-        <img src="https://www.bellavirtual.com/cdn/shop/files/2_c53d1862-2e10-4866-b881-92c3b7d5da1e.png?width=1100&height=734&crop=center" alt="A Manhattan bedroom staged in a luxury style" loading="lazy">
-        <div class="plate"><b>Luxury</b><span>Elevated · statement pieces</span></div>
-      </div>
-    </div>
-    </div>
-    <button class="book-nav" id="bkNext" type="button" aria-label="Next spread">›</button>
-  </div>
-  <div class="book-count" id="bkCount">Spread 1 of 5</div>
-  <div class="look-note">
-    <span class="picked" id="lookPicked">Tap <b>Add</b> on any style to build your shortlist.</span>
-    <span>Every style is composed by hand by a real interior designer.</span>
-  </div>
-</section>
-
-<!-- sticky shortlist bar -->
-<div class="shortlist" id="shortlist" role="region" aria-label="Your selected styles">
-  <span class="n"><b id="slCount">0</b> styles selected</span>
-  <div class="chips" id="slChips"></div>
-  <a class="btn" href="bella-order-page.html" id="slGo">Stage my listing</a>
-</div>
-
-<!-- ================= LEDGER ================= -->
-<section class="ledger" id="pricing">
-  <div class="head led-head">
-    <div>
-      <span class="micro">The math</span>
-      <h2>Three ways to stage a listing. One of them sells.</h2>
-      <p>Physical staging is slow and expensive. One-click AI is cheap and looks it. Here is what you are actually choosing between.</p>
-    </div>
-    <!-- PLACEHOLDER stock photo (Unsplash) — swap for real Bella agent/client photography before launch -->
-    <figure class="agent">
-      <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1000&q=75&fm=jpg" alt="A real estate agent" loading="lazy">
-      <!-- Verified client review from bellavirtual.com. Photo is a stock placeholder; swap for Sarah's real photo, or a marquee broker when available -->
-      <blockquote>
-        <span class="q-stars" aria-label="Five star review"><svg class="ico"><use href="#i-star"/></svg><svg class="ico"><use href="#i-star"/></svg><svg class="ico"><use href="#i-star"/></svg><svg class="ico"><use href="#i-star"/></svg><svg class="ico"><use href="#i-star"/></svg></span>
-        &ldquo;My favorite virtual stagers. We got an offer in 4 days and closed in 2 weeks.&rdquo;
-        <cite>Beverly Bahm &middot; Agent, Chicago IL</cite>
-      </blockquote>
-    </figure>
-  </div>
-
-  <div class="led-grid">
-    <div class="led led-old">
-      <svg class="strike" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1="1" y1="1" x2="99" y2="99"/></svg>
-      <span class="lbl">The old way · Physical staging</span>
-      <div class="amt">$2,000–5,000</div>
-      <div class="per">PER MONTH, PER PROPERTY, UNTIL IT SELLS</div>
-      <ul>
-        <li><svg class="ico"><use href="#i-x"/></svg> One to two weeks to schedule and install</li>
-        <li><svg class="ico"><use href="#i-x"/></svg> Rented by the month until the home sells</li>
-        <li><svg class="ico"><use href="#i-x"/></svg> Your seller approves strangers in the house</li>
-        <li><svg class="ico"><use href="#i-x"/></svg> One look, locked in once it arrives</li>
-        <li><svg class="ico"><use href="#i-x"/></svg> Occupied or unfinished homes: usually a no</li>
-      </ul>
-    </div>
-    <div class="led led-new">
-      <span class="lbl">The Bella way · Virtual staging</span>
-      <div class="amt">$45</div>
-      <div class="per">PER PHOTO, PAID ONCE · VOLUME DISCOUNTS TO 20%</div>
-      <ul>
-        <li><svg class="ico"><use href="#i-check"/></svg> Live in 24 to 48 hours</li>
-        <li><svg class="ico"><use href="#i-check"/></svg> Paid once, no monthly rental</li>
-        <li><svg class="ico"><use href="#i-check"/></svg> Nothing moves. Nobody enters the home.</li>
-        <li><svg class="ico"><use href="#i-check"/></svg> Unlimited revisions for two weeks</li>
-        <li><svg class="ico"><use href="#i-check"/></svg> Furniture removal included, occupied or not</li>
-      </ul>
-      <a class="btn btn-wht" href="#">Stage my listing</a>
-    </div>
-    <div class="led led-ai">
-      <svg class="strike" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1="1" y1="1" x2="99" y2="99"/></svg>
-      <span class="lbl">The shortcut · AI staging</span>
-      <div class="amt">$3–10</div>
-      <div class="per">PER PHOTO · INSTANT, AUTOMATED</div>
-      <ul>
-        <li><svg class="ico"><use href="#i-x"/></svg> Warped furniture and invented windows</li>
-        <li><svg class="ico"><use href="#i-x"/></svg> The same template buyers saw on three other listings</li>
-        <li><svg class="ico"><use href="#i-x"/></svg> Misrepresents the actual space</li>
-        <li><svg class="ico"><use href="#i-x"/></svg> No designer, no revisions, no judgment</li>
-        <li><svg class="ico"><use href="#i-x"/></svg> Cheap for a reason. It can cost you the sale.</li>
-      </ul>
-    </div>
-  </div>
-  <div class="led-note">
-    <span>A typical eight-photo listing runs about $360. Physical staging costs that much in the first week, and keeps charging until the home sells.</span>
-    <a class="btn" href="bella-order-page.html">Stage my listing</a>
-  </div>
+  <!-- SAMPLE outcome + customer data on real Bella before/after photos — swap for real per-job details before launch -->
+  <div class="jobs" id="jobs"></div>
+  <div class="reel-hint">Hover or tap a card to see it empty · drag to browse</div>
 </section>
 
 <!-- ================= CRAFT ================= -->
@@ -1556,6 +1365,28 @@ document.querySelectorAll('.compare').forEach(function(el){
   inner.parentNode.addEventListener('mouseenter',clear);
   inner.parentNode.addEventListener('mouseleave',schedule);
   paint(); schedule();
+})();
+
+/* completed jobs gallery — real Bella before/after photos; outcome + customer are SAMPLE until real per-job data is wired in */
+(function(){
+  var el=document.getElementById('jobs'); if(!el) return;
+  var C='https://www.bellavirtual.com/cdn/shop/files/', W='?width=1200';
+  var JOBS=[
+    {a:C+'Josh_Goetz_-_Room_1_Den-Family_Room_Tung_TP_1.jpg'+W, b:C+'Josh_Goetz_-_Room_1_Den-Family_Room_1.jpg'+W, cust:'Real estate agent · Lodge estate', name:'Den & family room', svcs:['Virtual staging','3D floor plan'], out:'Sold · 9 days'},
+    {a:C+'053-600-j-street.74270.p2k.027.print_ly_tb.jpg'+W, b:C+'053-600-j-street.74270.p2k.027.print.jpg'+W, cust:'Real estate agent · 600 J Street', name:'Living & dining', svcs:['Virtual staging','Day-to-dusk'], out:'Sold over asking · 4 days'},
+    {a:C+'Gareth_Roberts_-_Living_room_to_Dinning_Room_S210-120_Bayview_Ave-13_Tung_NAM.jpg'+W, b:C+'Gareth_Roberts_-_Living_room_to_Dinning_Room_S210-120_Bayview_Ave-13.jpg'+W, cust:'Real estate agent · Toronto', name:'120 Bayview Ave', svcs:['Virtual staging','Floor plan','House tour'], out:'Sold · 21 days'},
+    {a:C+'Unit_706_289_Drake_Street_Vancouver-dining_room-1_nhi_hb.jpg'+W, b:C+'Unit_706_289_Drake_Street_Vancouver-dining_room-1.jpg'+W, cust:'Brokerage · Vancouver', name:'289 Drake St', svcs:['Virtual staging','360° tour'], out:'Leased · 30 days'},
+    {a:C+'Calvin_Theme_Dawn_Image.jpg'+W, b:C+'Calvin_Theme_Image_Nov_16_2025.jpg'+W, cust:'Home builder · Model home', name:'Twilight exterior', svcs:['Day-to-dusk','3D render'], out:'Pre-sold from renders'}
+  ];
+  el.innerHTML=JOBS.map(function(j){
+    return '<article class="job-card"><div class="jc-img">'
+      +'<img class="jc-after" src="'+j.a+'" alt="'+j.name+', staged by Bella" loading="lazy">'
+      +'<img class="jc-before" src="'+j.b+'" alt="'+j.name+', before staging" loading="lazy">'
+      +'<span class="jc-badge">'+j.out+'</span><span class="jc-hint">Hover for before</span></div>'
+      +'<div class="jc-body"><span class="jc-cust">'+j.cust+'</span><h3>'+j.name+'</h3>'
+      +'<div class="jc-svcs">'+j.svcs.map(function(s){return '<span>'+s+'</span>';}).join('')+'</div></div></article>';
+  }).join('');
+  el.addEventListener('click',function(e){ var c=e.target.closest('.job-card'); if(c) c.classList.toggle('peek'); });   // tap-to-peek on touch
 })();
 </script>
 </body>
