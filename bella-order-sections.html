@@ -1,0 +1,331 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Order flow — sections concept | Bella Virtual</title>
+<meta name="robots" content="noindex">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap');
+  :root{--bg:#FDFCFA;--ink:#232120;--soft:#6E6A66;--faint:#9C978F;--line:#E8E4DE;--line-2:#F0EDE8;--dark:#1C1A18;--green:#3E6B4C;--gold:#E7C36A;--pad:44px}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:'Jost',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .micro{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+  .btn{display:inline-block;background:var(--ink);color:#fff;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;padding:15px 30px;cursor:pointer;border:0;font-family:inherit;transition:background .2s,color .2s}
+  .btn:hover{background:var(--green);color:#fff}
+
+  header{display:flex;justify-content:space-between;align-items:center;padding:22px var(--pad);border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(253,252,250,.92);backdrop-filter:blur(8px);z-index:20}
+  .logo{font-size:19px;letter-spacing:.4em}
+  .demo-tag{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);border:1px solid #D6E2D8;background:#F4F7F4;padding:5px 11px}
+  .back{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);text-decoration:none}
+  .back:hover{color:var(--ink)}
+
+  .wrap{max-width:820px;margin:0 auto;padding:48px var(--pad) 150px}
+  .head h1{font-size:clamp(28px,4vw,40px);font-weight:300;letter-spacing:-.02em;line-height:1.12}
+  .head p{font-size:15px;color:var(--soft);max-width:56ch;margin-top:10px}
+
+  /* project chips */
+  .ctx{margin:34px 0 8px}
+  .ctx-lab{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:12px}
+  .chips{display:flex;gap:7px;flex-wrap:wrap}
+  .chip{font-family:inherit;font-size:13.5px;background:#fff;border:1px solid var(--line);padding:11px 17px;cursor:pointer;transition:.15s;color:var(--soft)}
+  .chip:hover{border-color:var(--ink)}
+  .chip.on{border-color:var(--green);background:#F7FAF7;color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
+
+  /* packages */
+  .pkgs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:26px 0 8px}
+  @media(max-width:720px){.pkgs{grid-template-columns:1fr 1fr}}
+  .pkg{position:relative;text-align:left;background:#fff;border:1px solid var(--line);padding:16px 15px;cursor:pointer;font-family:inherit;transition:.15s}
+  .pkg:hover{border-color:var(--ink)}
+  .pkg.on{background:var(--dark);border-color:var(--dark);color:#EDEAE5}
+  .pkg b{display:block;font-size:14.5px;font-weight:400}
+  .pkg span{display:block;font-size:11.5px;color:var(--faint);margin-top:4px;line-height:1.4}
+  .pkg.on span{color:#9B958C}
+  .pkg .pk-badge{position:absolute;top:-9px;left:15px;background:var(--green);color:#fff;font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px}
+
+  .divider{display:flex;align-items:center;gap:14px;margin:34px 0 6px}
+  .divider span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .divider::before,.divider::after{content:"";height:1px;background:var(--line);flex:1}
+
+  /* core staging card */
+  .core{background:#F7FAF7;border:1px solid #DDE7DD;padding:22px 22px}
+  .core-top{display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .core b{font-size:16.5px;font-weight:400}
+  .core .core-sub{font-size:13px;color:var(--soft);margin-top:3px}
+  .stepper{display:flex;align-items:center;border:1px solid var(--line);background:var(--bg)}
+  .stepper button{width:44px;height:44px;background:#fff;border:0;font-size:19px;cursor:pointer;font-family:inherit;color:var(--ink)}
+  .stepper button:hover{color:var(--green)}
+  .stepper .v{width:52px;text-align:center;font-size:16px}
+  .free-badge{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);background:#F4F7F4;border:1px solid #D6E2D8;padding:6px 12px}
+
+  /* accordion sections */
+  .secs{margin-top:8px;display:flex;flex-direction:column;gap:6px}
+  .sec{background:#fff;border:1px solid var(--line);transition:border-color .15s}
+  .sec.open{border-color:#CFC9C0}
+  .sec-head{display:flex;align-items:center;gap:16px;padding:20px 22px;cursor:pointer;user-select:none}
+  .sec-head .q{flex:1}
+  .sec-head .q b{font-size:16px;font-weight:400;display:block}
+  .sec-head .q span{font-size:12.5px;color:var(--faint);display:block;margin-top:3px}
+  .sec-price{font-size:12.5px;color:var(--faint);white-space:nowrap}
+  .sec.on .sec-price{color:var(--green)}
+  /* toggle */
+  .tog{width:52px;height:30px;border-radius:99px;background:var(--line);border:0;cursor:pointer;position:relative;transition:background .2s;flex:0 0 52px}
+  .tog::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s}
+  .tog.on{background:var(--green)}
+  .tog.on::after{transform:translateX(22px)}
+  /* body (grid-rows animation, no layout thrash) */
+  .sec-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease}
+  .sec.open .sec-body{grid-template-rows:1fr}
+  .sec-body > .inner{overflow:hidden}
+  .sec-opts{padding:0 22px 20px;border-top:1px solid var(--line-2);margin-top:-1px;padding-top:16px;display:flex;flex-direction:column;gap:2px}
+  .subrow{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line-2)}
+  .subrow:last-child{border-bottom:0}
+  .subrow .sr-t{flex:1}
+  .subrow .sr-t b{font-size:14.5px;font-weight:400;display:block}
+  .subrow .sr-t span{font-size:12.5px;color:var(--faint);display:block;margin-top:2px}
+  .subrow .sr-price{font-size:12.5px;color:var(--faint);white-space:nowrap}
+  .tog.sm{width:46px;height:26px;flex-basis:46px}
+  .tog.sm::after{width:20px;height:20px}
+  .tog.sm.on::after{transform:translateX(20px)}
+  .miniStep{display:flex;align-items:center;border:1px solid var(--line);background:#fff}
+  .miniStep button{width:34px;height:34px;background:#fff;border:0;font-size:16px;cursor:pointer;font-family:inherit;color:var(--ink)}
+  .miniStep .v{width:34px;text-align:center;font-size:14px}
+  .floors{display:flex;align-items:center;gap:10px}
+  .floors small{font-size:12px;color:var(--faint)}
+
+  /* summary bar */
+  .runbar{position:fixed;left:0;right:0;bottom:0;background:var(--dark);color:#EDEAE5;z-index:25}
+  .runbar-in{max-width:900px;margin:0 auto;padding:15px var(--pad);display:flex;align-items:center;gap:20px}
+  .rb-sum{flex:1;font-size:13px;color:#B9B3AB;min-width:0}
+  .rb-sum b{color:#EDEAE5;font-weight:400}
+  .rb-price{text-align:right;white-space:nowrap}
+  .rb-price b{font-size:22px;font-weight:400}
+  .rb-price span{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#8B857D}
+  .rb-cta{background:#fff;color:var(--ink);border:0;font-family:inherit;font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:14px 22px;cursor:pointer;transition:.2s}
+  .rb-cta:hover{background:var(--green);color:#fff}
+  @media(max-width:600px){.rb-sum{display:none}}
+</style>
+
+<header>
+  <span class="logo">BELLA</span>
+  <span class="demo-tag">Concept · sections</span>
+  <a class="back" href="bella-order-page.html">← Current order page</a>
+</header>
+
+<div class="wrap">
+  <div class="head">
+    <span class="micro">Step 2 of 3</span>
+    <h1>Build your order.</h1>
+    <p>Start with a package, or switch on only what you need. Each section tells you what it does and what we’ll need from you.</p>
+  </div>
+
+  <div class="ctx">
+    <div class="ctx-lab">What are you staging?</div>
+    <div class="chips" id="chips">
+      <button class="chip on" data-proj="empty">An empty listing</button>
+      <button class="chip" data-proj="occupied">A lived-in home</button>
+      <button class="chip" data-proj="dated">Needs updating first</button>
+    </div>
+  </div>
+
+  <div class="divider"><span>Start with a package</span></div>
+  <div class="pkgs" id="pkgs">
+    <button class="pkg" data-pkg="basic"><b>Just staging</b><span>The essentials, nothing extra</span></button>
+    <button class="pkg on" data-pkg="ready"><span class="pk-badge">Popular</span><b>Listing-ready</b><span>Staging + a floor plan + twilight</span></button>
+    <button class="pkg" data-pkg="full"><b>Everything</b><span>Every service, switched on</span></button>
+    <button class="pkg" data-pkg="custom"><b>Build it myself</b><span>Start empty, add as you go</span></button>
+  </div>
+
+  <div class="divider"><span>Your services</span></div>
+
+  <!-- CORE: virtual staging always included -->
+  <div class="core">
+    <div class="core-top">
+      <div><b>Virtual staging</b><div class="core-sub" id="coreSub">Empty rooms furnished by real interior designers · $45 a photo</div></div>
+      <div class="stepper"><button data-d="-1">−</button><span class="v" id="pv">8</span><button data-d="1">+</button></div>
+    </div>
+    <div id="removalRow" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--line-2);display:none;align-items:center;gap:14px">
+      <div style="flex:1"><b style="font-weight:400">Furniture removal</b><div style="font-size:12.5px;color:var(--faint)">We clear the room first, then stage it clean.</div></div>
+      <span class="free-badge">Included free</span>
+    </div>
+  </div>
+
+  <div class="secs" id="secs"></div>
+</div>
+
+<div class="runbar">
+  <div class="runbar-in">
+    <div class="rb-sum" id="rbSum"></div>
+    <div class="rb-price"><b id="rbPrice">$0</b><span>Estimated</span></div>
+    <button class="rb-cta" id="review">Review order →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var PR={photo:45,dusk:7,sky:6,pano:31,house:46,fp2d:24,fp3d:84,reno:50};
+  var state={proj:'empty',photos:8,removal:false,
+    reno:{on:false},
+    edit:{on:false,dusk:false,sky:false},
+    floor:{on:false,d2:false,d2n:1,d3:false,d3n:1},
+    tour:{on:false,pano:false,panon:3,house:false}};
+
+  // section definitions (question-framed)
+  var SECS=[
+    {key:'reno', q:'Do you need to modernize it first?', sub:'Update dated floors, cabinets and finishes before staging — a virtual renovation.',
+     subs:[{k:'renoOn', t:'Virtual renovation', d:'Modern finishes on every staged photo', price:function(){return '+$'+PR.reno+'/photo';}}]},
+    {key:'edit', q:'Do you need photo editing?', sub:'Small edits, big first impression — brighter, warmer, more clicks.',
+     subs:[
+       {k:'dusk', t:'Day-to-dusk', d:'Turn a daytime exterior into a twilight hero shot', price:function(){return '+$'+PR.dusk+'/photo';}},
+       {k:'sky', t:'Sky replacement & retouch', d:'Swap grey skies, clean up blemishes', price:function(){return '+$'+PR.sky+'/photo';}}
+     ]},
+    {key:'floor', q:'Do you need floor plans?', sub:'Buyers understand the space before they visit. Priced per floor.',
+     subs:[
+       {k:'d2', t:'2D floor plan', d:'A clean, labelled layout', floors:'d2n', price:function(){return '+$'+PR.fp2d+'/floor';}},
+       {k:'d3', t:'3D floor plan', d:'Furnished, buyers can walk it', floors:'d3n', price:function(){return '+$'+PR.fp3d+'/floor';}}
+     ]},
+    {key:'tour', q:'Do you need a 3D tour?', sub:'Keep buyers on your listing longer; out-of-town buyers can walk it.',
+     subs:[
+       {k:'pano', t:'360° virtual staging', d:'Walkable, staged 360° rooms · you provide 360° photos', steps:'panon', price:function(){return '+$'+PR.pano+'/photo';}},
+       {k:'house', t:'Virtual house tour', d:'A walkthrough built from your listing photos', price:function(){return '+$'+PR.house;}}
+     ]}
+  ];
+
+  var secsEl=document.getElementById('secs');
+
+  function buildSecs(){
+    secsEl.innerHTML=SECS.map(function(s){
+      var st=state[s.key];
+      var subsHTML=s.subs.map(function(sub){
+        var checked=st[sub.k];
+        var extra='';
+        if(sub.floors) extra='<div class="floors" style="'+(checked?'':'opacity:.4;pointer-events:none')+'"><div class="miniStep" data-floors="'+s.key+':'+sub.floors+'"><button data-fd="-1">−</button><span class="v">'+st[sub.floors]+'</span><button data-fd="1">+</button></div><small>floors</small></div>';
+        if(sub.steps) extra='<div class="floors" style="'+(checked?'':'opacity:.4;pointer-events:none')+'"><div class="miniStep" data-floors="'+s.key+':'+sub.steps+'"><button data-fd="-1">−</button><span class="v">'+st[sub.steps]+'</span><button data-fd="1">+</button></div><small>rooms</small></div>';
+        return '<div class="subrow"><div class="sr-t"><b>'+sub.t+'</b><span>'+sub.d+'</span></div>'
+          +extra
+          +'<span class="sr-price">'+sub.price()+'</span>'
+          +'<button class="tog sm'+(checked?' on':'')+'" data-sub="'+s.key+':'+sub.k+'" type="button" aria-label="'+sub.t+'"></button></div>';
+      }).join('');
+      return '<div class="sec'+(st.on?' open on':'')+'" data-sec="'+s.key+'">'
+        +'<div class="sec-head" data-head="'+s.key+'"><div class="q"><b>'+s.q+'</b><span>'+s.sub+'</span></div>'
+        +'<span class="sec-price" id="sp_'+s.key+'"></span>'
+        +'<button class="tog'+(st.on?' on':'')+'" data-toggle="'+s.key+'" type="button" aria-label="Toggle"></button></div>'
+        +'<div class="sec-body"><div class="inner"><div class="sec-opts">'+subsHTML+'</div></div></div>'
+        +'</div>';
+    }).join('');
+    wire();
+    sync();
+  }
+
+  function wire(){
+    // header click = expand/collapse (does not change on-state unless via toggle)
+    secsEl.querySelectorAll('[data-head]').forEach(function(h){
+      h.addEventListener('click',function(e){ if(e.target.closest('[data-toggle]')) return;
+        var k=h.getAttribute('data-head'); var sec=secsEl.querySelector('.sec[data-sec="'+k+'"]');
+        sec.classList.toggle('open'); });
+    });
+    // section master toggle
+    secsEl.querySelectorAll('[data-toggle]').forEach(function(t){
+      t.addEventListener('click',function(e){ e.stopPropagation(); var k=t.getAttribute('data-toggle'); toggleSection(k); });
+    });
+    // sub toggles
+    secsEl.querySelectorAll('[data-sub]').forEach(function(t){
+      t.addEventListener('click',function(){ var p=t.getAttribute('data-sub').split(':'); var st=state[p[0]]; st[p[1]]=!st[p[1]];
+        if(st[p[1]]) st.on=true; // turning on a sub opens the section
+        // if no subs left on, keep section open but off? keep on if any sub on
+        st.on = anySub(p[0]); buildSecs(); });
+    });
+    // floor/step steppers
+    secsEl.querySelectorAll('[data-floors]').forEach(function(ms){
+      var p=ms.getAttribute('data-floors').split(':'); var st=state[p[0]], key=p[1];
+      ms.querySelectorAll('[data-fd]').forEach(function(b){ b.addEventListener('click',function(e){ e.stopPropagation();
+        st[key]=Math.max(1,st[key]+ +b.getAttribute('data-fd')); buildSecs(); }); });
+    });
+  }
+
+  function anySub(key){
+    var st=state[key];
+    if(key==='reno') return false; // reno handled by its own toggle
+    return SECS.filter(function(s){return s.key===key;})[0].subs.some(function(sub){ return st[sub.k]; });
+  }
+
+  function toggleSection(key){
+    var st=state[key];
+    st.on=!st.on;
+    if(key==='reno'){ /* reno has no subs, the toggle IS the service */ }
+    else if(st.on){ // turning a section on: pre-select a sensible default sub
+      var subs=SECS.filter(function(s){return s.key===key;})[0].subs;
+      var already=subs.some(function(sub){return st[sub.k];});
+      if(!already){ var def={edit:'dusk',floor:'d3',tour:'pano'}[key]; if(def) st[def]=true; }
+    } else { // turning off: clear all subs
+      SECS.filter(function(s){return s.key===key;})[0].subs.forEach(function(sub){ st[sub.k]=false; });
+    }
+    buildSecs();
+  }
+
+  // packages
+  function applyPkg(p){
+    // reset
+    state.reno={on:false};
+    state.edit={on:false,dusk:false,sky:false};
+    state.floor={on:false,d2:false,d2n:1,d3:false,d3n:1};
+    state.tour={on:false,pano:false,panon:3,house:false};
+    if(p==='ready'){ state.edit={on:true,dusk:true,sky:false}; state.floor={on:true,d2:false,d2n:1,d3:true,d3n:1}; }
+    if(p==='full'){ state.edit={on:true,dusk:true,sky:true}; state.floor={on:true,d2:true,d2n:1,d3:true,d3n:1}; state.tour={on:true,pano:true,panon:3,house:true}; if(state.proj==='dated') state.reno={on:true}; }
+    if(state.proj==='dated' && (p==='ready'||p==='full')) state.reno={on:true};
+    document.querySelectorAll('#pkgs .pkg').forEach(function(b){ b.classList.toggle('on',b.getAttribute('data-pkg')===p); });
+    buildSecs();
+  }
+
+  // pricing
+  function lines(){
+    var L=[],t=0;
+    L.push(['Virtual staging × '+state.photos, PR.photo*state.photos]); t+=PR.photo*state.photos;
+    if(state.removal) L.push(['Furniture removal',0,true]);
+    if(state.reno.on){ L.push(['Virtual renovation × '+state.photos, PR.reno*state.photos]); t+=PR.reno*state.photos; }
+    if(state.edit.dusk){ L.push(['Day-to-dusk × '+state.photos, PR.dusk*state.photos]); t+=PR.dusk*state.photos; }
+    if(state.edit.sky){ L.push(['Sky replacement × '+state.photos, PR.sky*state.photos]); t+=PR.sky*state.photos; }
+    if(state.floor.d2){ L.push(['2D floor plan × '+state.floor.d2n, PR.fp2d*state.floor.d2n]); t+=PR.fp2d*state.floor.d2n; }
+    if(state.floor.d3){ L.push(['3D floor plan × '+state.floor.d3n, PR.fp3d*state.floor.d3n]); t+=PR.fp3d*state.floor.d3n; }
+    if(state.tour.pano){ L.push(['360° tour × '+state.tour.panon, PR.pano*state.tour.panon]); t+=PR.pano*state.tour.panon; }
+    if(state.tour.house){ L.push(['Virtual house tour', PR.house]); t+=PR.house; }
+    return {L:L,total:t};
+  }
+  function money(n){ return '$'+n.toLocaleString(); }
+
+  function secTotal(key){
+    var st=state[key],n=0;
+    if(key==='reno'&&st.on) n=PR.reno*state.photos;
+    if(key==='edit'){ if(st.dusk)n+=PR.dusk*state.photos; if(st.sky)n+=PR.sky*state.photos; }
+    if(key==='floor'){ if(st.d2)n+=PR.fp2d*st.d2n; if(st.d3)n+=PR.fp3d*st.d3n; }
+    if(key==='tour'){ if(st.pano)n+=PR.pano*st.panon; if(st.house)n+=PR.house; }
+    return n;
+  }
+
+  function sync(){
+    var r=lines();
+    document.getElementById('rbPrice').textContent=money(r.total);
+    document.getElementById('pv').textContent=state.photos;
+    var on=r.L.length-1-(state.removal?1:0);
+    document.getElementById('rbSum').innerHTML='<b>'+state.photos+'</b> photos staged'+(on>0?' · <b>'+on+'</b> add-on'+(on>1?'s':''):'');
+    SECS.forEach(function(s){ var el=document.getElementById('sp_'+s.key); if(!el)return; var tt=secTotal(s.key); el.textContent=tt>0?('+'+money(tt)):(state[s.key].on?'':'Add'); });
+  }
+
+  // core stepper + project chips
+  document.querySelectorAll('.core [data-d]').forEach(function(b){ b.addEventListener('click',function(){ state.photos=Math.max(1,state.photos+ +b.getAttribute('data-d')); buildSecs(); }); });
+  document.querySelectorAll('#chips .chip').forEach(function(c){ c.addEventListener('click',function(){
+    state.proj=c.getAttribute('data-proj');
+    document.querySelectorAll('#chips .chip').forEach(function(x){ x.classList.toggle('on',x===c); });
+    state.removal=(state.proj==='occupied');
+    document.getElementById('removalRow').style.display=state.removal?'flex':'none';
+    var sub={empty:'Empty rooms furnished by real interior designers · $45 a photo',occupied:'We clear the room, then furnish it · $45 a photo, removal free',dated:'Modernized and furnished by our designers · $45 a photo'}[state.proj];
+    document.getElementById('coreSub').textContent=sub;
+    // dated → suggest reno
+    if(state.proj==='dated'){ state.reno={on:true}; } else if(state.proj!=='dated' && state.reno.on){ state.reno={on:false}; }
+    buildSecs();
+  }); });
+  document.querySelectorAll('#pkgs .pkg').forEach(function(b){ b.addEventListener('click',function(){ applyPkg(b.getAttribute('data-pkg')); }); });
+  document.getElementById('review').addEventListener('click',function(){ var r=lines(); alert('Concept demo — continues to the review + upload step.\n\n'+r.L.map(function(x){return '• '+x[0]+'  '+(x[2]?'Free':money(x[1]));}).join('\n')+'\n\nTotal: '+money(r.total)); });
+
+  // init with the "Listing-ready" package pre-applied
+  applyPkg('ready');
+})();
+</script>
