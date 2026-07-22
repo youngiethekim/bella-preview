@@ -253,14 +253,20 @@
   .svc-item .ico{width:26px;height:26px;color:var(--ink);opacity:1;stroke-width:1.2}
   .svc-item h3{font-size:16.5px;margin-top:2px}
   .svc-item p{font-size:13.5px;color:var(--soft);line-height:1.5}
-  /* central showcase image that auto-scrolls through service examples */
-  .showcase{max-width:680px;margin:36px auto 6px}
-  .sc-frame{position:relative;overflow:hidden;aspect-ratio:2.3;background:#EFECE8;border:1px solid var(--line)}
-  @media(max-width:640px){.sc-frame{aspect-ratio:1.6}}
-  .sc-track{display:flex;height:100%;transition:transform .8s cubic-bezier(.4,0,.2,1)}
-  .sc-slide{position:relative;flex:0 0 100%;height:100%}
-  .sc-slide img{width:100%;height:100%;object-fit:cover;display:block}
-  .sc-tag{position:absolute;left:18px;bottom:16px;background:rgba(20,18,16,.62);color:#fff;font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:8px 15px;backdrop-filter:blur(3px)}
+  /* central before/after flip book with SOLD outcomes */
+  .showcase{max-width:900px;margin:36px auto 8px}
+  .flip{perspective:1600px}
+  .flip-inner{position:relative;width:100%;aspect-ratio:1.62;transform-style:preserve-3d;transition:transform .85s cubic-bezier(.4,0,.2,1)}
+  .flip-inner.flipped{transform:rotateY(180deg)}
+  @media(max-width:640px){.flip-inner{aspect-ratio:1.3}}
+  .flip-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;border:1px solid var(--line);background:#EFECE8}
+  .flip-face.back{transform:rotateY(180deg)}
+  .flip-face img{width:100%;height:100%;object-fit:cover;display:block}
+  .ba-tag{position:absolute;top:14px;left:16px;background:rgba(20,18,16,.6);color:#fff;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;padding:6px 12px;backdrop-filter:blur(3px)}
+  .sold-badge{position:absolute;top:14px;right:16px;background:var(--green);color:#fff;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;padding:7px 15px}
+  .sold-info{position:absolute;left:16px;bottom:16px;background:rgba(18,16,14,.74);color:#fff;padding:9px 15px;backdrop-filter:blur(3px)}
+  .sold-info b{display:block;font-weight:400;font-size:13.5px;letter-spacing:.02em}
+  .sold-info span{display:block;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:#CFE3D3;margin-top:3px}
   .sc-dots{display:flex;gap:8px;justify-content:center;margin-top:16px}
   .sc-dots button{width:7px;height:7px;border-radius:99px;border:0;background:var(--line);cursor:pointer;padding:0;transition:.25s}
   .sc-dots button.on{background:var(--ink);width:22px}
@@ -833,13 +839,11 @@
     <p>Real interior designers and 3D artists handle the full visual package, composed by hand and back in 24 to 48 hours.</p>
   </div>
   <div class="wrap">
+    <!-- before/after flip book. SOLD stats are SAMPLE — replace with real case-study numbers from bellavirtual.com -->
     <div class="showcase">
-      <div class="sc-frame"><div class="sc-track" id="scTrack">
-        <div class="sc-slide"><img src="https://www.bellavirtual.com/cdn/shop/files/053-600-j-street.74270.p2k.027.print_ly_tb.jpg?width=1400" alt="A living room virtually staged by Bella" loading="lazy"><span class="sc-tag">Virtual staging</span></div>
-        <div class="sc-slide"><img src="https://www.bellavirtual.com/cdn/shop/files/Calvin_Theme_Dawn_Image.jpg?width=1400" alt="A day-to-dusk twilight edit" loading="lazy"><span class="sc-tag">Day-to-dusk</span></div>
-        <div class="sc-slide"><img src="https://www.bellavirtual.com/cdn/shop/files/INT_201_Bedroom.jpg?width=1400" alt="A photoreal 3D interior render" loading="lazy"><span class="sc-tag">3D render</span></div>
-        <div class="sc-slide"><img src="https://www.bellavirtual.com/cdn/shop/files/Minimal_Scandinavian_Kitchen_2025.jpg?width=1400" alt="A Scandinavian kitchen staged by Bella" loading="lazy"><span class="sc-tag">Renovation &amp; staging</span></div>
-        <div class="sc-slide"><img src="https://www.bellavirtual.com/cdn/shop/files/Gareth_Roberts_-_Living_room_to_Dinning_Room_S210-120_Bayview_Ave-13_Tung_NAM.jpg?width=1400" alt="A suite staged with a sectional and dining area" loading="lazy"><span class="sc-tag">Furniture removal &amp; staging</span></div>
+      <div class="flip"><div class="flip-inner" id="flipInner">
+        <div class="flip-face front"><img id="baBefore" src="" alt="A listing photo before staging"><span class="ba-tag">Before</span></div>
+        <div class="flip-face back"><img id="baAfter" src="" alt="The same room staged by Bella"><span class="ba-tag">After</span><span class="sold-badge">Sold</span><div class="sold-info"><b id="soldName"></b><span id="soldStat"></span></div></div>
       </div></div>
       <div class="sc-dots" id="scDots"></div>
     </div>
@@ -1527,20 +1531,31 @@ document.querySelectorAll('.compare').forEach(function(el){
   window.addEventListener('pointerup',function(){ down=false; });
 });
 
-/* central showcase: auto-advance through service examples, pause on hover, dots to jump */
+/* before/after flip book: shows before, flips to the staged "after" with a SOLD outcome, then advances.
+   SOLD stats below are SAMPLE — swap for real case-study numbers from bellavirtual.com. */
 (function(){
-  var track=document.getElementById('scTrack'); if(!track) return;
-  var n=track.children.length, i=0, dotsWrap=document.getElementById('scDots'), dots=[], timer;
-  for(var k=0;k<n;k++){ var b=document.createElement('button'); b.type='button'; b.setAttribute('aria-label','Show example '+(k+1));
-    (function(idx){ b.onclick=function(){ go(idx); restart(); }; })(k); dotsWrap.appendChild(b); dots.push(b); }
-  function render(){ track.style.transform='translateX(-'+(i*100)+'%)'; dots.forEach(function(d,x){ d.classList.toggle('on',x===i); }); }
-  function go(x){ i=(x+n)%n; render(); }
-  function start(){ timer=setInterval(function(){ go(i+1); }, 3400); }
-  function restart(){ clearInterval(timer); start(); }
-  var frame=track.closest('.sc-frame');
-  frame.addEventListener('mouseenter',function(){ clearInterval(timer); });
-  frame.addEventListener('mouseleave',start);
-  render(); start();
+  var inner=document.getElementById('flipInner'); if(!inner) return;
+  var beforeI=document.getElementById('baBefore'), afterI=document.getElementById('baAfter'),
+      nm=document.getElementById('soldName'), st=document.getElementById('soldStat'),
+      dotsWrap=document.getElementById('scDots'), dots=[], i=0, flipT, nextT;
+  var C='https://www.bellavirtual.com/cdn/shop/files/', W='?width=1400';
+  var PROJ=[
+    {b:C+'053-600-j-street.74270.p2k.027.print.jpg'+W, a:C+'053-600-j-street.74270.p2k.027.print_ly_tb.jpg'+W, name:'600 J Street', stat:'Sold over asking · 6 days on market'},
+    {b:C+'Josh_Goetz_-_Room_1_Den-Family_Room_1.jpg'+W, a:C+'Josh_Goetz_-_Room_1_Den-Family_Room_Tung_TP_1.jpg'+W, name:'Lodge estate den', stat:'Sold · 9 days on market'},
+    {b:C+'Gareth_Roberts_-_Living_room_to_Dinning_Room_S210-120_Bayview_Ave-13.jpg'+W, a:C+'Gareth_Roberts_-_Living_room_to_Dinning_Room_S210-120_Bayview_Ave-13_Tung_NAM.jpg'+W, name:'120 Bayview Ave, Toronto', stat:'Sold · 21 days on market'},
+    {b:C+'Unit_706_289_Drake_Street_Vancouver-dining_room-1.jpg'+W, a:C+'Unit_706_289_Drake_Street_Vancouver-dining_room-1_nhi_hb.jpg'+W, name:'289 Drake St, Vancouver', stat:'Leased · 30 days'}
+  ];
+  for(var k=0;k<PROJ.length;k++){ var b=document.createElement('button'); b.type='button'; b.setAttribute('aria-label','Project '+(k+1));
+    (function(x){ b.onclick=function(){ jump(x); }; })(k); dotsWrap.appendChild(b); dots.push(b); }
+  function paint(){ var p=PROJ[i]; beforeI.src=p.b; afterI.src=p.a; nm.textContent=p.name; st.textContent=p.stat; dots.forEach(function(d,x){ d.classList.toggle('on',x===i); }); }
+  function clear(){ clearTimeout(flipT); clearTimeout(nextT); }
+  function schedule(){ flipT=setTimeout(function(){ inner.classList.add('flipped'); }, 1900); nextT=setTimeout(function(){ step(1); }, 4700); }
+  function reset(){ inner.style.transition='none'; inner.classList.remove('flipped'); paint(); void inner.offsetWidth; inner.style.transition=''; }
+  function step(d){ clear(); i=(i+d+PROJ.length)%PROJ.length; reset(); schedule(); }
+  function jump(x){ clear(); i=x; reset(); schedule(); }
+  inner.parentNode.addEventListener('mouseenter',clear);
+  inner.parentNode.addEventListener('mouseleave',schedule);
+  paint(); schedule();
 })();
 </script>
 </body>
