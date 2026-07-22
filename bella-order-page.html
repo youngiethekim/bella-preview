@@ -90,15 +90,25 @@
   .pkg.on .pkg-desc{color:rgba(237,234,229,.74)}
   .pkg.on .pkg-price{color:#fff}
   .pkg .pkg-badge{position:absolute;top:-9px;left:16px;background:var(--green);color:#fff;font-size:9px;letter-spacing:.13em;text-transform:uppercase;padding:3px 9px}
-  .cust-toggle{display:block;width:100%;text-align:center;background:0;border:1px dashed var(--line);color:var(--soft);font-family:inherit;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:13px;margin-top:16px;cursor:pointer;transition:.15s}
-  .cust-toggle:hover,.cust-toggle.open{border-color:var(--ink);color:var(--ink)}
-  .cust-toggle.open{border-style:solid}
-  .customize{display:none;margin-top:8px}
-  .customize.show{display:block}
+  /* starting-point selector: packages + à la carte + custom */
+  .modebar{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 4px}
+  .modechip{flex:1 1 auto;min-width:118px;background:#fff;border:1px solid var(--line);cursor:pointer;font-family:inherit;padding:13px 14px;text-align:left;display:flex;flex-direction:column;gap:3px;transition:.15s}
+  .modechip:hover{border-color:var(--ink)}
+  .modechip.on{background:var(--dark);color:#EDEAE5;border-color:var(--dark)}
+  .modechip b{font-size:14.5px;font-weight:400}
+  .modechip .mc-tag{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--green)}
+  .modechip.on .mc-tag{color:#CFE3D3}
+  .menu{margin-top:14px}
+  .freebadge{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);border:1px solid rgba(62,107,76,.45);padding:6px 12px;white-space:nowrap}
+  .customnote{display:none;margin-top:14px;background:#fff;border:1px solid var(--line);padding:20px 22px}
+  .customnote.show{display:block}
+  .customnote label{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
+  .customnote textarea{width:100%;font-family:inherit;font-size:14.5px;color:var(--ink);background:var(--bg);border:1px solid var(--line);padding:11px 13px;min-height:88px;resize:vertical;line-height:1.5}
+  .cn-help{font-size:12.5px;color:var(--soft);margin-top:10px}
   .cat-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:22px 0 8px;padding-bottom:8px;border-bottom:1px solid var(--line-2)}
   .cat-head .cat-l{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
   .cat-head .cat-d{font-size:12.5px;color:var(--faint)}
-  .customize .cat-head:first-child{margin-top:4px}
+  .menu .cat-head:first-child{margin-top:4px}
   .pano{position:relative;height:230px;overflow:hidden;background:#111;cursor:grab;user-select:none;border:1px solid var(--line)}
   .pano.grab{cursor:grabbing}
   .pano-img{position:absolute;inset:0;background-image:url('https://pannellum.org/images/alma.jpg');background-size:auto 100%;background-repeat:repeat-x;background-position:0 center;will-change:background-position}
@@ -177,6 +187,7 @@
   <symbol id="i-sun" viewBox="0 0 24 24"><path d="M17 17a5 5 0 0 0-10 0"/><path d="M2.5 17h19"/><path d="M12 4v3"/><path d="M5.6 8.6l1.6 1.6M18.4 8.6l-1.6 1.6"/><path d="M3.5 12.6h2M18.5 12.6h2"/></symbol>
   <symbol id="i-360" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-3-6.2"/><path d="M20 4.5V8h-3.5"/></symbol>
   <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1-.5-8A5 5 0 0 1 16 8.6 3.75 3.75 0 0 1 17.4 18z"/></symbol>
+  <symbol id="i-eraser" viewBox="0 0 24 24"><path d="M8.5 19.5H20"/><path d="M13.2 6.6l4.2 4.2a2 2 0 0 1 0 2.8l-5.2 5.2H9l-3.4-3.4a2 2 0 0 1 0-2.8l5.4-5.4a2 2 0 0 1 2.8 0z"/><path d="M9.4 8.4l6 6"/></symbol>
   <symbol id="i-blue" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15"/><path d="M3.5 9h17M8 4.5V19.5"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
 </svg>
@@ -289,7 +300,7 @@
 <script>
 (function(){
   var P={ empty:{unit:45,stage:'Virtual staging',path:'listing',blurb:'Vacant rooms, furnished by a designer'},
-          occupied:{unit:55,stage:'Furniture removal + staging',path:'listing',blurb:'We clear the room, then stage it'},
+          occupied:{unit:45,stage:'Virtual staging',path:'listing',blurb:'We clear the room for free, then stage it'},
           dated:{unit:95,stage:'Virtual renovation + staging',path:'listing',blurb:'Modernized finishes, then staged'},
           prebuild:{path:'build'} };
   var PR={FP2D:24,FP3D:84,TOUR:46,DUSK:7,RINT:630,REXT:840,RINT_C:490,REXT_C:980,PANO:31,SKY:6};
@@ -297,11 +308,11 @@
   function rInt(){ return state.commercial?PR.RINT_C:PR.RINT; }
   function rExt(){ return state.commercial?PR.REXT_C:PR.REXT; }
   /* PLACEHOLDER commercial rates for staging & floor plans — confirm real commercial pricing */
-  var CU={empty:65,occupied:75,dated:130};   // commercial staging, per photo
+  var CU={empty:65,occupied:65,dated:130};   // commercial staging, per photo (removal included free)
   var CFP3D=110;                             // commercial 3D floor plan
   function stageUnit(){ var p=P[state.proj]; if(!p||!p.unit) return 0; return state.commercial?(CU[state.proj]||p.unit):p.unit; }
   function fp3d(){ return state.commercial?CFP3D:PR.FP3D; }
-  var state={ proj:null, commercial:false, photos:8, floor:false, tour:false, dusk:false, sky:false, pano360:false, pano:3,
+  var state={ proj:null, commercial:false, photos:8, mode:'ready', floor:false, floor2d:false, tour:false, dusk:false, sky:false, pano360:false, pano:3,
               rint:1, rext:1, rfp:1, useInt:true, useExt:true, useFp:true };
 
   // saved lookbook pieces
@@ -318,6 +329,7 @@
       var total=0, disc=0;
       var stageCost=stageUnit()*state.photos, dStage=stageCost*volDisc(state.photos);
       L.push([p.stage+' × '+state.photos+' photos', money(stageCost)]); total+=stageCost-dStage; disc+=dStage;
+      if(state.floor2d){ L.push(['2D floor plan', money(PR.FP2D)]); total+=PR.FP2D; }
       if(state.floor){ L.push(['3D floor plan', money(fp3d())]); total+=fp3d(); }
       if(state.tour){ L.push(['Virtual house tour', money(PR.TOUR)]); total+=PR.TOUR; }
       if(state.dusk){ var duskCost=PR.DUSK*state.photos, dDusk=duskCost*volDisc(state.photos); L.push(['Day-to-dusk edits × '+state.photos, money(duskCost)]); total+=duskCost-dDusk; disc+=dDusk; }
@@ -348,28 +360,32 @@
   function buildConfig(){
     var p=P[state.proj], box=document.getElementById('config'); box.innerHTML='';
     if(p.path==='listing'){
-      document.getElementById('s2title').textContent='How big is the job?';
-      document.getElementById('s2sub').textContent=(state.commercial?'Tell us how many photos, then pick a package. Most commercial spaces run about 8 photos.':'Tell us how many photos, then pick a package. Most listings run about 8 photos.');
-      var dFloor=fp3d(), dTour=PR.TOUR, dDusk=PR.DUSK*state.photos, dPano=PR.PANO*3;
+      document.getElementById('s2title').textContent='Build your order';
+      document.getElementById('s2sub').textContent=(state.commercial?'Start with a package or pick services à la carte. Each one lists exactly what we need from you.':'Start with a package, or pick services à la carte. Each one lists exactly what we need from you.');
       box.innerHTML=
         row('How many photos to stage?', p.stage+' · '+money(stageUnit())+' each, volume discounts apply', stepper('photos'), 'stage', 'sofa')
-       +'<p class="pkg-lead">Then pick a package — most agents start here. You can fine-tune anything below.</p>'
-       +'<div class="pkgs">'
-         +pkgCard('stage','Staged photos','Just your staged listing photos.',0,false)
-         +pkgCard('ready','Listing-Ready','Staging, a 3D floor plan, and twilight shots — what most listings need.',dFloor+dDusk,true)
-         +pkgCard('full','Full Exposure','Everything: floor plan, house tour, twilight, and a 360° walkthrough.',dFloor+dTour+dDusk+dPano,false)
+       +'<p class="pkg-lead">Pick a starting point.</p>'
+       +'<div class="modebar" id="modebar">'
+         +modeChip('stage','Staged photos','')
+         +modeChip('ready','Listing-Ready','Popular')
+         +modeChip('full','Full Exposure','')
+         +modeChip('ala','À la carte','')
+         +modeChip('custom','Custom','')
        +'</div>'
-       +'<button type="button" class="cust-toggle" id="custToggle">Customize what’s included ▾</button>'
-       +'<div class="customize" id="customize">'
-         +catHead('Show the space','Help buyers understand the layout')
-         +toggleRow('3D floor plan','Buyers see the layout, furnished','floor','+'+money(fp3d()),'floor','plan')
-         +toggleRow('Virtual house tour','A walkable tour from your photos','tour','+'+money(PR.TOUR),'tour','tour')
-         +'<div class="qrow"><svg class="qico"><use href="#i-360"/></svg><span class="lbl"><b>360° virtual tour</b><span>Your photographer shoots 360° photos, we stitch and stage them into one walkable tour. <button type="button" class="linkbtn" id="panoExample">See an example →</button></span></span><span class="price">+$'+PR.PANO+' / photo</span><button class="toggle" data-tog="pano360"></button></div>'
+       +'<div class="menu" id="menu">'
+         +catHead('Virtual staging','We need: empty, well-lit photos of each room')
+         +freeRow('Furniture removal','Cluttered or occupied? We clear the room, then stage it, at no extra charge.','eraser')
+         +toggleRow('Day-to-dusk edits','Twilight hero shots that stop the scroll. You provide a daytime exterior photo.','dusk','+'+money(PR.DUSK)+'/photo','dusk','sun')
+         +toggleRow('Sky replacement &amp; retouching','Swap grey skies, clean up blemishes. You provide the exterior photos.','sky','+'+money(PR.SKY)+'/photo','','cloud')
+         +'<div class="qrow"><svg class="qico"><use href="#i-360"/></svg><span class="lbl"><b>360° virtual staging</b><span>We stitch and stage your 360° photos into one walkable tour. You provide 360° photos. <button type="button" class="linkbtn" id="panoExample">See an example →</button></span></span><span class="price">+$'+PR.PANO+' / photo</span><button class="toggle" data-tog="pano360"></button></div>'
          +'<div class="qsub" id="panoSub"><span class="lbl"><b>How many 360° photos?</b><span>Usually one per room you want walkable</span></span>'+stepper('pano')+'</div>'
-         +catHead('Photo editing','Make the photos you have pop')
-         +toggleRow('Day-to-dusk edits','Twilight hero shots that stop the scroll','dusk','+'+money(PR.DUSK)+'/photo','dusk','sun')
-         +toggleRow('Sky replacement &amp; retouching','Swap grey skies, clean up blemishes and clutter','sky','+'+money(PR.SKY)+'/photo','','cloud')
-       +'</div>';
+         +catHead('Floor plans','We need: rough measurements or an existing sketch')
+         +toggleRow('2D floor plan','A clean, labelled layout','floor2d','+'+money(PR.FP2D),'','plan')
+         +toggleRow('3D floor plan','Furnished, so buyers can walk the layout','floor','+'+money(fp3d()),'floor','plan')
+         +catHead('Tours','')
+         +toggleRow('Virtual house tour','A walkable tour built from your listing photos','tour','+'+money(PR.TOUR),'tour','tour')
+       +'</div>'
+       +'<div class="customnote" id="customNote"><label>Tell us about your listing</label><textarea id="fNote" placeholder="Anything special — number of properties, unusual rooms, deadlines, brand requirements…"></textarea><p class="cn-help">Our team will tailor a quote and confirm what we need from you.</p></div>';
       if(saved.length){
         box.insertAdjacentHTML('beforeend','<div class="saved-note"><span>You saved <b>'+saved.length+' style'+(saved.length>1?'s':'')+'</b> in the lookbook, and we will use them.</span><a href="bella-lookbook.html">Edit in lookbook →</a></div>');
       } else {
@@ -378,7 +394,7 @@
       var pex=document.getElementById('panoExample');
       if(pex) pex.onclick=function(){ document.getElementById('panoModal').classList.add('open'); };
       // smart default: pre-pick the right package the first time we configure this project
-      if(defaultedFor!==state.proj){ applyPkg(state.proj==='dated'?'full':'ready'); defaultedFor=state.proj; }
+      if(defaultedFor!==state.proj){ applyMode(state.proj==='dated'?'full':'ready'); defaultedFor=state.proj; }
     } else {
       document.getElementById('s2title').textContent='What do you need to show?';
       document.getElementById('s2sub').textContent='Pick the visuals your sales office needs. We build them from your drawings, no finished home required.';
@@ -392,23 +408,30 @@
   }
   function exLink(ex){ return ex? ' <button type="button" class="linkbtn" data-ex="'+ex+'">See an example →</button>' : ''; }
   function qicon(ic){ return ic? '<svg class="qico"><use href="#i-'+ic+'"/></svg>' : ''; }
-  function catHead(l,d){ return '<div class="cat-head"><span class="cat-l">'+l+'</span><span class="cat-d">'+d+'</span></div>'; }
+  function catHead(l,d){ return '<div class="cat-head"><span class="cat-l">'+l+'</span>'+(d?'<span class="cat-d">'+d+'</span>':'')+'</div>'; }
+  function modeChip(k,n,tag){ return '<button type="button" class="modechip" data-mode="'+k+'"><b>'+n+'</b>'+(tag?'<span class="mc-tag">'+tag+'</span>':'')+'</button>'; }
+  function freeRow(name,sub,ic){ return '<div class="qrow">'+qicon(ic)+'<span class="lbl"><b>'+name+'</b><span>'+sub+'</span></span><span class="freebadge">Included free</span></div>'; }
   function pkgCard(key,name,desc,delta,rec){ return '<button type="button" class="pkg'+(rec?' rec':'')+'" data-pkg="'+key+'">'+(rec?'<span class="pkg-badge">Most popular</span>':'')+'<b>'+name+'</b><span class="pkg-desc">'+desc+'</span><span class="pkg-price">'+(delta>0?'+'+money(delta):'Base price')+'</span></button>'; }
   function row(name,sub,control,ex,ic){ return '<div class="qrow">'+qicon(ic)+'<span class="lbl"><b>'+name+'</b><span>'+sub+exLink(ex)+'</span></span>'+control+'</div>'; }
   function stepper(key){ return '<span class="stepper" data-step="'+key+'"><button data-d="-1">−</button><span class="v" id="v_'+key+'"></span><button data-d="1">+</button></span>'; }
   function toggleRow(name,sub,key,price,ex,ic){ return '<div class="qrow">'+qicon(ic)+'<span class="lbl"><b>'+name+'</b><span>'+sub+exLink(ex)+'</span></span><span class="price">'+price+'</span><button class="toggle" data-tog="'+key+'"></button></div>'; }
   function toggleStep(name,sub,tkey,qkey,price,ex,ic){ return '<div class="qrow">'+qicon(ic)+'<span class="lbl"><b>'+name+'</b><span>'+sub+exLink(ex)+'</span></span><span class="stepper" data-step="'+qkey+'"><button data-d="-1">−</button><span class="v" id="v_'+qkey+'"></span><button data-d="1">+</button></span><span class="price">'+price+'</span><button class="toggle" data-tog="'+tkey+'"></button></div>'; }
 
-  // add-on packages (presets over the à-la-carte toggles) — reduce decision fatigue
+  // starting points: 3 packages (presets) + à la carte + custom
   var defaultedFor=null;   // which project we've already pre-recommended a package for
-  var PKG={ stage:{floor:false,tour:false,dusk:false,pano360:false},
-            ready:{floor:true, tour:false,dusk:true, pano360:false},
-            full: {floor:true, tour:true, dusk:true, pano360:true} };
-  function applyPkg(k){ var s=PKG[k]; state.floor=s.floor; state.tour=s.tour; state.dusk=s.dusk; state.pano360=s.pano360; if(k==='full'&&state.pano<1) state.pano=3; sync(); }
-  function syncPkg(){
-    var cur=null;
-    for(var k in PKG){ var s=PKG[k]; if(state.floor===s.floor&&state.tour===s.tour&&state.dusk===s.dusk&&state.pano360===s.pano360){ cur=k; break; } }
-    document.querySelectorAll('.pkg').forEach(function(el){ el.classList.toggle('on', el.getAttribute('data-pkg')===cur); });
+  var FIELDS=['floor','floor2d','tour','dusk','sky','pano360'];
+  var PKG={ stage:{floor:false,floor2d:false,tour:false,dusk:false,sky:false,pano360:false},
+            ready:{floor:true, floor2d:false,tour:false,dusk:true, sky:false,pano360:false},
+            full: {floor:true, floor2d:false,tour:true, dusk:true, sky:false,pano360:true} };
+  function matchPkg(){ for(var k in PKG){ var s=PKG[k], ok=true; FIELDS.forEach(function(f){ if(state[f]!==s[f]) ok=false; }); if(ok) return k; } return null; }
+  function applyMode(m){
+    if(PKG[m]){ var s=PKG[m]; FIELDS.forEach(function(f){ state[f]=s[f]; }); if(m==='full'&&state.pano<1) state.pano=3; }
+    state.mode=m; sync();
+  }
+  function reMode(){ if(state.mode==='custom') return; state.mode = matchPkg() || 'ala'; }  // manual edits => package or à la carte
+  function syncMode(){
+    document.querySelectorAll('.modechip').forEach(function(el){ el.classList.toggle('on', el.getAttribute('data-mode')===state.mode); });
+    var cn=document.getElementById('customNote'); if(cn) cn.classList.toggle('show', state.mode==='custom');
   }
   function bind(){
     document.querySelectorAll('.stepper').forEach(function(s){
@@ -420,17 +443,15 @@
     });
     document.querySelectorAll('.toggle').forEach(function(t){
       var key=t.getAttribute('data-tog');
-      t.onclick=function(){ state[key]=!state[key]; sync(); };
+      t.onclick=function(){ state[key]=!state[key]; reMode(); sync(); };
     });
-    document.querySelectorAll('.pkg[data-pkg]').forEach(function(el){ el.onclick=function(){ applyPkg(el.getAttribute('data-pkg')); }; });
-    var ct=document.getElementById('custToggle');
-    if(ct) ct.onclick=function(){ var c=document.getElementById('customize'); c.classList.toggle('show'); ct.classList.toggle('open'); ct.textContent=(c.classList.contains('show')?'Hide customization ▴':'Customize what’s included ▾'); };
+    document.querySelectorAll('.modechip[data-mode]').forEach(function(el){ el.onclick=function(){ applyMode(el.getAttribute('data-mode')); }; });
   }
   function sync(){
     ['photos','rint','rext','rfp','pano'].forEach(function(k){ var el=document.getElementById('v_'+k); if(el) el.textContent=state[k]; });
     document.querySelectorAll('.toggle').forEach(function(t){ t.classList.toggle('on', !!state[t.getAttribute('data-tog')]); });
     var ps=document.getElementById('panoSub'); if(ps) ps.classList.toggle('show', !!state.pano360);
-    syncPkg();
+    syncMode();
     document.getElementById('run2').textContent=money(lines().total);
   }
 
