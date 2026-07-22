@@ -128,7 +128,7 @@
   @media(max-width:640px){.tipbox{left:auto;right:0;transform:translateY(4px)}.tipbox::after{left:auto;right:14px}.tip:hover .tipbox,.tip:focus .tipbox{transform:translateY(0)}}
   .pano{position:relative;height:230px;overflow:hidden;background:#111;cursor:grab;user-select:none;border:1px solid var(--line)}
   .pano.grab{cursor:grabbing}
-  .pano-img{position:absolute;inset:0;background-image:url('https://pannellum.org/images/alma.jpg');background-size:auto 100%;background-repeat:repeat-x;background-position:0 center;will-change:background-position}
+  .pano-img{position:absolute;inset:0;background-image:url('https://youngiethekim.github.io/bella-preview/assets/pano/pano-condo.jpg');background-size:auto 100%;background-repeat:repeat-x;background-position:0 center;will-change:background-position}
   .pano-tag{position:absolute;left:12px;bottom:12px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.55);padding:6px 12px;backdrop-filter:blur(3px);pointer-events:none}
   .linkbtn{background:0;border:0;padding:0;font-family:inherit;font-size:13px;color:var(--green);text-decoration:underline;cursor:pointer}
   .linkbtn:hover{opacity:.7}
@@ -420,7 +420,7 @@
       document.getElementById('s2title').textContent='Build your order';
       document.getElementById('s2sub').textContent=(state.commercial?'Start with a package or pick services à la carte. Each one lists exactly what we need from you.':'Start with a package, or pick services à la carte. Each one lists exactly what we need from you.');
       box.innerHTML=
-        '<p class="pkg-lead">How would you like to start?</p>'
+        '<p class="pkg-lead">Pick a starting point.</p>'
        +'<div class="modebar" id="modebar">'
          +modeChip('stage','Staged photos','')
          +modeChip('ready','Listing-Ready','Popular')
@@ -433,8 +433,9 @@
          +catHead('Virtual staging','We need: empty, well-lit photos of each room')
          +row('Virtual staging', 'Empty rooms furnished by real interior designers · '+money(stageUnit())+' each, volume discounts apply', stepper('photos'), 'stage', 'sofa')
          +toggleRow('Furniture removal','Occupied or cluttered? We clear the room first, so it can be staged clean.','removal','<span class="freeprice">Included free</span>','','eraser')
-         +toggleRow('Virtual renovation','Modernize dated floors, cabinets, and finishes before we stage — buyers scroll past tired kitchens and baths. We need photos of the dated space.','reno','+'+money(PR.RENO)+'/photo','','roller')
          +powerHead()
+         +catHead('Virtual renovation','We need: photos of the dated space','Buyers scroll right past tired kitchens and baths. A virtual reno shows the home at its potential — no contractor, no delay.')
+         +toggleRow('Virtual renovation','Modernize dated floors, cabinets, and finishes before we stage.','reno','+'+money(PR.RENO)+'/photo','','roller')
          +catHead('Photo editing','Make the photos you have pop','Small edits, big first impression. Bright skies and clean, warm rooms get more clicks and saves online.')
          +toggleRow('Day-to-dusk edits','Twilight hero shots that stop the scroll. You provide a daytime exterior photo.','dusk','+'+money(PR.DUSK)+'/photo','dusk','sun')
          +toggleRow('Sky replacement &amp; retouching','Swap grey skies, clean up blemishes. You provide the exterior photos.','sky','+'+money(PR.SKY)+'/photo','','cloud')
@@ -466,8 +467,8 @@
       document.getElementById('s2sub').textContent='Pick the visuals your sales office needs. We build them from your drawings, no finished home required.';
       box.innerHTML=
         catHead('Built from your drawings','We need: architectural blueprints or plans (PDF/CAD) and property dimensions','Renders are built from your plans, so the drawings and dimensions are what make them accurate. You can upload them at checkout, or send them right after.')
-       +toggleStep((state.commercial?'Commercial interior renders':'Interior 3D renders'),'Photoreal rooms from your plans','useInt','rint','+'+money(rInt())+' each','rint')
-       +toggleStep((state.commercial?'Commercial exterior renders':'Exterior 3D renders'),'Elevations, streetscapes, aerials','useExt','rext','+'+money(rExt())+' each','rext')
+       +toggleStep((state.commercial?'Commercial interior renders':'Interior 3D renders'),'Photoreal rooms from your plans','useInt','rint','+'+money(rInt())+' each',state.commercial?'crint':'rint')
+       +toggleStep((state.commercial?'Commercial exterior renders':'Exterior 3D renders'),'Elevations, streetscapes, aerials','useExt','rext','+'+money(rExt())+' each',state.commercial?'crext':'rext')
        +toggleStep('Furnished 3D floor plans','Walk the layout','useFp','rfp','+'+money(fp3d())+' each','floor');
     }
     box.insertAdjacentHTML('beforeend','<p class="tiers">Volume pricing, applied automatically to every service — <b>3+</b> save 5% · <b>6+</b> save 10% · <b>11+</b> save 15% · <b>21+</b> save 20%.</p>');
@@ -645,6 +646,7 @@
 
   // ---- per-service examples: real Bella work where available; nearest real image (flagged) as a stand-in otherwise ----
   var CDN='https://www.bellavirtual.com/cdn/shop/files/', W='?width=1400';
+  var AST='https://youngiethekim.github.io/bella-preview/assets/';
   var EX={
     stage:{ before:CDN+'053-600-j-street.74270.p2k.027.print.jpg'+W, after:CDN+'053-600-j-street.74270.p2k.027.print_ly_tb.jpg'+W,
             cap:'Virtual staging — a real Bella project at 600 J Street. Empty room, furnished by a designer.',
@@ -655,19 +657,25 @@
     rint:{  after:CDN+'INT_201_Bedroom.jpg'+W,
             cap:'Interior 3D render — real Bella work, built from plans before the home exists.',
             req:['Architectural floor plans or drawings (PDF or CAD)','Any finishes or material selections you want shown'] },
-    /* PLACEHOLDER stand-ins: nearest real Bella image until true samples are supplied */
-    floor2d:{ after:CDN+'Living_Room_e6c83783-d966-4eca-b94d-1e7d1e6621cd.png'+W, placeholder:true,
-            cap:'A clean, labelled 2D floor plan gives buyers the layout at a glance. Real 2D sample coming.',
-            req:['Rough measurements or an existing sketch','One set per floor of the home'] },
-    floor:{ after:CDN+'Living_Room_e6c83783-d966-4eca-b94d-1e7d1e6621cd.png'+W, placeholder:true,
-            cap:'A furnished 3D floor plan renders this layout from above so buyers can walk it. Real floor-plan sample coming.',
-            req:['Rough measurements or an existing sketch','One set per floor of the home'] },
+    floor2d:{ after:AST+'floorplan/fp-2d.jpg',
+            cap:'2D floor plan — real Bella work. A clean, labelled layout with room dimensions, so buyers read the space at a glance.',
+            req:['Architectural blueprints or drawings (PDF or CAD), if you have them','Otherwise, dimensions for each floor','A rough sketch also works'] },
+    floor:{ after:AST+'floorplan/fp-3d.jpg',
+            cap:'3D floor plan — real Bella work. Furnished and rendered from above with dimensions, so buyers can walk each level.',
+            req:['Architectural blueprints or drawings (PDF or CAD), if you have them','Otherwise, dimensions for each floor'] },
+    rext:{  after:AST+'render/ext-villa-1.jpg',
+            cap:'Exterior 3D render — real Bella work, built from drawings before the home is finished.',
+            req:['Elevations or site drawings','Any material, landscaping, or lighting direction'] },
+    crint:{ after:AST+'commercial/office.jpg',
+            cap:'Commercial interior render — real Bella work. A workspace built photoreal from plans, before fit-out.',
+            req:['Architectural floor plans or drawings (PDF or CAD)','Any finishes, fixtures or branding to show'] },
+    crext:{ after:AST+'commercial/restaurant.jpg',
+            cap:'Commercial render — real Bella work. A hospitality space brought to life from drawings.',
+            req:['Plans, elevations or site drawings','Any material, lighting or branding direction'] },
+    /* PLACEHOLDER stand-in: nearest real Bella image until a true tour sample is supplied */
     tour:{  after:CDN+'Minimal_Scandinavian_Kitchen_2025.jpg'+W, placeholder:true,
             cap:'A virtual house tour links your staged rooms into one walkthrough. Real tour sample coming.',
-            req:['Your finished listing photos — we stitch them together','Photos in shooting order help us sequence the walk'] },
-    rext:{  after:CDN+'INT_201_Bedroom.jpg'+W, placeholder:true,
-            cap:'Exterior renders show elevations, streetscapes and aerials from your drawings. Real exterior sample coming.',
-            req:['Elevations or site drawings','Any material, landscaping, or lighting direction'] }
+            req:['Your finished listing photos, we stitch them together','Photos in shooting order help us sequence the walk'] }
   };
   (function(){
     var em=document.getElementById('exModal'), img=document.getElementById('exImg'),
