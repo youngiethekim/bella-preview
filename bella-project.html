@@ -64,10 +64,22 @@
   /* shop the look */
   .shop{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
   @media(max-width:900px){.shop{grid-template-columns:1fr 1fr}}
-  .brand{border:1px solid var(--line);background:#fff;padding:18px 18px 20px;display:flex;flex-direction:column;gap:5px}
-  .brand .bn{font-size:15px}
-  .brand .bp{font-size:12.5px;color:var(--soft);flex:1}
-  .brand .code{margin-top:8px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);border:1px dashed var(--green);padding:6px 10px;text-align:center}
+  .brand{border:1px solid var(--line);background:#fff;padding:18px 18px 20px;display:flex;flex-direction:column;gap:6px}
+  .brand .br-i{width:22px;height:22px;color:var(--ink);margin-bottom:4px}
+  .brand .bp{font-size:15.5px;color:var(--ink)}
+  .brand .bn{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--green)}
+  /* generic sprite icon + tabs */
+  .svgi{stroke:currentColor;fill:none;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round;width:18px;height:18px}
+  .svgi.bi{width:15px;height:15px;margin-right:7px;vertical-align:-2px}
+  .hd-i{width:20px;height:20px;flex:0 0 20px;vertical-align:-3px;margin-right:9px;color:var(--ink)}
+  .tabnav{display:flex;gap:4px;max-width:1280px;margin:0 auto;padding:22px var(--pad) 0;flex-wrap:wrap}
+  .ptab{display:inline-flex;align-items:center;gap:9px;font-family:inherit;font-size:13.5px;letter-spacing:.03em;background:#fff;border:1px solid var(--line);color:var(--soft);padding:12px 20px;cursor:pointer;transition:.15s}
+  .ptab .svgi{width:17px;height:17px}
+  .ptab:hover{border-color:var(--ink);color:var(--ink)}
+  .ptab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .tab-panel{display:none}
+  .tab-panel.show{display:block}
+  .blk .hd h2{display:flex;align-items:center}
 
   /* two-col builder */
   .grid{display:grid;grid-template-columns:360px 1fr;gap:34px;padding:34px var(--pad) 70px;max-width:1280px;margin:0 auto;align-items:start}
@@ -114,7 +126,9 @@
   .brochure .b-addr{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-top:4px}
   .brochure .b-facts{display:flex;gap:26px;margin:16px 0;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
   .brochure .b-facts div b{font-size:18px;font-weight:400}
+  .brochure .b-facts div{text-align:center}
   .brochure .b-facts div span{display:block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  .b-facts .svgi,.w-facts .svgi{width:17px;height:17px;color:var(--soft);display:block;margin:0 auto 5px}
   .brochure .b-desc{font-size:13.5px;color:#514e4a;line-height:1.6}
   .brochure .b-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-top:18px}
   .brochure .b-grid .imgwm img{aspect-ratio:1.3;object-fit:cover;width:100%}
@@ -183,6 +197,21 @@
 </header>
 
 <!-- SUMMARY -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="1"/><path d="M3.5 15.5l4.5-4 3.5 3 3.5-3.5 5.5 5"/><circle cx="8.6" cy="9.4" r="1.2"/></symbol>
+  <symbol id="i-sofa" viewBox="0 0 24 24"><path d="M4 11.5V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3.5"/><path d="M2 13.5a2 2 0 0 1 4 0v1.5h12v-1.5a2 2 0 0 1 4 0V18H2z"/><path d="M5 18v2M19 18v2"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6.5 3.5h7l4.5 4.5v12h-11.5z"/><path d="M13.5 3.5V8H18"/><path d="M9 13.8l1.9 1.9 3.9-3.9"/></symbol>
+  <symbol id="i-bed" viewBox="0 0 24 24"><path d="M3 18v-7h13a4 4 0 0 1 4 4v3"/><path d="M3 12V7M3 18v2M20 18v2"/><path d="M6 11V9.5h4V11"/></symbol>
+  <symbol id="i-bath" viewBox="0 0 24 24"><path d="M4 12.5h16V15a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M6 12.5V6.5a2 2 0 0 1 4 0"/><path d="M8.5 6.5h3M6 19l-1 2M18 19l1 2"/></symbol>
+  <symbol id="i-ruler" viewBox="0 0 24 24"><rect x="3" y="8.5" width="18" height="7" rx="1"/><path d="M7 8.5v3M11 8.5v4M15 8.5v3M19 8.5v4"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M5 19h14"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M4 4h8l8 8-8 8-8-8z"/><circle cx="8.5" cy="8.5" r="1.3"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.4 2.6 14.6 0 17M12 3.5c-2.6 2.4-2.6 14.6 0 17"/></symbol>
+  <symbol id="i-tour" viewBox="0 0 24 24"><path d="M3 12c2.4-4.2 5.4-6.3 9-6.3s6.6 2.1 9 6.3c-2.4 4.2-5.4 6.3-9 6.3S5.4 16.2 3 12z"/><circle cx="12" cy="12" r="2.6"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M6 3h4l1.5 5-2.5 1.5a12 12 0 0 0 5.5 5.5l1.5-2.5 5 1.5v4a2 2 0 0 1-2 2A16 16 0 0 1 4 5a2 2 0 0 1 2-2z"/></symbol>
+</defs></svg>
+
 <section class="summary">
   <div class="summary-in">
     <div>
@@ -198,35 +227,47 @@
   </div>
 </section>
 
-<!-- DELIVERED FILES -->
-<section class="blk">
+<!-- TABS -->
+<div class="tabnav" id="projTabs">
+  <button class="ptab on" data-tab="photos" type="button"><svg class="svgi"><use href="#i-image"/></svg>Photos</button>
+  <button class="ptab" data-tab="furniture" type="button"><svg class="svgi"><use href="#i-sofa"/></svg>Furniture used</button>
+  <button class="ptab" data-tab="marketing" type="button"><svg class="svgi"><use href="#i-doc"/></svg>Marketing materials</button>
+</div>
+
+<!-- PHOTOS -->
+<section class="blk tab-panel show" id="panel-photos">
   <div class="hd">
-    <h2>Your delivered files</h2>
+    <h2><svg class="svgi hd-i"><use href="#i-image"/></svg>Your delivered photos</h2>
     <span class="micro" id="wmState">Download originals, or toggle the virtually-staged mark</span>
   </div>
   <div class="files" id="fileGrid"></div>
   <div class="files-bar">
-    <button class="btn btn-sm" id="dlAll">Download all (8)</button>
+    <button class="btn btn-sm" id="dlAll"><svg class="svgi bi"><use href="#i-download"/></svg>Download all (8)</button>
     <div class="toggle-row" id="wmToggle"><span class="tg"></span> Mark photos “Virtually staged”</div>
     <span class="micro">MLS-compliant labelling</span>
   </div>
-  <!-- SAMPLE styling note — pull the real designer's notes per project on the live tool -->
-  <p class="furn-note"><b style="font-weight:400">The look:</b> warm transitional staging chosen for this market — a boucle accent chair, oak-and-brass coffee table, and a low-profile linen sofa keep sightlines open, while soft neutrals and layered textures help buyers picture themselves living here. <span class="flag" style="margin-left:6px">Sample notes</span></p>
 </section>
 
-<!-- SHOP THE LOOK -->
-<section class="blk">
+<!-- FURNITURE USED -->
+<section class="blk tab-panel" id="panel-furniture">
   <div class="hd">
-    <h2>Shop the look</h2>
-    <span class="flag">Sample partners</span>
-    <span class="micro">Designer furniture used in your staging, with partner discounts</span>
+    <h2><svg class="svgi hd-i"><use href="#i-sofa"/></svg>Furniture used</h2>
+    <span class="micro">The designer pieces we staged your listing with</span>
   </div>
   <div class="shop" id="shopGrid"></div>
-  <p class="note" style="text-align:left;margin-top:12px">Illustrative brands &amp; codes. On the live tool these are the real furniture pieces used in your project, linked to partner brands with active designer discounts.</p>
+  <!-- SAMPLE styling note — pull the real designer's notes per project on the live tool -->
+  <p class="furn-note"><svg class="svgi hd-i" style="color:var(--gold)"><use href="#i-tag"/></svg><b style="font-weight:400">The look:</b> warm transitional staging chosen for this market — a boucle accent chair, oak-and-brass coffee table, and a low-profile linen sofa keep sightlines open, while soft neutrals and layered textures help buyers picture themselves living here. <span class="flag" style="margin-left:6px">Sample</span></p>
 </section>
 
-<!-- BUILDER -->
-<div class="grid">
+<!-- MARKETING MATERIALS -->
+<div class="tab-panel" id="panel-marketing">
+  <section class="blk" style="padding-bottom:0">
+    <div class="hd">
+      <h2><svg class="svgi hd-i"><use href="#i-doc"/></svg>Marketing materials</h2>
+      <span class="micro">Turn your photos into a listing brochure and website</span>
+    </div>
+  </section>
+  <div class="grid" style="padding-top:22px">
   <div class="side">
     <div class="panel">
       <h2>Listing details</h2>
@@ -284,6 +325,7 @@
     <p class="note">Mockup preview — on the live tool this exports a print-ready PDF and publishes a shareable listing site under your brand.</p>
   </div>
 </div>
+</div><!-- /panel-marketing -->
 
 <!-- ORDERS -->
 <section class="blk" id="orders" style="padding-bottom:60px">
@@ -331,7 +373,7 @@
     {n:'Article',p:'Layered wool area rug',c:'BELLA-ART20'}
   ];
   document.getElementById('shopGrid').innerHTML=BRANDS.map(function(b){
-    return '<div class="brand"><span class="bn">'+b.n+'</span><span class="bp">'+b.p+'</span><span class="code">'+b.c+'</span></div>';
+    return '<div class="brand"><svg class="svgi br-i"><use href="#i-tag"/></svg><span class="bp">'+b.p+'</span><span class="bn">'+b.n+'</span></div>';
   }).join('');
 
   /* orders — current + sample past */
@@ -384,7 +426,7 @@
       +'<div class="b-hero"><img src="'+PHOTOS[0]+'" alt="">'+(state.wm?'<span class="vs vtop">Virtually staged</span>':'')+'<span class="b-price">'+esc(val('fPrice'))+'</span></div>'
       +'<div class="b-body">'
         +'<h3>'+esc(val('fHead'))+'</h3><p class="b-addr">'+esc(val('fAddr'))+'</p>'
-        +'<div class="b-facts"><div><b>'+esc(val('fBeds'))+'</b><span>Beds</span></div><div><b>'+esc(val('fBaths'))+'</b><span>Baths</span></div><div><b>'+esc(val('fSqft'))+'</b><span>Sq ft</span></div></div>'
+        +'<div class="b-facts"><div><svg class="svgi"><use href="#i-bed"/></svg><b>'+esc(val('fBeds'))+'</b><span>Beds</span></div><div><svg class="svgi"><use href="#i-bath"/></svg><b>'+esc(val('fBaths'))+'</b><span>Baths</span></div><div><svg class="svgi"><use href="#i-ruler"/></svg><b>'+esc(val('fSqft'))+'</b><span>Sq ft</span></div></div>'
         +'<p class="b-desc">'+esc(val('fDesc'))+'</p>'
         +'<div class="b-grid">'+PHOTOS.slice(1,7).map(img).join('')+'</div>'
         +'<div class="b-foot"><div class="agent"><span class="hs" '+hsStyle()+'></span><div><b>'+esc(val('fAgent'))+'</b><span>'+esc(val('fPhone'))+'</span></div></div><div class="b-logo">'+logoEl()+'</div></div>'
@@ -396,7 +438,7 @@
       +'<div class="site">'
         +'<div class="w-top"><span class="wl">'+logoEl()+'</span><span class="micro">'+esc(val('fPhone'))+'</span></div>'
         +'<div class="w-hero"><img src="'+PHOTOS[0]+'" alt="">'+(state.wm?'<span class="vs vtop">Virtually staged</span>':'')+'<div class="veil"></div><div class="w-copy"><div class="p">'+esc(val('fPrice'))+'</div><div class="a">'+esc(val('fAddr'))+'</div></div></div>'
-        +'<div class="w-facts"><div><b>'+esc(val('fBeds'))+'</b><span>Beds</span></div><div><b>'+esc(val('fBaths'))+'</b><span>Baths</span></div><div><b>'+esc(val('fSqft'))+'</b><span>Sq ft</span></div></div>'
+        +'<div class="w-facts"><div><svg class="svgi"><use href="#i-bed"/></svg><b>'+esc(val('fBeds'))+'</b><span>Beds</span></div><div><svg class="svgi"><use href="#i-bath"/></svg><b>'+esc(val('fBaths'))+'</b><span>Baths</span></div><div><svg class="svgi"><use href="#i-ruler"/></svg><b>'+esc(val('fSqft'))+'</b><span>Sq ft</span></div></div>'
         +'<div class="w-about"><h3>'+esc(val('fHead'))+'</h3><p>'+esc(val('fDesc'))+'</p></div>'
         +'<div class="w-gal">'+PHOTOS.slice(1,7).map(img).join('')+'</div>'
         +'<div class="w-cta"><div class="hs" '+hsStyle()+'></div><h3>Book a private showing</h3><div style="font-size:13px;color:#b8b2a9;margin-top:8px">'+esc(val('fAgent'))+' · '+esc(val('fPhone'))+'</div><a class="btn">Request a tour</a></div>'
@@ -425,6 +467,17 @@
   document.getElementById('pvAction').onclick=function(){ alert(state.view==='bro'?'Mockup: exports a print-ready PDF brochure for '+val('fAddr')+'.':'Mockup: publishes a one-listing website for '+val('fAddr')+'.'); };
 
   renderFiles(); render();
+})();
+
+/* tabs: Photos / Furniture used / Marketing materials */
+(function(){
+  var tabs=document.querySelectorAll('.ptab[data-tab]'), panels={photos:'panel-photos',furniture:'panel-furniture',marketing:'panel-marketing'};
+  tabs.forEach(function(t){ t.onclick=function(){
+    var k=t.getAttribute('data-tab');
+    tabs.forEach(function(x){ x.classList.toggle('on',x===t); });
+    Object.keys(panels).forEach(function(p){ document.getElementById(panels[p]).classList.toggle('show', p===k); });
+    window.scrollTo({top:0,behavior:'smooth'});
+  };});
 })();
 </script>
 </body>

@@ -98,7 +98,8 @@
   .modechip b{font-size:14.5px;font-weight:400}
   .modechip .mc-tag{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--green)}
   .modechip.on .mc-tag{color:#CFE3D3}
-  .menu{margin-top:14px}
+  .menu-lead{font-size:13.5px;color:var(--soft);margin:22px 0 2px}
+  .menu{margin-top:12px}
   .freebadge{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);border:1px solid rgba(62,107,76,.45);padding:6px 12px;white-space:nowrap}
   .customnote{display:none;margin-top:14px;background:#fff;border:1px solid var(--line);padding:20px 22px}
   .customnote.show{display:block}
@@ -363,8 +364,7 @@
       document.getElementById('s2title').textContent='Build your order';
       document.getElementById('s2sub').textContent=(state.commercial?'Start with a package or pick services à la carte. Each one lists exactly what we need from you.':'Start with a package, or pick services à la carte. Each one lists exactly what we need from you.');
       box.innerHTML=
-        row('How many photos to stage?', p.stage+' · '+money(stageUnit())+' each, volume discounts apply', stepper('photos'), 'stage', 'sofa')
-       +'<p class="pkg-lead">Pick a starting point.</p>'
+        '<p class="pkg-lead">Pick a starting point.</p>'
        +'<div class="modebar" id="modebar">'
          +modeChip('stage','Staged photos','')
          +modeChip('ready','Listing-Ready','Popular')
@@ -372,6 +372,8 @@
          +modeChip('ala','À la carte','')
          +modeChip('custom','Custom','')
        +'</div>'
+       +row('How many photos to stage?', p.stage+' · '+money(stageUnit())+' each, volume discounts apply', stepper('photos'), 'stage', 'sofa')
+       +'<p class="menu-lead">Included in your package — toggle anything to customize.</p>'
        +'<div class="menu" id="menu">'
          +catHead('Virtual staging','We need: empty, well-lit photos of each room')
          +freeRow('Furniture removal','Cluttered or occupied? We clear the room, then stage it, at no extra charge.','eraser')
