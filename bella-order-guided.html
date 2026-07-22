@@ -1,0 +1,330 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guided order flow (concept) | Bella Virtual</title>
+<meta name="robots" content="noindex">
+<style>
+  :root{--bg:#FDFCFA;--ink:#232120;--soft:#6E6A66;--faint:#9C978F;--line:#E8E4DE;--line-2:#F0EDE8;--dark:#1C1A18;--green:#3E6B4C;--gold:#E7C36A;--pad:44px}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:'Jost',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+  @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap');
+  .micro{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+  .btn{display:inline-block;background:var(--ink);color:#fff;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;padding:15px 30px;cursor:pointer;border:0;font-family:inherit;transition:background .2s,color .2s,border-color .2s}
+  .btn:hover{background:var(--green);color:#fff}
+  .btn[disabled]{opacity:.3;pointer-events:none}
+  .btn-line{background:transparent;border:1px solid var(--line);color:var(--soft);padding:14px 22px}
+  .btn-line:hover{border-color:var(--ink);color:var(--ink);background:transparent}
+  .linkbtn{background:0;border:0;font-family:inherit;color:var(--green);text-decoration:underline;cursor:pointer;font-size:13.5px}
+  .linkbtn:hover{opacity:.7}
+
+  /* header */
+  header{display:flex;justify-content:space-between;align-items:center;padding:22px var(--pad);border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(253,252,250,.92);backdrop-filter:blur(8px);z-index:20}
+  .logo{font-size:19px;letter-spacing:.4em;font-weight:400}
+  .demo-tag{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);border:1px solid #D6E2D8;background:#F4F7F4;padding:5px 11px}
+  .back{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);text-decoration:none}
+  .back:hover{color:var(--ink)}
+
+  /* progress */
+  .prog{height:3px;background:var(--line-2);overflow:hidden}
+  .prog span{display:block;height:100%;background:var(--green);width:100%;transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.4,0,.2,1)}
+
+  .stage{max-width:760px;margin:0 auto;padding:54px var(--pad) 160px;min-height:60vh}
+  .qstep{display:none;animation:rise .45s cubic-bezier(.2,.7,.2,1)}
+  .qstep.on{display:block}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .qnum{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--green)}
+  .qstep h2{font-size:clamp(26px,4vw,40px);font-weight:300;letter-spacing:-.02em;line-height:1.12;margin:12px 0 8px}
+  .qstep .sub{font-size:15px;color:var(--soft);max-width:52ch}
+  .qstep .body{margin-top:34px}
+
+  /* option cards */
+  .opts{display:grid;gap:8px}
+  .opts.two{grid-template-columns:1fr 1fr}
+  .opts.three{grid-template-columns:1fr 1fr 1fr}
+  @media(max-width:640px){.opts.two,.opts.three{grid-template-columns:1fr}}
+  .opt{position:relative;text-align:left;background:#fff;border:1px solid var(--line);padding:22px 20px;cursor:pointer;font-family:inherit;display:flex;gap:15px;align-items:flex-start;transition:border-color .15s,background .15s;width:100%}
+  .opt:hover{border-color:var(--ink)}
+  .opt.on{border-color:var(--green);background:#F7FAF7;box-shadow:inset 0 0 0 1px var(--green)}
+  .opt .oic{width:26px;height:26px;flex:0 0 26px;fill:none;stroke:var(--ink);stroke-width:1.4;margin-top:2px}
+  .opt.on .oic{stroke:var(--green)}
+  .opt b{display:block;font-size:16px;font-weight:400;letter-spacing:.01em}
+  .opt p{font-size:13px;color:var(--soft);margin-top:4px}
+  .opt .jargon{font-size:11px;color:var(--faint);margin-top:6px;font-style:italic}
+  .opt .plus{margin-left:auto;font-size:12.5px;color:var(--faint);white-space:nowrap;align-self:center}
+  .opt.on .plus{color:var(--green)}
+  .opt .tick{position:absolute;top:14px;right:14px;width:18px;height:18px;opacity:0;transition:.15s}
+  .opt.on .tick{opacity:1}
+
+  /* yes/no big */
+  .yn{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:520px}
+  .yn button{font-family:inherit;background:#fff;border:1px solid var(--line);padding:26px;font-size:17px;cursor:pointer;transition:.15s}
+  .yn button:hover{border-color:var(--ink)}
+  .yn button.on{border-color:var(--green);background:#F7FAF7;box-shadow:inset 0 0 0 1px var(--green);color:var(--green)}
+  .yn small{display:block;font-size:12.5px;color:var(--faint);margin-top:5px}
+
+  /* seg */
+  .seg{display:inline-flex;border:1px solid var(--line);background:#fff;margin-bottom:26px}
+  .seg button{font-family:inherit;font-size:12px;letter-spacing:.09em;text-transform:uppercase;background:#fff;color:var(--soft);border:0;padding:10px 22px;cursor:pointer;transition:.15s}
+  .seg button.on{background:var(--ink);color:#fff}
+
+  /* stepper */
+  .count{display:flex;align-items:center;gap:0;border:1px solid var(--line);width:max-content;background:#fff}
+  .count button{width:56px;height:56px;background:#fff;border:0;font-size:22px;cursor:pointer;font-family:inherit;color:var(--ink)}
+  .count button:hover{background:var(--bg);color:var(--green)}
+  .count .val{width:80px;text-align:center;font-size:22px;border-left:1px solid var(--line);border-right:1px solid var(--line);height:56px;line-height:56px}
+  .hint{font-size:13px;color:var(--faint);margin-top:14px}
+  .presets{display:flex;gap:7px;margin-top:16px;flex-wrap:wrap}
+  .presets button{font-family:inherit;font-size:12.5px;border:1px solid var(--line);background:#fff;color:var(--soft);padding:8px 14px;cursor:pointer}
+  .presets button:hover{border-color:var(--ink);color:var(--ink)}
+
+  .qfoot{margin-top:38px;display:flex;align-items:center;gap:16px}
+
+  /* running bar */
+  .runbar{position:fixed;left:0;right:0;bottom:0;background:var(--dark);color:#EDEAE5;z-index:25;transform:translateY(0);transition:transform .3s}
+  .runbar-in{max-width:1040px;margin:0 auto;padding:15px var(--pad);display:flex;align-items:center;gap:20px}
+  .rb-list{flex:1;display:flex;gap:8px;flex-wrap:wrap;min-width:0}
+  .rb-chip{font-size:12px;background:#2A2622;border:1px solid #38332D;padding:6px 11px;color:#CFC9C1;white-space:nowrap}
+  .rb-chip.free{color:#B9D2BE;border-color:#33463A}
+  .rb-empty{font-size:13px;color:#8B857D}
+  .rb-price{text-align:right;white-space:nowrap}
+  .rb-price b{font-size:22px;font-weight:400}
+  .rb-price span{display:block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#8B857D}
+  @media(max-width:720px){.rb-list{display:none}}
+
+  /* review + requirements */
+  .review{display:grid;grid-template-columns:1.25fr 1fr;gap:5px;margin-top:34px}
+  @media(max-width:820px){.review{grid-template-columns:1fr}}
+  .rev-card{background:var(--dark);color:#EDEAE5;padding:32px}
+  .rev-card .micro{color:#9B958C}
+  .rev-card h3{font-size:24px;font-weight:300;margin:8px 0 20px}
+  .lines{list-style:none;display:flex;flex-direction:column;gap:12px}
+  .lines li{display:flex;justify-content:space-between;gap:14px;font-size:14px;border-bottom:1px solid #2E2A25;padding-bottom:12px}
+  .lines li:last-child{border-bottom:0}
+  .lines .free{color:#B9D2BE}
+  .rev-tot{display:flex;justify-content:space-between;align-items:baseline;margin-top:18px;padding-top:18px;border-top:1px solid #34302B}
+  .rev-tot b{font-size:26px;font-weight:400}
+  .send{background:#fff;border:1px solid var(--line);padding:30px}
+  .send h4{font-size:15px}
+  .send .sub2{font-size:13px;color:var(--soft);margin:6px 0 18px;line-height:1.5}
+  .need{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:20px}
+  .need li{position:relative;padding-left:26px;font-size:13.5px;color:var(--soft);line-height:1.45}
+  .need li svg{position:absolute;left:0;top:1px;width:17px;height:17px;stroke:var(--green);fill:none;stroke-width:1.6}
+  .dropz{display:flex;align-items:center;gap:13px;padding:16px;border:1px dashed #BFD2BF;background:#F7FAF7;cursor:pointer;transition:.15s}
+  .dropz:hover{border-color:var(--green);background:#F2F7F2}
+  .dropz svg{width:24px;height:24px;stroke:var(--green);fill:none;stroke-width:1.5;flex:0 0 24px}
+  .dropz b{display:block;font-size:13px;color:var(--ink)}
+  .dropz small{font-size:11.5px;color:var(--faint)}
+  .send-foot{margin-top:16px;display:flex;flex-direction:column;gap:10px}
+  .send-later{font-size:12.5px;color:var(--faint);text-align:center}
+  .done-note{background:#F4F7F4;border:1px solid #D6E2D8;padding:14px 16px;font-size:13px;color:#40573f;margin-top:22px}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="g-empty" viewBox="0 0 24 24"><path d="M3 20V9l9-5 9 5v11"/><path d="M3 20h18"/><path d="M9 20v-6h6v6"/></symbol>
+  <symbol id="g-sofa" viewBox="0 0 24 24"><path d="M5 11V9a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2"/><path d="M3.5 11A1.5 1.5 0 0 1 5 12.5V16h14v-3.5A1.5 1.5 0 0 1 20.5 11"/><path d="M5 18v1.5M19 18v1.5"/></symbol>
+  <symbol id="g-reno" viewBox="0 0 24 24"><path d="M14 6l4 4-9 9-4 1 1-4z"/><path d="M13 7l4 4"/></symbol>
+  <symbol id="g-blue" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15"/><path d="M3.5 9h17M8 4.5V19.5"/></symbol>
+  <symbol id="g-plan" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="1"/><path d="M3.5 11h6V3.5"/><path d="M9.5 11v9.5"/><path d="M9.5 15h11"/></symbol>
+  <symbol id="g-none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M6 18 18 6"/></symbol>
+  <symbol id="g-tick" viewBox="0 0 24 24" fill="none" stroke="#3E6B4C" stroke-width="2"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+  <symbol id="g-upload" viewBox="0 0 24 24"><path d="M12 15V4"/><path d="M8 8l4-4 4 4"/><path d="M4 15v3.5a1.5 1.5 0 0 0 1.5 1.5h13a1.5 1.5 0 0 0 1.5-1.5V15"/></symbol>
+  <symbol id="g-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+</svg>
+
+<header>
+  <span class="logo">BELLA</span>
+  <span class="demo-tag">Concept · guided flow</span>
+  <a class="back" href="bella-order-page.html">← Current order page</a>
+</header>
+<div class="prog"><span id="prog"></span></div>
+
+<div class="stage" id="stage"></div>
+
+<div class="runbar" id="runbar">
+  <div class="runbar-in">
+    <button class="btn-line" id="rbBack" style="visibility:hidden">← Back</button>
+    <div class="rb-list" id="rbList"><span class="rb-empty">Answer a couple of questions and we'll build your order.</span></div>
+    <div class="rb-price"><b id="rbPrice">$0</b><span>Estimated</span></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var PR={photo:45, dusk:7, sky:6, pano:31, reno:50, fp2d:24, fp3d:84};
+  var state={ commercial:false, proj:null, photos:8, floor:'none', dusk:false, pano:false, reno:false, removal:false };
+
+  // ----- flow definition (questions are computed so we can skip the reno Q unless "dated") -----
+  function steps(){
+    var s=['project','photos','floor','dusk','pano'];
+    if(state.proj==='dated') s.splice(1,0,'reno');   // ask reno right after project
+    s.push('review');
+    return s;
+  }
+  var idx=0;
+
+  var stage=document.getElementById('stage');
+
+  // ---------- renderers ----------
+  function optCard(ic,title,desc,jargon,plus,active){
+    return '<button class="opt'+(active?' on':'')+'" type="button">'
+      +'<svg class="oic"><use href="#'+ic+'"/></svg>'
+      +'<span style="flex:1"><b>'+title+'</b><p>'+desc+'</p>'+(jargon?'<span class="jargon">'+jargon+'</span>':'')+'</span>'
+      +(plus?'<span class="plus">'+plus+'</span>':'')
+      +'<svg class="tick"><use href="#g-tick"/></svg></button>';
+  }
+  function yn(y,n){
+    return '<div class="yn">'
+      +'<button type="button" data-v="yes">'+y+'</button>'
+      +'<button type="button" data-v="no">'+n+'</button></div>';
+  }
+
+  var Q={
+    project:function(){
+      var com=state.commercial;
+      var cards=[
+        ['empty','g-empty', com?'An empty business':'An empty listing', com?'Vacant office, retail or suite':'Vacant rooms that need furniture',''],
+        ['occupied','g-sofa', com?'A space that’s in use':'A lived-in home', 'Furnished or cluttered — we clear it first, free','includes free furniture removal'],
+        ['dated','g-reno','Needs updating first','Dated finishes we modernize before staging',''],
+        ['unbuilt','g-blue','Not built yet','Sell from plans with 3D renders','']
+      ];
+      return {num:'Question 1',h:'What are you working on?',sub:'Pick the one that fits. We’ll figure out the rest and only ask what matters.',
+        body:'<div class="seg"><button data-seg="res" class="'+(!com?'on':'')+'">Residential</button><button data-seg="com" class="'+(com?'on':'')+'">Commercial</button></div>'
+          +'<div class="opts">'+cards.map(function(c){return optCard(c[1],c[2],c[3],c[4],'',state.proj===c[0]);}).join('')+'</div>',
+        wire:function(el){
+          el.querySelectorAll('[data-seg]').forEach(function(b){ b.onclick=function(){ state.commercial=b.getAttribute('data-seg')==='com'; render(); }; });
+          el.querySelectorAll('.opt').forEach(function(b,i){ b.onclick=function(){ state.proj=cards[i][0]; state.removal=(cards[i][0]==='occupied'); next(); }; });
+        }, auto:true };
+    },
+    reno:function(){
+      return {num:'Quick one',h:'Want us to modernize the dated finishes first?',sub:'We update floors, cabinets and fixtures so buyers see the home at its potential — then we stage it. We call this a virtual renovation.',
+        body:yn('Yes, modernize it<small>+$'+PR.reno+' per photo</small>','No, stage it as-is<small>Keep the current finishes</small>'),
+        wire:function(el){ el.querySelectorAll('[data-v]').forEach(function(b){ b.onclick=function(){ state.reno=b.getAttribute('data-v')==='yes'; next(); }; }); } };
+    },
+    photos:function(){
+      return {num:'Question 2',h:'How many photos should we stage?',sub:'Usually one hero photo per main room — living, kitchen, primary bedroom, and so on. You can change this anytime.',
+        body:'<div class="count"><button data-d="-1">−</button><span class="val" id="pv">'+state.photos+'</span><button data-d="1">+</button></div>'
+          +'<div class="presets"><button data-set="3">Just the key rooms (3)</button><button data-set="6">A typical listing (6)</button><button data-set="10">Whole home (10)</button></div>'
+          +'<p class="hint">$'+PR.photo+' a photo. Volume discounts kick in automatically at 3+, 6+, and 11+.</p>',
+        wire:function(el){
+          el.querySelectorAll('[data-d]').forEach(function(b){ b.onclick=function(){ state.photos=Math.max(1,state.photos+ +b.getAttribute('data-d')); el.querySelector('#pv').textContent=state.photos; sync(); }; });
+          el.querySelectorAll('[data-set]').forEach(function(b){ b.onclick=function(){ state.photos=+b.getAttribute('data-set'); el.querySelector('#pv').textContent=state.photos; sync(); }; });
+        }, showNext:true };
+    },
+    floor:function(){
+      return {num:'Question 3',h:'Want to show the layout as a floor plan?',sub:'Listings with a floor plan get more qualified showings — buyers understand the space before they visit. Optional.',
+        body:'<div class="opts three">'
+          +optCard('g-none','No floor plan','Just the staged photos','','',state.floor==='none')
+          +optCard('g-plan','2D floor plan','A clean, labelled layout','','+$'+PR.fp2d+'/floor',state.floor==='2d')
+          +optCard('g-plan','3D floor plan','Furnished, buyers can walk it','','+$'+PR.fp3d+'/floor',state.floor==='3d')
+          +'</div>',
+        wire:function(el){ var vals=['none','2d','3d']; el.querySelectorAll('.opt').forEach(function(b,i){ b.onclick=function(){ state.floor=vals[i]; next(); }; }); } };
+    },
+    dusk:function(){
+      return {num:'Question 4',h:'Turn a daytime exterior into a twilight shot?',sub:'A warm dusk sky is the photo buyers stop scrolling for. Give us one daytime exterior and we make the hero shot. We call this day-to-dusk.',
+        body:yn('Yes, add the twilight shot<small>+$'+PR.dusk+' per photo</small>','No thanks','no'),
+        wire:function(el){ el.querySelectorAll('[data-v]').forEach(function(b){ b.onclick=function(){ state.dusk=b.getAttribute('data-v')==='yes'; next(); }; }); } };
+    },
+    pano:function(){
+      return {num:'Question 5',h:'Let buyers walk it in 360°?',sub:'A 360° tour keeps buyers on your listing longer, and out-of-town buyers can walk it without booking a showing. You provide 360° photos.',
+        body:yn('Yes, add a 360° tour<small>+$'+PR.pano+' per room</small>','No, photos are enough'),
+        wire:function(el){ el.querySelectorAll('[data-v]').forEach(function(b){ b.onclick=function(){ state.pano=b.getAttribute('data-v')==='yes'; next(); }; }); } };
+    },
+    review:function(){ return null; } // handled specially
+  };
+
+  // ---------- pricing / order lines ----------
+  function lines(){
+    var L=[], t=0;
+    var unit=PR.photo;
+    L.push([ (state.commercial?'Commercial ':'')+'Staged photos × '+state.photos, '$'+(unit*state.photos)]); t+=unit*state.photos;
+    if(state.removal){ L.push(['Furniture removal','Free',true]); }
+    if(state.reno){ L.push(['Virtual renovation × '+state.photos, '$'+(PR.reno*state.photos)]); t+=PR.reno*state.photos; }
+    if(state.floor==='2d'){ L.push(['2D floor plan','$'+PR.fp2d]); t+=PR.fp2d; }
+    if(state.floor==='3d'){ L.push(['3D floor plan','$'+PR.fp3d]); t+=PR.fp3d; }
+    if(state.dusk){ L.push(['Day-to-dusk × '+state.photos, '$'+(PR.dusk*state.photos)]); t+=PR.dusk*state.photos; }
+    if(state.pano){ L.push(['360° tour × '+state.photos, '$'+(PR.pano*state.photos)]); t+=PR.pano*state.photos; }
+    return {L:L,total:t};
+  }
+  function money(n){ return '$'+n.toLocaleString(); }
+
+  // requirements consolidated
+  function needs(){
+    var n=[];
+    n.push(state.proj==='occupied' ? 'Photos of each room (we clear the furniture)' : 'Empty, well-lit photos of each room to stage');
+    if(state.dusk) n.push('One daytime exterior photo');
+    if(state.pano) n.push('360° (equirectangular) photos of each room to walk');
+    if(state.floor!=='none' || state.proj==='unbuilt') n.push('Blueprints or dimensions for the floor plan');
+    if(state.proj==='unbuilt') n.push('Architectural plans / elevations for the renders');
+    return n;
+  }
+
+  // ---------- running bar ----------
+  function sync(){
+    var r=lines();
+    document.getElementById('rbPrice').textContent=money(r.total);
+    var list=document.getElementById('rbList');
+    if(!state.proj){ list.innerHTML='<span class="rb-empty">Answer a couple of questions and we’ll build your order.</span>'; return; }
+    list.innerHTML=r.L.map(function(x){ return '<span class="rb-chip'+(x[2]?' free':'')+'">'+x[0]+(x[2]?' · free':'')+'</span>'; }).join('');
+  }
+
+  // ---------- render current step ----------
+  function render(){
+    var flow=steps();
+    if(idx>=flow.length) idx=flow.length-1;
+    var key=flow[idx];
+    document.getElementById('prog').style.transform='scaleX('+(idx/(flow.length-1))+')';
+    document.getElementById('rbBack').style.visibility = idx===0 ? 'hidden':'visible';
+
+    if(key==='review'){ renderReview(); sync(); return; }
+
+    var q=Q[key]();
+    stage.innerHTML='<div class="qstep on"><span class="qnum">'+q.num+'</span><h2>'+q.h+'</h2>'
+      +(q.sub?'<p class="sub">'+q.sub+'</p>':'')
+      +'<div class="body">'+q.body+'</div>'
+      +(q.showNext?'<div class="qfoot"><button class="btn" id="contBtn">Continue →</button></div>':'')
+      +'</div>';
+    if(q.wire) q.wire(stage);
+    var cb=document.getElementById('contBtn'); if(cb) cb.onclick=next;
+    sync();
+  }
+
+  function renderReview(){
+    var r=lines(), nd=needs();
+    stage.innerHTML='<div class="qstep on"><span class="qnum">Last step</span>'
+      +'<h2>Here’s your order — and the one thing we need from you.</h2>'
+      +'<p class="sub">Built from your answers. Everything’s adjustable, and you can send your files now or later from your dashboard.</p>'
+      +'<div class="review">'
+        +'<div class="rev-card"><span class="micro">Your order</span><h3>'+orderName()+'</h3>'
+          +'<ul class="lines">'+r.L.map(function(x){return '<li><span>'+x[0]+'</span><span class="'+(x[2]?'free':'')+'">'+x[1]+'</span></li>';}).join('')+'</ul>'
+          +'<div class="rev-tot"><span class="micro" style="color:#9B958C">Total</span><b>'+money(r.total)+'</b></div></div>'
+        +'<div class="send"><h4>What to send us</h4><p class="sub2">One quick handoff and we’re off. Everything we need for what you picked:</p>'
+          +'<ul class="need">'+nd.map(function(x){return '<li><svg><use href="#g-check"/></svg>'+x+'</li>';}).join('')+'</ul>'
+          +'<label class="dropz"><input type="file" multiple hidden id="up"><svg><use href="#g-upload"/></svg><span><b>Drop your files here</b><small>Photos, PDF, CAD — or drag &amp; drop</small></span></label>'
+          +'<div class="send-foot"><button class="btn" style="width:100%;text-align:center" id="place">Place order · '+money(r.total)+'</button>'
+          +'<span class="send-later"><button class="linkbtn" id="later">I’ll send my files later from the dashboard</button></span></div>'
+        +'</div>'
+      +'</div>'
+      +'<div class="qfoot"><button class="btn-line" id="rev-back">← Change an answer</button></div>'
+      +'</div>';
+    document.getElementById('rev-back').onclick=prev;
+    var up=document.getElementById('up');
+    up.onchange=function(){ var lbl=up.closest('.dropz'); var n=up.files.length; if(n){ lbl.style.borderStyle='solid'; lbl.style.borderColor='var(--green)'; lbl.querySelector('b').textContent=n+' file'+(n>1?'s':'')+' ready to send'; lbl.querySelector('small').textContent='We’ll attach these to your order'; } };
+    document.getElementById('place').onclick=function(){ alert('Concept demo — this is where checkout happens.\n\nOrder: '+orderName()+'\nTotal: '+money(lines().total)); };
+    document.getElementById('later').onclick=function(){ alert('Concept demo — order is placed now; a reminder + upload link waits in the client dashboard until your files arrive. Nothing starts until we have them.'); };
+  }
+
+  function orderName(){
+    if(state.proj==='unbuilt') return 'Pre-sale visuals';
+    if(state.reno) return 'Renovate + stage';
+    if(state.dusk||state.pano||state.floor!=='none') return 'Full listing package';
+    return 'Staged listing';
+  }
+
+  // ---------- nav ----------
+  function next(){ var flow=steps(); if(idx<flow.length-1){ idx++; render(); scrollTo({top:0,behavior:'smooth'}); } }
+  function prev(){ if(idx>0){ idx--; render(); scrollTo({top:0,behavior:'smooth'}); } }
+  document.getElementById('rbBack').onclick=prev;
+
+  render();
+})();
+</script>
