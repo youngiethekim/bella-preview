@@ -110,6 +110,22 @@
   .cat-head .cat-l{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
   .cat-head .cat-d{font-size:12.5px;color:var(--faint)}
   .menu .cat-head:first-child{margin-top:4px}
+  .freeprice{color:var(--green);font-weight:400}
+  /* power-ups divider */
+  .power-head{display:flex;align-items:center;gap:14px;margin:34px 0 6px;padding:16px 18px;background:var(--dark);color:#F2EFEA}
+  .power-head .pw-i{width:24px;height:24px;stroke:var(--gold);fill:none;stroke-width:1.3;flex:0 0 24px}
+  .power-head .pw-txt{flex:1}
+  .power-head .pw-txt b{display:block;font-size:15px;font-weight:400;letter-spacing:.02em}
+  .power-head .pw-txt span{display:block;font-size:12.5px;color:#A9A49A;margin-top:2px}
+  .power-head .tip .tipi{stroke:#EDEAE5}
+  /* tooltips */
+  .tip{position:relative;display:inline-flex;align-items:center;cursor:help;vertical-align:middle;margin-left:2px}
+  .tip .tipi{width:16px;height:16px;stroke:var(--faint);fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+  .tip:hover .tipi,.tip:focus .tipi{stroke:var(--ink)}
+  .tipbox{position:absolute;bottom:calc(100% + 9px);left:50%;transform:translateX(-50%) translateY(4px);width:240px;max-width:70vw;background:var(--ink);color:#F2EFEA;font-size:12px;line-height:1.5;letter-spacing:.01em;text-transform:none;padding:11px 13px;border-radius:6px;box-shadow:0 12px 34px -12px rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:.16s;z-index:20;text-align:left;font-weight:300}
+  .tipbox::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--ink)}
+  .tip:hover .tipbox,.tip:focus .tipbox{opacity:1;transform:translateX(-50%) translateY(0)}
+  @media(max-width:640px){.tipbox{left:auto;right:0;transform:translateY(4px)}.tipbox::after{left:auto;right:14px}.tip:hover .tipbox,.tip:focus .tipbox{transform:translateY(0)}}
   .pano{position:relative;height:230px;overflow:hidden;background:#111;cursor:grab;user-select:none;border:1px solid var(--line)}
   .pano.grab{cursor:grabbing}
   .pano-img{position:absolute;inset:0;background-image:url('https://pannellum.org/images/alma.jpg');background-size:auto 100%;background-repeat:repeat-x;background-position:0 center;will-change:background-position}
@@ -189,6 +205,8 @@
   <symbol id="i-360" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-3-6.2"/><path d="M20 4.5V8h-3.5"/></symbol>
   <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1-.5-8A5 5 0 0 1 16 8.6 3.75 3.75 0 0 1 17.4 18z"/></symbol>
   <symbol id="i-eraser" viewBox="0 0 24 24"><path d="M8.5 19.5H20"/><path d="M13.2 6.6l4.2 4.2a2 2 0 0 1 0 2.8l-5.2 5.2H9l-3.4-3.4a2 2 0 0 1 0-2.8l5.4-5.4a2 2 0 0 1 2.8 0z"/><path d="M9.4 8.4l6 6"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5"/><circle cx="12" cy="7.8" r=".4" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></symbol>
   <symbol id="i-blue" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15"/><path d="M3.5 9h17M8 4.5V19.5"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
 </svg>
@@ -304,8 +322,8 @@
           occupied:{unit:45,stage:'Virtual staging',path:'listing',blurb:'We clear the room for free, then stage it'},
           dated:{unit:95,stage:'Virtual renovation + staging',path:'listing',blurb:'Modernized finishes, then staged'},
           prebuild:{path:'build'} };
-  var PR={FP2D:24,FP3D:84,TOUR:46,DUSK:7,RINT:630,REXT:840,RINT_C:490,REXT_C:980,PANO:31,SKY:6};
-  /* PLACEHOLDER: SKY = sky replacement + retouching per photo — confirm Bella's real photo-editing rate */
+  var PR={FP2D:24,FP3D:84,TOUR:46,DUSK:7,RINT:630,REXT:840,RINT_C:490,REXT_C:980,PANO:31,SKY:6,RENO:50};
+  /* PLACEHOLDER: SKY (sky/retouch) and RENO (virtual renovation) per photo — confirm Bella's real rates */
   function rInt(){ return state.commercial?PR.RINT_C:PR.RINT; }
   function rExt(){ return state.commercial?PR.REXT_C:PR.REXT; }
   /* PLACEHOLDER commercial rates for staging & floor plans — confirm real commercial pricing */
@@ -313,7 +331,7 @@
   var CFP3D=110;                             // commercial 3D floor plan
   function stageUnit(){ var p=P[state.proj]; if(!p||!p.unit) return 0; return state.commercial?(CU[state.proj]||p.unit):p.unit; }
   function fp3d(){ return state.commercial?CFP3D:PR.FP3D; }
-  var state={ proj:null, commercial:false, photos:8, mode:'ready', floor:false, floor2d:false, tour:false, dusk:false, sky:false, pano360:false, pano:3,
+  var state={ proj:null, commercial:false, photos:8, mode:'ready', removal:false, reno:false, floor:false, floor2d:false, tour:false, dusk:false, sky:false, pano360:false, pano:3,
               rint:1, rext:1, rfp:1, useInt:true, useExt:true, useFp:true };
 
   // saved lookbook pieces
@@ -329,7 +347,9 @@
     if(p.path==='listing'){
       var total=0, disc=0;
       var stageCost=stageUnit()*state.photos, dStage=stageCost*volDisc(state.photos);
-      L.push([p.stage+' × '+state.photos+' photos', money(stageCost)]); total+=stageCost-dStage; disc+=dStage;
+      L.push(['Virtual staging × '+state.photos+' photos', money(stageCost)]); total+=stageCost-dStage; disc+=dStage;
+      if(state.removal){ L.push(['Furniture removal', 'Free']); }
+      if(state.reno){ var renoCost=PR.RENO*state.photos, dReno=renoCost*volDisc(state.photos); L.push(['Virtual renovation × '+state.photos, money(renoCost)]); total+=renoCost-dReno; disc+=dReno; }
       if(state.floor2d){ L.push(['2D floor plan', money(PR.FP2D)]); total+=PR.FP2D; }
       if(state.floor){ L.push(['3D floor plan', money(fp3d())]); total+=fp3d(); }
       if(state.tour){ L.push(['Virtual house tour', money(PR.TOUR)]); total+=PR.TOUR; }
@@ -372,19 +392,23 @@
          +modeChip('ala','À la carte','')
          +modeChip('custom','Custom','')
        +'</div>'
-       +row('How many photos to stage?', p.stage+' · '+money(stageUnit())+' each, volume discounts apply', stepper('photos'), 'stage', 'sofa')
-       +'<p class="menu-lead">Included in your package — toggle anything to customize.</p>'
+       +'<p class="menu-lead">Here’s what’s included — check or uncheck anything below.</p>'
        +'<div class="menu" id="menu">'
          +catHead('Virtual staging','We need: empty, well-lit photos of each room')
-         +freeRow('Furniture removal','Cluttered or occupied? We clear the room, then stage it, at no extra charge.','eraser')
+         +row('Virtual staging', 'Empty rooms furnished by real interior designers · '+money(stageUnit())+' each, volume discounts apply', stepper('photos'), 'stage', 'sofa')
+         +toggleRow('Furniture removal','Occupied or cluttered? We clear the room first, so it can be staged clean.','removal','<span class="freeprice">Included free</span>','','eraser')
+         +powerHead()
+         +catHead('Virtual renovation','We need: photos of the dated space','Buyers scroll right past tired kitchens and baths. A virtual reno shows the home at its potential — no contractor, no delay.')
+         +toggleRow('Virtual renovation','Modernize dated floors, cabinets, and finishes before we stage.','reno','+'+money(PR.RENO)+'/photo','','roller')
+         +catHead('Photo editing','Make the photos you have pop','Small edits, big first impression. Bright skies and clean, warm rooms get more clicks and saves online.')
          +toggleRow('Day-to-dusk edits','Twilight hero shots that stop the scroll. You provide a daytime exterior photo.','dusk','+'+money(PR.DUSK)+'/photo','dusk','sun')
          +toggleRow('Sky replacement &amp; retouching','Swap grey skies, clean up blemishes. You provide the exterior photos.','sky','+'+money(PR.SKY)+'/photo','','cloud')
-         +'<div class="qrow"><svg class="qico"><use href="#i-360"/></svg><span class="lbl"><b>360° virtual staging</b><span>We stitch and stage your 360° photos into one walkable tour. You provide 360° photos. <button type="button" class="linkbtn" id="panoExample">See an example →</button></span></span><span class="price">+$'+PR.PANO+' / photo</span><button class="toggle" data-tog="pano360"></button></div>'
-         +'<div class="qsub" id="panoSub"><span class="lbl"><b>How many 360° photos?</b><span>Usually one per room you want walkable</span></span>'+stepper('pano')+'</div>'
-         +catHead('Floor plans','We need: rough measurements or an existing sketch')
+         +catHead('Floor plans','We need: rough measurements or an existing sketch','Listings with a floor plan get more qualified showings — buyers understand the space before they visit.')
          +toggleRow('2D floor plan','A clean, labelled layout','floor2d','+'+money(PR.FP2D),'','plan')
          +toggleRow('3D floor plan','Furnished, so buyers can walk the layout','floor','+'+money(fp3d()),'floor','plan')
-         +catHead('Tours','')
+         +catHead('Tours','','A 360° tour keeps buyers on your listing longer, and out-of-town buyers can walk it without booking a showing.')
+         +'<div class="qrow"><svg class="qico"><use href="#i-360"/></svg><span class="lbl"><b>360° virtual staging</b><span>We stitch and stage your 360° photos into one walkable tour. You provide 360° photos. <button type="button" class="linkbtn" id="panoExample">See an example →</button></span></span><span class="price">+$'+PR.PANO+' / photo</span><button class="toggle" data-tog="pano360"></button></div>'
+         +'<div class="qsub" id="panoSub"><span class="lbl"><b>How many 360° photos?</b><span>Usually one per room you want walkable</span></span>'+stepper('pano')+'</div>'
          +toggleRow('Virtual house tour','A walkable tour built from your listing photos','tour','+'+money(PR.TOUR),'tour','tour')
        +'</div>'
        +'<div class="customnote" id="customNote"><label>Tell us about your listing</label><textarea id="fNote" placeholder="Anything special — number of properties, unusual rooms, deadlines, brand requirements…"></textarea><p class="cn-help">Our team will tailor a quote and confirm what we need from you.</p></div>';
@@ -395,8 +419,13 @@
       }
       var pex=document.getElementById('panoExample');
       if(pex) pex.onclick=function(){ document.getElementById('panoModal').classList.add('open'); };
-      // smart default: pre-pick the right package the first time we configure this project
-      if(defaultedFor!==state.proj){ applyMode(state.proj==='dated'?'full':'ready'); defaultedFor=state.proj; }
+      // smart default: pre-pick the right package + relevant free/upgrade services the first time
+      if(defaultedFor!==state.proj){
+        applyMode(state.proj==='dated'?'full':'ready');
+        state.removal=(state.proj==='occupied');
+        if(state.proj==='dated') state.reno=true;
+        defaultedFor=state.proj; sync();
+      }
     } else {
       document.getElementById('s2title').textContent='What do you need to show?';
       document.getElementById('s2sub').textContent='Pick the visuals your sales office needs. We build them from your drawings, no finished home required.';
@@ -410,7 +439,9 @@
   }
   function exLink(ex){ return ex? ' <button type="button" class="linkbtn" data-ex="'+ex+'">See an example →</button>' : ''; }
   function qicon(ic){ return ic? '<svg class="qico"><use href="#i-'+ic+'"/></svg>' : ''; }
-  function catHead(l,d){ return '<div class="cat-head"><span class="cat-l">'+l+'</span>'+(d?'<span class="cat-d">'+d+'</span>':'')+'</div>'; }
+  function tip(t){ return '<span class="tip" tabindex="0"><svg class="tipi"><use href="#i-info"/></svg><span class="tipbox">'+t+'</span></span>'; }
+  function catHead(l,d,tp){ return '<div class="cat-head"><span class="cat-l">'+l+'</span>'+(d?'<span class="cat-d">'+d+'</span>':'')+(tp?tip(tp):'')+'</div>'; }
+  function powerHead(){ return '<div class="power-head"><svg class="pw-i"><use href="#i-bolt"/></svg><div class="pw-txt"><b>Listing power-ups</b><span>Extra services that help your listing reach further and sell.</span></div>'+tip('95% of buyers start their search online. Standing out in the first three photos is what wins the click — these add-ons help your listing get seen and sold.')+'</div>'; }
   function modeChip(k,n,tag){ return '<button type="button" class="modechip" data-mode="'+k+'"><b>'+n+'</b>'+(tag?'<span class="mc-tag">'+tag+'</span>':'')+'</button>'; }
   function freeRow(name,sub,ic){ return '<div class="qrow">'+qicon(ic)+'<span class="lbl"><b>'+name+'</b><span>'+sub+'</span></span><span class="freebadge">Included free</span></div>'; }
   function pkgCard(key,name,desc,delta,rec){ return '<button type="button" class="pkg'+(rec?' rec':'')+'" data-pkg="'+key+'">'+(rec?'<span class="pkg-badge">Most popular</span>':'')+'<b>'+name+'</b><span class="pkg-desc">'+desc+'</span><span class="pkg-price">'+(delta>0?'+'+money(delta):'Base price')+'</span></button>'; }
@@ -421,10 +452,10 @@
 
   // starting points: 3 packages (presets) + à la carte + custom
   var defaultedFor=null;   // which project we've already pre-recommended a package for
-  var FIELDS=['floor','floor2d','tour','dusk','sky','pano360'];
-  var PKG={ stage:{floor:false,floor2d:false,tour:false,dusk:false,sky:false,pano360:false},
-            ready:{floor:true, floor2d:false,tour:false,dusk:true, sky:false,pano360:false},
-            full: {floor:true, floor2d:false,tour:true, dusk:true, sky:false,pano360:true} };
+  var FIELDS=['reno','floor','floor2d','tour','dusk','sky','pano360'];
+  var PKG={ stage:{reno:false,floor:false,floor2d:false,tour:false,dusk:false,sky:false,pano360:false},
+            ready:{reno:false,floor:true, floor2d:false,tour:false,dusk:true, sky:false,pano360:false},
+            full: {reno:false,floor:true, floor2d:false,tour:true, dusk:true, sky:false,pano360:true} };
   function matchPkg(){ for(var k in PKG){ var s=PKG[k], ok=true; FIELDS.forEach(function(f){ if(state[f]!==s[f]) ok=false; }); if(ok) return k; } return null; }
   function applyMode(m){
     if(PKG[m]){ var s=PKG[m]; FIELDS.forEach(function(f){ state[f]=s[f]; }); if(m==='full'&&state.pano<1) state.pano=3; }
