@@ -194,6 +194,49 @@
   .sb-sty.on .ck{display:grid}
   .sb-sty .nm{display:block;font-size:11.5px;padding:7px 6px;text-align:center}
   .sb-panel .linkbtn{margin-top:12px;display:inline-block}
+  /* ===== "build your look" loadout modal (video-game style) ===== */
+  .gamemodal{background:rgba(10,9,8,.74);padding:5vh 4vw}
+  .gamemodal .gm-box{max-width:700px;width:100%;max-height:92vh;overflow-y:auto;position:relative;background:#1B1917;color:#EDEAE5;border:1px solid #2E2A25;border-radius:18px;padding:26px 26px 24px;box-shadow:0 50px 120px -30px rgba(0,0,0,.75);animation:gmIn .3s cubic-bezier(.2,.8,.2,1)}
+  .gamemodal .gm-box::-webkit-scrollbar{width:0}
+  @keyframes gmIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+  .gm-x{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;background:#2A2622;border:1px solid #3A352F;color:#EDEAE5;font-size:20px;line-height:1;cursor:pointer;z-index:4;transition:.15s}
+  .gm-x:hover{background:#3A352F}
+  .gm-top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding-right:40px}
+  .gm-kick{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#8B857D}
+  .gm-title{font-size:clamp(24px,4vw,32px);font-weight:300;letter-spacing:-.01em;margin-top:5px}
+  .gm-count{font-size:12px;letter-spacing:.06em;color:#CFE3D3;background:#22302A;border:1px solid #33463A;padding:8px 15px;border-radius:99px;white-space:nowrap;transition:transform .2s}
+  .gm-count.bump{transform:scale(1.12)}
+  .gm-hint{font-size:12.5px;color:#9B958C;margin:12px 0 16px;line-height:1.5}
+  .gm-loadout{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  @media(max-width:560px){.gm-loadout{grid-template-columns:1fr 1fr}}
+  .gm-tile{position:relative;aspect-ratio:1.08;border-radius:13px;overflow:hidden;cursor:pointer;border:2px solid transparent;background:#0F0E0D;transition:transform .18s cubic-bezier(.2,.7,.2,1),border-color .18s,box-shadow .18s}
+  .gm-tile img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s cubic-bezier(.2,.7,.2,1),filter .2s;filter:brightness(.8) saturate(.92)}
+  .gm-tile:hover{transform:translateY(-5px)}
+  .gm-tile:hover img{transform:scale(1.07);filter:brightness(.95)}
+  .gm-room{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:30px 12px 11px;font-size:13px;letter-spacing:.02em;color:#fff;background:linear-gradient(to top,rgba(0,0,0,.78),transparent)}
+  .gm-add{position:absolute;top:9px;right:9px;z-index:3;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);backdrop-filter:blur(5px);display:grid;place-items:center;color:#fff;font-size:19px;line-height:1;transition:.18s}
+  .gm-add svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2.6}
+  .gm-badge{position:absolute;top:10px;left:10px;z-index:3;font-size:9px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;color:#0E2114;background:#8FD3A3;padding:5px 9px;border-radius:5px;opacity:0;transform:translateY(-7px);transition:.2s}
+  .gm-tile.on{border-color:var(--green);box-shadow:0 0 0 3px rgba(62,107,76,.35),0 16px 34px -12px rgba(62,107,76,.55)}
+  .gm-tile.on img{filter:brightness(1.02) saturate(1.06)}
+  .gm-tile.on .gm-add{background:var(--green);transform:scale(1.06)}
+  .gm-tile.on .gm-badge{opacity:1;transform:none}
+  @keyframes gmPop{0%{transform:scale(.5)}55%{transform:scale(1.22)}100%{transform:scale(1)}}
+  .gm-tile.on .gm-add svg{animation:gmPop .3s}
+  .gm-rlab{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#8B857D;margin:20px 0 10px}
+  .gm-roster{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:20px}
+  .gm-roster::-webkit-scrollbar{height:0}
+  .gm-port{flex:0 0 auto;width:74px;cursor:pointer;text-align:center;background:0;border:0;font-family:inherit;padding:0;opacity:.62;transition:opacity .16s,transform .16s}
+  .gm-port:hover{opacity:.92;transform:translateY(-2px)}
+  .gm-port.on{opacity:1}
+  .gm-port .pim{width:74px;height:50px;border-radius:9px;overflow:hidden;border:2px solid transparent;transition:.16s}
+  .gm-port img{width:100%;height:100%;object-fit:cover;display:block}
+  .gm-port.on .pim{border-color:var(--gold);box-shadow:0 0 16px -2px rgba(231,195,106,.7)}
+  .gm-port .pnm{font-size:10px;color:#B9B3AB;margin-top:6px;white-space:nowrap}
+  .gm-port.on .pnm{color:#EDEAE5}
+  .gm-use{width:100%;background:#fff;color:#1B1917;border:0;font-family:inherit;font-size:12px;letter-spacing:.13em;text-transform:uppercase;padding:16px;cursor:pointer;border-radius:9px;transition:.2s}
+  .gm-use:hover{background:var(--green);color:#fff}
+  .sb-sty .saved-pill{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:.1em;text-transform:uppercase;background:var(--green);color:#fff;padding:3px 8px;border-radius:4px;white-space:nowrap}
   .sectog{width:52px;height:30px;border-radius:99px;background:var(--line);border:0;cursor:pointer;position:relative;transition:background .2s;flex:0 0 52px}
   .sectog::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
   .sectog.on{background:var(--green)}
@@ -429,6 +472,20 @@
   </div>
 </div>
 
+<!-- fun "build your look" loadout modal (opens when you pick a style; click outside to close) -->
+<div class="pmodal gamemodal" id="styleModal">
+  <div class="gm-box">
+    <button class="gm-x" id="styleClose" type="button" aria-label="Close">×</button>
+    <div class="gm-top"><div><span class="gm-kick">Build your look</span><h3 class="gm-title" id="gmTitle">Modern</h3></div>
+      <div class="gm-count" id="gmCount">0 rooms styled</div></div>
+    <p class="gm-hint">Tap a room to add it to your set. Switch styles below. Our designers place what you pick.</p>
+    <div class="gm-loadout" id="gmLoadout"></div>
+    <div class="gm-rlab">Choose a style</div>
+    <div class="gm-roster" id="gmRoster"></div>
+    <button class="gm-use" id="gmUse" type="button">Lock in this look →</button>
+  </div>
+</div>
+
 <script>
 (function(){
   var P={ empty:{unit:45,stage:'Virtual staging',path:'listing',blurb:'Vacant rooms, furnished by a designer'},
@@ -583,7 +640,14 @@
   function subStep(name,sub,tkey,qkey,price,ex){ return subQty(name,sub,tkey,qkey,'floors',price,ex); }
   // ---- inline "the look" chooser: designers pick, or you pick a style + save room sets ----
   var CAT='https://youngiethekim.github.io/bella-preview/bella-catalog/items/';
-  var STY=[{k:'modern',n:'Modern',im:'LR_MDRN_L148'},{k:'scandi',n:'Scandinavian',im:'LR_SCND_L381'},{k:'coastal',n:'Coastal',im:'LR_COAST_L521'},{k:'midcentury',n:'Mid-century',im:'LR_MCM_L446'},{k:'farmhouse',n:'Farmhouse',im:'LR_FARM_L382'},{k:'contemporary',n:'Contemporary',im:'LR_CONT_L387'}];
+  var STY=[
+    {k:'modern',n:'Modern',im:'LR_MDRN_L148',rooms:[['Living room','LR_MDRN_L148'],['Dining','DR_MDRN_D107'],['Bedroom','BD_MDRN_B403']]},
+    {k:'scandi',n:'Scandinavian',im:'LR_SCND_L381',rooms:[['Living room','LR_SCND_L381'],['Dining','DR_SCND_D350'],['Bedroom','BD_SCND_B355']]},
+    {k:'coastal',n:'Coastal',im:'LR_COAST_L521',rooms:[['Living room','LR_COAST_L521'],['Dining','DR_COAS_D1117'],['Bedroom','BD_COAS_B390']]},
+    {k:'midcentury',n:'Mid-century',im:'LR_MCM_L446',rooms:[['Living room','LR_MCM_L446'],['Dining','DR_MCM_316'],['Bedroom','BD_MCM_B444']]},
+    {k:'farmhouse',n:'Farmhouse',im:'LR_FARM_L382',rooms:[['Living room','LR_FARM_L382'],['Kitchen','KT_FARM_K112'],['Bedroom','BD_FARM_B394']]},
+    {k:'contemporary',n:'Contemporary',im:'LR_CONT_L387',rooms:[['Living room','LR_CONT_L387'],['Dining','DR_CONT_D310'],['Bedroom','BD_CONT_428']]}
+  ];
   function styleBox(){
     return '<div class="stylebox" id="stylebox"><div class="sb-lab">The look</div>'
       +'<div class="sb-paths">'
@@ -596,10 +660,13 @@
         +'</div><a class="linkbtn" href="bella-lookbook.html">Save specific room sets in the lookbook →</a></div>'
     +'</div>';
   }
+  var savedRooms={};   // keyed "styleKey:roomName"
+  var CHK='<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
+  function savedCount(k){ return Object.keys(savedRooms).filter(function(x){return x.indexOf(k+':')===0 && savedRooms[x];}).length; }
   function bindStyle(){
     var box=document.getElementById('stylebox'); if(!box) return;
     box.querySelectorAll('.sb-path').forEach(function(b){ b.onclick=function(){ state.styleMode=b.getAttribute('data-sm'); syncStyle(); }; });
-    box.querySelectorAll('.sb-sty').forEach(function(b){ b.onclick=function(){ var k=b.getAttribute('data-sk'); state.stylePick=(state.stylePick===k?null:k); syncStyle(); }; });
+    box.querySelectorAll('.sb-sty').forEach(function(b){ b.onclick=function(){ openStyleModal(b.getAttribute('data-sk')); }; });
     syncStyle();
   }
   function syncStyle(){
@@ -608,7 +675,47 @@
     var pro=document.getElementById('sbPro'), self=document.getElementById('sbSelf');
     if(pro) pro.classList.toggle('show', state.styleMode==='pro');
     if(self) self.classList.toggle('show', state.styleMode==='self');
-    box.querySelectorAll('.sb-sty').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-sk')===state.stylePick); });
+    box.querySelectorAll('.sb-sty').forEach(function(b){
+      var k=b.getAttribute('data-sk'), on=(k===state.stylePick);
+      b.classList.toggle('on', on);
+      var old=b.querySelector('.saved-pill'); if(old) old.remove();
+      var n=savedCount(k);
+      if(n){ var p=document.createElement('span'); p.className='saved-pill'; p.textContent=n+' saved'; b.querySelector('.t').appendChild(p); }
+    });
+  }
+  // ---- video-game style "build your look" modal ----
+  var gmPrev=0;
+  function openStyleModal(k){ state.stylePick=k; renderRoster(); renderLoadout(); document.getElementById('styleModal').classList.add('open'); }
+  function closeStyleModal(){ document.getElementById('styleModal').classList.remove('open'); syncStyle(); }
+  function curStyle(){ return STY.filter(function(x){return x.k===state.stylePick;})[0]; }
+  function renderLoadout(){
+    var s=curStyle(); if(!s) return;
+    document.getElementById('gmTitle').textContent=s.n;
+    document.getElementById('gmLoadout').innerHTML=s.rooms.map(function(r){
+      var key=s.k+':'+r[0], on=!!savedRooms[key];
+      return '<button type="button" class="gm-tile'+(on?' on':'')+'" data-room="'+r[0]+'"><img src="'+CAT+r[1]+'.jpg" alt="'+r[0]+'" decoding="async"><span class="gm-badge">In your set</span><span class="gm-add">'+(on?CHK:'+')+'</span><span class="gm-room">'+r[0]+'</span></button>';
+    }).join('');
+    document.querySelectorAll('#gmLoadout .gm-tile').forEach(function(t){
+      t.onclick=function(){ var key=s.k+':'+t.getAttribute('data-room'); savedRooms[key]=!savedRooms[key];
+        t.classList.toggle('on', savedRooms[key]);
+        t.querySelector('.gm-add').innerHTML = savedRooms[key]?CHK:'+';
+        updateCount(true);
+      };
+    });
+    updateCount(false);
+  }
+  function renderRoster(){
+    document.getElementById('gmRoster').innerHTML=STY.map(function(s){
+      return '<button type="button" class="gm-port'+(s.k===state.stylePick?' on':'')+'" data-sk="'+s.k+'"><span class="pim"><img src="'+CAT+s.im+'.jpg" alt="'+s.n+'" loading="lazy"></span><span class="pnm">'+s.n+'</span></button>';
+    }).join('');
+    document.querySelectorAll('#gmRoster .gm-port').forEach(function(p){
+      p.onclick=function(){ state.stylePick=p.getAttribute('data-sk'); renderRoster(); renderLoadout(); };
+    });
+  }
+  function updateCount(bump){
+    var n=savedCount(state.stylePick), el=document.getElementById('gmCount');
+    el.textContent = n===0?'Pick your rooms' : n+' room'+(n>1?'s':'')+' styled';
+    if(bump){ el.classList.add('bump'); setTimeout(function(){ el.classList.remove('bump'); },200); }
   }
   // section grouping: which state fields each question controls
   var SECMAP={reno:['reno'],edit:['dusk','sky'],floor:['floor2d','floor'],tour:['pano360','tour']};
@@ -875,6 +982,15 @@
     document.getElementById('panoClose').onclick=close;
     pm.addEventListener('click',function(e){ if(e.target===pm) close(); });
     window.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
+  })();
+
+  // "build your look" modal: close on X, outside click, Escape, or lock-in
+  (function(){
+    var sm=document.getElementById('styleModal');
+    document.getElementById('styleClose').onclick=closeStyleModal;
+    document.getElementById('gmUse').onclick=closeStyleModal;
+    sm.addEventListener('click',function(e){ if(e.target===sm) closeStyleModal(); });
+    window.addEventListener('keydown',function(e){ if(e.key==='Escape' && sm.classList.contains('open')) closeStyleModal(); });
   })();
 })();
 </script>
