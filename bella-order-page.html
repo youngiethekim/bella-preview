@@ -240,6 +240,16 @@
   .gm-use{width:100%;background:#fff;color:#1B1917;border:0;font-family:inherit;font-size:12px;letter-spacing:.13em;text-transform:uppercase;padding:16px;cursor:pointer;border-radius:9px;transition:.2s}
   .gm-use:hover{background:var(--green);color:#fff}
   .sb-sty .saved-pill{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:.1em;text-transform:uppercase;background:var(--green);color:#fff;padding:3px 8px;border-radius:4px;white-space:nowrap}
+  /* step 2 footer actions + optional-extras nudge */
+  .foot-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .rec-nudge{display:flex;align-items:center;gap:14px;background:#F4F7F4;border:1px solid #DCE7DD;padding:16px 18px;margin-bottom:14px;transition:opacity .2s}
+  .rec-nudge .rn-i{width:22px;height:22px;stroke:var(--green);fill:none;stroke-width:1.4;flex:0 0 22px}
+  .rec-nudge .rn-t{flex:1;min-width:160px}
+  .rec-nudge .rn-t b{display:block;font-size:14.5px;font-weight:400}
+  .rec-nudge .rn-t span{display:block;font-size:12.5px;color:var(--soft);margin-top:2px;line-height:1.4}
+  .rec-nudge .btn-line{white-space:nowrap}
+  .rec-nudge.done{opacity:.6}
+  @media(max-width:520px){.rec-nudge{flex-wrap:wrap}.rec-nudge .btn-line{width:100%;text-align:center}}
   .sectog{width:52px;height:30px;border-radius:99px;background:var(--line);border:0;cursor:pointer;position:relative;transition:background .2s;flex:0 0 52px}
   .sectog::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
   .sectog.on{background:var(--green)}
@@ -412,16 +422,33 @@
 
   <!-- ===== STEP 2 ===== -->
   <section id="step2" class="hide">
-    <div class="step-head">
-      <span class="micro">Step 2</span>
-      <h2 id="s2title">A few quick details.</h2>
-      <p id="s2sub">Tell us the size of the job. You can fine-tune everything on the next step.</p>
+    <!-- 2a · staging + the look (the calm essentials) -->
+    <div id="s2a">
+      <div class="step-head">
+        <span class="micro">Step 2</span>
+        <h2 id="s2title">Let’s stage your listing.</h2>
+        <p id="s2sub">The essentials first — how many photos, and the look. Anything extra comes after, only if you want it.</p>
+      </div>
+      <div class="config" id="config"></div>
+      <div class="wiz-foot">
+        <button class="btn-line" id="back1">← Back</button>
+        <span class="running">Total <b id="run2">$0</b></span>
+        <button class="btn" id="toExtras">Continue →</button>
+      </div>
     </div>
-    <div class="config" id="config"></div>
-    <div class="wiz-foot">
-      <button class="btn-line" id="back1">← Back</button>
-      <span class="running">Running total <b id="run2">$0</b></span>
-      <button class="btn" id="to3">See my package →</button>
+    <!-- 2b · optional extras -->
+    <div id="s2b" class="hide">
+      <div class="step-head">
+        <span class="micro">Step 2 · optional</span>
+        <h2>Anything else before we start?</h2>
+        <p>Most listings sell on great staging alone. Add only what helps yours — or skip straight to your package.</p>
+      </div>
+      <div class="config" id="configExtras"></div>
+      <div class="wiz-foot">
+        <button class="btn-line" id="backStaging">← Back</button>
+        <span class="running">Total <b id="run2b">$0</b></span>
+        <span class="foot-actions"><button class="btn-line" id="skipExtras">Skip, just stage it</button><button class="btn" id="to3">See my package →</button></span>
+      </div>
     </div>
   </section>
 
@@ -551,27 +578,27 @@
     return 'Listing Staging';
   }
 
-  // ---- STEP 2 builder ----
+  // ---- STEP 2 builder (2a = staging + look, 2b = optional extras) ----
+  var hasExtras=false;
   function buildConfig(){
-    var p=P[state.proj], box=document.getElementById('config'); box.innerHTML='';
+    var p=P[state.proj], box=document.getElementById('config'), ex=document.getElementById('configExtras');
+    box.innerHTML=''; ex.innerHTML='';
+    hasExtras=(p.path==='listing');
     if(p.path==='listing'){
-      document.getElementById('s2title').textContent='Build your order';
-      document.getElementById('s2sub').textContent='Start with a package, then switch on only what you need. Each section says what it does and what we’ll need from you.';
+      document.getElementById('s2title').textContent='Let’s stage your listing.';
+      document.getElementById('s2sub').textContent='The essentials first — how many photos, and the look. Anything extra comes after, only if you want it.';
+      // --- 2a: virtual staging + the look ---
       box.innerHTML=
-        '<div class="modebar" id="modebar">'
-         +modeChip('stage','Just staging','')
-         +modeChip('ready','Listing-ready','Popular')
-         +modeChip('full','Everything','')
-       +'</div>'
-       +'<div class="divlab"><span>Your services</span></div>'
-       // CORE — virtual staging is always included
-       +'<div class="core"><div class="core-top">'+qicon('sofa')
+        '<div class="core"><div class="core-top">'+qicon('sofa')
          +'<span class="lbl"><b>Virtual staging</b><span>Empty rooms furnished by real interior designers · '+money(stageUnit())+' each, volume discounts apply'+exLink('stage')+'</span></span>'
          +stepper('photos')+'</div>'
          +'<div class="removal-row" id="removalRow"><span class="lbl"><b>Furniture removal</b><span>Occupied or cluttered? We clear the room first, then stage it clean.</span></span><span class="freeprice">Included free</span><button class="toggle" data-tog="removal"></button></div>'
          +styleBox()
        +'</div>'
-       // ACCORDION SECTIONS — each a plain-language question
+       +'<p class="tiers">Volume pricing, applied automatically — <b>3+</b> save 5% · <b>6+</b> save 10% · <b>11+</b> save 15% · <b>21+</b> save 20%.</p>';
+      // --- 2b: optional extras (a gentle nudge + the question sections) ---
+      ex.innerHTML=
+        '<div class="rec-nudge" id="recNudge"><svg class="rn-i"><use href="#i-bolt"/></svg><div class="rn-t"><b>Most agents add these two</b><span>A 3D floor plan and a twilight exterior — the extras that most help a listing sell.</span></div><button class="btn-line" id="rnAdd" type="button">Add both</button></div>'
        +'<div class="secs">'
          +section('reno','Do you need to virtually renovate it?','See what a modern renovation would look like — updated floors, cabinets and finishes — to show buyers the home’s full potential.',
              subQty('Virtual renovation','Modernize the dated finishes, then furnish. Pick how many photos to renovate.','reno','renoN','photos','+'+money(PR.RENO)+' / photo','reno')
@@ -587,18 +614,14 @@
               .replace('</span></span><span class="qtywrap"','. <button type="button" class="linkbtn" id="panoExample">See a sample &amp; what we need →</button></span></span><span class="qtywrap"')
             +subRow('Virtual house tour','A walkable tour built from your listing photos','tour','+'+money(PR.TOUR),'tour'))
        +'</div>';
-      if(saved.length){
-        box.insertAdjacentHTML('beforeend','<div class="saved-note"><span>You saved <b>'+saved.length+' style'+(saved.length>1?'s':'')+'</b> in the lookbook, and we will use them.</span><a href="bella-lookbook.html">Edit in lookbook →</a></div>');
-      } else {
-        box.insertAdjacentHTML('beforeend','<div class="saved-note"><span>Not sure on the look? Pick styles in the lookbook, or just tell us the buyer and our designers choose.</span><a href="bella-lookbook.html">Browse the lookbook →</a></div>');
-      }
       var pex=document.getElementById('panoExample');
       if(pex) pex.onclick=function(){ document.getElementById('panoModal').classList.add('open'); };
-      // smart default: pre-pick the right package + relevant free/upgrade services the first time
+      var rn=document.getElementById('rnAdd');
+      if(rn) rn.onclick=function(){ state.floor=true; state.dusk=true; state.duskN=state.photos; reMode(); sync(); openAllSecs(); document.getElementById('recNudge').classList.add('done'); rn.textContent='Added ✓'; rn.disabled=true; };
+      // calm default: extras start OFF; occupied gets free removal; a "needs renovations" job pre-checks renovation (that's the point)
       if(defaultedFor!==state.proj){
-        applyMode(state.proj==='dated'?'full':'ready');
         state.removal=(state.proj==='occupied');
-        if(state.proj==='dated') state.reno=true;
+        if(state.proj==='dated'){ state.reno=true; state.renoN=state.photos; }
         defaultedFor=state.proj; sync(); openAllSecs();
       }
     } else {
@@ -608,9 +631,9 @@
         catHead('Built from your drawings','We need: architectural blueprints or plans (PDF/CAD) and property dimensions','Renders are built from your plans, so the drawings and dimensions are what make them accurate. You can upload them at checkout, or send them right after.')
        +toggleStep((state.commercial?'Commercial interior renders':'Interior 3D renders'),'Photoreal rooms from your plans','useInt','rint','+'+money(rInt())+' each',state.commercial?'crint':'rint')
        +toggleStep((state.commercial?'Commercial exterior renders':'Exterior 3D renders'),'Elevations, streetscapes, aerials','useExt','rext','+'+money(rExt())+' each',state.commercial?'crext':'rext')
-       +toggleStep('Furnished 3D floor plans','Walk the layout','useFp','rfp','+'+money(fp3d())+' each','floor');
+       +toggleStep('Furnished 3D floor plans','Walk the layout','useFp','rfp','+'+money(fp3d())+' each','floor')
+       +'<p class="tiers">Volume pricing, applied automatically — <b>3+</b> save 5% · <b>6+</b> save 10% · <b>11+</b> save 15% · <b>21+</b> save 20%.</p>';
     }
-    box.insertAdjacentHTML('beforeend','<p class="tiers">Volume pricing, applied automatically to every service — <b>3+</b> save 5% · <b>6+</b> save 10% · <b>11+</b> save 15% · <b>21+</b> save 20%.</p>');
     bind(); bindStyle(); sync();
   }
   function exLink(ex){ return ex? ' <button type="button" class="linkbtn" data-ex="'+ex+'">See a sample &amp; what we need →</button>' : ''; }
@@ -799,7 +822,9 @@
     // furniture removal only makes sense for an occupied listing
     var rr=document.getElementById('removalRow'); if(rr) rr.style.display=(state.proj==='occupied')?'flex':'none';
     syncMode();
-    document.getElementById('run2').textContent=money(lines().total);
+    var tot=money(lines().total);
+    var r2=document.getElementById('run2'); if(r2) r2.textContent=tot;
+    var r2b=document.getElementById('run2b'); if(r2b) r2b.textContent=tot;
   }
 
   // ---- STEP 3 ----
@@ -887,8 +912,13 @@
     document.querySelectorAll('#steps .s').forEach(function(s){
       var si=+s.getAttribute('data-s'); s.classList.toggle('on',si===n); s.classList.toggle('done',si<n);
     });
-    if(n===2) buildConfig();
+    if(n===2){ buildConfig(); showS2('a'); }
     if(n===3) buildSummary();
+    scrollTo({top:0,behavior:'smooth'});
+  }
+  function showS2(which){
+    document.getElementById('s2a').classList.toggle('hide', which!=='a');
+    document.getElementById('s2b').classList.toggle('hide', which!=='b');
     scrollTo({top:0,behavior:'smooth'});
   }
   function relabelChoices(){
@@ -917,8 +947,12 @@
   });
   document.getElementById('to2').onclick=function(){ if(state.proj) goStep(2); };
   document.getElementById('back1').onclick=function(){ goStep(1); };
+  // 2a "Continue": listings go to the optional extras screen; renders skip straight to the package
+  document.getElementById('toExtras').onclick=function(){ if(hasExtras) showS2('b'); else goStep(3); };
+  document.getElementById('backStaging').onclick=function(){ showS2('a'); };
+  document.getElementById('skipExtras').onclick=function(){ goStep(3); };
   document.getElementById('to3').onclick=function(){ goStep(3); };
-  document.getElementById('back2').onclick=function(){ goStep(2); };
+  document.getElementById('back2').onclick=function(){ goStep(2); if(hasExtras) showS2('b'); };
   document.getElementById('startOrder').onclick=function(){ alert('Mockup: this continues to photo upload and checkout on the live site.  Package: '+packName()+' — '+money(lines().total)); };
 
   // ---- per-service examples: real Bella work where available; nearest real image (flagged) as a stand-in otherwise ----
