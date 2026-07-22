@@ -1,0 +1,227 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Listing brochure templates (concept) | Bella Virtual</title>
+<meta name="robots" content="noindex">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap');
+  :root{--bg:#FDFCFA;--ink:#232120;--soft:#6E6A66;--faint:#9C978F;--line:#E8E4DE;--line-2:#F0EDE8;--dark:#1C1A18;--green:#3E6B4C;--gold:#B8985A;--pad:44px}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:'Jost',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F3F1ED;color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .serif{font-family:'Playfair Display',Georgia,serif}
+  .micro{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+
+  header{display:flex;justify-content:space-between;align-items:center;padding:22px var(--pad);border-bottom:1px solid var(--line);background:var(--bg);position:sticky;top:0;z-index:20}
+  .logo{font-size:19px;letter-spacing:.4em}
+  .demo-tag{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);border:1px solid #D6E2D8;background:#F4F7F4;padding:5px 11px}
+  .back{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);text-decoration:none}
+  .back:hover{color:var(--ink)}
+
+  .wrap{max-width:1120px;margin:0 auto;padding:40px var(--pad) 80px}
+  .intro h1{font-size:clamp(26px,3.4vw,38px);font-weight:300;letter-spacing:-.02em}
+  .intro p{font-size:15px;color:var(--soft);max-width:60ch;margin-top:10px}
+  .sample-note{margin-top:14px;font-size:12.5px;color:#8A6D2F;background:#FBF6EA;border:1px solid #EBDCBB;padding:9px 13px;display:inline-block}
+
+  .layout{display:grid;grid-template-columns:230px 1fr;gap:34px;margin-top:34px;align-items:start}
+  @media(max-width:820px){.layout{grid-template-columns:1fr}}
+  /* picker */
+  .picker{display:flex;flex-direction:column;gap:8px;position:sticky;top:96px}
+  @media(max-width:820px){.picker{position:static;flex-direction:row;overflow-x:auto;padding-bottom:4px}}
+  .pick{text-align:left;background:#fff;border:1px solid var(--line);padding:15px 16px;cursor:pointer;font-family:inherit;transition:.15s;min-width:180px}
+  .pick:hover{border-color:var(--ink)}
+  .pick.on{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green);background:#fff}
+  .pick b{display:block;font-size:15px;font-weight:400}
+  .pick span{display:block;font-size:12px;color:var(--faint);margin-top:3px;line-height:1.4}
+  .pick .sw{display:flex;gap:4px;margin-top:10px}
+  .pick .sw i{width:16px;height:16px;border-radius:50%;display:block}
+
+  /* stage */
+  .stage{display:flex;flex-direction:column;align-items:center;gap:18px}
+  .sheet-tools{display:flex;justify-content:space-between;align-items:center;width:100%;max-width:560px;gap:12px}
+  .sheet-tools .nm{font-size:13px;color:var(--soft)}
+  .btn{background:var(--ink);color:#fff;font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;padding:12px 20px;cursor:pointer;border:0;font-family:inherit;transition:.2s}
+  .btn:hover{background:var(--green)}
+  .btn-line{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .btn-line:hover{border-color:var(--ink);background:#fff}
+
+  /* the printable sheet — US Letter portrait ratio */
+  .sheet{width:560px;max-width:94vw;background:#fff;box-shadow:0 24px 60px -22px rgba(0,0,0,.4);position:relative;color:var(--ink)}
+  .sheet *{box-sizing:border-box}
+  .sheet img{display:block;width:100%;height:100%;object-fit:cover}
+
+  /* ============ TEMPLATE: EDITORIAL ============ */
+  .t-editorial{display:flex;flex-direction:column}
+  .t-editorial .ed-top{display:flex;justify-content:space-between;align-items:center;padding:22px 30px 14px;border-bottom:1px solid var(--line)}
+  .t-editorial .ed-top .bk{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--soft)}
+  .t-editorial .ed-top .pr{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+  .t-editorial .ed-hero{height:288px;overflow:hidden}
+  .t-editorial .ed-body{padding:22px 30px 6px;text-align:center;display:flex;flex-direction:column}
+  .t-editorial h2{font-size:29px;font-weight:400;line-height:1.14;letter-spacing:.01em}
+  .t-editorial .ed-sub{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--soft);margin-top:12px}
+  .t-editorial .ed-price{font-size:20px;letter-spacing:.02em;margin-top:8px}
+  .t-editorial .ed-desc{font-size:11.5px;line-height:1.7;color:var(--soft);max-width:52ch;margin:14px auto 0}
+  .t-editorial .ed-gal{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-top:18px;height:130px}
+  .t-editorial .ed-foot{display:flex;justify-content:space-between;align-items:center;padding:14px 30px;border-top:1px solid var(--line)}
+  .t-editorial .ed-foot .ag{font-size:15px}
+  .t-editorial .ed-foot .ct{font-size:10.5px;letter-spacing:.05em;color:var(--soft);text-align:right;line-height:1.6}
+
+  /* ============ TEMPLATE: CLASSIC ============ */
+  .t-classic{display:flex;flex-direction:column}
+  .t-classic .cl-hero{height:250px;position:relative}
+  .t-classic .cl-price{position:absolute;left:0;bottom:0;background:var(--dark);color:#fff;padding:10px 20px;font-size:20px;letter-spacing:.02em}
+  .t-classic .cl-addr{background:var(--green);color:#fff;padding:9px 22px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center}
+  .t-classic .cl-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:96px 96px;gap:4px;padding:4px 4px 0}
+  .t-classic .cl-cols{display:grid;grid-template-columns:1.3fr 1fr;gap:22px;padding:20px 24px}
+  .t-classic .cl-cols h3{font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;color:var(--ink)}
+  .t-classic .cl-cols p{font-size:11.5px;line-height:1.65;color:var(--soft)}
+  .t-classic .feat{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .t-classic .feat li{font-size:11.5px;color:var(--soft);padding-left:18px;position:relative;line-height:1.4}
+  .t-classic .feat li::before{content:"";position:absolute;left:0;top:5px;width:7px;height:7px;background:var(--green);border-radius:50%}
+  .t-classic .cl-foot{display:flex;align-items:center;gap:14px;padding:14px 24px;border-top:1px solid var(--line);background:#FAF8F5}
+  .t-classic .av{width:46px;height:46px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:16px;flex:0 0 46px}
+  .t-classic .cl-foot .who b{font-size:14.5px;font-weight:400;display:block}
+  .t-classic .cl-foot .who span{font-size:11px;color:var(--soft)}
+  .t-classic .cl-foot .ct{margin-left:auto;text-align:right;font-size:11px;color:var(--soft);line-height:1.6}
+
+  /* ============ TEMPLATE: MODERN ============ */
+  .t-modern{display:flex;flex-direction:column;padding:34px 34px 26px}
+  .t-modern .mo-top{display:flex;justify-content:space-between;align-items:baseline}
+  .t-modern .mo-top .mk{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--faint)}
+  .t-modern h2{font-size:34px;font-weight:300;letter-spacing:-.02em;line-height:1.05;margin-top:26px;max-width:15ch}
+  .t-modern .mo-stat{display:flex;gap:26px;margin-top:18px}
+  .t-modern .mo-stat div b{font-size:19px;font-weight:400;display:block}
+  .t-modern .mo-stat div span{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .t-modern .mo-img{height:320px;margin-top:22px;overflow:hidden}
+  .t-modern .mo-foot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:20px}
+  .t-modern .mo-foot .pr{font-size:24px;font-weight:300}
+  .t-modern .mo-foot .ag{text-align:right;font-size:11px;color:var(--soft);line-height:1.7}
+  .t-modern .mo-foot .ag b{color:var(--ink);font-weight:400;font-size:13px}
+
+  /* ============ TEMPLATE: BOLD ============ */
+  .t-bold{display:flex;flex-direction:column}
+  .t-bold .bo-band{background:var(--green);color:#fff;padding:22px 28px;display:flex;justify-content:space-between;align-items:center}
+  .t-bold .bo-band .h b{font-size:22px;font-weight:500;display:block;letter-spacing:.01em}
+  .t-bold .bo-band .h span{font-size:11px;letter-spacing:.16em;text-transform:uppercase;opacity:.85}
+  .t-bold .bo-band .pr{font-size:28px;font-weight:500}
+  .t-bold .bo-hero{height:250px;overflow:hidden}
+  .t-bold .bo-chips{display:flex;flex-wrap:wrap;gap:7px;padding:18px 28px 6px}
+  .t-bold .bo-chips span{font-size:11px;background:#F1F4F1;color:var(--green);border:1px solid #DCE7DD;padding:7px 12px;letter-spacing:.02em}
+  .t-bold .bo-desc{padding:6px 28px 0;font-size:11.5px;line-height:1.7;color:var(--soft)}
+  .t-bold .bo-foot{margin-top:18px;display:flex;align-items:center;gap:14px;background:var(--dark);color:#EDEAE5;padding:16px 28px}
+  .t-bold .bo-foot .av{width:44px;height:44px;border-radius:50%;background:var(--green);display:grid;place-items:center;font-size:15px;flex:0 0 44px}
+  .t-bold .bo-foot .who b{font-size:15px;font-weight:400;display:block}
+  .t-bold .bo-foot .who span{font-size:11px;color:#9B958C}
+  .t-bold .bo-foot .ct{margin-left:auto;text-align:right;font-size:11px;color:#B9B3AB;line-height:1.6}
+</style>
+
+<header>
+  <span class="logo">BELLA</span>
+  <span class="demo-tag">Concept · brochure templates</span>
+  <a class="back" href="bella-project.html">← Project workspace</a>
+</header>
+
+<div class="wrap">
+  <div class="intro">
+    <span class="micro">Marketing materials</span>
+    <h1>Choose your listing brochure.</h1>
+    <p>The same listing, four proven layouts — modeled on how top brokerages present a home (Sotheby's editorial, the classic top-producer flyer, Compass-style minimal, and a bold branded sheet). Pick one; your photos, details, and branding drop in automatically from your order.</p>
+    <div class="sample-note">Sample listing — your address, price, description and agent details fill in from your project.</div>
+  </div>
+
+  <div class="layout">
+    <div class="picker" id="picker"></div>
+    <div class="stage">
+      <div class="sheet-tools">
+        <span class="nm" id="tplName"></span>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-line" id="useBtn">Use this template</button>
+          <button class="btn" id="pdfBtn">Download PDF</button>
+        </div>
+      </div>
+      <div class="sheet" id="sheet"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var A='https://youngiethekim.github.io/bella-preview/assets/';
+  var L={
+    name:'Concord Gardens', hood:'Capstan Village · Richmond, BC',
+    price:'$1,288,000', tag:'2 Bed · 2 Bath · 912 SqFt',
+    beds:'2',baths:'2',sqft:'912',
+    headline:'Mountain views, minutes from the city.',
+    desc:'A bright, open home framed by floor-to-ceiling windows and North Shore mountain views. A chef’s kitchen with a quartz island opens to a sunlit living and dining space warmed by a designer fireplace. Two calm bedrooms, spa-inspired baths, and a private balcony complete an easy West Coast home.',
+    features:['Floor-to-ceiling mountain views','Chef’s kitchen · quartz island','Wide-plank oak flooring','Designer fireplace','Spa-inspired ensuite','Private view balcony'],
+    ag:{name:'Alex Rivera',title:'REALTOR®',phone:'(604) 555-0182',email:'alex@westcoast.example',bk:'Westcoast Realty',initials:'AR'},
+    ph:{hero:A+'hero/hero-after.jpg',k:A+'projects/kitchen-after.jpg',l:A+'projects/living-after.jpg',d:A+'projects/dining-after.jpg',p:A+'projects/primary-after.jpg',b:A+'projects/bed2-after.jpg'}
+  };
+
+  var TPL=[
+    {key:'editorial',name:'Editorial',desc:'Luxury, magazine-style. Big hero, elegant serif, lots of air.',sw:['#232120','#B8985A','#F3F1ED'],render:editorial},
+    {key:'classic',name:'Classic flyer',desc:'The dependable top-producer sheet. Price banner, photo grid, features.',sw:['#3E6B4C','#1C1A18','#FAF8F5'],render:classic},
+    {key:'modern',name:'Modern minimal',desc:'Compass-style. Big type, one strong image, quiet and confident.',sw:['#232120','#FFFFFF','#9C978F'],render:modern},
+    {key:'bold',name:'Bold branded',desc:'Strong colour band and price. For agents with a loud brand.',sw:['#3E6B4C','#1C1A18','#F1F4F1'],render:bold}
+  ];
+  var cur=0;
+
+  function editorial(){
+    return '<div class="t-editorial">'
+      +'<div class="ed-top"><span class="bk">'+L.ag.bk+'</span><span class="pr">For sale · '+L.tag+'</span></div>'
+      +'<div class="ed-hero"><img src="'+L.ph.hero+'" alt=""></div>'
+      +'<div class="ed-body"><h2 class="serif">'+L.headline+'</h2>'
+        +'<div class="ed-sub">'+L.hood+'</div>'
+        +'<div class="ed-price serif">'+L.price+'</div>'
+        +'<p class="ed-desc">'+L.desc+'</p>'
+        +'<div class="ed-gal"><img src="'+L.ph.k+'"><img src="'+L.ph.l+'"><img src="'+L.ph.p+'"></div>'
+      +'</div>'
+      +'<div class="ed-foot"><span class="ag serif">'+L.ag.name+'</span><span class="ct">'+L.ag.title+' · '+L.ag.phone+'<br>'+L.ag.email+'</span></div>'
+    +'</div>';
+  }
+  function classic(){
+    return '<div class="t-classic">'
+      +'<div class="cl-hero"><img src="'+L.ph.hero+'"><div class="cl-price">'+L.price+'</div></div>'
+      +'<div class="cl-addr"><span>'+L.name+' · '+L.hood+'</span><span>'+L.tag+'</span></div>'
+      +'<div class="cl-grid"><img src="'+L.ph.k+'"><img src="'+L.ph.l+'"><img src="'+L.ph.d+'"><img src="'+L.ph.p+'"></div>'
+      +'<div class="cl-cols"><div><h3>About this home</h3><p>'+L.desc+'</p></div>'
+        +'<div><h3>Features</h3><ul class="feat">'+L.features.map(function(f){return '<li>'+f+'</li>';}).join('')+'</ul></div></div>'
+      +'<div class="cl-foot"><div class="av">'+L.ag.initials+'</div><div class="who"><b>'+L.ag.name+'</b><span>'+L.ag.title+' · '+L.ag.bk+'</span></div>'
+        +'<div class="ct">'+L.ag.phone+'<br>'+L.ag.email+'</div></div>'
+    +'</div>';
+  }
+  function modern(){
+    return '<div class="t-modern">'
+      +'<div class="mo-top"><span class="mk">'+L.ag.bk+'</span><span class="mk">For sale</span></div>'
+      +'<h2>'+L.headline+'</h2>'
+      +'<div class="mo-stat"><div><b>'+L.beds+'</b><span>Bed</span></div><div><b>'+L.baths+'</b><span>Bath</span></div><div><b>'+L.sqft+'</b><span>SqFt</span></div></div>'
+      +'<div class="mo-img"><img src="'+L.ph.l+'"></div>'
+      +'<div class="mo-foot"><div class="pr">'+L.price+'</div><div class="ag"><b>'+L.ag.name+'</b><br>'+L.ag.title+' · '+L.ag.phone+'</div></div>'
+    +'</div>';
+  }
+  function bold(){
+    return '<div class="t-bold">'
+      +'<div class="bo-band"><div class="h"><b>'+L.name+'</b><span>'+L.hood+'</span></div><div class="pr">'+L.price+'</div></div>'
+      +'<div class="bo-hero"><img src="'+L.ph.hero+'"></div>'
+      +'<div class="bo-chips">'+L.features.map(function(f){return '<span>'+f+'</span>';}).join('')+'</div>'
+      +'<p class="bo-desc">'+L.desc+'</p>'
+      +'<div class="bo-foot"><div class="av">'+L.ag.initials+'</div><div class="who"><b>'+L.ag.name+'</b><span>'+L.ag.title+' · '+L.ag.bk+'</span></div>'
+        +'<div class="ct">'+L.ag.phone+'<br>'+L.ag.email+'</div></div>'
+    +'</div>';
+  }
+
+  var picker=document.getElementById('picker'), sheet=document.getElementById('sheet');
+  picker.innerHTML=TPL.map(function(t,i){
+    return '<button class="pick'+(i===0?' on':'')+'" data-i="'+i+'"><b>'+t.name+'</b><span>'+t.desc+'</span>'
+      +'<span class="sw">'+t.sw.map(function(c){return '<i style="background:'+c+'"></i>';}).join('')+'</span></button>';
+  }).join('');
+  function paint(){
+    var t=TPL[cur]; sheet.innerHTML=t.render();
+    document.getElementById('tplName').textContent=t.name+' template · US Letter';
+    picker.querySelectorAll('.pick').forEach(function(b,i){ b.classList.toggle('on',i===cur); });
+  }
+  picker.querySelectorAll('.pick').forEach(function(b){ b.onclick=function(){ cur=+b.getAttribute('data-i'); paint(); }; });
+  document.getElementById('pdfBtn').onclick=function(){ alert('Concept demo — exports this brochure as a print-ready PDF with your listing details and branding.'); };
+  document.getElementById('useBtn').onclick=function(){ alert('Concept demo — sets "'+TPL[cur].name+'" as your brochure style. You can switch anytime.'); };
+  paint();
+})();
+</script>
