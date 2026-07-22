@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your Project — Brochures &amp; Listing Website | Bella Virtual</title>
+<meta name="description" content="Turn your Bella order into a print-ready listing brochure and a one-listing website, auto-filled from your staged photos.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://www.bellavirtual.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#FDFCFA;--ink:#232120;--soft:#6E6A66;--faint:#9C978F;--line:#E8E4DE;--line-2:#F0EDE8;--dark:#1C1A18;--green:#3E6B4C;--gold:#E7C36A;--pad:44px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:"Jost",system-ui,sans-serif;font-weight:300;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  img{display:block;max-width:100%}a{text-decoration:none;color:inherit}
+  h1,h2,h3{font-weight:300;letter-spacing:-.012em;line-height:1.12}
+  .micro{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .btn{display:inline-block;background:var(--ink);color:#fff;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;padding:13px 22px;cursor:pointer;border:0;font-family:inherit;transition:opacity .2s}
+  .btn:hover{opacity:.85}.btn-line{background:transparent;color:var(--ink);border:1px solid var(--ink)}.btn-line:hover{background:var(--ink);color:#fff}
+  header{position:sticky;top:0;z-index:40;background:rgba(253,252,250,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line-2)}
+  .nav{display:flex;align-items:center;gap:20px;height:64px;padding:0 var(--pad);max-width:1280px;margin:0 auto}
+  .mark{font-size:15px;letter-spacing:.5em;font-weight:400}
+  .nav .sp{margin-left:auto}
+  .nav .pill{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);border:1px solid rgba(62,107,76,.4);border-radius:999px;padding:6px 13px}
+
+  .wrap{max-width:1280px;margin:0 auto;padding:0 var(--pad)}
+  /* order summary bar */
+  .summary{border-bottom:1px solid var(--line);background:#fff}
+  .summary-in{max-width:1280px;margin:0 auto;padding:26px var(--pad);display:flex;align-items:center;gap:20px 40px;flex-wrap:wrap}
+  .summary h1{font-size:clamp(22px,2.4vw,30px)}
+  .summary .sub{font-size:13.5px;color:var(--soft);margin-top:4px}
+  .summary .stat{display:flex;gap:28px;margin-left:auto;flex-wrap:wrap}
+  .summary .stat div b{display:block;font-size:19px;font-weight:400}
+  .summary .stat div span{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  .badge-done{display:inline-flex;align-items:center;gap:7px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:var(--green);padding:5px 12px}
+
+  /* main layout */
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:36px;padding:40px var(--pad) 80px;max-width:1280px;margin:0 auto;align-items:start}
+  @media(max-width:920px){.grid{grid-template-columns:1fr;gap:28px}}
+  .panel{background:#fff;border:1px solid var(--line)}
+  .panel h2{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);padding:18px 20px;border-bottom:1px solid var(--line-2)}
+  .side{position:sticky;top:84px}
+  @media(max-width:920px){.side{position:static}}
+  .form{padding:18px 20px 22px;display:grid;gap:14px}
+  .form label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:5px}
+  .form input,.form textarea{width:100%;font-family:inherit;font-size:14.5px;color:var(--ink);background:var(--bg);border:1px solid var(--line);padding:10px 12px}
+  .form textarea{resize:vertical;min-height:78px;line-height:1.5}
+  .form .two{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  .photos{padding:16px 20px 20px}
+  .photos .pgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+  .photos .pgrid img{aspect-ratio:1.3;object-fit:cover;border:1px solid var(--line)}
+  .photos .cap{font-size:12px;color:var(--soft);margin-top:12px}
+
+  /* right side: builder + preview */
+  .make{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:26px}
+  @media(max-width:560px){.make{grid-template-columns:1fr}}
+  .make .card{background:#fff;border:1px solid var(--line);padding:24px 24px 22px;display:flex;flex-direction:column;gap:8px}
+  .make .card .ico{width:30px;height:30px;stroke:var(--ink);fill:none;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;margin-bottom:6px}
+  .make .card h3{font-size:19px}
+  .make .card p{font-size:13.5px;color:var(--soft);flex:1}
+  .make .card .btn{margin-top:12px;align-self:flex-start}
+  .make .card.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+
+  .preview-head{display:flex;align-items:center;gap:14px;margin-bottom:14px;flex-wrap:wrap}
+  .preview-head .micro{flex:1}
+  .tabs{display:inline-flex;border:1px solid var(--line)}
+  .tabs button{font-family:inherit;font-size:12px;letter-spacing:.1em;text-transform:uppercase;background:#fff;color:var(--soft);border:0;padding:9px 16px;cursor:pointer}
+  .tabs button.on{background:var(--ink);color:#fff}
+
+  .stage{background:#EFECE8;border:1px solid var(--line);padding:26px;display:flex;justify-content:center;overflow:auto}
+
+  /* ---- BROCHURE preview (print flyer) ---- */
+  .brochure{width:100%;max-width:600px;background:#fff;box-shadow:0 20px 60px -30px rgba(0,0,0,.4);color:#232120}
+  .brochure .b-hero{position:relative;aspect-ratio:1.5;overflow:hidden;background:#ddd}
+  .brochure .b-hero img{width:100%;height:100%;object-fit:cover}
+  .brochure .b-hero .b-price{position:absolute;left:0;bottom:0;background:var(--ink);color:#fff;padding:12px 20px;font-size:22px;letter-spacing:.01em}
+  .brochure .b-body{padding:24px 28px 28px}
+  .brochure .b-body h3{font-size:24px;font-weight:400}
+  .brochure .b-body .b-addr{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-top:4px}
+  .brochure .b-facts{display:flex;gap:26px;margin:16px 0;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .brochure .b-facts div b{font-size:18px;font-weight:400}
+  .brochure .b-facts div span{display:block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  .brochure .b-desc{font-size:13.5px;color:#514e4a;line-height:1.6}
+  .brochure .b-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-top:18px}
+  .brochure .b-grid img{aspect-ratio:1.3;object-fit:cover}
+  .brochure .b-foot{display:flex;align-items:center;justify-content:space-between;margin-top:20px;padding-top:16px;border-top:1px solid var(--line);gap:14px;flex-wrap:wrap}
+  .brochure .b-foot .agent b{font-size:14px;font-weight:400}
+  .brochure .b-foot .agent span{display:block;font-size:12px;color:var(--soft)}
+  .brochure .b-foot .b-logo{font-size:13px;letter-spacing:.4em;font-weight:400}
+
+  /* ---- WEBSITE preview (browser frame) ---- */
+  .browser{width:100%;max-width:900px;background:#fff;border:1px solid var(--line);box-shadow:0 20px 60px -30px rgba(0,0,0,.4)}
+  .browser .bar{display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:1px solid var(--line);background:#F4F1EC}
+  .browser .bar .dot{width:10px;height:10px;border-radius:50%;background:#d6d1c9}
+  .browser .bar .url{flex:1;margin-left:10px;font-size:11.5px;color:var(--soft);background:#fff;border:1px solid var(--line);border-radius:5px;padding:5px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .site{max-height:560px;overflow:auto}
+  .site .w-hero{position:relative;aspect-ratio:2.1;overflow:hidden;background:#ddd}
+  .site .w-hero img{width:100%;height:100%;object-fit:cover}
+  .site .w-hero .veil{position:absolute;inset:0;background:linear-gradient(to top,rgba(15,13,11,.72),rgba(15,13,11,.05) 55%,transparent)}
+  .site .w-hero .w-copy{position:absolute;left:32px;bottom:26px;color:#fff}
+  .site .w-hero .w-copy .p{font-size:26px;letter-spacing:.01em}
+  .site .w-hero .w-copy .a{font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.9);margin-top:4px}
+  .site .w-facts{display:flex;justify-content:center;gap:44px;padding:22px;border-bottom:1px solid var(--line)}
+  .site .w-facts div{text-align:center}
+  .site .w-facts b{font-size:20px;font-weight:400}
+  .site .w-facts span{display:block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  .site .w-about{padding:34px 40px;max-width:640px;margin:0 auto;text-align:center}
+  .site .w-about h3{font-size:22px}
+  .site .w-about p{font-size:14.5px;color:var(--soft);margin-top:12px;line-height:1.65}
+  .site .w-gal{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:0 5px 5px}
+  .site .w-gal img{aspect-ratio:1.5;object-fit:cover}
+  .site .w-cta{text-align:center;padding:40px 20px;background:var(--dark);color:#fff}
+  .site .w-cta h3{color:#fff;font-size:22px}
+  .site .w-cta .btn{margin-top:18px;background:#fff;color:var(--ink)}
+
+  .note{font-size:12px;color:var(--faint);margin-top:14px;text-align:center}
+  footer{background:var(--dark);color:#8a857d;padding:26px var(--pad);font-size:12.5px;text-align:center}
+  footer a{color:#b8b2a9;text-decoration:underline}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a class="mark" href="bella-homepage-redesign.html">BELLA</a>
+    <span class="pill">Project workspace</span>
+    <span class="sp"></span>
+    <a class="btn-line" href="bella-order-page.html" style="padding:9px 16px;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase">New order</a>
+  </div>
+</header>
+
+<!-- ORDER SUMMARY -->
+<section class="summary">
+  <div class="summary-in">
+    <div>
+      <span class="badge-done">✓ Delivered</span>
+      <h1 style="margin-top:10px">Your staged listing is ready.</h1>
+      <p class="sub">Order #BV-10428 · Listing Staging + floor plan · 8 photos · delivered in 41 hours</p>
+    </div>
+    <div class="stat">
+      <div><b>8</b><span>Staged photos</span></div>
+      <div><b>1</b><span>3D floor plan</span></div>
+      <div><b>∞</b><span>Revisions (2 wks)</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="grid">
+  <!-- LEFT: listing details + assets -->
+  <div class="side">
+    <div class="panel">
+      <h2>Listing details</h2>
+      <div class="form">
+        <div><label>Address</label><input id="fAddr" value="42 Bayview Terrace, Toronto"></div>
+        <div><label>Price</label><input id="fPrice" value="$1,249,000"></div>
+        <div class="two">
+          <div><label>Beds</label><input id="fBeds" value="4"></div>
+          <div><label>Baths</label><input id="fBaths" value="3"></div>
+          <div><label>Sq ft</label><input id="fSqft" value="2,410"></div>
+        </div>
+        <div><label>Headline</label><input id="fHead" value="Light-filled family home, move-in ready"></div>
+        <div><label>Description</label><textarea id="fDesc">Sun-drenched and thoughtfully staged, this home invites you to picture the life you'll build here — morning coffee in the breakfast nook, friends gathered in the open living room, quiet evenings on the deck. Every room is dressed to feel like home the moment you walk in.</textarea></div>
+        <div class="two" style="grid-template-columns:1fr 1fr">
+          <div><label>Agent</label><input id="fAgent" value="Beverly Bahm"></div>
+          <div><label>Phone</label><input id="fPhone" value="(312) 555-0148"></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:24px">
+      <h2>Your staged photos</h2>
+      <div class="photos">
+        <div class="pgrid" id="photoGrid"></div>
+        <p class="cap">8 designer-staged photos, delivered. These auto-fill your brochure &amp; website.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: make + preview -->
+  <div>
+    <div class="make">
+      <div class="card on" id="cardBro">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M6 3.5h9l4 4v13h-13z"/><path d="M15 3.5V8h4"/><path d="M8.5 12h7M8.5 15.5h7M8.5 8.5h3"/></svg>
+        <h3>Listing brochure</h3>
+        <p>A print-ready flyer built from your staged photos and listing details. Download as PDF for open houses and mailers.</p>
+        <button class="btn" data-view="bro">Open brochure</button>
+      </div>
+      <div class="card" id="cardWeb">
+        <svg class="ico" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="14" rx="1"/><path d="M3.5 8.5h17M6.5 6.4h.01M9 6.4h.01"/></svg>
+        <h3>Listing website</h3>
+        <p>A single-listing website with your gallery, details, and a lead form. Publish and share the link in one click.</p>
+        <button class="btn btn-line" data-view="web">Open website</button>
+      </div>
+    </div>
+
+    <div class="preview-head">
+      <span class="micro" id="pvLabel">Brochure preview · updates live as you edit</span>
+      <div class="tabs">
+        <button data-view="bro" class="on" id="tabBro">Brochure</button>
+        <button data-view="web" id="tabWeb">Website</button>
+      </div>
+      <button class="btn" id="pvAction">Download PDF</button>
+    </div>
+
+    <div class="stage" id="stage"></div>
+    <p class="note" id="pvNote">Mockup preview — on the live tool this exports a print-ready PDF and publishes a shareable listing site.</p>
+  </div>
+</div>
+
+<footer>
+  © Bella Virtual Staging · Project workspace mockup · <a href="bella-homepage-redesign.html">Back to the studio</a>
+</footer>
+
+<script>
+(function(){
+  var C='https://www.bellavirtual.com/cdn/shop/files/', W='?width=1000';
+  // delivered staged photos (real Bella work)
+  var PHOTOS=[
+    C+'053-600-j-street.74270.p2k.027.print_ly_tb.jpg'+W,
+    C+'Gareth_Roberts_-_Living_room_to_Dinning_Room_S210-120_Bayview_Ave-13_Tung_NAM.jpg'+W,
+    C+'Josh_Goetz_-_Room_1_Den-Family_Room_Tung_TP_1.jpg'+W,
+    C+'INT_201_Bedroom.jpg'+W,
+    C+'Minimal_Scandinavian_Kitchen_2025.jpg'+W,
+    C+'Unit_706_289_Drake_Street_Vancouver-dining_room-1_nhi_hb.jpg'+W,
+    C+'Elizabeth_Ramos_-_Webster_from_Dining_nhi_tb-transformed.jpg'+W,
+    C+'3D_Illustration_Photo_Frame_Lounge_Jan_16_2025.jpg'+W
+  ];
+  // thumbnail gallery
+  document.getElementById('photoGrid').innerHTML=PHOTOS.slice(0,6).map(function(s){return '<img src="'+s+'" alt="Staged photo" loading="lazy">';}).join('');
+
+  function val(id){ return (document.getElementById(id).value||'').trim(); }
+  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function brochure(){
+    var beds=esc(val('fBeds')), baths=esc(val('fBaths')), sqft=esc(val('fSqft'));
+    return '<div class="brochure">'
+      +'<div class="b-hero"><img src="'+PHOTOS[0]+'" alt=""><span class="b-price">'+esc(val('fPrice'))+'</span></div>'
+      +'<div class="b-body">'
+        +'<h3>'+esc(val('fHead'))+'</h3>'
+        +'<p class="b-addr">'+esc(val('fAddr'))+'</p>'
+        +'<div class="b-facts"><div><b>'+beds+'</b><span>Beds</span></div><div><b>'+baths+'</b><span>Baths</span></div><div><b>'+sqft+'</b><span>Sq ft</span></div></div>'
+        +'<p class="b-desc">'+esc(val('fDesc'))+'</p>'
+        +'<div class="b-grid">'+PHOTOS.slice(1,7).map(function(s){return '<img src="'+s+'" alt="">';}).join('')+'</div>'
+        +'<div class="b-foot"><div class="agent"><b>'+esc(val('fAgent'))+'</b><span>'+esc(val('fPhone'))+'</span></div><div class="b-logo">BELLA</div></div>'
+      +'</div></div>';
+  }
+  function website(){
+    var beds=esc(val('fBeds')), baths=esc(val('fBaths')), sqft=esc(val('fSqft'));
+    var slug=esc(val('fAddr')).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+    return '<div class="browser"><div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">yourbrand.com/'+slug+'</span></div>'
+      +'<div class="site">'
+        +'<div class="w-hero"><img src="'+PHOTOS[0]+'" alt=""><div class="veil"></div><div class="w-copy"><div class="p">'+esc(val('fPrice'))+'</div><div class="a">'+esc(val('fAddr'))+'</div></div></div>'
+        +'<div class="w-facts"><div><b>'+beds+'</b><span>Beds</span></div><div><b>'+baths+'</b><span>Baths</span></div><div><b>'+sqft+'</b><span>Sq ft</span></div></div>'
+        +'<div class="w-about"><h3>'+esc(val('fHead'))+'</h3><p>'+esc(val('fDesc'))+'</p></div>'
+        +'<div class="w-gal">'+PHOTOS.slice(1,7).map(function(s){return '<img src="'+s+'" alt="">';}).join('')+'</div>'
+        +'<div class="w-cta"><h3>Book a private showing</h3><div style="font-size:13px;color:#b8b2a9;margin-top:8px">'+esc(val('fAgent'))+' · '+esc(val('fPhone'))+'</div><a class="btn">Request a tour</a></div>'
+      +'</div></div>';
+  }
+
+  var view='bro';
+  function render(){
+    document.getElementById('stage').innerHTML = view==='bro'? brochure() : website();
+    var bro=view==='bro';
+    document.getElementById('tabBro').classList.toggle('on',bro);
+    document.getElementById('tabWeb').classList.toggle('on',!bro);
+    document.getElementById('cardBro').classList.toggle('on',bro);
+    document.getElementById('cardWeb').classList.toggle('on',!bro);
+    document.getElementById('pvLabel').textContent = (bro?'Brochure':'Website')+' preview · updates live as you edit';
+    document.getElementById('pvAction').textContent = bro?'Download PDF':'Publish site';
+  }
+  function setView(v){ view=v; render(); }
+  document.querySelectorAll('[data-view]').forEach(function(b){ b.addEventListener('click',function(){ setView(b.getAttribute('data-view')); }); });
+  // live update on any field edit
+  ['fAddr','fPrice','fBeds','fBaths','fSqft','fHead','fDesc','fAgent','fPhone'].forEach(function(id){
+    document.getElementById(id).addEventListener('input', render);
+  });
+  document.getElementById('pvAction').addEventListener('click',function(){
+    alert(view==='bro'
+      ? 'Mockup: this exports a print-ready PDF brochure for '+val('fAddr')+'.'
+      : 'Mockup: this publishes a shareable one-listing website for '+val('fAddr')+'.');
+  });
+  render();
+})();
+</script>
+</body>
+</html>
