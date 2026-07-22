@@ -95,6 +95,10 @@
   .cust-toggle.open{border-style:solid}
   .customize{display:none;margin-top:8px}
   .customize.show{display:block}
+  .cat-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:22px 0 8px;padding-bottom:8px;border-bottom:1px solid var(--line-2)}
+  .cat-head .cat-l{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+  .cat-head .cat-d{font-size:12.5px;color:var(--faint)}
+  .customize .cat-head:first-child{margin-top:4px}
   .pano{position:relative;height:230px;overflow:hidden;background:#111;cursor:grab;user-select:none;border:1px solid var(--line)}
   .pano.grab{cursor:grabbing}
   .pano-img{position:absolute;inset:0;background-image:url('https://pannellum.org/images/alma.jpg');background-size:auto 100%;background-repeat:repeat-x;background-position:0 center;will-change:background-position}
@@ -172,6 +176,7 @@
   <symbol id="i-tour" viewBox="0 0 24 24"><path d="M3 12c2.4-4.2 5.4-6.3 9-6.3s6.6 2.1 9 6.3c-2.4 4.2-5.4 6.3-9 6.3S5.4 16.2 3 12z"/><circle cx="12" cy="12" r="2.6"/></symbol>
   <symbol id="i-sun" viewBox="0 0 24 24"><path d="M17 17a5 5 0 0 0-10 0"/><path d="M2.5 17h19"/><path d="M12 4v3"/><path d="M5.6 8.6l1.6 1.6M18.4 8.6l-1.6 1.6"/><path d="M3.5 12.6h2M18.5 12.6h2"/></symbol>
   <symbol id="i-360" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-3-6.2"/><path d="M20 4.5V8h-3.5"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1-.5-8A5 5 0 0 1 16 8.6 3.75 3.75 0 0 1 17.4 18z"/></symbol>
   <symbol id="i-blue" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15"/><path d="M3.5 9h17M8 4.5V19.5"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
 </svg>
@@ -287,7 +292,8 @@
           occupied:{unit:55,stage:'Furniture removal + staging',path:'listing',blurb:'We clear the room, then stage it'},
           dated:{unit:95,stage:'Virtual renovation + staging',path:'listing',blurb:'Modernized finishes, then staged'},
           prebuild:{path:'build'} };
-  var PR={FP2D:24,FP3D:84,TOUR:46,DUSK:7,RINT:630,REXT:840,RINT_C:490,REXT_C:980,PANO:31};
+  var PR={FP2D:24,FP3D:84,TOUR:46,DUSK:7,RINT:630,REXT:840,RINT_C:490,REXT_C:980,PANO:31,SKY:6};
+  /* PLACEHOLDER: SKY = sky replacement + retouching per photo — confirm Bella's real photo-editing rate */
   function rInt(){ return state.commercial?PR.RINT_C:PR.RINT; }
   function rExt(){ return state.commercial?PR.REXT_C:PR.REXT; }
   /* PLACEHOLDER commercial rates for staging & floor plans — confirm real commercial pricing */
@@ -295,7 +301,7 @@
   var CFP3D=110;                             // commercial 3D floor plan
   function stageUnit(){ var p=P[state.proj]; if(!p||!p.unit) return 0; return state.commercial?(CU[state.proj]||p.unit):p.unit; }
   function fp3d(){ return state.commercial?CFP3D:PR.FP3D; }
-  var state={ proj:null, commercial:false, photos:8, floor:false, tour:false, dusk:false, pano360:false, pano:3,
+  var state={ proj:null, commercial:false, photos:8, floor:false, tour:false, dusk:false, sky:false, pano360:false, pano:3,
               rint:1, rext:1, rfp:1, useInt:true, useExt:true, useFp:true };
 
   // saved lookbook pieces
@@ -315,6 +321,7 @@
       if(state.floor){ L.push(['3D floor plan', money(fp3d())]); total+=fp3d(); }
       if(state.tour){ L.push(['Virtual house tour', money(PR.TOUR)]); total+=PR.TOUR; }
       if(state.dusk){ var duskCost=PR.DUSK*state.photos, dDusk=duskCost*volDisc(state.photos); L.push(['Day-to-dusk edits × '+state.photos, money(duskCost)]); total+=duskCost-dDusk; disc+=dDusk; }
+      if(state.sky){ var skyCost=PR.SKY*state.photos, dSky=skyCost*volDisc(state.photos); L.push(['Sky replacement & retouching × '+state.photos, money(skyCost)]); total+=skyCost-dSky; disc+=dSky; }
       if(state.pano360){ var panoCost=PR.PANO*state.pano, dPano=panoCost*volDisc(state.pano); L.push(['360° virtual tour × '+state.pano, money(panoCost)]); total+=panoCost-dPano; disc+=dPano; }
       if(disc) L.push(['Volume discount', '−'+money(disc)]);
       return {L:L,total:total,disc:disc};
@@ -354,11 +361,14 @@
        +'</div>'
        +'<button type="button" class="cust-toggle" id="custToggle">Customize what’s included ▾</button>'
        +'<div class="customize" id="customize">'
+         +catHead('Show the space','Help buyers understand the layout')
          +toggleRow('3D floor plan','Buyers see the layout, furnished','floor','+'+money(fp3d()),'floor','plan')
          +toggleRow('Virtual house tour','A walkable tour from your photos','tour','+'+money(PR.TOUR),'tour','tour')
-         +toggleRow('Day-to-dusk edits','Twilight hero shots that stop the scroll','dusk','+'+money(PR.DUSK)+'/photo','dusk','sun')
          +'<div class="qrow"><svg class="qico"><use href="#i-360"/></svg><span class="lbl"><b>360° virtual tour</b><span>Your photographer shoots 360° photos, we stitch and stage them into one walkable tour. <button type="button" class="linkbtn" id="panoExample">See an example →</button></span></span><span class="price">+$'+PR.PANO+' / photo</span><button class="toggle" data-tog="pano360"></button></div>'
          +'<div class="qsub" id="panoSub"><span class="lbl"><b>How many 360° photos?</b><span>Usually one per room you want walkable</span></span>'+stepper('pano')+'</div>'
+         +catHead('Photo editing','Make the photos you have pop')
+         +toggleRow('Day-to-dusk edits','Twilight hero shots that stop the scroll','dusk','+'+money(PR.DUSK)+'/photo','dusk','sun')
+         +toggleRow('Sky replacement &amp; retouching','Swap grey skies, clean up blemishes and clutter','sky','+'+money(PR.SKY)+'/photo','','cloud')
        +'</div>';
       if(saved.length){
         box.insertAdjacentHTML('beforeend','<div class="saved-note"><span>You saved <b>'+saved.length+' style'+(saved.length>1?'s':'')+'</b> in the lookbook, and we will use them.</span><a href="bella-lookbook.html">Edit in lookbook →</a></div>');
@@ -382,6 +392,7 @@
   }
   function exLink(ex){ return ex? ' <button type="button" class="linkbtn" data-ex="'+ex+'">See an example →</button>' : ''; }
   function qicon(ic){ return ic? '<svg class="qico"><use href="#i-'+ic+'"/></svg>' : ''; }
+  function catHead(l,d){ return '<div class="cat-head"><span class="cat-l">'+l+'</span><span class="cat-d">'+d+'</span></div>'; }
   function pkgCard(key,name,desc,delta,rec){ return '<button type="button" class="pkg'+(rec?' rec':'')+'" data-pkg="'+key+'">'+(rec?'<span class="pkg-badge">Most popular</span>':'')+'<b>'+name+'</b><span class="pkg-desc">'+desc+'</span><span class="pkg-price">'+(delta>0?'+'+money(delta):'Base price')+'</span></button>'; }
   function row(name,sub,control,ex,ic){ return '<div class="qrow">'+qicon(ic)+'<span class="lbl"><b>'+name+'</b><span>'+sub+exLink(ex)+'</span></span>'+control+'</div>'; }
   function stepper(key){ return '<span class="stepper" data-step="'+key+'"><button data-d="-1">−</button><span class="v" id="v_'+key+'"></span><button data-d="1">+</button></span>'; }
