@@ -534,7 +534,7 @@
   .quote-top.quote cite{margin-top:16px}
   .quote-top.quote .rating{margin-top:22px}
   /* ---------- who we are (agent outcomes / feeling) ---------- */
-  .who{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg)}
+  .whyus{border-top:1px solid var(--line);background:var(--bg)}
   .who-in{max-width:1200px;margin:0 auto;padding:76px var(--pad)}
   .who-lead{max-width:640px}
   .who-lead h2{font-size:clamp(26px,3vw,40px);margin-top:12px;max-width:22ch}
@@ -545,6 +545,24 @@
   .who-card .ico{width:30px;height:30px;color:var(--green);opacity:1;stroke-width:1.2;margin-bottom:14px;display:block}
   .who-card h3{font-size:19px}
   .who-card p{margin-top:9px;font-size:14px;color:var(--soft);line-height:1.55}
+  /* ---------- the math (cost value) ---------- */
+  .value{background:var(--dark);color:#EDEAE5;border-top:1px solid var(--line)}
+  .value-in{max-width:940px;margin:0 auto;padding:70px var(--pad);text-align:center}
+  .value .micro{color:#807A72}
+  .value h2{color:#fff;font-size:clamp(26px,3vw,40px);margin-top:12px}
+  .value-rows{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:32px;text-align:left}
+  @media(max-width:640px){.value-rows{grid-template-columns:1fr}}
+  .vrow{padding:26px 26px;border:1px solid #34302B}
+  .vrow .vlbl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9B958C}
+  .vrow .vamt{display:block;font-size:clamp(30px,4vw,44px);font-weight:300;letter-spacing:-.02em;margin:9px 0 5px;line-height:1}
+  .vrow.old .vamt{color:#9B958C}
+  .vrow.old .vamt s{text-decoration-color:#B0553F;text-decoration-thickness:1px}
+  .vrow.new{background:#26231F;border-color:var(--green)}
+  .vrow.new .vamt{color:#fff}
+  .vrow .vper{font-size:12.5px;color:#9B958C}
+  .vrow.new .vper{color:#CFE3D3}
+  .value-note{max-width:62ch;margin:28px auto 0;font-size:15.5px;color:#C9C3BB;line-height:1.6}
+  .value .btn-wht{margin-top:26px}
   .quote p{font-size:clamp(24px,3vw,40px);font-weight:300;letter-spacing:-.015em;max-width:20ch;margin:0 auto}
   .quote cite{display:block;margin-top:22px;font-style:normal;font-size:11.5px;letter-spacing:.15em;
     text-transform:uppercase;color:var(--faint)}
@@ -861,7 +879,7 @@
 </div>
 
 <!-- ================= WHO WE ARE ================= -->
-<section class="who">
+<section class="whyus">
   <div class="who-in">
     <div class="who-lead">
       <p class="micro">Who we are</p>
@@ -873,6 +891,20 @@
       <div class="who-card"><svg class="ico"><use href="#i-pen"/></svg><h3>Look like the expert</h3><p>Every room composed by a designer who knows your market, so your sellers think you're a hero.</p></div>
       <div class="who-card"><svg class="ico"><use href="#i-clock"/></svg><h3>Sell it faster</h3><p>Buyers feel at home in the first three photos, so the offers come sooner and the home moves.</p></div>
     </div>
+  </div>
+</section>
+
+<!-- ================= THE MATH (cost value) ================= -->
+<section class="value">
+  <div class="value-in">
+    <p class="micro">The math</p>
+    <h2>Same result. A fraction of the cost.</h2>
+    <div class="value-rows">
+      <div class="vrow old"><span class="vlbl">Physical staging</span><span class="vamt"><s>$2,000–5,000</s></span><span class="vper">a month · until it sells · the furniture goes back</span></div>
+      <div class="vrow new"><span class="vlbl">Bella virtual staging</span><span class="vamt">$45</span><span class="vper">a photo · paid once · yours for the whole listing</span></div>
+    </div>
+    <p class="value-note">Both show buyers the potential of the home, and get the same reaction in the first three photos. One costs thousands a month and hands the furniture back the day it sells. The other is about a tenth of the cost, paid once.</p>
+    <a class="btn btn-wht" href="bella-pricing.html">See the full comparison →</a>
   </div>
 </section>
 
