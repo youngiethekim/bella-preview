@@ -254,23 +254,40 @@
   .svc-item .ico{width:26px;height:26px;color:var(--ink);opacity:1;stroke-width:1.2}
   .svc-item h3{font-size:16.5px;margin-top:2px}
   .svc-item p{font-size:13.5px;color:var(--soft);line-height:1.5}
-  /* central before/after flip book with SOLD outcomes */
-  .showcase{max-width:900px;margin:36px auto 8px}
-  .flip{perspective:1600px}
-  .flip-inner{position:relative;width:100%;aspect-ratio:1.62;transform-style:preserve-3d;transition:transform .85s cubic-bezier(.4,0,.2,1)}
-  .flip-inner.flipped{transform:rotateY(180deg)}
-  @media(max-width:640px){.flip-inner{aspect-ratio:1.3}}
-  .flip-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;border:1px solid var(--line);background:#EFECE8}
-  .flip-face.back{transform:rotateY(180deg)}
-  .flip-face img{width:100%;height:100%;object-fit:cover;display:block}
-  .ba-tag{position:absolute;top:14px;left:16px;background:rgba(20,18,16,.6);color:#fff;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;padding:6px 12px;backdrop-filter:blur(3px)}
-  .sold-badge{position:absolute;top:14px;right:16px;background:var(--green);color:#fff;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;padding:7px 15px}
-  .sold-info{position:absolute;left:16px;bottom:16px;background:rgba(18,16,14,.74);color:#fff;padding:9px 15px;backdrop-filter:blur(3px)}
-  .sold-info b{display:block;font-weight:400;font-size:13.5px;letter-spacing:.02em}
-  .sold-info span{display:block;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:#CFE3D3;margin-top:3px}
-  .sc-dots{display:flex;gap:8px;justify-content:center;margin-top:16px}
-  .sc-dots button{width:7px;height:7px;border-radius:99px;border:0;background:var(--line);cursor:pointer;padding:0;transition:.25s}
-  .sc-dots button.on{background:var(--ink);width:22px}
+  /* interactive before/after project browser (drag slider + thumbnails) */
+  .pbrowse{max-width:940px;margin:36px auto 8px}
+  .pb-stage{display:flex;align-items:center;gap:14px}
+  .pb-arw{flex:0 0 auto;width:46px;height:46px;border:1px solid var(--line);background:#fff;color:var(--ink);
+    font-size:24px;line-height:1;cursor:pointer;display:grid;place-items:center;transition:background .15s,color .15s,border-color .15s}
+  .pb-arw:hover{background:var(--green);color:#fff;border-color:var(--green)}
+  .pb-slider{position:relative;flex:1 1 auto;aspect-ratio:1.55;overflow:hidden;border:1px solid var(--line);
+    background:#EFECE8;--x:56%;cursor:ew-resize;touch-action:none;user-select:none}
+  @media(max-width:640px){.pb-slider{aspect-ratio:1.25}.pb-arw{width:40px;height:40px}}
+  .pb-slider img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+  .pb-before{clip-path:inset(0 calc(100% - var(--x)) 0 0)}
+  .pb-lbl{position:absolute;top:14px;z-index:3;background:rgba(20,18,16,.62);color:#fff;font-size:10.5px;
+    letter-spacing:.15em;text-transform:uppercase;padding:6px 12px;backdrop-filter:blur(3px);pointer-events:none}
+  .pb-lbl-b{left:14px}.pb-lbl-a{right:14px}
+  .pb-handle{position:absolute;top:0;bottom:0;left:var(--x);width:2px;background:#fff;z-index:4;
+    transform:translateX(-1px);box-shadow:0 0 0 1px rgba(0,0,0,.12);pointer-events:none}
+  .pb-grip{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;
+    background:#fff;box-shadow:0 3px 12px rgba(0,0,0,.28);display:grid;place-items:center}
+  .pb-grip::before{content:"‹ ›";font-size:12px;letter-spacing:1px;color:var(--ink)}
+  .pb-bar{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-top:16px;padding:0 60px}
+  @media(max-width:640px){.pb-bar{padding:0}}
+  .pb-meta b{font-size:15.5px;letter-spacing:.01em;color:var(--ink)}
+  .pb-meta span{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-top:4px}
+  .pb-count{font-size:12px;letter-spacing:.1em;color:var(--faint);white-space:nowrap}
+  .pb-count b{color:var(--ink);font-weight:500}
+  .pb-thumbs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:18px;padding:0 60px}
+  @media(max-width:640px){.pb-thumbs{padding:0}}
+  .pb-thumbs button{width:84px;height:56px;padding:0;border:1px solid var(--line);background:#EFECE8;
+    cursor:pointer;overflow:hidden;opacity:.6;transition:opacity .18s,border-color .18s;position:relative}
+  .pb-thumbs button img{width:100%;height:100%;object-fit:cover;display:block}
+  .pb-thumbs button:hover{opacity:.9}
+  .pb-thumbs button.on{opacity:1;border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
+  @media(max-width:640px){.pb-thumbs button{width:60px;height:42px}}
+  @media(prefers-reduced-motion:reduce){.pb-arw{transition:none}}
 
   /* ---------- work reel: snap-scrolling before/after film strip ---------- */
   .reel-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px}
@@ -918,12 +935,24 @@
   </div>
   <div class="wrap">
     <!-- before/after flip book. SOLD stats are SAMPLE — replace with real case-study numbers from bellavirtual.com -->
-    <div class="showcase">
-      <div class="flip"><div class="flip-inner" id="flipInner">
-        <div class="flip-face front"><img id="baBefore" src="" alt="A listing photo before staging"><span class="ba-tag">Before</span></div>
-        <div class="flip-face back"><img id="baAfter" src="" alt="The same room staged by Bella"><span class="ba-tag">After</span><span class="sold-badge">Sold</span><div class="sold-info"><b id="soldName"></b><span id="soldStat"></span></div></div>
-      </div></div>
-      <div class="sc-dots" id="scDots"></div>
+    <!-- interactive before/after browser · real Concord Pacific (Concord Gardens) project -->
+    <div class="pbrowse" id="pbrowse">
+      <div class="pb-stage">
+        <button class="pb-arw" id="pbPrev" type="button" aria-label="Previous room">&#8249;</button>
+        <div class="pb-slider" id="pbSlider">
+          <img class="pb-after" id="pbAfter" src="" alt="A room staged by Bella">
+          <img class="pb-before" id="pbBefore" src="" alt="The same room empty, before staging">
+          <span class="pb-lbl pb-lbl-b">Before</span>
+          <span class="pb-lbl pb-lbl-a">After</span>
+          <div class="pb-handle" id="pbHandle"><span class="pb-grip"></span></div>
+        </div>
+        <button class="pb-arw" id="pbNext" type="button" aria-label="Next room">&#8250;</button>
+      </div>
+      <div class="pb-bar">
+        <div class="pb-meta"><b id="pbRoom">Living room</b><span id="pbProj">Concord Pacific · Concord Gardens</span></div>
+        <span class="pb-count"><b id="pbNum">01</b> / <span id="pbTot">06</span> · drag to reveal</span>
+      </div>
+      <div class="pb-thumbs" id="pbThumbs"></div>
     </div>
     <div class="svc-grid">
       <div class="svc-item"><svg class="ico"><use href="#i-sofa"/></svg><h3>Virtual staging</h3><p>Empty rooms furnished by real interior designers to match the home and the buyer.</p></div>
@@ -1380,29 +1409,52 @@ document.querySelectorAll('.compare').forEach(function(el){
 
 /* before/after flip book: shows before, flips to the staged "after" with a SOLD outcome, then advances.
    SOLD stats below are SAMPLE — swap for real case-study numbers from bellavirtual.com. */
+/* interactive before/after project browser — real Concord Pacific · Concord Gardens work.
+   Drag the divider to reveal before/after; click a thumbnail or arrow to change room. */
 (function(){
-  var inner=document.getElementById('flipInner'); if(!inner) return;
-  var beforeI=document.getElementById('baBefore'), afterI=document.getElementById('baAfter'),
-      nm=document.getElementById('soldName'), st=document.getElementById('soldStat'),
-      dotsWrap=document.getElementById('scDots'), dots=[], i=0, flipT, nextT;
-  var C='https://www.bellavirtual.com/cdn/shop/files/', W='?width=1400';
+  var wrap=document.getElementById('pbrowse'); if(!wrap) return;
+  var slider=document.getElementById('pbSlider'), beforeI=document.getElementById('pbBefore'),
+      afterI=document.getElementById('pbAfter'), roomEl=document.getElementById('pbRoom'),
+      numEl=document.getElementById('pbNum'), thumbsWrap=document.getElementById('pbThumbs');
+  var A='https://youngiethekim.github.io/bella-preview/assets/projects/';
   var PROJ=[
-    {b:C+'053-600-j-street.74270.p2k.027.print.jpg'+W, a:C+'053-600-j-street.74270.p2k.027.print_ly_tb.jpg'+W, name:'600 J Street', stat:'Sold over asking · 6 days on market'},
-    {b:C+'Josh_Goetz_-_Room_1_Den-Family_Room_1.jpg'+W, a:C+'Josh_Goetz_-_Room_1_Den-Family_Room_Tung_TP_1.jpg'+W, name:'Lodge estate den', stat:'Sold · 9 days on market'},
-    {b:C+'Gareth_Roberts_-_Living_room_to_Dinning_Room_S210-120_Bayview_Ave-13.jpg'+W, a:C+'Gareth_Roberts_-_Living_room_to_Dinning_Room_S210-120_Bayview_Ave-13_Tung_NAM.jpg'+W, name:'120 Bayview Ave, Toronto', stat:'Sold · 21 days on market'},
-    {b:C+'Unit_706_289_Drake_Street_Vancouver-dining_room-1.jpg'+W, a:C+'Unit_706_289_Drake_Street_Vancouver-dining_room-1_nhi_hb.jpg'+W, name:'289 Drake St, Vancouver', stat:'Leased · 30 days'}
+    {key:'living',  room:'Living room'},
+    {key:'kitchen', room:'Kitchen & island'},
+    {key:'dining',  room:'Kitchen & dining'},
+    {key:'primary', room:'Primary bedroom'},
+    {key:'bed2',    room:'Second bedroom'},
+    {key:'bed3',    room:'Bedroom'}
   ];
-  for(var k=0;k<PROJ.length;k++){ var b=document.createElement('button'); b.type='button'; b.setAttribute('aria-label','Project '+(k+1));
-    (function(x){ b.onclick=function(){ jump(x); }; })(k); dotsWrap.appendChild(b); dots.push(b); }
-  function paint(){ var p=PROJ[i]; beforeI.src=p.b; afterI.src=p.a; nm.textContent=p.name; st.textContent=p.stat; dots.forEach(function(d,x){ d.classList.toggle('on',x===i); }); }
-  function clear(){ clearTimeout(flipT); clearTimeout(nextT); }
-  function schedule(){ flipT=setTimeout(function(){ inner.classList.add('flipped'); }, 1900); nextT=setTimeout(function(){ step(1); }, 4700); }
-  function reset(){ inner.style.transition='none'; inner.classList.remove('flipped'); paint(); void inner.offsetWidth; inner.style.transition=''; }
-  function step(d){ clear(); i=(i+d+PROJ.length)%PROJ.length; reset(); schedule(); }
-  function jump(x){ clear(); i=x; reset(); schedule(); }
-  inner.parentNode.addEventListener('mouseenter',clear);
-  inner.parentNode.addEventListener('mouseleave',schedule);
-  paint(); schedule();
+  var i=0;
+  document.getElementById('pbTot').textContent=('0'+PROJ.length).slice(-2);
+  // build thumbnails
+  var thumbs=PROJ.map(function(p,x){
+    var b=document.createElement('button'); b.type='button'; b.setAttribute('aria-label',p.room);
+    b.innerHTML='<img src="'+A+p.key+'-after.jpg" alt="'+p.room+', staged" loading="lazy">';
+    b.onclick=function(){ go(x); };
+    thumbsWrap.appendChild(b); return b;
+  });
+  function setX(pct){ pct=Math.max(2,Math.min(98,pct)); slider.style.setProperty('--x',pct+'%'); }
+  function paint(){
+    var p=PROJ[i];
+    beforeI.src=A+p.key+'-before.jpg'; beforeI.alt=p.room+' before staging';
+    afterI.src=A+p.key+'-after.jpg';  afterI.alt=p.room+' staged by Bella';
+    roomEl.textContent=p.room; numEl.textContent=('0'+(i+1)).slice(-2);
+    thumbs.forEach(function(t,x){ t.classList.toggle('on',x===i); });
+    setX(56);
+  }
+  function go(x){ i=(x+PROJ.length)%PROJ.length; paint(); }
+  document.getElementById('pbPrev').onclick=function(){ go(i-1); };
+  document.getElementById('pbNext').onclick=function(){ go(i+1); };
+  // drag-to-reveal
+  var dragging=false;
+  function fromEvent(e){ var r=slider.getBoundingClientRect(); var cx=(e.touches?e.touches[0].clientX:e.clientX); setX((cx-r.left)/r.width*100); }
+  slider.addEventListener('pointerdown',function(e){ dragging=true; slider.setPointerCapture&&slider.setPointerCapture(e.pointerId); fromEvent(e); });
+  slider.addEventListener('pointermove',function(e){ if(dragging) fromEvent(e); });
+  window.addEventListener('pointerup',function(){ dragging=false; });
+  // keyboard
+  wrap.addEventListener('keydown',function(e){ if(e.key==='ArrowLeft'){go(i-1);} else if(e.key==='ArrowRight'){go(i+1);} });
+  paint();
 })();
 
 /* completed jobs gallery — real Bella before/after photos; outcome + customer are SAMPLE until real per-job data is wired in */
