@@ -138,6 +138,46 @@
   .qsub .lbl{flex:1;min-width:200px}
   .qsub .lbl b{font-weight:400;font-size:15px;display:block}
   .qsub .lbl span{font-size:12.5px;color:var(--faint)}
+  /* ===== accordion service sections ===== */
+  .divlab{display:flex;align-items:center;gap:14px;margin:30px 0 10px}
+  .divlab span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .divlab::before,.divlab::after{content:"";height:1px;background:var(--line);flex:1}
+  .core{background:#F7FAF7;border:1px solid #DDE7DD;padding:22px 24px;margin-bottom:6px}
+  .core-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .core-top .lbl{flex:1;min-width:200px}
+  .core-top .lbl b{font-weight:400;font-size:16.5px;display:block}
+  .core-top .lbl span{font-size:13px;color:var(--faint)}
+  .core .removal-row{display:flex;align-items:center;gap:16px;margin-top:16px;padding-top:16px;border-top:1px solid #DDE7DD}
+  .core .removal-row .lbl{flex:1}
+  .core .removal-row .lbl b{font-weight:400;font-size:15px;display:block}
+  .core .removal-row .lbl span{font-size:12.5px;color:var(--faint)}
+  .secs{display:flex;flex-direction:column;gap:6px}
+  .sec{background:#fff;border:1px solid var(--line);transition:border-color .15s}
+  .sec.open{border-color:#CFC9C0}
+  .sec-head{display:flex;align-items:center;gap:16px;padding:22px 24px;cursor:pointer;user-select:none}
+  .sec-q{flex:1;min-width:180px}
+  .sec-q b{font-size:16.5px;font-weight:400;display:block}
+  .sec-q span{font-size:13px;color:var(--faint);display:block;margin-top:3px}
+  .sec-price{font-size:13px;color:var(--faint);white-space:nowrap}
+  .sec.on .sec-price{color:var(--green)}
+  .sectog{width:52px;height:30px;border-radius:99px;background:var(--line);border:0;cursor:pointer;position:relative;transition:background .2s;flex:0 0 52px}
+  .sectog::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+  .sectog.on{background:var(--green)}
+  .sectog.on::after{transform:translateX(22px)}
+  .sec-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease}
+  .sec.open .sec-body{grid-template-rows:1fr}
+  .sec-body>.inner{overflow:hidden}
+  .sec-opts{padding:4px 24px 20px;border-top:1px solid var(--line-2)}
+  .subrow{display:flex;align-items:center;gap:16px;padding:16px 0;border-bottom:1px solid var(--line-2);flex-wrap:wrap}
+  .subrow:last-child{border-bottom:0}
+  .subrow .lbl{flex:1;min-width:180px}
+  .subrow .lbl b{font-weight:400;font-size:15px;display:block}
+  .subrow .lbl span{font-size:12.5px;color:var(--faint)}
+  .subrow .price{font-size:13.5px;color:var(--soft);white-space:nowrap}
+  .subrow .stepper{transition:opacity .15s}
+  .subrow.off .stepper{opacity:.35;pointer-events:none}
+  .sec-note{font-size:13px;color:var(--soft);line-height:1.5;padding:16px 0 4px}
+  .sec-note b{color:var(--ink);font-weight:400}
   /* 360 example modal */
   .pmodal{position:fixed;inset:0;z-index:120;background:rgba(16,14,12,.55);display:none;align-items:center;justify-content:center;padding:6vh 5vw}
   .pmodal.open{display:flex}
@@ -418,36 +458,34 @@
     var p=P[state.proj], box=document.getElementById('config'); box.innerHTML='';
     if(p.path==='listing'){
       document.getElementById('s2title').textContent='Build your order';
-      document.getElementById('s2sub').textContent=(state.commercial?'Start with a package or pick services à la carte. Each one lists exactly what we need from you.':'Start with a package, or pick services à la carte. Each one lists exactly what we need from you.');
+      document.getElementById('s2sub').textContent='Start with a package, then switch on only what you need. Each section says what it does and what we’ll need from you.';
       box.innerHTML=
-        '<p class="pkg-lead">Pick a starting point.</p>'
-       +'<div class="modebar" id="modebar">'
-         +modeChip('stage','Staged photos','')
-         +modeChip('ready','Listing-Ready','Popular')
-         +modeChip('full','Full Exposure','')
-         +modeChip('ala','À la carte','')
-         +modeChip('custom','Custom','')
+        '<div class="modebar" id="modebar">'
+         +modeChip('stage','Just staging','')
+         +modeChip('ready','Listing-ready','Popular')
+         +modeChip('full','Everything','')
        +'</div>'
-       +'<p class="menu-lead">Here’s what’s included — check or uncheck anything below.</p>'
-       +'<div class="menu" id="menu">'
-         +catHead('Virtual staging','We need: empty, well-lit photos of each room')
-         +row('Virtual staging', 'Empty rooms furnished by real interior designers · '+money(stageUnit())+' each, volume discounts apply', stepper('photos'), 'stage', 'sofa')
-         +toggleRow('Furniture removal','Occupied or cluttered? We clear the room first, so it can be staged clean.','removal','<span class="freeprice">Included free</span>','','eraser')
-         +powerHead()
-         +catHead('Virtual renovation','We need: photos of the dated space','Buyers scroll right past tired kitchens and baths. A virtual reno shows the home at its potential — no contractor, no delay.')
-         +toggleRow('Virtual renovation','Modernize dated floors, cabinets, and finishes before we stage.','reno','+'+money(PR.RENO)+'/photo','','roller')
-         +catHead('Photo editing','Make the photos you have pop','Small edits, big first impression. Bright skies and clean, warm rooms get more clicks and saves online.')
-         +toggleRow('Day-to-dusk edits','Twilight hero shots that stop the scroll. You provide a daytime exterior photo.','dusk','+'+money(PR.DUSK)+'/photo','dusk','sun')
-         +toggleRow('Sky replacement &amp; retouching','Swap grey skies, clean up blemishes. You provide the exterior photos.','sky','+'+money(PR.SKY)+'/photo','','cloud')
-         +catHead('Floor plans','We need: architectural blueprints, or dimensions for each floor','Listings with a floor plan get more qualified showings — buyers understand the space before they visit. Priced per floor. You can upload your blueprints or measurements at checkout.')
-         +toggleStep('2D floor plan','A clean, labelled layout — one per floor','floor2d','fp2dn','+'+money(PR.FP2D)+' / floor','floor2d','plan')
-         +toggleStep('3D floor plan','Furnished, so buyers can walk each level','floor','fpn','+'+money(fp3d())+' / floor','floor','plan')
-         +catHead('Tours','','A 360° tour keeps buyers on your listing longer, and out-of-town buyers can walk it without booking a showing.')
-         +'<div class="qrow"><svg class="qico"><use href="#i-360"/></svg><span class="lbl"><b>360° virtual staging</b><span>We stitch and stage your 360° photos into one walkable tour. You provide 360° photos. <button type="button" class="linkbtn" id="panoExample">See a sample &amp; what we need →</button></span></span><span class="price">+$'+PR.PANO+' / photo</span><button class="toggle" data-tog="pano360"></button></div>'
-         +'<div class="qsub" id="panoSub"><span class="lbl"><b>How many 360° photos?</b><span>Usually one per room you want walkable</span></span>'+stepper('pano')+'</div>'
-         +toggleRow('Virtual house tour','A walkable tour built from your listing photos','tour','+'+money(PR.TOUR),'tour','tour')
+       +'<div class="divlab"><span>Your services</span></div>'
+       // CORE — virtual staging is always included
+       +'<div class="core"><div class="core-top">'+qicon('sofa')
+         +'<span class="lbl"><b>Virtual staging</b><span>Empty rooms furnished by real interior designers · '+money(stageUnit())+' each, volume discounts apply'+exLink('stage')+'</span></span>'
+         +stepper('photos')+'</div>'
+         +'<div class="removal-row" id="removalRow"><span class="lbl"><b>Furniture removal</b><span>Occupied or cluttered? We clear the room first, then stage it clean.</span></span><span class="freeprice">Included free</span><button class="toggle" data-tog="removal"></button></div>'
        +'</div>'
-       +'<div class="customnote" id="customNote"><label>Tell us about your listing</label><textarea id="fNote" placeholder="Anything special — number of properties, unusual rooms, deadlines, brand requirements…"></textarea><p class="cn-help">Our team will tailor a quote and confirm what we need from you.</p></div>';
+       // ACCORDION SECTIONS — each a plain-language question
+       +'<div class="secs">'
+         +section('reno','Do you need to modernize it first?','Update dated floors, cabinets and finishes before staging — a virtual renovation.',
+             '<div class="sec-note">We modernize the finishes on <b>every staged photo</b>, then furnish. <b>+'+money(PR.RENO)+' / photo</b>. You provide photos of the dated space.</div>')
+         +section('edit','Do you need photo editing?','Small edits, big first impression — brighter, warmer, more clicks online.',
+             subRow('Day-to-dusk edits','Turn a daytime exterior into a twilight hero shot. You provide a daytime photo.','dusk','+'+money(PR.DUSK)+' / photo','dusk')
+            +subRow('Sky replacement &amp; retouching','Swap grey skies, clean up blemishes. You provide the exterior photos.','sky','+'+money(PR.SKY)+' / photo',''))
+         +section('floor','Do you need floor plans?','Buyers understand the space before they visit. Priced per floor.',
+             subStep('2D floor plan','A clean, labelled layout','floor2d','fp2dn','+'+money(PR.FP2D)+' / floor','floor2d')
+            +subStep('3D floor plan','Furnished, so buyers can walk each level','floor','fpn','+'+money(fp3d())+' / floor','floor'))
+         +section('tour','Do you need a 3D tour?','Keep buyers on your listing longer; out-of-town buyers can walk it without a showing.',
+             '<div class="subrow off" id="panoRow" data-substep="pano360"><span class="lbl"><b>360° virtual staging</b><span>We stitch and stage your 360° photos into one walkable tour. <button type="button" class="linkbtn" id="panoExample">See a sample &amp; what we need →</button></span></span><span class="stepper" data-step="pano"><button data-d="-1">−</button><span class="v" id="v_pano"></span><button data-d="1">+</button></span><span class="price">+$'+PR.PANO+' / photo</span><button class="toggle" data-tog="pano360"></button></div>'
+            +subRow('Virtual house tour','A walkable tour built from your listing photos','tour','+'+money(PR.TOUR),'tour'))
+       +'</div>';
       if(saved.length){
         box.insertAdjacentHTML('beforeend','<div class="saved-note"><span>You saved <b>'+saved.length+' style'+(saved.length>1?'s':'')+'</b> in the lookbook, and we will use them.</span><a href="bella-lookbook.html">Edit in lookbook →</a></div>');
       } else {
@@ -460,7 +498,7 @@
         applyMode(state.proj==='dated'?'full':'ready');
         state.removal=(state.proj==='occupied');
         if(state.proj==='dated') state.reno=true;
-        defaultedFor=state.proj; sync();
+        defaultedFor=state.proj; sync(); openAllSecs();
       }
     } else {
       document.getElementById('s2title').textContent='What do you need to show?';
@@ -486,6 +524,36 @@
   function stepper(key){ return '<span class="stepper" data-step="'+key+'"><button data-d="-1">−</button><span class="v" id="v_'+key+'"></span><button data-d="1">+</button></span>'; }
   function toggleRow(name,sub,key,price,ex,ic){ return '<div class="qrow">'+qicon(ic)+'<span class="lbl"><b>'+name+'</b><span>'+sub+exLink(ex)+'</span></span><span class="price">'+price+'</span><button class="toggle" data-tog="'+key+'"></button></div>'; }
   function toggleStep(name,sub,tkey,qkey,price,ex,ic){ return '<div class="qrow">'+qicon(ic)+'<span class="lbl"><b>'+name+'</b><span>'+sub+exLink(ex)+'</span></span><span class="stepper" data-step="'+qkey+'"><button data-d="-1">−</button><span class="v" id="v_'+qkey+'"></span><button data-d="1">+</button></span><span class="price">'+price+'</span><button class="toggle" data-tog="'+tkey+'"></button></div>'; }
+  // accordion section (question-framed) + its sub-rows
+  function section(key,q,sub,body){
+    return '<div class="sec" data-sec="'+key+'"><div class="sec-head" data-sechead="'+key+'">'
+      +'<span class="sec-q"><b>'+q+'</b><span>'+sub+'</span></span>'
+      +'<span class="sec-price" id="sp_'+key+'"></span>'
+      +'<button class="sectog" data-sectog="'+key+'" type="button" aria-label="Toggle"></button></div>'
+      +'<div class="sec-body"><div class="inner"><div class="sec-opts">'+body+'</div></div></div></div>';
+  }
+  function subRow(name,sub,tkey,price,ex){ return '<div class="subrow"><span class="lbl"><b>'+name+'</b><span>'+sub+exLink(ex)+'</span></span><span class="price">'+price+'</span><button class="toggle" data-tog="'+tkey+'"></button></div>'; }
+  function subStep(name,sub,tkey,qkey,price,ex){ return '<div class="subrow off" data-substep="'+tkey+'"><span class="lbl"><b>'+name+'</b><span>'+sub+exLink(ex)+'</span></span><span class="stepper" data-step="'+qkey+'"><button data-d="-1">−</button><span class="v" id="v_'+qkey+'"></span><button data-d="1">+</button></span><span class="price">'+price+'</span><button class="toggle" data-tog="'+tkey+'"></button></div>'; }
+  // section grouping: which state fields each question controls
+  var SECMAP={reno:['reno'],edit:['dusk','sky'],floor:['floor2d','floor'],tour:['pano360','tour']};
+  var SECDEF={reno:'reno',edit:'dusk',floor:'floor',tour:'pano360'};
+  function secOn(key){ return SECMAP[key].some(function(f){return state[f];}); }
+  function openAllSecs(){ Object.keys(SECMAP).forEach(function(key){ var s=document.querySelector('.sec[data-sec="'+key+'"]'); if(s) s.classList.toggle('open', secOn(key)); }); }
+  function toggleSec(key){
+    if(secOn(key)){ SECMAP[key].forEach(function(f){ state[f]=false; }); }
+    else { state[SECDEF[key]]=true; }
+    reMode();
+    var s=document.querySelector('.sec[data-sec="'+key+'"]'); if(s) s.classList.toggle('open', secOn(key));
+    sync();
+  }
+  function secTotal(key){
+    var n=0;
+    if(key==='reno'){ if(state.reno) n=PR.RENO*state.photos; }
+    else if(key==='edit'){ if(state.dusk)n+=PR.DUSK*state.photos; if(state.sky)n+=PR.SKY*state.photos; }
+    else if(key==='floor'){ if(state.floor2d)n+=PR.FP2D*state.fp2dn; if(state.floor)n+=fp3d()*state.fpn; }
+    else if(key==='tour'){ if(state.pano360)n+=PR.PANO*state.pano; if(state.tour)n+=PR.TOUR; }
+    return n;
+  }
 
   // starting points: 3 packages (presets) + à la carte + custom
   var defaultedFor=null;   // which project we've already pre-recommended a package for
@@ -496,7 +564,7 @@
   function matchPkg(){ for(var k in PKG){ var s=PKG[k], ok=true; FIELDS.forEach(function(f){ if(state[f]!==s[f]) ok=false; }); if(ok) return k; } return null; }
   function applyMode(m){
     if(PKG[m]){ var s=PKG[m]; FIELDS.forEach(function(f){ state[f]=s[f]; }); if(m==='full'&&state.pano<1) state.pano=3; }
-    state.mode=m; sync();
+    state.mode=m; sync(); openAllSecs();
   }
   function reMode(){ if(state.mode==='custom') return; state.mode = matchPkg() || 'ala'; }  // manual edits => package or à la carte
   function syncMode(){
@@ -516,11 +584,30 @@
       t.onclick=function(){ state[key]=!state[key]; reMode(); sync(); };
     });
     document.querySelectorAll('.modechip[data-mode]').forEach(function(el){ el.onclick=function(){ applyMode(el.getAttribute('data-mode')); }; });
+    // accordion: click header to peek open/closed (without changing on-state)
+    document.querySelectorAll('.sec-head').forEach(function(h){
+      h.onclick=function(e){ if(e.target.closest('.sectog')) return; var sec=h.parentNode; sec.classList.toggle('open'); };
+    });
+    // accordion: master toggle turns the whole question on/off
+    document.querySelectorAll('.sectog').forEach(function(t){
+      t.onclick=function(e){ e.stopPropagation(); toggleSec(t.getAttribute('data-sectog')); };
+    });
   }
   function sync(){
     ['photos','rint','rext','rfp','pano','fpn','fp2dn'].forEach(function(k){ var el=document.getElementById('v_'+k); if(el) el.textContent=state[k]; });
     document.querySelectorAll('.toggle').forEach(function(t){ t.classList.toggle('on', !!state[t.getAttribute('data-tog')]); });
     var ps=document.getElementById('panoSub'); if(ps) ps.classList.toggle('show', !!state.pano360);
+    // accordion section states + prices
+    Object.keys(SECMAP).forEach(function(key){
+      var sec=document.querySelector('.sec[data-sec="'+key+'"]'); if(!sec) return;
+      var on=secOn(key); sec.classList.toggle('on',on);
+      var tg=sec.querySelector('.sectog'); if(tg) tg.classList.toggle('on',on);
+      var sp=document.getElementById('sp_'+key); if(sp){ var tt=secTotal(key); sp.textContent= tt>0?('+'+money(tt)):(on?'':'Add'); }
+    });
+    // grey out a service's stepper until its own toggle is on
+    document.querySelectorAll('.subrow[data-substep]').forEach(function(r){ r.classList.toggle('off', !state[r.getAttribute('data-substep')]); });
+    // furniture removal only makes sense for an occupied listing
+    var rr=document.getElementById('removalRow'); if(rr) rr.style.display=(state.proj==='occupied')?'flex':'none';
     syncMode();
     document.getElementById('run2').textContent=money(lines().total);
   }
