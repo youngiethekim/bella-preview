@@ -145,6 +145,11 @@
   .pmodal .pano{height:min(46vh,320px);border-radius:8px}
   .pmodal .pclose{position:absolute;top:16px;right:16px;width:38px;height:38px;border-radius:50%;background:rgba(20,18,16,.72);border:0;color:#fff;font-size:23px;line-height:1;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.4);z-index:5}
   .pmodal .pcap{color:var(--soft);font-size:12.5px;margin-top:12px;text-align:center;max-width:52ch;margin-left:auto;margin-right:auto}
+  .exreq{margin-top:14px;background:#F4F7F4;border:1px solid #DDE7DD;padding:15px 17px}
+  .exreq-h{display:block;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--green);margin-bottom:9px}
+  .exreq ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+  .exreq li{position:relative;padding-left:22px;font-size:13px;color:var(--ink);line-height:1.45}
+  .exreq li::before{content:"✓";position:absolute;left:0;top:0;color:var(--green);font-size:13px}
   /* volume-tier note under the config */
   .tiers{font-size:12.5px;color:var(--soft);text-align:center;margin-top:8px;padding:2px 10px}
   .tiers b{color:var(--ink);font-weight:500}
@@ -304,15 +309,17 @@
   <div class="box">
     <div class="exwrap"><button class="exba" id="exToggle" type="button">See before</button><img id="exImg" alt="Service example"></div>
     <p class="pcap" id="exCap"></p>
+    <div class="exreq" id="exReq"></div>
   </div>
 </div>
 
-<!-- 360 example (opens from the "See an example" link on Step 2) -->
+<!-- 360 example (opens from the "See a sample" link on Step 2) -->
 <div class="pmodal" id="panoModal">
   <button class="pclose" id="panoClose" type="button" aria-label="Close">×</button>
   <div class="box">
-    <div class="pano" id="pano"><div class="pano-img" id="panoImg"></div><span class="pano-tag">Example 360° tour · drag to look around</span></div>
-    <p class="pcap">A sample stitched tour. Your photographer captures the 360° photos on site — we stitch and virtually stage them into one walkable tour like this.</p>
+    <div class="pano" id="pano"><div class="pano-img" id="panoImg"></div><span class="pano-tag">Sample 360° tour · drag to look around</span></div>
+    <p class="pcap">A sample stitched tour. We stitch and virtually stage your 360° photos into one walkable tour like this.</p>
+    <div class="exreq"><span class="exreq-h">What we need from you</span><ul><li>360° photos of each room you want walkable (equirectangular JPGs).</li><li>Ask your real estate photographer to shoot these — most already offer 360° capture.</li></ul></div>
   </div>
 </div>
 
@@ -331,7 +338,7 @@
   var CFP3D=110;                             // commercial 3D floor plan
   function stageUnit(){ var p=P[state.proj]; if(!p||!p.unit) return 0; return state.commercial?(CU[state.proj]||p.unit):p.unit; }
   function fp3d(){ return state.commercial?CFP3D:PR.FP3D; }
-  var state={ proj:null, commercial:false, photos:8, mode:'ready', removal:false, reno:false, floor:false, floor2d:false, tour:false, dusk:false, sky:false, pano360:false, pano:3,
+  var state={ proj:null, commercial:false, photos:8, mode:'ready', removal:false, reno:false, floor:false, fpn:1, floor2d:false, fp2dn:1, tour:false, dusk:false, sky:false, pano360:false, pano:3,
               rint:1, rext:1, rfp:1, useInt:true, useExt:true, useFp:true };
 
   // saved lookbook pieces
@@ -350,8 +357,8 @@
       L.push(['Virtual staging × '+state.photos+' photos', money(stageCost)]); total+=stageCost-dStage; disc+=dStage;
       if(state.removal){ L.push(['Furniture removal', 'Free']); }
       if(state.reno){ var renoCost=PR.RENO*state.photos, dReno=renoCost*volDisc(state.photos); L.push(['Virtual renovation × '+state.photos, money(renoCost)]); total+=renoCost-dReno; disc+=dReno; }
-      if(state.floor2d){ L.push(['2D floor plan', money(PR.FP2D)]); total+=PR.FP2D; }
-      if(state.floor){ L.push(['3D floor plan', money(fp3d())]); total+=fp3d(); }
+      if(state.floor2d){ L.push(['2D floor plan × '+state.fp2dn+(state.fp2dn>1?' floors':' floor'), money(PR.FP2D*state.fp2dn)]); total+=PR.FP2D*state.fp2dn; }
+      if(state.floor){ L.push(['3D floor plan × '+state.fpn+(state.fpn>1?' floors':' floor'), money(fp3d()*state.fpn)]); total+=fp3d()*state.fpn; }
       if(state.tour){ L.push(['Virtual house tour', money(PR.TOUR)]); total+=PR.TOUR; }
       if(state.dusk){ var duskCost=PR.DUSK*state.photos, dDusk=duskCost*volDisc(state.photos); L.push(['Day-to-dusk edits × '+state.photos, money(duskCost)]); total+=duskCost-dDusk; disc+=dDusk; }
       if(state.sky){ var skyCost=PR.SKY*state.photos, dSky=skyCost*volDisc(state.photos); L.push(['Sky replacement & retouching × '+state.photos, money(skyCost)]); total+=skyCost-dSky; disc+=dSky; }
@@ -403,11 +410,11 @@
          +catHead('Photo editing','Make the photos you have pop','Small edits, big first impression. Bright skies and clean, warm rooms get more clicks and saves online.')
          +toggleRow('Day-to-dusk edits','Twilight hero shots that stop the scroll. You provide a daytime exterior photo.','dusk','+'+money(PR.DUSK)+'/photo','dusk','sun')
          +toggleRow('Sky replacement &amp; retouching','Swap grey skies, clean up blemishes. You provide the exterior photos.','sky','+'+money(PR.SKY)+'/photo','','cloud')
-         +catHead('Floor plans','We need: rough measurements or an existing sketch','Listings with a floor plan get more qualified showings — buyers understand the space before they visit.')
-         +toggleRow('2D floor plan','A clean, labelled layout','floor2d','+'+money(PR.FP2D),'','plan')
-         +toggleRow('3D floor plan','Furnished, so buyers can walk the layout','floor','+'+money(fp3d()),'floor','plan')
+         +catHead('Floor plans','We need: rough measurements or a sketch for each floor','Listings with a floor plan get more qualified showings — buyers understand the space before they visit. Priced per floor.')
+         +toggleStep('2D floor plan','A clean, labelled layout — one per floor','floor2d','fp2dn','+'+money(PR.FP2D)+' / floor','floor2d','plan')
+         +toggleStep('3D floor plan','Furnished, so buyers can walk each level','floor','fpn','+'+money(fp3d())+' / floor','floor','plan')
          +catHead('Tours','','A 360° tour keeps buyers on your listing longer, and out-of-town buyers can walk it without booking a showing.')
-         +'<div class="qrow"><svg class="qico"><use href="#i-360"/></svg><span class="lbl"><b>360° virtual staging</b><span>We stitch and stage your 360° photos into one walkable tour. You provide 360° photos. <button type="button" class="linkbtn" id="panoExample">See an example →</button></span></span><span class="price">+$'+PR.PANO+' / photo</span><button class="toggle" data-tog="pano360"></button></div>'
+         +'<div class="qrow"><svg class="qico"><use href="#i-360"/></svg><span class="lbl"><b>360° virtual staging</b><span>We stitch and stage your 360° photos into one walkable tour. You provide 360° photos. <button type="button" class="linkbtn" id="panoExample">See a sample &amp; what we need →</button></span></span><span class="price">+$'+PR.PANO+' / photo</span><button class="toggle" data-tog="pano360"></button></div>'
          +'<div class="qsub" id="panoSub"><span class="lbl"><b>How many 360° photos?</b><span>Usually one per room you want walkable</span></span>'+stepper('pano')+'</div>'
          +toggleRow('Virtual house tour','A walkable tour built from your listing photos','tour','+'+money(PR.TOUR),'tour','tour')
        +'</div>'
@@ -437,7 +444,7 @@
     box.insertAdjacentHTML('beforeend','<p class="tiers">Volume pricing, applied automatically to every service — <b>3+</b> save 5% · <b>6+</b> save 10% · <b>11+</b> save 15% · <b>21+</b> save 20%.</p>');
     bind(); sync();
   }
-  function exLink(ex){ return ex? ' <button type="button" class="linkbtn" data-ex="'+ex+'">See an example →</button>' : ''; }
+  function exLink(ex){ return ex? ' <button type="button" class="linkbtn" data-ex="'+ex+'">See a sample &amp; what we need →</button>' : ''; }
   function qicon(ic){ return ic? '<svg class="qico"><use href="#i-'+ic+'"/></svg>' : ''; }
   function tip(t){ return '<span class="tip" tabindex="0"><svg class="tipi"><use href="#i-info"/></svg><span class="tipbox">'+t+'</span></span>'; }
   function catHead(l,d,tp){ return '<div class="cat-head"><span class="cat-l">'+l+'</span>'+(d?'<span class="cat-d">'+d+'</span>':'')+(tp?tip(tp):'')+'</div>'; }
@@ -470,7 +477,7 @@
     document.querySelectorAll('.stepper').forEach(function(s){
       var key=s.getAttribute('data-step');
       s.querySelectorAll('button').forEach(function(b){ b.onclick=function(){
-        var d=+b.getAttribute('data-d'); var min=(key==='photos'||key==='pano')?1:0;
+        var d=+b.getAttribute('data-d'); var min=(key==='photos'||key==='pano'||key==='fpn'||key==='fp2dn')?1:0;
         state[key]=Math.max(min,(state[key]||0)+d); sync();
       };});
     });
@@ -481,7 +488,7 @@
     document.querySelectorAll('.modechip[data-mode]').forEach(function(el){ el.onclick=function(){ applyMode(el.getAttribute('data-mode')); }; });
   }
   function sync(){
-    ['photos','rint','rext','rfp','pano'].forEach(function(k){ var el=document.getElementById('v_'+k); if(el) el.textContent=state[k]; });
+    ['photos','rint','rext','rfp','pano','fpn','fp2dn'].forEach(function(k){ var el=document.getElementById('v_'+k); if(el) el.textContent=state[k]; });
     document.querySelectorAll('.toggle').forEach(function(t){ t.classList.toggle('on', !!state[t.getAttribute('data-tog')]); });
     var ps=document.getElementById('panoSub'); if(ps) ps.classList.toggle('show', !!state.pano360);
     syncMode();
@@ -568,18 +575,27 @@
   var CDN='https://www.bellavirtual.com/cdn/shop/files/', W='?width=1400';
   var EX={
     stage:{ before:CDN+'053-600-j-street.74270.p2k.027.print.jpg'+W, after:CDN+'053-600-j-street.74270.p2k.027.print_ly_tb.jpg'+W,
-            cap:'Virtual staging — a real Bella project at 600 J Street. Empty room, furnished by a designer.' },
+            cap:'Virtual staging — a real Bella project at 600 J Street. Empty room, furnished by a designer.',
+            req:['Empty, well-lit photos of each room you want staged','Shoot the whole room in frame, at about eye level','Your real estate photographer can provide these'] },
     dusk:{  before:CDN+'Calvin_Theme_Image_Nov_16_2025.jpg'+W, after:CDN+'Calvin_Theme_Dawn_Image.jpg'+W,
-            cap:'Day-to-dusk edit — real Bella work. A daytime exterior turned into a twilight hero shot.' },
+            cap:'Day-to-dusk edit — real Bella work. A daytime exterior turned into a twilight hero shot.',
+            req:['One daytime exterior photo per shot you want edited','A clear, unobstructed view of the front of the home'] },
     rint:{  after:CDN+'INT_201_Bedroom.jpg'+W,
-            cap:'Interior 3D render — real Bella work, built from plans before the home exists.' },
+            cap:'Interior 3D render — real Bella work, built from plans before the home exists.',
+            req:['Architectural floor plans or drawings (PDF or CAD)','Any finishes or material selections you want shown'] },
     /* PLACEHOLDER stand-ins: nearest real Bella image until true samples are supplied */
+    floor2d:{ after:CDN+'Living_Room_e6c83783-d966-4eca-b94d-1e7d1e6621cd.png'+W, placeholder:true,
+            cap:'A clean, labelled 2D floor plan gives buyers the layout at a glance. Real 2D sample coming.',
+            req:['Rough measurements or an existing sketch','One set per floor of the home'] },
     floor:{ after:CDN+'Living_Room_e6c83783-d966-4eca-b94d-1e7d1e6621cd.png'+W, placeholder:true,
-            cap:'A furnished 3D floor plan renders this layout from above so buyers can walk it. Real floor-plan sample coming.' },
+            cap:'A furnished 3D floor plan renders this layout from above so buyers can walk it. Real floor-plan sample coming.',
+            req:['Rough measurements or an existing sketch','One set per floor of the home'] },
     tour:{  after:CDN+'Minimal_Scandinavian_Kitchen_2025.jpg'+W, placeholder:true,
-            cap:'A virtual house tour links your staged rooms into one walkthrough. Real tour sample coming.' },
+            cap:'A virtual house tour links your staged rooms into one walkthrough. Real tour sample coming.',
+            req:['Your finished listing photos — we stitch them together','Photos in shooting order help us sequence the walk'] },
     rext:{  after:CDN+'INT_201_Bedroom.jpg'+W, placeholder:true,
-            cap:'Exterior renders show elevations, streetscapes and aerials from your drawings. Real exterior sample coming.' }
+            cap:'Exterior renders show elevations, streetscapes and aerials from your drawings. Real exterior sample coming.',
+            req:['Elevations or site drawings','Any material, landscaping, or lighting direction'] }
   };
   (function(){
     var em=document.getElementById('exModal'), img=document.getElementById('exImg'),
@@ -592,6 +608,9 @@
       after=true; render();
       tog.style.display = cur.before ? '' : 'none'; tog.textContent='See before';
       cap.innerHTML=(cur.placeholder?'<span class="exbadge">Illustrative</span>':'')+cur.cap;
+      var rq=document.getElementById('exReq');
+      if(cur.req && cur.req.length){ rq.innerHTML='<span class="exreq-h">What we need from you</span><ul>'+cur.req.map(function(r){return '<li>'+r+'</li>';}).join('')+'</ul>'; rq.style.display=''; }
+      else { rq.style.display='none'; }
       em.classList.add('open');
     });
     tog.onclick=function(){ after=!after; render(); tog.textContent=after?'See before':'See after'; };
