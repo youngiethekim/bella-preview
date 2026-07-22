@@ -420,7 +420,7 @@
       document.getElementById('s2title').textContent='Build your order';
       document.getElementById('s2sub').textContent=(state.commercial?'Start with a package or pick services à la carte. Each one lists exactly what we need from you.':'Start with a package, or pick services à la carte. Each one lists exactly what we need from you.');
       box.innerHTML=
-        '<p class="pkg-lead">Pick a starting point.</p>'
+        '<p class="pkg-lead">How would you like to start?</p>'
        +'<div class="modebar" id="modebar">'
          +modeChip('stage','Staged photos','')
          +modeChip('ready','Listing-Ready','Popular')
@@ -433,9 +433,8 @@
          +catHead('Virtual staging','We need: empty, well-lit photos of each room')
          +row('Virtual staging', 'Empty rooms furnished by real interior designers · '+money(stageUnit())+' each, volume discounts apply', stepper('photos'), 'stage', 'sofa')
          +toggleRow('Furniture removal','Occupied or cluttered? We clear the room first, so it can be staged clean.','removal','<span class="freeprice">Included free</span>','','eraser')
+         +toggleRow('Virtual renovation','Modernize dated floors, cabinets, and finishes before we stage — buyers scroll past tired kitchens and baths. We need photos of the dated space.','reno','+'+money(PR.RENO)+'/photo','','roller')
          +powerHead()
-         +catHead('Virtual renovation','We need: photos of the dated space','Buyers scroll right past tired kitchens and baths. A virtual reno shows the home at its potential — no contractor, no delay.')
-         +toggleRow('Virtual renovation','Modernize dated floors, cabinets, and finishes before we stage.','reno','+'+money(PR.RENO)+'/photo','','roller')
          +catHead('Photo editing','Make the photos you have pop','Small edits, big first impression. Bright skies and clean, warm rooms get more clicks and saves online.')
          +toggleRow('Day-to-dusk edits','Twilight hero shots that stop the scroll. You provide a daytime exterior photo.','dusk','+'+money(PR.DUSK)+'/photo','dusk','sun')
          +toggleRow('Sky replacement &amp; retouching','Swap grey skies, clean up blemishes. You provide the exterior photos.','sky','+'+money(PR.SKY)+'/photo','','cloud')
