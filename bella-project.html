@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Your Project — Brochures &amp; Listing Website | Bella Virtual</title>
-<meta name="description" content="Turn your Bella order into a print-ready listing brochure and a one-listing website, auto-filled from your staged photos.">
+<title>Your Project — Downloads, Brochures &amp; Listing Website | Bella Virtual</title>
+<meta name="description" content="Your Bella project workspace: download staged photos, watermark as virtually staged, add your brand, and build a listing brochure and website.">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,90 +18,128 @@
   img{display:block;max-width:100%}a{text-decoration:none;color:inherit}
   h1,h2,h3{font-weight:300;letter-spacing:-.012em;line-height:1.12}
   .micro{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
-  .btn{display:inline-block;background:var(--ink);color:#fff;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;padding:13px 22px;cursor:pointer;border:0;font-family:inherit;transition:opacity .2s}
+  .btn{display:inline-block;background:var(--ink);color:#fff;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;padding:12px 20px;cursor:pointer;border:0;font-family:inherit;transition:opacity .2s;text-align:center}
   .btn:hover{opacity:.85}.btn-line{background:transparent;color:var(--ink);border:1px solid var(--ink)}.btn-line:hover{background:var(--ink);color:#fff}
+  .btn-sm{padding:9px 14px;font-size:11px}
   header{position:sticky;top:0;z-index:40;background:rgba(253,252,250,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line-2)}
-  .nav{display:flex;align-items:center;gap:20px;height:64px;padding:0 var(--pad);max-width:1280px;margin:0 auto}
+  .nav{display:flex;align-items:center;gap:16px;height:64px;padding:0 var(--pad);max-width:1280px;margin:0 auto}
   .mark{font-size:15px;letter-spacing:.5em;font-weight:400}
   .nav .sp{margin-left:auto}
   .nav .pill{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);border:1px solid rgba(62,107,76,.4);border-radius:999px;padding:6px 13px}
+  .acct{display:flex;align-items:center;gap:9px;font-size:12.5px;letter-spacing:.03em;color:var(--soft)}
+  .acct .av{width:30px;height:30px;border-radius:50%;background:#e6e1d9 center/cover;border:1px solid var(--line)}
 
   .wrap{max-width:1280px;margin:0 auto;padding:0 var(--pad)}
-  /* order summary bar */
   .summary{border-bottom:1px solid var(--line);background:#fff}
-  .summary-in{max-width:1280px;margin:0 auto;padding:26px var(--pad);display:flex;align-items:center;gap:20px 40px;flex-wrap:wrap}
-  .summary h1{font-size:clamp(22px,2.4vw,30px)}
+  .summary-in{max-width:1280px;margin:0 auto;padding:24px var(--pad);display:flex;align-items:center;gap:18px 40px;flex-wrap:wrap}
+  .summary h1{font-size:clamp(21px,2.3vw,29px);margin-top:9px}
   .summary .sub{font-size:13.5px;color:var(--soft);margin-top:4px}
-  .summary .stat{display:flex;gap:28px;margin-left:auto;flex-wrap:wrap}
+  .summary .stat{display:flex;gap:26px;margin-left:auto;flex-wrap:wrap}
   .summary .stat div b{display:block;font-size:19px;font-weight:400}
   .summary .stat div span{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
   .badge-done{display:inline-flex;align-items:center;gap:7px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:var(--green);padding:5px 12px}
 
-  /* main layout */
-  .grid{display:grid;grid-template-columns:340px 1fr;gap:36px;padding:40px var(--pad) 80px;max-width:1280px;margin:0 auto;align-items:start}
-  @media(max-width:920px){.grid{grid-template-columns:1fr;gap:28px}}
+  section.blk{padding:34px var(--pad) 0;max-width:1280px;margin:0 auto}
+  .blk .hd{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+  .blk .hd h2{font-size:17px}
+  .blk .hd .micro{margin-left:auto}
+  .flag{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(231,195,106,.55);padding:2px 7px;border-radius:99px}
+
+  /* delivered files */
+  .files{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  @media(max-width:900px){.files{grid-template-columns:1fr 1fr}}
+  .file{position:relative;border:1px solid var(--line);background:#fff;overflow:hidden}
+  .file .ph{position:relative;aspect-ratio:1.4;overflow:hidden;background:#EFECE8}
+  .file .ph img{width:100%;height:100%;object-fit:cover}
+  .file .dl{position:absolute;top:8px;right:8px;background:rgba(20,18,16,.72);color:#fff;border:0;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:15px;display:grid;place-items:center}
+  .file .dl:hover{background:var(--ink)}
+  .wm{position:absolute;left:8px;bottom:8px;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:rgba(20,18,16,.6);padding:4px 8px;backdrop-filter:blur(2px)}
+  .files-bar{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:16px}
+  .toggle-row{display:inline-flex;align-items:center;gap:11px;font-size:13.5px;color:var(--ink);cursor:pointer}
+  .tg{width:46px;height:26px;border-radius:99px;background:var(--line);position:relative;transition:.2s;flex:0 0 46px}
+  .tg::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .toggle-row.on .tg{background:var(--green)}.toggle-row.on .tg::after{transform:translateX(20px)}
+  .furn-note{font-size:13.5px;color:var(--soft);margin-top:16px;max-width:70ch;line-height:1.6;border-left:2px solid var(--gold);padding-left:14px}
+
+  /* shop the look */
+  .shop{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  @media(max-width:900px){.shop{grid-template-columns:1fr 1fr}}
+  .brand{border:1px solid var(--line);background:#fff;padding:18px 18px 20px;display:flex;flex-direction:column;gap:5px}
+  .brand .bn{font-size:15px}
+  .brand .bp{font-size:12.5px;color:var(--soft);flex:1}
+  .brand .code{margin-top:8px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);border:1px dashed var(--green);padding:6px 10px;text-align:center}
+
+  /* two-col builder */
+  .grid{display:grid;grid-template-columns:360px 1fr;gap:34px;padding:34px var(--pad) 70px;max-width:1280px;margin:0 auto;align-items:start}
+  @media(max-width:920px){.grid{grid-template-columns:1fr;gap:26px}}
   .panel{background:#fff;border:1px solid var(--line)}
-  .panel h2{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);padding:18px 20px;border-bottom:1px solid var(--line-2)}
-  .side{position:sticky;top:84px}
+  .panel h2{font-size:13px;letter-spacing:.14em;text-transform:uppercase;padding:16px 20px;border-bottom:1px solid var(--line-2)}
+  .side{position:sticky;top:80px}
   @media(max-width:920px){.side{position:static}}
-  .form{padding:18px 20px 22px;display:grid;gap:14px}
+  .form{padding:16px 20px 20px;display:grid;gap:13px}
   .form label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:5px}
   .form input,.form textarea{width:100%;font-family:inherit;font-size:14.5px;color:var(--ink);background:var(--bg);border:1px solid var(--line);padding:10px 12px}
-  .form textarea{resize:vertical;min-height:78px;line-height:1.5}
-  .form .two{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-  .photos{padding:16px 20px 20px}
-  .photos .pgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
-  .photos .pgrid img{aspect-ratio:1.3;object-fit:cover;border:1px solid var(--line)}
-  .photos .cap{font-size:12px;color:var(--soft);margin-top:12px}
-
-  /* right side: builder + preview */
-  .make{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:26px}
-  @media(max-width:560px){.make{grid-template-columns:1fr}}
-  .make .card{background:#fff;border:1px solid var(--line);padding:24px 24px 22px;display:flex;flex-direction:column;gap:8px}
-  .make .card .ico{width:30px;height:30px;stroke:var(--ink);fill:none;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;margin-bottom:6px}
-  .make .card h3{font-size:19px}
-  .make .card p{font-size:13.5px;color:var(--soft);flex:1}
-  .make .card .btn{margin-top:12px;align-self:flex-start}
-  .make .card.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+  .form textarea{resize:vertical;min-height:88px;line-height:1.5}
+  .form .three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  .form .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .ac{position:relative}
+  .ac-list{position:absolute;left:0;right:0;top:100%;z-index:6;background:#fff;border:1px solid var(--line);border-top:0;display:none}
+  .ac-list.on{display:block}
+  .ac-list button{display:block;width:100%;text-align:left;background:#fff;border:0;border-top:1px solid var(--line-2);font-family:inherit;font-size:13.5px;color:var(--ink);padding:9px 12px;cursor:pointer}
+  .ac-list button:hover{background:var(--bg)}
+  .linkbtn{background:0;border:0;padding:0;font-family:inherit;font-size:12px;color:var(--green);text-decoration:underline;cursor:pointer;letter-spacing:.02em}
+  .up{display:flex;align-items:center;gap:12px}
+  .up .thumb{width:44px;height:44px;border-radius:6px;background:#EFECE8 center/cover;border:1px solid var(--line);flex:0 0 44px}
+  .up label.file-lbl{display:inline-block;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);border:1px solid var(--ink);padding:8px 12px;cursor:pointer}
+  .up input[type=file]{display:none}
 
   .preview-head{display:flex;align-items:center;gap:14px;margin-bottom:14px;flex-wrap:wrap}
-  .preview-head .micro{flex:1}
+  .preview-head .micro{flex:1;min-width:180px}
   .tabs{display:inline-flex;border:1px solid var(--line)}
   .tabs button{font-family:inherit;font-size:12px;letter-spacing:.1em;text-transform:uppercase;background:#fff;color:var(--soft);border:0;padding:9px 16px;cursor:pointer}
   .tabs button.on{background:var(--ink);color:#fff}
-
   .stage{background:#EFECE8;border:1px solid var(--line);padding:26px;display:flex;justify-content:center;overflow:auto}
+  .imgwm{position:relative;display:block}
+  .vs{position:absolute;z-index:2;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:rgba(20,18,16,.62);padding:4px 9px}
+  .imgwm .vs{left:8px;bottom:8px}
+  .vs.vtop{top:12px;left:12px}
 
-  /* ---- BROCHURE preview (print flyer) ---- */
+  /* brochure */
   .brochure{width:100%;max-width:600px;background:#fff;box-shadow:0 20px 60px -30px rgba(0,0,0,.4);color:#232120}
   .brochure .b-hero{position:relative;aspect-ratio:1.5;overflow:hidden;background:#ddd}
   .brochure .b-hero img{width:100%;height:100%;object-fit:cover}
-  .brochure .b-hero .b-price{position:absolute;left:0;bottom:0;background:var(--ink);color:#fff;padding:12px 20px;font-size:22px;letter-spacing:.01em}
+  .brochure .b-hero .b-price{position:absolute;left:0;bottom:0;background:var(--ink);color:#fff;padding:12px 20px;font-size:22px}
   .brochure .b-body{padding:24px 28px 28px}
   .brochure .b-body h3{font-size:24px;font-weight:400}
-  .brochure .b-body .b-addr{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-top:4px}
+  .brochure .b-addr{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-top:4px}
   .brochure .b-facts{display:flex;gap:26px;margin:16px 0;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
   .brochure .b-facts div b{font-size:18px;font-weight:400}
   .brochure .b-facts div span{display:block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
   .brochure .b-desc{font-size:13.5px;color:#514e4a;line-height:1.6}
   .brochure .b-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-top:18px}
-  .brochure .b-grid img{aspect-ratio:1.3;object-fit:cover}
+  .brochure .b-grid .imgwm img{aspect-ratio:1.3;object-fit:cover;width:100%}
   .brochure .b-foot{display:flex;align-items:center;justify-content:space-between;margin-top:20px;padding-top:16px;border-top:1px solid var(--line);gap:14px;flex-wrap:wrap}
+  .brochure .b-foot .agent{display:flex;align-items:center;gap:11px}
+  .brochure .b-foot .agent .hs{width:42px;height:42px;border-radius:50%;background:#EFECE8 center/cover;flex:0 0 42px}
   .brochure .b-foot .agent b{font-size:14px;font-weight:400}
   .brochure .b-foot .agent span{display:block;font-size:12px;color:var(--soft)}
-  .brochure .b-foot .b-logo{font-size:13px;letter-spacing:.4em;font-weight:400}
+  .brochure .b-logo{font-size:13px;letter-spacing:.4em;font-weight:400}
+  .brochure .b-logo img{max-height:30px}
 
-  /* ---- WEBSITE preview (browser frame) ---- */
+  /* website */
   .browser{width:100%;max-width:900px;background:#fff;border:1px solid var(--line);box-shadow:0 20px 60px -30px rgba(0,0,0,.4)}
   .browser .bar{display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:1px solid var(--line);background:#F4F1EC}
   .browser .bar .dot{width:10px;height:10px;border-radius:50%;background:#d6d1c9}
   .browser .bar .url{flex:1;margin-left:10px;font-size:11.5px;color:var(--soft);background:#fff;border:1px solid var(--line);border-radius:5px;padding:5px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .site{max-height:560px;overflow:auto}
+  .site .w-top{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:1px solid var(--line)}
+  .site .w-top .wl{font-size:13px;letter-spacing:.34em}
+  .site .w-top .wl img{max-height:26px}
   .site .w-hero{position:relative;aspect-ratio:2.1;overflow:hidden;background:#ddd}
   .site .w-hero img{width:100%;height:100%;object-fit:cover}
   .site .w-hero .veil{position:absolute;inset:0;background:linear-gradient(to top,rgba(15,13,11,.72),rgba(15,13,11,.05) 55%,transparent)}
-  .site .w-hero .w-copy{position:absolute;left:32px;bottom:26px;color:#fff}
-  .site .w-hero .w-copy .p{font-size:26px;letter-spacing:.01em}
+  .site .w-hero .w-copy{position:absolute;left:32px;bottom:26px;color:#fff;z-index:2}
+  .site .w-hero .w-copy .p{font-size:26px}
   .site .w-hero .w-copy .a{font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.9);margin-top:4px}
   .site .w-facts{display:flex;justify-content:center;gap:44px;padding:22px;border-bottom:1px solid var(--line)}
   .site .w-facts div{text-align:center}
@@ -111,14 +149,25 @@
   .site .w-about h3{font-size:22px}
   .site .w-about p{font-size:14.5px;color:var(--soft);margin-top:12px;line-height:1.65}
   .site .w-gal{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:0 5px 5px}
-  .site .w-gal img{aspect-ratio:1.5;object-fit:cover}
-  .site .w-cta{text-align:center;padding:40px 20px;background:var(--dark);color:#fff}
+  .site .w-gal .imgwm img{aspect-ratio:1.5;object-fit:cover;width:100%}
+  .site .w-cta{text-align:center;padding:38px 20px;background:var(--dark);color:#fff}
+  .site .w-cta .hs{width:54px;height:54px;border-radius:50%;background:#333 center/cover;margin:0 auto 12px}
   .site .w-cta h3{color:#fff;font-size:22px}
-  .site .w-cta .btn{margin-top:18px;background:#fff;color:var(--ink)}
+  .site .w-cta .btn{margin-top:16px;background:#fff;color:var(--ink)}
 
   .note{font-size:12px;color:var(--faint);margin-top:14px;text-align:center}
   footer{background:var(--dark);color:#8a857d;padding:26px var(--pad);font-size:12.5px;text-align:center}
   footer a{color:#b8b2a9;text-decoration:underline}
+
+  /* orders */
+  .orders{display:grid;gap:8px}
+  .order-row{display:flex;align-items:center;gap:16px;border:1px solid var(--line);background:#fff;padding:14px 18px;flex-wrap:wrap}
+  .order-row.cur{border-color:var(--ink)}
+  .order-row .oid{font-size:13.5px;min-width:110px}
+  .order-row .od{font-size:13px;color:var(--soft);flex:1;min-width:180px}
+  .order-row .os{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px}
+  .os.done{background:var(--green);color:#fff}.os.prog{background:var(--gold);color:#1a1a1a}
+  .order-row .oa{margin-left:auto}
 </style>
 </head>
 <body>
@@ -128,16 +177,17 @@
     <a class="mark" href="bella-homepage-redesign.html">BELLA</a>
     <span class="pill">Project workspace</span>
     <span class="sp"></span>
-    <a class="btn-line" href="bella-order-page.html" style="padding:9px 16px;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase">New order</a>
+    <a class="acct" href="#orders"><span class="av" style="background-image:url('https://images.unsplash.com/photo-1580489944761-15a19d654956?w=80&q=70&fm=jpg')"></span>Beverly Bahm</a>
+    <a class="btn btn-line btn-sm" href="bella-order-page.html">New order</a>
   </div>
 </header>
 
-<!-- ORDER SUMMARY -->
+<!-- SUMMARY -->
 <section class="summary">
   <div class="summary-in">
     <div>
       <span class="badge-done">✓ Delivered</span>
-      <h1 style="margin-top:10px">Your staged listing is ready.</h1>
+      <h1>Your staged listing is ready.</h1>
       <p class="sub">Order #BV-10428 · Listing Staging + floor plan · 8 photos · delivered in 41 hours</p>
     </div>
     <div class="stat">
@@ -148,66 +198,98 @@
   </div>
 </section>
 
+<!-- DELIVERED FILES -->
+<section class="blk">
+  <div class="hd">
+    <h2>Your delivered files</h2>
+    <span class="micro" id="wmState">Download originals, or toggle the virtually-staged mark</span>
+  </div>
+  <div class="files" id="fileGrid"></div>
+  <div class="files-bar">
+    <button class="btn btn-sm" id="dlAll">Download all (8)</button>
+    <div class="toggle-row" id="wmToggle"><span class="tg"></span> Mark photos “Virtually staged”</div>
+    <span class="micro">MLS-compliant labelling</span>
+  </div>
+  <!-- SAMPLE styling note — pull the real designer's notes per project on the live tool -->
+  <p class="furn-note"><b style="font-weight:400">The look:</b> warm transitional staging chosen for this market — a boucle accent chair, oak-and-brass coffee table, and a low-profile linen sofa keep sightlines open, while soft neutrals and layered textures help buyers picture themselves living here. <span class="flag" style="margin-left:6px">Sample notes</span></p>
+</section>
+
+<!-- SHOP THE LOOK -->
+<section class="blk">
+  <div class="hd">
+    <h2>Shop the look</h2>
+    <span class="flag">Sample partners</span>
+    <span class="micro">Designer furniture used in your staging, with partner discounts</span>
+  </div>
+  <div class="shop" id="shopGrid"></div>
+  <p class="note" style="text-align:left;margin-top:12px">Illustrative brands &amp; codes. On the live tool these are the real furniture pieces used in your project, linked to partner brands with active designer discounts.</p>
+</section>
+
+<!-- BUILDER -->
 <div class="grid">
-  <!-- LEFT: listing details + assets -->
   <div class="side">
     <div class="panel">
       <h2>Listing details</h2>
       <div class="form">
-        <div><label>Address</label><input id="fAddr" value="42 Bayview Terrace, Toronto"></div>
+        <div class="ac">
+          <label>Project address <span style="color:var(--green)">· autofill</span></label>
+          <input id="fAddr" value="42 Bayview Terrace, Toronto" autocomplete="off">
+          <div class="ac-list" id="acList"></div>
+        </div>
         <div><label>Price</label><input id="fPrice" value="$1,249,000"></div>
-        <div class="two">
+        <div class="three">
           <div><label>Beds</label><input id="fBeds" value="4"></div>
           <div><label>Baths</label><input id="fBaths" value="3"></div>
           <div><label>Sq ft</label><input id="fSqft" value="2,410"></div>
         </div>
         <div><label>Headline</label><input id="fHead" value="Light-filled family home, move-in ready"></div>
-        <div><label>Description</label><textarea id="fDesc">Sun-drenched and thoughtfully staged, this home invites you to picture the life you'll build here — morning coffee in the breakfast nook, friends gathered in the open living room, quiet evenings on the deck. Every room is dressed to feel like home the moment you walk in.</textarea></div>
-        <div class="two" style="grid-template-columns:1fr 1fr">
+        <div>
+          <label>Description</label>
+          <textarea id="fDesc">Sun-drenched and thoughtfully staged, this home invites you to picture the life you'll build here, morning coffee in the breakfast nook, friends gathered in the open living room, quiet evenings on the deck. Every room is dressed to feel like home the moment you walk in.</textarea>
+          <button class="linkbtn" id="autoDesc" style="margin-top:7px">✨ Auto-write description</button>
+          <span class="flag" style="margin-left:6px">Demo</span>
+        </div>
+        <div class="two">
           <div><label>Agent</label><input id="fAgent" value="Beverly Bahm"></div>
           <div><label>Phone</label><input id="fPhone" value="(312) 555-0148"></div>
         </div>
       </div>
     </div>
-    <div class="panel" style="margin-top:24px">
-      <h2>Your staged photos</h2>
-      <div class="photos">
-        <div class="pgrid" id="photoGrid"></div>
-        <p class="cap">8 designer-staged photos, delivered. These auto-fill your brochure &amp; website.</p>
+
+    <div class="panel" style="margin-top:22px">
+      <h2>Your brand</h2>
+      <div class="form">
+        <div>
+          <label>Logo (shown on brochure &amp; site)</label>
+          <div class="up"><span class="thumb" id="logoThumb"></span><label class="file-lbl">Upload logo<input type="file" id="fLogo" accept="image/*"></label></div>
+        </div>
+        <div>
+          <label>Your headshot</label>
+          <div class="up"><span class="thumb" id="hsThumb" style="border-radius:50%"></span><label class="file-lbl">Upload photo<input type="file" id="fHs" accept="image/*"></label></div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- RIGHT: make + preview -->
   <div>
-    <div class="make">
-      <div class="card on" id="cardBro">
-        <svg class="ico" viewBox="0 0 24 24"><path d="M6 3.5h9l4 4v13h-13z"/><path d="M15 3.5V8h4"/><path d="M8.5 12h7M8.5 15.5h7M8.5 8.5h3"/></svg>
-        <h3>Listing brochure</h3>
-        <p>A print-ready flyer built from your staged photos and listing details. Download as PDF for open houses and mailers.</p>
-        <button class="btn" data-view="bro">Open brochure</button>
-      </div>
-      <div class="card" id="cardWeb">
-        <svg class="ico" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="14" rx="1"/><path d="M3.5 8.5h17M6.5 6.4h.01M9 6.4h.01"/></svg>
-        <h3>Listing website</h3>
-        <p>A single-listing website with your gallery, details, and a lead form. Publish and share the link in one click.</p>
-        <button class="btn btn-line" data-view="web">Open website</button>
-      </div>
-    </div>
-
     <div class="preview-head">
       <span class="micro" id="pvLabel">Brochure preview · updates live as you edit</span>
       <div class="tabs">
         <button data-view="bro" class="on" id="tabBro">Brochure</button>
         <button data-view="web" id="tabWeb">Website</button>
       </div>
-      <button class="btn" id="pvAction">Download PDF</button>
+      <button class="btn btn-sm" id="pvAction">Download PDF</button>
     </div>
-
     <div class="stage" id="stage"></div>
-    <p class="note" id="pvNote">Mockup preview — on the live tool this exports a print-ready PDF and publishes a shareable listing site.</p>
+    <p class="note">Mockup preview — on the live tool this exports a print-ready PDF and publishes a shareable listing site under your brand.</p>
   </div>
 </div>
+
+<!-- ORDERS -->
+<section class="blk" id="orders" style="padding-bottom:60px">
+  <div class="hd"><h2>Your orders</h2><span class="micro">Account · past &amp; current projects</span></div>
+  <div class="orders" id="orderList"></div>
+</section>
 
 <footer>
   © Bella Virtual Staging · Project workspace mockup · <a href="bella-homepage-redesign.html">Back to the studio</a>
@@ -216,7 +298,6 @@
 <script>
 (function(){
   var C='https://www.bellavirtual.com/cdn/shop/files/', W='?width=1000';
-  // delivered staged photos (real Bella work)
   var PHOTOS=[
     C+'053-600-j-street.74270.p2k.027.print_ly_tb.jpg'+W,
     C+'Gareth_Roberts_-_Living_room_to_Dinning_Room_S210-120_Bayview_Ave-13_Tung_NAM.jpg'+W,
@@ -227,61 +308,123 @@
     C+'Elizabeth_Ramos_-_Webster_from_Dining_nhi_tb-transformed.jpg'+W,
     C+'3D_Illustration_Photo_Frame_Lounge_Jan_16_2025.jpg'+W
   ];
-  // thumbnail gallery
-  document.getElementById('photoGrid').innerHTML=PHOTOS.slice(0,6).map(function(s){return '<img src="'+s+'" alt="Staged photo" loading="lazy">';}).join('');
-
+  var state={ view:'bro', wm:false, logo:'', hs:'' };
   function val(id){ return (document.getElementById(id).value||'').trim(); }
-  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function vsTag(){ return state.wm? '<span class="vs">Virtually staged</span>' : ''; }
+  function img(src){ return '<span class="imgwm"><img src="'+src+'" alt="">'+vsTag()+'</span>'; }
+
+  /* delivered files grid with download + watermark badge */
+  function renderFiles(){
+    document.getElementById('fileGrid').innerHTML=PHOTOS.map(function(s,i){
+      return '<div class="file"><div class="ph"><img src="'+s+'" alt="Staged photo '+(i+1)+'" loading="lazy">'
+        +(state.wm?'<span class="wm">Virtually staged</span>':'')
+        +'<a class="dl" href="'+s+'" download="bella-staged-'+(i+1)+'.jpg" title="Download">↓</a></div></div>';
+    }).join('');
+  }
+
+  /* shop the look — SAMPLE brands + codes */
+  var BRANDS=[
+    {n:'Sundays',p:'Boucle accent chair',c:'BELLA-SUN15'},
+    {n:'Rove Concepts',p:'Oak &amp; brass coffee table',c:'BELLA-ROVE10'},
+    {n:'Maiden Home',p:'Low-profile linen sofa',c:'BELLA-MAIDEN'},
+    {n:'Article',p:'Layered wool area rug',c:'BELLA-ART20'}
+  ];
+  document.getElementById('shopGrid').innerHTML=BRANDS.map(function(b){
+    return '<div class="brand"><span class="bn">'+b.n+'</span><span class="bp">'+b.p+'</span><span class="code">'+b.c+'</span></div>';
+  }).join('');
+
+  /* orders — current + sample past */
+  var ORDERS=[
+    {id:'#BV-10428',d:'42 Bayview Terrace · Listing Staging + floor plan',s:'Delivered',cur:true},
+    {id:'#BV-10102',d:'88 Lakeshore Rd · Furniture removal + staging (6 photos)',s:'Delivered'},
+    {id:'#BV-9840',d:'12 Maple Grove · Day-to-dusk + staging (10 photos)',s:'Delivered'},
+    {id:'#BV-10501',d:'305 Harbour St · Virtual renovation (in progress)',s:'In progress'}
+  ];
+  document.getElementById('orderList').innerHTML=ORDERS.map(function(o){
+    var done=o.s==='Delivered';
+    return '<div class="order-row'+(o.cur?' cur':'')+'"><span class="oid">'+o.id+(o.cur?' · current':'')+'</span>'
+      +'<span class="od">'+o.d+'</span>'
+      +'<span class="os '+(done?'done':'prog')+'">'+o.s+'</span>'
+      +'<span class="oa">'+(o.cur?'<span class="micro">open</span>':'<button class="btn btn-line btn-sm">Open</button>')+'</span></div>';
+  }).join('');
+
+  /* address autofill (DEMO — connect Google Places API on the live site) */
+  var SUGG=['42 Bayview Terrace, Toronto, ON','120 Bayview Ave, Toronto, ON','600 J Street, Sacramento, CA','289 Drake St, Vancouver, BC','88 Lakeshore Rd, Oakville, ON'];
+  var addr=document.getElementById('fAddr'), acList=document.getElementById('acList');
+  addr.addEventListener('input',function(){
+    var q=addr.value.toLowerCase();
+    if(!q){ acList.classList.remove('on'); return; }
+    var m=SUGG.filter(function(s){return s.toLowerCase().indexOf(q)>-1;}).slice(0,4);
+    if(!m.length){ acList.classList.remove('on'); return; }
+    acList.innerHTML=m.map(function(s){return '<button type="button">'+esc(s)+'</button>';}).join('');
+    acList.classList.add('on');
+    acList.querySelectorAll('button').forEach(function(b){ b.onclick=function(){ addr.value=b.textContent; acList.classList.remove('on'); render(); }; });
+  });
+  document.addEventListener('click',function(e){ if(e.target!==addr) acList.classList.remove('on'); });
+
+  /* auto-write description (DEMO — live tool also reads public property data) */
+  document.getElementById('autoDesc').onclick=function(){
+    var beds=val('fBeds'), baths=val('fBaths'), head=val('fHead').toLowerCase();
+    var a=val('fAddr').split(',')[0];
+    document.getElementById('fDesc').value='Welcome to '+a+'. From the moment you step inside, this '+beds+'-bedroom, '+baths+'-bath home feels like somewhere you could stay forever, sunlight pouring across open living spaces, a kitchen made for gathering, and bedrooms that invite you to exhale. Professionally staged to show every room at its best, it is ready for its next chapter, and for you to picture yours here.';
+    render();
+  };
+
+  /* brand + headshot upload */
+  function readFile(input, cb){ var f=input.files&&input.files[0]; if(!f) return; var r=new FileReader(); r.onload=function(){ cb(r.result); }; r.readAsDataURL(f); }
+  document.getElementById('fLogo').addEventListener('change',function(){ readFile(this,function(u){ state.logo=u; document.getElementById('logoThumb').style.backgroundImage='url('+u+')'; render(); }); });
+  document.getElementById('fHs').addEventListener('change',function(){ readFile(this,function(u){ state.hs=u; document.getElementById('hsThumb').style.backgroundImage='url('+u+')'; render(); }); });
+
+  function logoEl(){ return state.logo? '<img src="'+state.logo+'" alt="Your brand">' : 'BELLA'; }
+  function hsStyle(){ return state.hs? 'style="background-image:url('+state.hs+')"' : ''; }
 
   function brochure(){
-    var beds=esc(val('fBeds')), baths=esc(val('fBaths')), sqft=esc(val('fSqft'));
     return '<div class="brochure">'
-      +'<div class="b-hero"><img src="'+PHOTOS[0]+'" alt=""><span class="b-price">'+esc(val('fPrice'))+'</span></div>'
+      +'<div class="b-hero"><img src="'+PHOTOS[0]+'" alt="">'+(state.wm?'<span class="vs vtop">Virtually staged</span>':'')+'<span class="b-price">'+esc(val('fPrice'))+'</span></div>'
       +'<div class="b-body">'
-        +'<h3>'+esc(val('fHead'))+'</h3>'
-        +'<p class="b-addr">'+esc(val('fAddr'))+'</p>'
-        +'<div class="b-facts"><div><b>'+beds+'</b><span>Beds</span></div><div><b>'+baths+'</b><span>Baths</span></div><div><b>'+sqft+'</b><span>Sq ft</span></div></div>'
+        +'<h3>'+esc(val('fHead'))+'</h3><p class="b-addr">'+esc(val('fAddr'))+'</p>'
+        +'<div class="b-facts"><div><b>'+esc(val('fBeds'))+'</b><span>Beds</span></div><div><b>'+esc(val('fBaths'))+'</b><span>Baths</span></div><div><b>'+esc(val('fSqft'))+'</b><span>Sq ft</span></div></div>'
         +'<p class="b-desc">'+esc(val('fDesc'))+'</p>'
-        +'<div class="b-grid">'+PHOTOS.slice(1,7).map(function(s){return '<img src="'+s+'" alt="">';}).join('')+'</div>'
-        +'<div class="b-foot"><div class="agent"><b>'+esc(val('fAgent'))+'</b><span>'+esc(val('fPhone'))+'</span></div><div class="b-logo">BELLA</div></div>'
+        +'<div class="b-grid">'+PHOTOS.slice(1,7).map(img).join('')+'</div>'
+        +'<div class="b-foot"><div class="agent"><span class="hs" '+hsStyle()+'></span><div><b>'+esc(val('fAgent'))+'</b><span>'+esc(val('fPhone'))+'</span></div></div><div class="b-logo">'+logoEl()+'</div></div>'
       +'</div></div>';
   }
   function website(){
-    var beds=esc(val('fBeds')), baths=esc(val('fBaths')), sqft=esc(val('fSqft'));
     var slug=esc(val('fAddr')).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
     return '<div class="browser"><div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">yourbrand.com/'+slug+'</span></div>'
       +'<div class="site">'
-        +'<div class="w-hero"><img src="'+PHOTOS[0]+'" alt=""><div class="veil"></div><div class="w-copy"><div class="p">'+esc(val('fPrice'))+'</div><div class="a">'+esc(val('fAddr'))+'</div></div></div>'
-        +'<div class="w-facts"><div><b>'+beds+'</b><span>Beds</span></div><div><b>'+baths+'</b><span>Baths</span></div><div><b>'+sqft+'</b><span>Sq ft</span></div></div>'
+        +'<div class="w-top"><span class="wl">'+logoEl()+'</span><span class="micro">'+esc(val('fPhone'))+'</span></div>'
+        +'<div class="w-hero"><img src="'+PHOTOS[0]+'" alt="">'+(state.wm?'<span class="vs vtop">Virtually staged</span>':'')+'<div class="veil"></div><div class="w-copy"><div class="p">'+esc(val('fPrice'))+'</div><div class="a">'+esc(val('fAddr'))+'</div></div></div>'
+        +'<div class="w-facts"><div><b>'+esc(val('fBeds'))+'</b><span>Beds</span></div><div><b>'+esc(val('fBaths'))+'</b><span>Baths</span></div><div><b>'+esc(val('fSqft'))+'</b><span>Sq ft</span></div></div>'
         +'<div class="w-about"><h3>'+esc(val('fHead'))+'</h3><p>'+esc(val('fDesc'))+'</p></div>'
-        +'<div class="w-gal">'+PHOTOS.slice(1,7).map(function(s){return '<img src="'+s+'" alt="">';}).join('')+'</div>'
-        +'<div class="w-cta"><h3>Book a private showing</h3><div style="font-size:13px;color:#b8b2a9;margin-top:8px">'+esc(val('fAgent'))+' · '+esc(val('fPhone'))+'</div><a class="btn">Request a tour</a></div>'
+        +'<div class="w-gal">'+PHOTOS.slice(1,7).map(img).join('')+'</div>'
+        +'<div class="w-cta"><div class="hs" '+hsStyle()+'></div><h3>Book a private showing</h3><div style="font-size:13px;color:#b8b2a9;margin-top:8px">'+esc(val('fAgent'))+' · '+esc(val('fPhone'))+'</div><a class="btn">Request a tour</a></div>'
       +'</div></div>';
   }
 
-  var view='bro';
   function render(){
-    document.getElementById('stage').innerHTML = view==='bro'? brochure() : website();
-    var bro=view==='bro';
+    document.getElementById('stage').innerHTML = state.view==='bro'? brochure() : website();
+    var bro=state.view==='bro';
     document.getElementById('tabBro').classList.toggle('on',bro);
     document.getElementById('tabWeb').classList.toggle('on',!bro);
-    document.getElementById('cardBro').classList.toggle('on',bro);
-    document.getElementById('cardWeb').classList.toggle('on',!bro);
-    document.getElementById('pvLabel').textContent = (bro?'Brochure':'Website')+' preview · updates live as you edit';
-    document.getElementById('pvAction').textContent = bro?'Download PDF':'Publish site';
+    document.getElementById('pvLabel').textContent=(bro?'Brochure':'Website')+' preview · updates live as you edit';
+    document.getElementById('pvAction').textContent=bro?'Download PDF':'Publish site';
   }
-  function setView(v){ view=v; render(); }
-  document.querySelectorAll('[data-view]').forEach(function(b){ b.addEventListener('click',function(){ setView(b.getAttribute('data-view')); }); });
-  // live update on any field edit
-  ['fAddr','fPrice','fBeds','fBaths','fSqft','fHead','fDesc','fAgent','fPhone'].forEach(function(id){
-    document.getElementById(id).addEventListener('input', render);
-  });
-  document.getElementById('pvAction').addEventListener('click',function(){
-    alert(view==='bro'
-      ? 'Mockup: this exports a print-ready PDF brochure for '+val('fAddr')+'.'
-      : 'Mockup: this publishes a shareable one-listing website for '+val('fAddr')+'.');
-  });
-  render();
+  document.getElementById('tabBro').onclick=function(){ state.view='bro'; render(); };
+  document.getElementById('tabWeb').onclick=function(){ state.view='web'; render(); };
+  ['fAddr','fPrice','fBeds','fBaths','fSqft','fHead','fDesc','fAgent','fPhone'].forEach(function(id){ document.getElementById(id).addEventListener('input',render); });
+
+  /* watermark toggle */
+  var wmT=document.getElementById('wmToggle');
+  wmT.onclick=function(){ state.wm=!state.wm; wmT.classList.toggle('on',state.wm); renderFiles(); render();
+    document.getElementById('wmState').textContent=state.wm?'“Virtually staged” label applied to every photo':'Download originals, or toggle the virtually-staged mark'; };
+
+  /* downloads */
+  document.getElementById('dlAll').onclick=function(){ alert('Mockup: this downloads all 8 delivered photos'+(state.wm?' with the “Virtually staged” label baked in':' as high-res originals')+'.'); };
+  document.getElementById('pvAction').onclick=function(){ alert(state.view==='bro'?'Mockup: exports a print-ready PDF brochure for '+val('fAddr')+'.':'Mockup: publishes a one-listing website for '+val('fAddr')+'.'); };
+
+  renderFiles(); render();
 })();
 </script>
 </body>
