@@ -52,8 +52,12 @@
   .choices{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:14px}
   @media(max-width:720px){.choices{grid-template-columns:1fr}}
   .choice{text-align:left;font-family:inherit;background:#fff;border:1px solid var(--line);padding:26px 26px;
-    cursor:pointer;display:flex;gap:18px;align-items:flex-start;transition:border-color .15s,background .15s}
-  .choice:hover{border-color:var(--ink)}
+    cursor:pointer;display:flex;gap:18px;align-items:flex-start;position:relative;
+    transition:transform .2s cubic-bezier(.2,.7,.2,1),box-shadow .2s,background .2s,border-color .2s}
+  .choice:hover{background:var(--dark);border-color:var(--dark);transform:translateY(-3px);box-shadow:0 22px 46px -18px rgba(28,26,24,.62)}
+  .choice:hover b{color:#fff}
+  .choice:hover span{color:rgba(237,234,229,.74)}
+  .choice:hover .ico{color:#E7C36A;stroke:#E7C36A}
   .choice.on{border-color:var(--ink);background:#fff;outline:1px solid var(--ink);outline-offset:-2px}
   .choice .ico{flex:0 0 26px;color:var(--soft);margin-top:2px}
   .choice b{font-weight:400;font-size:18px;display:block}

@@ -1,0 +1,261 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Choose your style (concept) | Bella Virtual</title>
+<meta name="robots" content="noindex">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap');
+  :root{--bg:#FDFCFA;--ink:#232120;--soft:#6E6A66;--faint:#9C978F;--line:#E8E4DE;--line-2:#F0EDE8;--dark:#1C1A18;--green:#3E6B4C;--gold:#B8985A;--pad:44px}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:'Jost',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .micro{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+
+  header{display:flex;justify-content:space-between;align-items:center;padding:22px var(--pad);border-bottom:1px solid var(--line);background:rgba(253,252,250,.92);backdrop-filter:blur(8px);position:sticky;top:0;z-index:20}
+  .logo{font-size:19px;letter-spacing:.4em}
+  .demo-tag{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);border:1px solid #D6E2D8;background:#F4F7F4;padding:5px 11px}
+  .back{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);text-decoration:none}
+  .back:hover{color:var(--ink)}
+
+  .wrap{max-width:900px;margin:0 auto;padding:48px var(--pad) 150px}
+  .head h1{font-size:clamp(28px,4vw,40px);font-weight:300;letter-spacing:-.02em;line-height:1.12}
+  .head p{font-size:15px;color:var(--soft);max-width:56ch;margin-top:10px}
+
+  /* path cards */
+  .paths{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:32px}
+  @media(max-width:720px){.paths{grid-template-columns:1fr}}
+  .path{position:relative;text-align:left;background:#fff;border:1px solid var(--line);padding:24px 22px;cursor:pointer;font-family:inherit;transition:.15s}
+  .path:hover{border-color:var(--ink)}
+  .path.on{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green);background:#F9FBF9}
+  .path .pk{display:flex;align-items:center;gap:12px}
+  .path .dot{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line);flex:0 0 20px;transition:.15s;position:relative}
+  .path.on .dot{border-color:var(--green)}
+  .path.on .dot::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--green)}
+  .path b{font-size:17px;font-weight:400}
+  .path .rec{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);border:1px solid #cfe0d3;padding:3px 8px;margin-left:auto}
+  .path p{font-size:13px;color:var(--soft);margin-top:10px;line-height:1.5}
+
+  .panel{display:none;margin-top:8px;background:#fff;border:1px solid var(--line);border-top:0;padding:28px 26px}
+  .panel.show{display:block;animation:rise .35s ease}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .q{margin-bottom:22px}
+  .q .lab{font-size:13px;letter-spacing:.02em;color:var(--ink);margin-bottom:11px;font-weight:400}
+  .q .lab span{color:var(--faint);font-size:12px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{font-family:inherit;font-size:13.5px;background:#fff;border:1px solid var(--line);padding:10px 15px;cursor:pointer;color:var(--soft);transition:.15s}
+  .chip:hover{border-color:var(--ink)}
+  .chip.on{border-color:var(--green);background:#F4F7F4;color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
+  textarea{width:100%;font-family:inherit;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--line);padding:12px 13px;min-height:76px;resize:vertical;line-height:1.5}
+  .reassure{display:flex;gap:12px;align-items:flex-start;background:#F4F7F4;border:1px solid #DCE7DD;padding:14px 16px;margin-top:4px;font-size:13px;color:#40573f;line-height:1.5}
+  .reassure svg{width:20px;height:20px;stroke:var(--green);fill:none;stroke-width:1.5;flex:0 0 20px;margin-top:1px}
+
+  /* style picker */
+  .styles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  @media(max-width:640px){.styles{grid-template-columns:1fr 1fr}}
+  .sty{text-align:left;background:#fff;border:1px solid var(--line);padding:0;cursor:pointer;font-family:inherit;overflow:hidden;transition:.15s}
+  .sty:hover{border-color:var(--ink)}
+  .sty.on{border-color:var(--green);box-shadow:inset 0 0 0 2px var(--green)}
+  .sty .thumb{aspect-ratio:1.3;overflow:hidden;position:relative}
+  .sty .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .sty .tick{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;background:var(--green);display:none;place-items:center}
+  .sty.on .tick{display:grid}
+  .sty .tick svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2.4}
+  .sty .cap{padding:11px 13px 13px}
+  .sty .cap b{font-size:14.5px;font-weight:400;display:block}
+  .sty .cap span{font-size:11.5px;color:var(--faint);display:block;margin-top:2px;line-height:1.4}
+
+  /* collection */
+  .collection{margin-top:24px;padding-top:22px;border-top:1px solid var(--line-2);display:none}
+  .collection.show{display:block}
+  .collection h3{font-size:16px;font-weight:400}
+  .collection .sub{font-size:13px;color:var(--soft);margin:4px 0 16px}
+  .sets{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  @media(max-width:640px){.sets{grid-template-columns:1fr}}
+  .set{position:relative;border:1px solid var(--line);overflow:hidden;background:#fff}
+  .set .im{aspect-ratio:1.2;overflow:hidden}
+  .set .im img{width:100%;height:100%;object-fit:cover;display:block}
+  .set .row{display:flex;align-items:center;justify-content:space-between;padding:10px 12px}
+  .set .row b{font-size:13px;font-weight:400}
+  .heart{width:34px;height:34px;border:1px solid var(--line);background:#fff;border-radius:50%;cursor:pointer;display:grid;place-items:center;transition:.15s}
+  .heart svg{width:16px;height:16px;stroke:var(--soft);fill:none;stroke-width:1.6}
+  .heart.on{border-color:var(--green);background:var(--green)}
+  .heart.on svg{stroke:#fff;fill:#fff}
+  .look-link{display:inline-block;margin-top:16px;font-size:13.5px;color:var(--green);text-decoration:underline;cursor:pointer}
+  .look-link:hover{opacity:.7}
+
+  /* runbar */
+  .runbar{position:fixed;left:0;right:0;bottom:0;background:var(--dark);color:#EDEAE5;z-index:25}
+  .runbar-in{max-width:900px;margin:0 auto;padding:15px var(--pad);display:flex;align-items:center;gap:18px}
+  .rb-sum{flex:1;font-size:13.5px;color:#C7C1B9;min-width:0}
+  .rb-sum b{color:#EDEAE5;font-weight:400}
+  .rb-cta{background:#fff;color:var(--ink);border:0;font-family:inherit;font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:14px 24px;cursor:pointer;transition:.2s}
+  .rb-cta:hover{background:var(--green);color:#fff}
+  .rb-cta[disabled]{opacity:.4;pointer-events:none}
+</style>
+
+<header>
+  <span class="logo">BELLA</span>
+  <span class="demo-tag">Concept · choose your style</span>
+  <a class="back" href="bella-order-page.html">← Order page</a>
+</header>
+
+<div class="wrap">
+  <div class="head">
+    <span class="micro">Step 2 · the look</span>
+    <h1>How should we style it?</h1>
+    <p>Two ways to get the right look. Let our interior designers choose what sells for your buyer, or pick the style and the exact furniture sets yourself.</p>
+  </div>
+
+  <div class="paths" id="paths">
+    <button class="path on" data-path="pro" type="button">
+      <div class="pk"><span class="dot"></span><b>Leave it to the professionals</b><span class="rec">Recommended</span></div>
+      <p>Tell us who’s buying. Our designers pair that with local market data and choose the style that sells fastest.</p>
+    </button>
+    <button class="path" data-path="self" type="button">
+      <div class="pk"><span class="dot"></span><b>I’ll choose the look</b></div>
+      <p>Pick a style you love, then save the exact furniture sets you want for each room.</p>
+    </button>
+  </div>
+
+  <!-- PRO PANEL -->
+  <div class="panel show" id="panelPro">
+    <div class="q">
+      <div class="lab">Who’s the most likely buyer? <span>· pick any that fit</span></div>
+      <div class="chips" data-group="buyer" data-multi="1"></div>
+    </div>
+    <div class="q">
+      <div class="lab">How is the home positioned?</div>
+      <div class="chips" data-group="price"></div>
+    </div>
+    <div class="q">
+      <div class="lab">What should buyers feel when they walk in? <span>· pick any</span></div>
+      <div class="chips" data-group="vibe" data-multi="1"></div>
+    </div>
+    <div class="q">
+      <div class="lab">Anything specific? <span>· optional</span></div>
+      <textarea id="proNote" placeholder="The neighbourhood and who’s buying there, colours to lean into or avoid, the feel of comparable listings…"></textarea>
+    </div>
+    <div class="reassure"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>
+      <span>Our interior designers combine your answers with local buyer data to choose the style, palette and pieces most likely to sell your listing fast. You’ll see the staged photos before anything goes live, with unlimited revisions.</span></div>
+  </div>
+
+  <!-- SELF PANEL -->
+  <div class="panel" id="panelSelf">
+    <div class="q">
+      <div class="lab">Pick a style</div>
+      <div class="styles" id="styles"></div>
+    </div>
+    <div class="collection" id="collection">
+      <h3 id="colTitle">Your collection</h3>
+      <p class="sub">Save the room sets you love. Our designers place them, and you can fine-tune in the lookbook.</p>
+      <div class="sets" id="sets"></div>
+      <a class="look-link" id="lookLink">Browse every piece in this style in the lookbook →</a>
+    </div>
+  </div>
+</div>
+
+<div class="runbar">
+  <div class="runbar-in">
+    <div class="rb-sum" id="rbSum">Our designers will choose the style that sells for your buyer.</div>
+    <button class="rb-cta" id="cta">Continue →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var CAT='https://youngiethekim.github.io/bella-preview/bella-catalog/items/';
+  var STYLES=[
+    {k:'modern',name:'Modern',desc:'Clean lines, warm woods, uncluttered.',lr:'LR_MDRN_L148',dr:'DR_MDRN_D107',bd:'BD_MDRN_B403'},
+    {k:'scandi',name:'Scandinavian',desc:'Light, airy, natural and calm.',lr:'LR_SCND_L381',dr:'DR_SCND_D350',bd:'BD_SCND_B355'},
+    {k:'coastal',name:'Coastal',desc:'Breezy and soft, relaxed by the water.',lr:'LR_COAST_L521',dr:'DR_COAS_D1117',bd:'BD_COAS_B390'},
+    {k:'midcentury',name:'Mid-century',desc:'Retro warmth, iconic silhouettes.',lr:'LR_MCM_L446',dr:'DR_MCM_316',bd:'BD_MCM_B444'},
+    {k:'farmhouse',name:'Farmhouse',desc:'Cozy, characterful, lived-in charm.',lr:'LR_FARM_L382',dr:'KT_FARM_K112',bd:'BD_FARM_B394'},
+    {k:'contemporary',name:'Contemporary luxe',desc:'Elevated, tailored, a little bit luxe.',lr:'LR_CONT_L387',dr:'DR_CONT_D310',bd:'BD_CONT_428'}
+  ];
+  var OPTS={
+    buyer:['Young family','First-time buyer','Professional couple','Downsizer / empty-nester','Investor / renter','Luxury buyer'],
+    price:['Entry','Mid-market','Premium','Luxury'],
+    vibe:['Warm & cozy','Bright & airy','Sleek & modern','Elevated & luxe','Relaxed & coastal']
+  };
+  var state={path:'pro', buyer:[], price:null, vibe:[], style:null, saved:{}};
+
+  // build chips
+  document.querySelectorAll('.chips[data-group]').forEach(function(box){
+    var g=box.getAttribute('data-group'), multi=box.getAttribute('data-multi');
+    box.innerHTML=OPTS[g].map(function(o){return '<button type="button" class="chip" data-v="'+o+'">'+o+'</button>';}).join('');
+    box.querySelectorAll('.chip').forEach(function(c){
+      c.onclick=function(){
+        var v=c.getAttribute('data-v');
+        if(multi){ var i=state[g].indexOf(v); if(i<0)state[g].push(v); else state[g].splice(i,1); c.classList.toggle('on'); }
+        else { state[g]=(state[g]===v?null:v); box.querySelectorAll('.chip').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-v')===state[g]);}); }
+        sync();
+      };
+    });
+  });
+
+  // build styles
+  var stylesBox=document.getElementById('styles');
+  stylesBox.innerHTML=STYLES.map(function(s){
+    return '<button type="button" class="sty" data-k="'+s.k+'"><div class="thumb"><img src="'+CAT+s.lr+'.jpg" alt="'+s.name+' living room" loading="lazy"><span class="tick"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span></div>'
+      +'<div class="cap"><b>'+s.name+'</b><span>'+s.desc+'</span></div></button>';
+  }).join('');
+  stylesBox.querySelectorAll('.sty').forEach(function(b){ b.onclick=function(){ pickStyle(b.getAttribute('data-k')); }; });
+
+  function pickStyle(k){
+    state.style=k; state.saved={};
+    stylesBox.querySelectorAll('.sty').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-k')===k);});
+    var s=STYLES.filter(function(x){return x.k===k;})[0];
+    document.getElementById('colTitle').textContent='Your '+s.name+' collection';
+    var rooms=[['Living room',s.lr],['Dining',s.dr],['Bedroom',s.bd]];
+    document.getElementById('sets').innerHTML=rooms.map(function(r,i){
+      return '<div class="set"><div class="im"><img src="'+CAT+r[1]+'.jpg" alt="'+s.name+' '+r[0]+'" loading="lazy"></div>'
+        +'<div class="row"><b>'+r[0]+'</b><button class="heart" data-room="'+r[0]+'" type="button" aria-label="Save"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.6-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.4-7 10-7 10z"/></svg></button></div></div>';
+    }).join('');
+    document.getElementById('sets').querySelectorAll('.heart').forEach(function(h){
+      h.onclick=function(){ var room=h.getAttribute('data-room'); state.saved[room]=!state.saved[room]; h.classList.toggle('on',state.saved[room]); sync(); };
+    });
+    document.getElementById('collection').classList.add('show');
+    sync();
+  }
+
+  // path switch
+  document.querySelectorAll('.path').forEach(function(p){
+    p.onclick=function(){
+      state.path=p.getAttribute('data-path');
+      document.querySelectorAll('.path').forEach(function(x){x.classList.toggle('on',x===p);});
+      document.getElementById('panelPro').classList.toggle('show',state.path==='pro');
+      document.getElementById('panelSelf').classList.toggle('show',state.path==='self');
+      sync();
+    };
+  });
+  document.getElementById('lookLink').onclick=function(){ location.href='bella-lookbook.html'; };
+
+  function sync(){
+    var sum, ready;
+    if(state.path==='pro'){
+      var bits=[];
+      if(state.buyer.length) bits.push(state.buyer.length+' buyer type'+(state.buyer.length>1?'s':''));
+      if(state.price) bits.push(state.price);
+      if(state.vibe.length) bits.push(state.vibe.length+' vibe'+(state.vibe.length>1?'s':''));
+      sum = bits.length? 'Designers’ pick · '+bits.join(' · ') : 'Our designers will choose the style that sells for your buyer.';
+      ready = true; // pro path is always fine to continue (form is guidance)
+    } else {
+      if(!state.style){ sum='Pick a style to continue.'; ready=false; }
+      else {
+        var s=STYLES.filter(function(x){return x.k===state.style;})[0];
+        var n=Object.keys(state.saved).filter(function(r){return state.saved[r];}).length;
+        sum=s.name+(n? ' · '+n+' set'+(n>1?'s':'')+' saved' : ' · save the sets you like');
+        ready=true;
+      }
+    }
+    document.getElementById('rbSum').innerHTML=sum.replace(/(Designers’ pick|[A-Z][a-z-]+)( ·|$)/,'<b>$1</b>$2');
+    document.getElementById('cta').disabled=!ready;
+  }
+  document.getElementById('cta').onclick=function(){
+    var msg = state.path==='pro'
+      ? 'Concept demo — sends your buyer profile to our design team.\n\nBuyer: '+(state.buyer.join(', ')||'—')+'\nPositioning: '+(state.price||'—')+'\nVibe: '+(state.vibe.join(', ')||'—')
+      : 'Concept demo — locks in your style + saved sets.\n\nStyle: '+STYLES.filter(function(x){return x.k===state.style;})[0].name+'\nSaved: '+(Object.keys(state.saved).filter(function(r){return state.saved[r];}).join(', ')||'none yet');
+    alert(msg);
+  };
+  sync();
+})();
+</script>
