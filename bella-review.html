@@ -99,7 +99,8 @@
   .sw.on{box-shadow:0 0 0 2px var(--ink)}
   .tb-note{margin-left:auto;font-size:11px;color:var(--faint);white-space:nowrap;padding-left:10px}
 
-  .stage-scroll{flex:1;overflow:auto;display:grid;place-items:center;padding:26px}
+  .center{min-height:0}
+  .stage-scroll{flex:1 1 0;min-height:0;overflow:auto;display:grid;place-items:center;padding:22px}
   .stage{position:relative;max-width:min(100%,900px);width:100%;box-shadow:0 18px 50px -22px rgba(0,0,0,.45);background:#fff;user-select:none}
   .stage.placing{cursor:crosshair}
   .stage.drawing{cursor:crosshair}
