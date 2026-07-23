@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your projects — Client Dashboard | Bella Virtual</title>
+<meta name="description" content="Your Bella Virtual client dashboard: manage every staging order, track revisions, invite collaborators and start a new order.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://www.bellavirtual.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#FDFCFA;--ink:#232120;--soft:#5E5A56;--faint:#9C978F;--line:#E8E4DE;--line-2:#F0EDE8;--dark:#1C1A18;--green:#3E6B4C;--gold:#B8985A;--blue:#3E6076;--amber:#B5892F;--purple:#6B4E86;--pad:44px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:"Jost",system-ui,sans-serif;font-weight:300;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  img{display:block;max-width:100%}a{text-decoration:none;color:inherit}
+  h1,h2,h3{font-weight:300;letter-spacing:-.012em;line-height:1.14}
+  .micro{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .btn{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:#fff;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;padding:12px 20px;cursor:pointer;border:0;font-family:inherit;transition:.2s}
+  .btn:hover{background:var(--green)}
+  .btn-line{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  .btn-line:hover{border-color:var(--ink);background:transparent}
+  .btn-sm{padding:8px 13px;font-size:11px}
+
+  header{position:sticky;top:0;z-index:40;background:rgba(253,252,250,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line-2)}
+  .nav{display:flex;align-items:center;gap:26px;height:64px;padding:0 var(--pad);max-width:1320px;margin:0 auto}
+  .mark{font-size:15px;letter-spacing:.5em;font-weight:400}
+  .nav .lk{font-size:13px;letter-spacing:.03em;color:var(--soft)}
+  .nav .lk:hover{color:var(--ink)}
+  .nav .lk.on{color:var(--ink)}
+  .nav .sp{margin-left:auto}
+  .acct{display:flex;align-items:center;gap:9px;font-size:13px;letter-spacing:.02em;color:var(--soft)}
+  .acct .av{width:30px;height:30px;border-radius:50%;background:#e6e1d9 center/cover;border:1px solid var(--line)}
+
+  .wrap{max-width:1320px;margin:0 auto;padding:0 var(--pad)}
+  .hero-row{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:40px 0 8px}
+  .hero-row h1{font-size:clamp(26px,3vw,36px)}
+  .hero-row .hi{font-size:13px;color:var(--soft);margin-top:6px}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:26px 0 30px}
+  @media(max-width:820px){.stats{grid-template-columns:1fr 1fr}}
+  .stat{background:#fff;border:1px solid var(--line);padding:20px 22px}
+  .stat b{display:block;font-size:30px;font-weight:300;line-height:1}
+  .stat .lb{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-top:9px}
+  .stat.accent{background:var(--dark);color:#fff;border-color:var(--dark)}
+  .stat.accent .lb{color:#9B958C}
+
+  .board{display:grid;grid-template-columns:1fr 320px;gap:34px;padding-bottom:80px;align-items:start}
+  @media(max-width:1000px){.board{grid-template-columns:1fr}}
+
+  .toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+  .filters{display:flex;gap:4px;flex-wrap:wrap}
+  .filters button{font-family:inherit;font-size:12.5px;letter-spacing:.02em;color:var(--soft);background:transparent;border:1px solid var(--line);padding:8px 14px;cursor:pointer;transition:.15s}
+  .filters button:hover{border-color:var(--ink);color:var(--ink)}
+  .filters button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  @media(max-width:640px){.grid{grid-template-columns:1fr}}
+  .pcard{background:#fff;border:1px solid var(--line);display:flex;flex-direction:column;transition:.15s}
+  .pcard:hover{border-color:var(--ink)}
+  .pcard .ph{aspect-ratio:16/10;background:#eee center/cover;position:relative}
+  .pcard .chip{position:absolute;top:12px;left:12px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:99px;display:inline-flex;align-items:center;gap:6px;background:#fff}
+  .chip i{width:6px;height:6px;border-radius:50%;background:currentColor}
+  .c-progress{color:var(--soft)} .c-delivered{color:var(--green)} .c-revisions{color:var(--amber)} .c-studio{color:var(--blue)} .c-ready{color:var(--purple)} .c-approved{color:#fff;background:var(--green)}
+  .pcard .bd{padding:16px 18px 18px;display:flex;flex-direction:column;flex:1}
+  .pcard .addr{font-size:18px;color:var(--ink)}
+  .pcard .meta{font-size:12.5px;color:var(--soft);margin-top:4px}
+  .pcard .oid{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-top:9px}
+  .pcard .rev-note{font-size:12.5px;color:var(--amber);margin-top:10px;display:flex;align-items:center;gap:7px}
+  .pcard .rev-note svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.5}
+  .pcard .acts{display:flex;gap:7px;margin-top:16px;flex-wrap:wrap}
+  .pcard .acts .btn,.pcard .acts .btn-line{flex:0 0 auto}
+  .progress{margin-top:12px}
+  .progress .bar{height:5px;background:var(--line-2);border-radius:99px;overflow:hidden}
+  .progress .bar span{display:block;height:100%;background:var(--green)}
+  .progress .lb{font-size:11px;color:var(--faint);margin-top:6px}
+
+  /* side column */
+  .side .panel{background:#fff;border:1px solid var(--line);margin-bottom:22px}
+  .side .panel h3{font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:15px 18px;border-bottom:1px solid var(--line-2);color:var(--soft)}
+  .side .pb{padding:8px 18px 16px}
+  .feed{display:flex;flex-direction:column}
+  .fitem{display:flex;gap:11px;padding:12px 0;border-bottom:1px solid var(--line-2)}
+  .fitem:last-child{border-bottom:0}
+  .fitem .fdot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex:none}
+  .fitem .ft{font-size:13px;color:var(--ink);line-height:1.4}
+  .fitem .ft b{font-weight:400}
+  .fitem .fw{font-size:11.5px;color:var(--faint);margin-top:2px}
+  .team{display:flex;flex-direction:column;gap:10px;padding:14px 18px 6px}
+  .trow{display:flex;align-items:center;gap:10px}
+  .trow .av{width:30px;height:30px;border-radius:50%;background:#e6e1d9 center/cover;font-size:11px;display:grid;place-items:center;color:#fff;flex:none}
+  .trow .tn{font-size:13.5px;color:var(--ink)}
+  .trow .tr{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  .invite-row{padding:12px 18px 18px;display:flex;gap:7px}
+  .invite-row input{flex:1;border:1px solid var(--line);padding:9px 11px;font-family:inherit;font-size:13px}
+  .invite-row input:focus{outline:0;border-color:var(--ink)}
+  .cta-card{background:linear-gradient(180deg,#20304A,#1C1A18);color:#fff;padding:24px}
+  .cta-card h3{color:#fff;padding:0;border:0;font-size:19px;letter-spacing:-.01em;text-transform:none}
+  .cta-card p{font-size:13px;color:#B9C2CE;margin:8px 0 16px}
+  .cta-card .btn{background:#fff;color:var(--ink)}
+  .cta-card .btn:hover{background:var(--green);color:#fff}
+
+  footer{border-top:1px solid var(--line);padding:26px var(--pad);text-align:center;font-size:12px;color:var(--faint)}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:13px;padding:12px 20px;border-radius:99px;z-index:120;opacity:0;transition:.25s;pointer-events:none}
+  .toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a class="mark" href="bella-homepage-redesign.html">BELLA</a>
+    <a class="lk on" href="bella-dashboard.html">Dashboard</a>
+    <a class="lk" href="bella-order-page.html">New order</a>
+    <a class="lk" href="bella-resources.html">Resources</a>
+    <span class="sp"></span>
+    <div class="acct"><span class="av" style="background-image:url('https://images.unsplash.com/photo-1580489944761-15a19d654956?w=80&q=70&fm=jpg')"></span>Beverly Bahm</div>
+    <a class="lk" href="bella-login.html">Sign out</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="hero-row">
+    <div>
+      <h1>Welcome back, Beverly.</h1>
+      <div class="hi">Here's everything you have with Bella right now.</div>
+    </div>
+    <a class="btn" href="bella-order-page.html"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.7"><path d="M12 5v14M5 12h14"/></svg>New staging order</a>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="board">
+    <div>
+      <div class="toolbar">
+        <div class="filters" id="filters"></div>
+        <span class="micro" id="projCount"></span>
+      </div>
+      <div class="grid" id="grid"></div>
+    </div>
+
+    <aside class="side">
+      <div class="panel cta-card">
+        <h3>Need a change on a delivered listing?</h3>
+        <p>Pin, sketch and explain exactly what you want. Free and unlimited for two weeks after delivery.</p>
+        <a class="btn" href="bella-review.html">Open review workspace →</a>
+      </div>
+      <div class="panel">
+        <h3>Recent activity</h3>
+        <div class="pb"><div class="feed" id="feed"></div></div>
+      </div>
+      <div class="panel">
+        <h3>Your team &amp; guests</h3>
+        <div class="team" id="team"></div>
+        <div class="invite-row"><input id="inviteEmail" placeholder="Invite by email…" autocomplete="off"><button class="btn-line btn-sm" id="inviteBtn">Invite</button></div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<footer>Bella Virtual Staging · Client dashboard mockup · <a href="bella-homepage-redesign.html">Back to the studio</a></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  var C='https://www.bellavirtual.com/cdn/shop/files/', W='?width=800';
+  var A='assets/projects/';
+  /* status vocabulary shared with the review workspace */
+  var ST={
+    progress:{label:'In progress',cls:'c-progress'},
+    delivered:{label:'Delivered',cls:'c-delivered'},
+    revisions:{label:'Revisions requested',cls:'c-revisions'},
+    studio:{label:'With studio',cls:'c-studio'},
+    ready:{label:'Ready to review',cls:'c-ready'},
+    approved:{label:'Approved',cls:'c-approved'}
+  };
+  /* SAMPLE project set — a spread of statuses to show the whole lifecycle */
+  var PROJECTS=[
+    {id:'BV-10428',addr:'42 Bayview Terrace, Toronto',svc:'Listing staging + floor plan',photos:8,status:'revisions',date:'Delivered Jul 22',img:A+'living-after.jpg',current:true,revText:'Round 1 · 3 requests sent to Bella'},
+    {id:'BV-10502',addr:'120 Bayview Ave, Toronto',svc:'Staging + day-to-dusk',photos:6,status:'ready',date:'Revised Jul 21',img:A+'primary-after.jpg',revText:'Revised kitchen ready for your review'},
+    {id:'BV-10501',addr:'305 Harbour St, Toronto',svc:'Virtual renovation + staging',photos:5,status:'progress',date:'Started Jul 20',img:A+'bed2-before.jpg',pct:55,pctText:'Staging in progress · est. delivery Jul 24'},
+    {id:'BV-10102',addr:'88 Lakeshore Rd, Oakville',svc:'Furniture removal + staging',photos:6,status:'delivered',date:'Delivered Jul 12',img:A+'dining-after.jpg'},
+    {id:'BV-9840',addr:'12 Maple Grove, Toronto',svc:'Day-to-dusk + staging',photos:10,status:'approved',date:'Approved Jun 28',img:A+'bed3-after.jpg'}
+  ];
+  var FEED=[
+    {c:'var(--amber)',t:'<b>Bella</b> is relaying your Round 1 revisions to the studio',w:'42 Bayview Terrace · 2h ago'},
+    {c:'var(--purple)',t:'Revised <b>kitchen</b> is ready to review',w:'120 Bayview Ave · 6h ago'},
+    {c:'var(--blue)',t:'<b>Jordan (buyer)</b> commented on the living room',w:'42 Bayview Terrace · 8h ago'},
+    {c:'var(--green)',t:'Order <b>delivered</b> — 6 staged photos',w:'88 Lakeshore Rd · 3d ago'}
+  ];
+  var TEAM=[
+    {n:'Beverly Bahm',r:'You · Agent',av:'BB',img:'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=80&q=70&fm=jpg'},
+    {n:'Jordan Lee',r:'Realtor client · guest',av:'JL',img:''},
+    {n:'Bella Studio',r:'Your Bella team',av:'BV',img:''}
+  ];
+
+  function $(id){return document.getElementById(id);}
+  function esc(s){return (s==null?'':''+s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function toast(m){var t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove('show');},2000);}
+
+  /* stats */
+  function renderStats(){
+    var active=PROJECTS.filter(function(p){return p.status!=='approved';}).length;
+    var inRev=PROJECTS.filter(function(p){return p.status==='revisions'||p.status==='studio'||p.status==='ready';}).length;
+    var delivered=PROJECTS.filter(function(p){return p.status==='delivered'||p.status==='ready'||p.status==='revisions'||p.status==='approved';}).length;
+    var photos=PROJECTS.reduce(function(a,p){return a+p.photos;},0);
+    $('stats').innerHTML=[
+      {b:active,l:'Active projects',accent:true},
+      {b:inRev,l:'In revision'},
+      {b:delivered,l:'Delivered'},
+      {b:photos,l:'Photos staged'}
+    ].map(function(s){return '<div class="stat'+(s.accent?' accent':'')+'"><b>'+s.b+'</b><div class="lb">'+s.l+'</div></div>';}).join('');
+  }
+
+  /* filters */
+  var filter='all';
+  var FILTERS=[{k:'all',l:'All'},{k:'progress',l:'In progress'},{k:'active-rev',l:'In revision'},{k:'delivered',l:'Delivered'}];
+  function matches(p){
+    if(filter==='all') return true;
+    if(filter==='active-rev') return p.status==='revisions'||p.status==='studio'||p.status==='ready';
+    if(filter==='delivered') return p.status==='delivered'||p.status==='approved';
+    return p.status===filter;
+  }
+  function renderFilters(){
+    $('filters').innerHTML=FILTERS.map(function(f){return '<button data-f="'+f.k+'"'+(f.k===filter?' class="on"':'')+'>'+f.l+'</button>';}).join('');
+    $('filters').querySelectorAll('button').forEach(function(b){b.onclick=function(){filter=b.getAttribute('data-f');renderFilters();renderGrid();};});
+  }
+
+  /* cards */
+  function actions(p){
+    var a=[];
+    if(p.status==='progress'){ a.push('<a class="btn btn-sm" href="bella-project.html">Track order</a>'); }
+    else {
+      a.push('<a class="btn btn-sm" href="bella-project.html">Open workspace</a>');
+      if(p.status!=='approved') a.push('<a class="btn-line btn-sm" href="bella-review.html">Revisions</a>');
+    }
+    return a.join('');
+  }
+  function card(p){
+    var st=ST[p.status];
+    var html='<div class="pcard">'
+      +'<div class="ph" style="background-image:url('+p.img+')"><span class="chip '+st.cls+'"><i></i>'+st.label+'</span></div>'
+      +'<div class="bd">'
+        +'<div class="addr">'+esc(p.addr.split(',')[0])+'</div>'
+        +'<div class="meta">'+esc(p.svc)+' · '+p.photos+' photos</div>'
+        +'<div class="oid">#'+p.id+' · '+esc(p.date)+'</div>';
+    if(p.revText) html+='<div class="rev-note"><svg viewBox="0 0 24 24"><path d="M12 20s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="8" r="2.2"/></svg>'+esc(p.revText)+'</div>';
+    if(p.pct!=null) html+='<div class="progress"><div class="bar"><span style="width:'+p.pct+'%"></span></div><div class="lb">'+esc(p.pctText||'')+'</div></div>';
+    html+='<div class="acts">'+actions(p)+'</div>';
+    html+='</div></div>';
+    return html;
+  }
+  function renderGrid(){
+    var list=PROJECTS.filter(matches);
+    $('grid').innerHTML=list.map(card).join('')||'<div class="micro" style="padding:30px 0">No projects in this view.</div>';
+    $('projCount').textContent=list.length+' of '+PROJECTS.length+' projects';
+  }
+
+  /* feed + team */
+  function renderFeed(){
+    $('feed').innerHTML=FEED.map(function(f){return '<div class="fitem"><span class="fdot" style="background:'+f.c+'"></span><div><div class="ft">'+f.t+'</div><div class="fw">'+f.w+'</div></div></div>';}).join('');
+  }
+  function renderTeam(){
+    $('team').innerHTML=TEAM.map(function(t){
+      var av=t.img?'<span class="av" style="background-image:url('+t.img+')"></span>':'<span class="av" style="background:'+(t.r.indexOf('Bella')>-1?'var(--green)':'var(--blue)')+'">'+t.av+'</span>';
+      return '<div class="trow">'+av+'<div><div class="tn">'+esc(t.n)+'</div><div class="tr">'+esc(t.r)+'</div></div></div>';
+    }).join('');
+  }
+  $('inviteBtn').onclick=function(){
+    var v=$('inviteEmail').value.trim(); if(!v) return;
+    TEAM.push({n:v,r:'Realtor client · guest',av:v.slice(0,2).toUpperCase(),img:''});
+    $('inviteEmail').value=''; renderTeam(); toast('Invite sent (demo)');
+  };
+  $('inviteEmail').addEventListener('keydown',function(e){if(e.key==='Enter')$('inviteBtn').click();});
+
+  renderStats(); renderFilters(); renderGrid(); renderFeed(); renderTeam();
+})();
+</script>
+</body>
+</html>
