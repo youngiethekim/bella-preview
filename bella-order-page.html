@@ -279,6 +279,14 @@
   .pv-x{position:fixed;top:20px;right:24px;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;border:0;font-size:24px;line-height:1;cursor:pointer;z-index:5}
   .pv-x:hover{background:rgba(255,255,255,.26)}
   .up-block{margin-top:15px}
+  .up-prog{margin-top:12px;display:none}
+  .up-prog.show{display:block}
+  .up-prog .up-prog-lab{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;color:var(--soft);margin-bottom:6px}
+  .up-prog .up-prog-lab b{color:var(--ink);font-weight:500}
+  .up-prog .up-prog-lab .togo{color:var(--green)}
+  .up-prog .up-prog-lab .togo.done{color:var(--green)}
+  .up-prog .up-bar{height:6px;background:var(--line-2);border-radius:99px;overflow:hidden}
+  .up-prog .up-bar span{display:block;height:100%;background:var(--green);border-radius:99px;transition:width .25s}
   .up-zone{display:flex;align-items:center;gap:13px;padding:14px 16px;border:1px dashed #C7C1B8;background:#fff;cursor:pointer;transition:border-color .15s,background .15s}
   .up-zone:hover,.up-zone.drag{border-color:var(--green);background:#F7FAF7}
   .up-zone.has{border-style:solid;border-color:#DDE7DD;background:#F7FAF7}
@@ -821,9 +829,9 @@
       document.getElementById('s2sub').textContent='The essentials first — how many photos, and the look. Anything extra comes after, only if you want it.';
       // --- 2a: three clear steps — count, upload, style ---
       box.innerHTML=
-        '<div class="stp" id="stp1"><div class="stp-h"><span class="stp-n">1</span><div class="stp-t"><b>How many photos?</b><span>Choose how many rooms to stage — or upload them in step 2 and we’ll count for you.</span></div></div>'
+        '<div class="stp" id="stp1"><div class="stp-h"><span class="stp-n">1</span><div class="stp-t"><b>Virtual staging</b><span>Empty rooms furnished by real interior designers · '+money(stageUnit())+' each, volume discounts apply.'+exLink('stage')+'</span></div></div>'
           +'<div class="core-top">'+qicon('sofa')
-            +'<span class="lbl"><b>Virtual staging</b><span>Empty rooms furnished by real interior designers · '+money(stageUnit())+' each, volume discounts apply'+exLink('stage')+'</span></span>'
+            +'<span class="lbl"><b>How many photos?</b><span>Choose how many rooms to stage — or upload them in step 2 and we’ll count for you.</span></span>'
             +stepper('photos')+'</div>'
           +volMeter()
         +'</div>'
@@ -916,7 +924,7 @@
   function volMeter(){
     return '<div class="vol"><div class="vol-lab"><span>Volume savings — the more photos, the less each costs</span><span class="vol-hint">Tap a tier to set your count →</span></div>'
       +'<div class="vol-tiers">'+VTIERS.map(function(t){
-          return '<button type="button" class="vt" data-min="'+t.m+'"><b>'+t.m+'+</b><span class="vt-off">'+t.d+'% off</span><span class="vt-pp">'+money2(photoPrice(t.d))+'/photo</span></button>';
+          return '<button type="button" class="vt" data-min="'+t.m+'"><b>'+t.m+'+</b><span class="vt-off">'+t.d+'% off</span></button>';
         }).join('')+'</div>'
       +'<div class="vol-econ" id="volEcon"></div>'
       +'<div class="vol-msg" id="volMsg"></div></div>';
@@ -959,7 +967,7 @@
     return '<div class="up-block"><label class="up-zone" id="upZone"><input type="file" id="upInput" accept="image/*" multiple hidden>'
       +'<svg class="up-i"><use href="#i-upload"/></svg>'
       +'<span class="up-t"><b id="upTitle">Have your photos? Drop them in</b><span id="upSub">We’ll count them and set the number for you — JPG or PNG. No photos yet? Just pick a number and send them later.</span></span>'
-      +'</label><div class="up-thumbs" id="upThumbs"></div>'
+      +'</label><div class="up-prog" id="upProg"></div><div class="up-thumbs" id="upThumbs"></div>'
       +'<div class="up-later"><button type="button" class="up-later-toggle" id="upLaterToggle">📷  Photos not ready? Send your photographer a direct upload link →</button>'
         +'<div class="up-later-panel" id="upLaterPanel">'
           +'<label>Photographer’s email</label><input type="email" id="photogEmail" placeholder="photographer@studio.com" autocomplete="off">'
@@ -1062,19 +1070,39 @@
   }
   function addFiles(files){
     [].slice.call(files).forEach(function(f){ if(f.type&&f.type.indexOf('image')===0){ state.uploads.push({name:f.name, url:URL.createObjectURL(f)}); } });
-    if(state.uploads.length) state.photos=state.uploads.length;
+    // uploads count toward the number they chose; only grow the order if they upload more
+    if(state.uploads.length > state.photos) state.photos=state.uploads.length;
     renderUploads(); sync();
   }
   function renderUploads(){
     var wrap=document.getElementById('upThumbs'), zone=document.getElementById('upZone'); if(!wrap||!zone) return;
-    var n=state.uploads.length;
-    document.getElementById('upTitle').textContent = n? (n+' photo'+(n>1?'s':'')+' ready') : 'Have your photos? Drop them in';
-    document.getElementById('upSub').textContent = n? 'We’ll stage these. Add more, or remove any below.' : 'We’ll count them and set the number for you — JPG or PNG. No photos yet? Just pick a number and send them later.';
+    var n=state.uploads.length, target=state.photos, remaining=Math.max(0, target-n);
+    if(!n){
+      document.getElementById('upTitle').textContent='Have your photos? Drop them in';
+      document.getElementById('upSub').textContent='We’ll count them and set the number for you — JPG or PNG. No photos yet? Just pick a number and send them later.';
+    } else if(remaining>0){
+      document.getElementById('upTitle').textContent=n+' of '+target+' photos in';
+      document.getElementById('upSub').textContent='Drop in '+remaining+' more, or send the rest to us later.';
+    } else {
+      document.getElementById('upTitle').textContent='All '+target+' photo'+(target>1?'s':'')+' ready ✓';
+      document.getElementById('upSub').textContent='Add more, or remove any below.';
+    }
     zone.classList.toggle('has', n>0);
-    var s2=document.getElementById('stp2'); if(s2) s2.classList.toggle('done', n>0 || state.photog.sent);
+    var s2=document.getElementById('stp2'); if(s2) s2.classList.toggle('done', (n>0 && remaining===0) || state.photog.sent);
+    // progress bar toward the chosen count
+    var prog=document.getElementById('upProg');
+    if(prog){
+      if(n>0 && target>0){
+        prog.classList.add('show');
+        var pct=Math.min(100, Math.round(n/target*100));
+        prog.innerHTML='<div class="up-prog-lab"><span><b>'+n+'</b> of '+target+' uploaded</span>'
+          +'<span class="togo'+(remaining===0?' done':'')+'">'+(remaining>0? remaining+' more photo'+(remaining>1?'s':'')+' to go' : 'All uploaded ✓')+'</span></div>'
+          +'<div class="up-bar"><span style="width:'+pct+'%"></span></div>';
+      } else { prog.classList.remove('show'); prog.innerHTML=''; }
+    }
     wrap.innerHTML=state.uploads.map(function(u,i){ return '<div class="up-th" data-i="'+i+'"><img src="'+u.url+'" alt=""><span class="up-style">'+escF(thumbStyleTag(u))+'</span><span class="up-zoom">'+ZOOM+'</span><button type="button" class="up-x" data-i="'+i+'" aria-label="Remove">×</button></div>'; }).join('');
     wrap.querySelectorAll('.up-th').forEach(function(el){ el.onclick=function(e){ if(e.target.closest('.up-x')) return; openRoomStyle(+el.getAttribute('data-i')); }; });
-    wrap.querySelectorAll('.up-x').forEach(function(b){ b.onclick=function(e){ e.preventDefault(); e.stopPropagation(); var i=+b.getAttribute('data-i'); state.uploads.splice(i,1); if(state.uploads.length) state.photos=state.uploads.length; renderUploads(); sync(); }; });
+    wrap.querySelectorAll('.up-x').forEach(function(b){ b.onclick=function(e){ e.preventDefault(); e.stopPropagation(); var i=+b.getAttribute('data-i'); state.uploads.splice(i,1); renderUploads(); sync(); }; });
   }
   // ---- inline "the look" chooser: designers pick, or you pick a style + save room sets ----
   var CAT='https://youngiethekim.github.io/bella-preview/bella-catalog/items/';
@@ -1283,7 +1311,7 @@
     var tot=money(lines().total);
     var r2=document.getElementById('run2'); if(r2) r2.textContent=tot;
     var r2b=document.getElementById('run2b'); if(r2b) r2b.textContent=tot;
-    syncVol(); syncReqUploads(); renderCart();
+    syncVol(); syncReqUploads(); if(document.getElementById('upProg')) renderUploads(); renderCart();
   }
   // line-item breakdown shown from the footer total
   function renderCart(){
