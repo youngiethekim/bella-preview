@@ -158,6 +158,20 @@
   .core .removal-row .lbl{flex:1}
   .core .removal-row .lbl b{font-weight:400;font-size:15px;display:block}
   .core .removal-row .lbl span{font-size:12.5px;color:var(--faint)}
+  /* numbered sub-steps within "Let's stage your listing" */
+  .stp{background:#F7FAF7;border:1px solid #DDE7DD;padding:20px 22px;margin-bottom:6px}
+  .stp-h{display:flex;align-items:flex-start;gap:13px;margin-bottom:16px}
+  .stp-n{flex:none;width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;font-size:13px;display:grid;place-items:center;margin-top:1px;transition:.2s}
+  .stp.done .stp-n{background:var(--green)}
+  .stp-t b{font-weight:400;font-size:16px;display:block}
+  .stp-t span{font-size:12.5px;color:var(--faint)}
+  .stp .removal-row{display:flex;align-items:center;gap:16px;margin-top:16px;padding-top:16px;border-top:1px solid #DDE7DD}
+  .stp .removal-row .lbl{flex:1}
+  .stp .removal-row .lbl b{font-weight:400;font-size:15px;display:block}
+  .stp .removal-row .lbl span{font-size:12.5px;color:var(--faint)}
+  .stp .up-block{margin-top:0}
+  .stp .sb-lab{display:none}
+  .stp .stylebox{margin-top:0;padding-top:0;border-top:0}
   .secs{display:flex;flex-direction:column;gap:6px}
   .sec{background:#fff;border:1px solid var(--line);transition:border-color .15s}
   .sec.open{border-color:#CFC9C0}
@@ -718,16 +732,21 @@
     if(p.path==='listing'){
       document.getElementById('s2title').textContent='Let’s stage your listing.';
       document.getElementById('s2sub').textContent='The essentials first — how many photos, and the look. Anything extra comes after, only if you want it.';
-      // --- 2a: virtual staging + the look ---
+      // --- 2a: three clear steps — count, upload, style ---
       box.innerHTML=
-        '<div class="core"><div class="core-top">'+qicon('sofa')
-         +'<span class="lbl"><b>Virtual staging</b><span>Empty rooms furnished by real interior designers · '+money(stageUnit())+' each, volume discounts apply'+exLink('stage')+'</span></span>'
-         +stepper('photos')+'</div>'
-         +volMeter()
-         +uploadBlock()
-         +'<div class="removal-row" id="removalRow"><span class="lbl"><b>Furniture removal</b><span>Occupied or cluttered? We clear the room first, then stage it clean.</span></span><span class="freeprice">Included free</span><button class="toggle" data-tog="removal"></button></div>'
-         +styleBox()
-       +'</div>';
+        '<div class="stp" id="stp1"><div class="stp-h"><span class="stp-n">1</span><div class="stp-t"><b>How many photos?</b><span>Choose how many rooms to stage — or upload them in step 2 and we’ll count for you.</span></div></div>'
+          +'<div class="core-top">'+qicon('sofa')
+            +'<span class="lbl"><b>Virtual staging</b><span>Empty rooms furnished by real interior designers · '+money(stageUnit())+' each, volume discounts apply'+exLink('stage')+'</span></span>'
+            +stepper('photos')+'</div>'
+          +volMeter()
+        +'</div>'
+        +'<div class="stp" id="stp2"><div class="stp-h"><span class="stp-n">2</span><div class="stp-t"><b>Upload your photos</b><span>Optional right now — drop them in, or send them after checkout.</span></div></div>'
+          +uploadBlock()
+          +'<div class="removal-row" id="removalRow"><span class="lbl"><b>Furniture removal</b><span>Occupied or cluttered? We clear the room first, then stage it clean.</span></span><span class="freeprice">Included free</span><button class="toggle" data-tog="removal"></button></div>'
+        +'</div>'
+        +'<div class="stp" id="stp3"><div class="stp-h"><span class="stp-n">3</span><div class="stp-t"><b>Choose the look</b><span>Let our designers pick what sells for your buyer, or choose a style yourself.</span></div></div>'
+          +styleBox()
+        +'</div>';
       // --- 2b: optional extras (a gentle nudge + the question sections) ---
       ex.innerHTML=
         '<div class="rec-nudge" id="recNudge"><svg class="rn-i"><use href="#i-bolt"/></svg><div class="rn-t"><b>Most agents add these two</b><span>A 3D floor plan and a twilight exterior — the extras that most help a listing sell.</span></div><button class="btn-line" id="rnAdd" type="button">Add both</button></div>'
@@ -842,6 +861,7 @@
     document.getElementById('upTitle').textContent = n? (n+' photo'+(n>1?'s':'')+' ready') : 'Have your photos? Drop them in';
     document.getElementById('upSub').textContent = n? 'We’ll stage these. Add more, or remove any below.' : 'We’ll count them and set the number for you — JPG or PNG. No photos yet? Just pick a number and send them later.';
     zone.classList.toggle('has', n>0);
+    var s2=document.getElementById('stp2'); if(s2) s2.classList.toggle('done', n>0);
     wrap.innerHTML=state.uploads.map(function(u,i){ return '<div class="up-th" data-i="'+i+'"><img src="'+u.url+'" alt=""><span class="up-zoom">'+ZOOM+'</span><button type="button" class="up-x" data-i="'+i+'" aria-label="Remove">×</button></div>'; }).join('');
     wrap.querySelectorAll('.up-th').forEach(function(el){ el.onclick=function(e){ if(e.target.closest('.up-x')) return; openPhoto(state.uploads[+el.getAttribute('data-i')].url); }; });
     wrap.querySelectorAll('.up-x').forEach(function(b){ b.onclick=function(e){ e.preventDefault(); e.stopPropagation(); var i=+b.getAttribute('data-i'); state.uploads.splice(i,1); if(state.uploads.length) state.photos=state.uploads.length; renderUploads(); sync(); }; });
