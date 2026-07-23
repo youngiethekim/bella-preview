@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio Portal — Bella Virtual</title>
+<meta name="description" content="Bella Virtual studio partner portal: your assigned jobs, the production brief, and deliverable uploads.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#FBFAF8;--ink:#232120;--soft:#5E5A56;--faint:#9C978F;--line:#E8E4DE;--line-2:#F0EDE8;--dark:#1C1A18;--green:#3E6B4C;--gold:#B8985A;--blue:#3E6076;--amber:#B5892F;--purple:#6B4E86;--red:#C4553F;--top:60px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--ink);font-family:"Jost",system-ui,sans-serif;font-weight:300;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow:hidden}
+  a{text-decoration:none;color:inherit}
+  img{display:block;max-width:100%}
+  button{font-family:inherit;cursor:pointer}
+  .micro{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint)}
+  .btn{display:inline-flex;align-items:center;gap:7px;background:var(--ink);color:#fff;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;padding:11px 17px;border:0;transition:.18s;border-radius:7px}
+  .btn:hover{background:var(--green)}
+  .btn:disabled{background:#CFCAC2;cursor:default}
+  .btn-line{background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:10px 15px;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;transition:.15s}
+  .btn-line:hover{border-color:var(--ink)}
+  .btn-sm{padding:8px 12px;font-size:10.5px}
+
+  header{height:var(--top);display:flex;align-items:center;gap:18px;padding:0 26px;background:#fff;border-bottom:1px solid var(--line)}
+  .mark{font-size:15px;letter-spacing:.42em;font-weight:400}
+  .pill{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);border:1px solid rgba(107,78,134,.4);border-radius:999px;padding:5px 11px}
+  .who{margin-left:auto;display:flex;align-items:center;gap:9px;font-size:13px;color:var(--soft)}
+  .who .av{width:28px;height:28px;border-radius:50%;background:var(--purple);color:#fff;font-size:11px;display:grid;place-items:center}
+  .gated{font-size:11px;color:var(--faint)}
+
+  .wsp{display:grid;grid-template-columns:340px 1fr;height:calc(100% - var(--top))}
+  .list{border-right:1px solid var(--line);background:#fff;overflow-y:auto}
+  .list-h{padding:15px 18px 10px;display:flex;justify-content:space-between;align-items:baseline;position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line-2)}
+  .list-h h1{font-size:16px;font-weight:400}
+  .filters{display:flex;gap:4px;flex-wrap:wrap;padding:11px 16px;border-bottom:1px solid var(--line-2)}
+  .filters button{font-size:11.5px;color:var(--soft);background:transparent;border:1px solid var(--line);border-radius:99px;padding:5px 11px}
+  .filters button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .job{padding:14px 18px;border-bottom:1px solid var(--line-2);cursor:pointer;transition:.12s;border-left:3px solid transparent}
+  .job:hover{background:#FAF9F7}
+  .job.on{background:#F5F7F5;border-left-color:var(--green)}
+  .job .jtop{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .job .jid{font-size:11px;color:var(--faint);letter-spacing:.03em}
+  .job .jaddr{font-size:14.5px;color:var(--ink);margin-top:2px}
+  .job .jsvc{font-size:12px;color:var(--soft);margin-top:2px}
+  .job .jmeta{display:flex;justify-content:space-between;align-items:center;margin-top:9px}
+  .chip{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:.05em;text-transform:uppercase;padding:4px 9px;border-radius:99px;white-space:nowrap}
+  .chip .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+  .ch-assigned{color:var(--ink);background:#F0EDE8} .ch-inprogress{color:var(--blue);background:#E9F0F4} .ch-qa{color:var(--purple);background:#EFEAF4} .ch-revision{color:var(--amber);background:#FBF3E2} .ch-done{color:#fff;background:var(--green)}
+  .due{font-size:12px} .due.over{color:var(--red)} .due.soon{color:var(--amber)} .due.ok{color:var(--faint)}
+
+  /* brief detail */
+  .detail{overflow-y:auto;padding:26px 32px 60px}
+  .detail-empty{height:100%;display:grid;place-items:center;color:var(--faint);font-size:14px}
+  .d-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:22px}
+  .d-head .kick{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--purple)}
+  .d-head h2{font-size:24px;font-weight:300;margin-top:6px;letter-spacing:-.01em}
+  .d-head .sub{font-size:13px;color:var(--soft);margin-top:5px}
+  .d-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .d-grid{display:grid;grid-template-columns:1fr 300px;gap:30px;align-items:start}
+  @media(max-width:1000px){.d-grid{grid-template-columns:1fr}}
+  .sec-t{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint);margin:0 0 12px}
+  .block{margin-bottom:26px}
+  .svc-list{display:flex;flex-direction:column;gap:7px}
+  .svc{display:flex;align-items:center;gap:11px;padding:11px 14px;border:1px solid var(--line);border-radius:8px;background:#fff}
+  .svc .si{width:30px;height:30px;border-radius:7px;background:#EEF3EE;display:grid;place-items:center;color:var(--green);flex:none;font-size:14px}
+  .svc b{font-weight:400}
+  .svc span{font-size:12px;color:var(--faint);display:block}
+  .svc .qty{margin-left:auto;font-size:13px;color:var(--soft);white-space:nowrap}
+  /* per-photo shot list */
+  .shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+  .shot{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+  .shot .ph{aspect-ratio:4/3;background:#eee center/cover;position:relative}
+  .shot .ph .rev{position:absolute;top:6px;right:6px;background:var(--amber);color:#fff;font-size:10px;padding:2px 7px;border-radius:99px}
+  .shot .cap{padding:8px 10px}
+  .shot .cap b{font-weight:400;font-size:13px;display:block;text-transform:capitalize}
+  .shot .cap .sty{font-size:11.5px;color:var(--green);margin-top:2px}
+  .shot .cap .sty.dc{color:var(--soft)}
+  /* files */
+  .files{display:flex;flex-direction:column;gap:6px}
+  .file{display:flex;align-items:center;gap:10px;padding:10px 13px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:13px}
+  .file .fi{width:26px;height:26px;border-radius:6px;background:#F1EEE8;display:grid;place-items:center;color:var(--soft);flex:none}
+  .file .dl{margin-left:auto;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--green)}
+  .file.missing{border-style:dashed;color:var(--amber)}
+  .file.missing .fi{background:#FBF3E2;color:var(--amber)}
+  /* side card */
+  .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:14px}
+  .card h4{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint);margin-bottom:12px}
+  .kv{display:flex;justify-content:space-between;gap:12px;font-size:13.5px;padding:7px 0;border-bottom:1px solid var(--line-2)}
+  .kv:last-child{border-bottom:0}
+  .kv span{color:var(--soft)} .kv b{font-weight:400;text-align:right}
+  .kv b.over{color:var(--red)}
+  .note-card{background:#FAF7EF;border-color:#EADFC5}
+  .note-card p{font-size:13.5px;color:#5b5140;line-height:1.55}
+  /* revision requests */
+  .rev-list{display:flex;flex-direction:column;gap:9px}
+  .rev-item{border:1px solid #EADFC5;background:#FBF7EE;border-radius:8px;padding:12px 14px}
+  .rev-item .rn{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--amber);color:#fff;font-size:11px;margin-right:8px;vertical-align:-4px}
+  .rev-item .rt{font-size:13.5px;color:var(--ink)}
+  .rev-item .rw{font-size:11.5px;color:var(--faint);margin-top:4px;padding-left:28px}
+  /* upload */
+  .up{border:2px dashed #BFD3C2;background:#F1F7F2;border-radius:10px;padding:18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:.15s}
+  .up:hover,.up.drag{border-color:var(--green);background:#E7F1E9}
+  .up .ui{width:42px;height:42px;border-radius:50%;background:#E1EDE3;display:grid;place-items:center;flex:none}
+  .up .ui svg{width:20px;height:20px;stroke:var(--green);fill:none;stroke-width:1.6}
+  .up .ut b{font-weight:400;font-size:14px;display:block}
+  .up .ut span{font-size:12px;color:var(--soft)}
+  .up-btn{margin-left:auto;background:var(--ink);color:#fff;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;padding:10px 15px;border-radius:6px;flex:none}
+  .deliv{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+  .deliv .dt{width:66px;height:66px;border-radius:6px;overflow:hidden;border:1px solid var(--line);position:relative}
+  .deliv .dt img{width:100%;height:100%;object-fit:cover}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:13px;padding:12px 20px;border-radius:99px;z-index:120;opacity:0;transition:.25s;pointer-events:none}
+  .toast.show{opacity:1}
+</style>
+</head>
+<body>
+<header>
+  <a class="mark" href="bella-cms.html">BELLA</a>
+  <span class="pill">Studio Portal</span>
+  <span class="gated">Scoped access — no client identities or pricing</span>
+  <div class="who"><span class="av">SA</span>Studio A · Manila</div>
+</header>
+
+<div class="wsp">
+  <aside class="list">
+    <div class="list-h"><h1>Your jobs</h1><span class="micro" id="jobCount"></span></div>
+    <div class="filters" id="filters"></div>
+    <div id="jobs"></div>
+  </aside>
+  <section class="detail" id="detail"><div class="detail-empty">Select a job to see its production brief.</div></section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  var A='assets/projects/';
+  var ST={
+    assigned:{label:'Assigned',chip:'ch-assigned'},
+    inprogress:{label:'In progress',chip:'ch-inprogress'},
+    qa:{label:'Submitted for QA',chip:'ch-qa'},
+    revision:{label:'Changes requested',chip:'ch-revision'},
+    done:{label:'Approved',chip:'ch-done'}
+  };
+  function room(id,label,style){ return {id:id,label:label,style:style,orig:A+id+'-before.jpg'}; }
+  /* SAMPLE jobs assigned to this studio. Client identity + pricing are intentionally absent. */
+  var JOBS=[
+    {id:'BV-10531', ptype:'Residential · empty listing', addr:'240 Aspen Ridge', due:20, status:'assigned',
+      services:[{k:'stage',n:'Virtual staging',s:'Furnish empty rooms',qty:'6 photos'},{k:'floor',n:'2D floor plan',s:'Clean labelled layout',qty:'1 floor'}],
+      buyer:'Target buyer: young family, mid-market. Warm, family-friendly — not cold or ultra-modern.',
+      rooms:[room('living','Living room','designer'),room('kitchen','Kitchen','designer'),room('dining','Dining','designer'),room('primary','Primary bedroom','designer'),room('bed2','Bedroom 2','scandi'),room('bed3','Bedroom 3','designer')],
+      files:[{n:'6 room photos.zip',ok:true},{n:'Reference — Pinterest board.pdf',ok:true}], revisions:[] },
+    {id:'BV-10471', ptype:'Residential · empty listing', addr:'19 Maple Grove', due:-1, status:'inprogress',
+      services:[{k:'stage',n:'Virtual staging',s:'Furnish empty rooms',qty:'9 photos'},{k:'sky',n:'Sky replacement',s:'Swap grey skies on exteriors',qty:'2 photos'}],
+      buyer:'Target buyer: downsizing couple. Transitional, calm, uncluttered.',
+      rooms:[room('living','Living room','contemporary'),room('primary','Primary bedroom','contemporary'),room('dining','Dining','contemporary')],
+      files:[{n:'9 room photos.zip',ok:true},{n:'2 exterior photos.zip',ok:true}], revisions:[] },
+    {id:'BV-10428', ptype:'Residential · empty listing', addr:'42 Bayview Terrace', due:-3, status:'revision',
+      services:[{k:'stage',n:'Virtual staging',s:'Furnish empty rooms',qty:'8 photos'},{k:'floor',n:'3D floor plan',s:'Furnished, walkable',qty:'1 floor'}],
+      buyer:'Target buyer: professional couple. Warm modern, sells the feeling of home.',
+      rooms:[room('living','Living room','designer'),room('kitchen','Kitchen','designer')],
+      files:[{n:'8 room photos.zip',ok:true},{n:'Blueprints.pdf',ok:false}],
+      revisions:[
+        {n:1,room:'Living room',t:'Swap the artwork for something warmer — the blue feels cold against the staging.',by:'Agent'},
+        {n:2,room:'Living room',t:'Rug is a little small — size up so it sits under the front sofa legs.',by:'Agent'},
+        {n:3,room:'Kitchen',t:'Add a couple of counter stools at the island.',by:'Agent'}
+      ] },
+    {id:'BV-10502', ptype:'Residential · empty listing', addr:'120 Bayview Ave', due:5, status:'qa',
+      services:[{k:'stage',n:'Virtual staging',s:'Furnish empty rooms',qty:'6 photos'},{k:'dusk',n:'Day-to-dusk',s:'Twilight exterior',qty:'1 photo'}],
+      buyer:'Target buyer: first-time buyer. Bright, aspirational, Scandinavian-leaning.',
+      rooms:[room('primary','Primary bedroom','scandi'),room('living','Living room','scandi')],
+      files:[{n:'6 room photos.zip',ok:true}], revisions:[] }
+  ];
+  var STY={designer:'Designer’s choice',modern:'Modern',scandi:'Scandinavian',coastal:'Coastal',midcentury:'Mid-century',farmhouse:'Farmhouse',contemporary:'Contemporary'};
+
+  var curId=JOBS[0].id, filter='all';
+  var deliverables={}; // jobId -> [urls]
+  function $(id){return document.getElementById(id);}
+  function esc(s){return (s==null?'':''+s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function job(){ return JOBS.filter(function(j){return j.id===curId;})[0]; }
+  function toast(m){var t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove('show');},2100);}
+  function dueTag(j){ if(j.status==='done') return '<span class="due ok">Done</span>'; if(j.due<0) return '<span class="due over">'+Math.abs(j.due)+'h overdue</span>'; if(j.due<=6) return '<span class="due soon">Due in '+j.due+'h</span>'; return '<span class="due ok">Due in '+j.due+'h</span>'; }
+
+  var FILTERS=[{k:'all',l:'All'},{k:'assigned',l:'New'},{k:'inprogress',l:'In progress'},{k:'revision',l:'Changes'},{k:'qa',l:'In QA'}];
+  function renderFilters(){
+    $('filters').innerHTML=FILTERS.map(function(f){return '<button data-k="'+f.k+'"'+(filter===f.k?' class="on"':'')+'>'+f.l+'</button>';}).join('');
+    $('filters').querySelectorAll('button').forEach(function(b){ b.onclick=function(){ filter=b.getAttribute('data-k'); renderList(); }; });
+  }
+  function renderList(){
+    var list=JOBS.filter(function(j){ return filter==='all'||j.status===filter; });
+    $('jobCount').textContent=list.length+' job'+(list.length===1?'':'s');
+    $('jobs').innerHTML=list.map(function(j){
+      var st=ST[j.status];
+      return '<div class="job'+(j.id===curId?' on':'')+'" data-id="'+j.id+'"><div class="jtop"><span class="jid">#'+j.id+'</span>'+dueTag(j)+'</div>'
+        +'<div class="jaddr">'+esc(j.addr)+'</div>'
+        +'<div class="jsvc">'+j.services.map(function(s){return esc(s.n);}).join(' · ')+'</div>'
+        +'<div class="jmeta"><span class="chip '+st.chip+'"><span class="dot"></span>'+st.label+'</span>'+(j.revisions.length?'<span class="micro" style="color:var(--amber)">'+j.revisions.length+' change'+(j.revisions.length>1?'s':'')+'</span>':'')+'</div></div>';
+    }).join('');
+    $('jobs').querySelectorAll('.job').forEach(function(el){ el.onclick=function(){ curId=el.getAttribute('data-id'); renderList(); renderDetail(); }; });
+  }
+
+  var SIC={stage:'▤',floor:'▦',dusk:'☾',sky:'☁',tour:'◍',reno:'✎'};
+  function renderDetail(){
+    var j=job(); if(!j){ $('detail').innerHTML='<div class="detail-empty">Select a job.</div>'; return; }
+    var st=ST[j.status];
+    var actions='';
+    if(j.status==='assigned') actions='<button class="btn" id="startBtn">Start job</button>';
+    else if(j.status==='inprogress') actions='<button class="btn-line btn-sm" id="askBtn">Ask Bella</button><button class="btn" id="submitBtn">Submit for QA</button>';
+    else if(j.status==='revision') actions='<button class="btn-line btn-sm" id="askBtn">Ask Bella</button><button class="btn" id="submitBtn">Submit revised for QA</button>';
+    else if(j.status==='qa') actions='<span class="micro" style="color:var(--purple)">Awaiting Bella QA</span>';
+    else if(j.status==='done') actions='<span class="micro" style="color:var(--green)">Approved &amp; delivered</span>';
+
+    var shots=j.rooms.map(function(r){
+      var isRev=j.revisions.some(function(x){return x.room.toLowerCase()===r.label.toLowerCase();});
+      var dc=r.style==='designer';
+      return '<div class="shot"><div class="ph" style="background-image:url('+r.orig+')">'+(isRev?'<span class="rev">revise</span>':'')+'</div>'
+        +'<div class="cap"><b>'+esc(r.label)+'</b><span class="sty'+(dc?' dc':'')+'">'+(dc?'✦ ':'')+esc(STY[r.style]||r.style)+'</span></div></div>';
+    }).join('');
+
+    var files=j.files.map(function(f){
+      return f.ok? '<div class="file"><span class="fi">▤</span>'+esc(f.n)+'<span class="dl">Download</span></div>'
+                 : '<div class="file missing"><span class="fi">!</span>'+esc(f.n)+' — not provided yet<span class="dl" style="color:var(--amber)">Waiting</span></div>';
+    }).join('');
+
+    var revBlock = j.revisions.length? '<div class="block"><div class="sec-t">Changes requested · round '+(j.status==='revision'?'current':'')+'</div><div class="rev-list">'
+      +j.revisions.map(function(rq){ return '<div class="rev-item"><div class="rt"><span class="rn">'+rq.n+'</span>'+esc(rq.room)+' — '+esc(rq.t)+'</div><div class="rw">Requested by '+esc(rq.by)+'</div></div>'; }).join('')
+      +'</div></div>' : '';
+
+    var delivs=(deliverables[j.id]||[]);
+    var upBlock = (j.status==='inprogress'||j.status==='revision')? '<div class="block"><div class="sec-t">Upload your deliverables</div>'
+      +'<label class="up" id="upZone"><input type="file" id="upInput" accept="image/*" multiple hidden><span class="ui"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/></svg></span><span class="ut"><b>Drop the staged photos here</b><span>or click to browse · we run QA before the client sees them</span></span><span class="up-btn">Choose files</span></label>'
+      +'<div class="deliv" id="deliv">'+delivs.map(function(u){return '<div class="dt"><img src="'+u+'"></div>';}).join('')+'</div></div>' : '';
+
+    $('detail').innerHTML=
+      '<div class="d-head"><div><div class="kick">Production brief · #'+j.id+'</div><h2>'+esc(j.addr)+'</h2><div class="sub">'+esc(j.ptype)+' · <span class="chip '+st.chip+'" style="vertical-align:2px"><span class="dot"></span>'+st.label+'</span></div></div>'
+        +'<div class="d-actions">'+actions+'</div></div>'
+      +'<div class="d-grid"><div>'
+        + revBlock
+        +'<div class="block"><div class="sec-t">Services to produce</div><div class="svc-list">'
+          +j.services.map(function(s){ return '<div class="svc"><span class="si">'+(SIC[s.k]||'▤')+'</span><span><b>'+esc(s.n)+'</b><span>'+esc(s.s)+'</span></span><span class="qty">'+esc(s.qty)+'</span></div>'; }).join('')
+        +'</div></div>'
+        +'<div class="block"><div class="sec-t">Shot list &amp; styles ('+j.rooms.length+')</div><div class="shots">'+shots+'</div></div>'
+        + upBlock
+      +'</div><div>'
+        +'<div class="card"><h4>Job details</h4>'
+          +'<div class="kv"><span>Turnaround</span><b class="'+(j.due<0&&j.status!=='done'?'over':'')+'">'+(j.status==='done'?'Done':(j.due<0?Math.abs(j.due)+'h overdue':'Due in '+j.due+'h'))+'</b></div>'
+          +'<div class="kv"><span>Photos to stage</span><b>'+j.rooms.length+'</b></div>'
+          +'<div class="kv"><span>Services</span><b>'+j.services.length+'</b></div>'
+          +'<div class="kv"><span>Status</span><b>'+st.label+'</b></div>'
+        +'</div>'
+        +'<div class="card note-card"><h4>Buyer &amp; direction</h4><p>'+esc(j.buyer)+'</p></div>'
+        +'<div class="card"><h4>Source files</h4><div class="files">'+files+'</div></div>'
+      +'</div></div>';
+
+    var sb=$('startBtn'); if(sb) sb.onclick=function(){ j.status='inprogress'; toast('#'+j.id+' started'); renderList(); renderDetail(); };
+    var subm=$('submitBtn'); if(subm) subm.onclick=function(){ j.status='qa'; toast('#'+j.id+' submitted for Bella QA'); renderList(); renderDetail(); };
+    var ask=$('askBtn'); if(ask) ask.onclick=function(){ toast('Question sent to Bella (demo)'); };
+    bindUp(j);
+  }
+  function bindUp(j){
+    var zone=$('upZone'), input=$('upInput'); if(!zone||!input) return;
+    input.onchange=function(){ addDeliv(j,input.files); input.value=''; };
+    ['dragenter','dragover'].forEach(function(ev){ zone.addEventListener(ev,function(e){e.preventDefault();zone.classList.add('drag');}); });
+    ['dragleave','drop'].forEach(function(ev){ zone.addEventListener(ev,function(e){e.preventDefault();zone.classList.remove('drag');}); });
+    zone.addEventListener('drop',function(e){ if(e.dataTransfer&&e.dataTransfer.files) addDeliv(j,e.dataTransfer.files); });
+  }
+  function addDeliv(j,files){
+    deliverables[j.id]=deliverables[j.id]||[];
+    [].slice.call(files).forEach(function(f){ if(f.type&&f.type.indexOf('image')===0) deliverables[j.id].push(URL.createObjectURL(f)); });
+    renderDetail();
+  }
+
+  renderFilters(); renderList(); renderDetail();
+})();
+</script>
+</body>
+</html>
