@@ -31,6 +31,8 @@
   /* top bar */
   header{height:var(--top);display:flex;align-items:center;gap:20px;padding:0 var(--pad);border-bottom:1px solid var(--line);background:rgba(253,252,250,.96)}
   .brandline{display:flex;align-items:baseline;gap:14px;min-width:0}
+  .backlink{align-self:center;width:26px;height:26px;border:1px solid var(--line);border-radius:6px;display:grid;place-items:center;color:var(--soft);font-size:18px;line-height:1;text-decoration:none;transition:.15s;flex:none}
+  .backlink:hover{border-color:var(--ink);color:var(--ink)}
   .logo{font-size:15px;letter-spacing:.42em;font-weight:400}
   .proj{font-size:13.5px;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .proj b{color:var(--ink);font-weight:400}
@@ -209,6 +211,7 @@
 
 <header>
   <div class="brandline">
+    <a class="backlink" id="backLink" href="bella-dashboard.html" title="Back">‹</a>
     <span class="logo">BELLA</span>
     <span class="proj"><b id="hProj">42 Bayview Terrace</b> · <span id="hOrder">#BV-10428</span></span>
   </div>
@@ -785,6 +788,8 @@
       ? 'Click the photo to drop a pin, then sketch and describe the change.'
       : (role==='pm' ? 'Review each request, relay to the studio, and push the revised photo back.' : '');
     $('inviteBtn').style.display = role==='agent' ? 'inline-block':'none';
+    var bl=$('backLink');
+    if(bl){ if(role==='pm'){ bl.href='bella-cms.html'; bl.title='Back to Control Center'; } else { bl.href='bella-dashboard.html'; bl.title='Back to your projects'; } }
   }
 
   /* ---------------- master render ---------------- */
