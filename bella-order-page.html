@@ -197,6 +197,8 @@
   .sb-sty.on .ck{display:grid}
   .sb-sty .nm{display:block;font-size:11.5px;padding:7px 6px;text-align:center}
   .sb-panel .linkbtn{margin-top:12px;display:inline-block}
+  .sb-lookbtn{margin-top:4px}
+  .sb-savedline{display:block;margin-top:11px;font-size:12.5px;color:var(--green)}
   /* ===== "build your look" loadout modal (video-game style) ===== */
   .gamemodal{background:rgba(10,9,8,.74);padding:5vh 4vw}
   .gamemodal .gm-box{max-width:700px;width:100%;max-height:92vh;overflow-y:auto;position:relative;background:#1B1917;color:#EDEAE5;border:1px solid #2E2A25;border-radius:18px;padding:26px 26px 24px;box-shadow:0 50px 120px -30px rgba(0,0,0,.75);animation:gmIn .3s cubic-bezier(.2,.8,.2,1)}
@@ -376,6 +378,24 @@
   @media(max-width:560px){.wiz-foot{justify-content:center;text-align:center}}
   .wiz-foot .running{font-size:14px;color:var(--soft)}
   .wiz-foot .running b{color:var(--ink);font-weight:400;font-size:18px}
+  .wiz-foot .running{position:relative}
+  .cart-toggle{background:0;border:0;font-family:inherit;cursor:pointer;font-size:14px;color:var(--soft);display:inline-flex;align-items:center;gap:7px;padding:6px 4px}
+  .cart-toggle .cart-caret{width:13px;height:13px;stroke:var(--faint);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}
+  .cart-toggle.open .cart-caret{transform:rotate(180deg);stroke:var(--ink)}
+  .cart-toggle:hover{color:var(--ink)}
+  .cart-pop{position:absolute;bottom:calc(100% + 14px);left:50%;transform:translateX(-50%);min-width:288px;max-width:min(380px,88vw);background:#fff;border:1px solid var(--line);box-shadow:0 22px 54px -18px rgba(0,0,0,.42);border-radius:11px;padding:16px 18px;display:none;z-index:30;text-align:left}
+  .cart-pop.show{display:block}
+  .cart-pop::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:8px solid transparent;border-top-color:#fff;filter:drop-shadow(0 1px 0 var(--line))}
+  .cart-pop .cart-h{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:10px}
+  .cart-pop ul{list-style:none;display:flex;flex-direction:column}
+  .cart-pop li{display:flex;justify-content:space-between;gap:16px;font-size:13.5px;color:var(--soft);padding:8px 0;border-bottom:1px solid var(--line-2);line-height:1.35}
+  .cart-pop li:last-child{border-bottom:0}
+  .cart-pop li .cp-price{color:var(--ink);white-space:nowrap}
+  .cart-pop li.cp-free .cp-price{color:var(--green)}
+  .cart-pop li.cp-disc .cp-price{color:var(--green)}
+  .cart-pop .cart-tot{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;padding-top:11px;border-top:1px solid var(--line);font-size:14px}
+  .cart-pop .cart-tot b{font-size:19px;font-weight:400}
+  .cart-pop .cart-empty{font-size:13px;color:var(--faint)}
   .hide{display:none !important}
 </style>
 </head>
@@ -461,7 +481,7 @@
       <div class="config" id="config"></div>
       <div class="wiz-foot">
         <button class="btn-line" id="back1">← Back</button>
-        <span class="running">Total <b id="run2">$0</b></span>
+        <span class="running"><button class="cart-toggle" type="button">Total <b id="run2">$0</b> <svg class="cart-caret" viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg></button><div class="cart-pop" id="cartPopA"></div></span>
         <button class="btn" id="toExtras">Continue →</button>
       </div>
     </div>
@@ -475,7 +495,7 @@
       <div class="config" id="configExtras"></div>
       <div class="wiz-foot">
         <button class="btn-line" id="backStaging">← Back</button>
-        <span class="running">Total <b id="run2b">$0</b></span>
+        <span class="running"><button class="cart-toggle" type="button">Total <b id="run2b">$0</b> <svg class="cart-caret" viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg></button><div class="cart-pop" id="cartPopB"></div></span>
         <span class="foot-actions"><button class="btn-line" id="skipExtras">Skip, just stage it</button><button class="btn" id="to3">See my package →</button></span>
       </div>
     </div>
@@ -723,12 +743,14 @@
     return '<div class="stylebox" id="stylebox"><div class="sb-lab">The look</div>'
       +'<div class="sb-paths">'
         +'<button class="sb-path" data-sm="pro" type="button"><b>Let our designers choose</b><span>We pick the style that sells for your buyer</span></button>'
-        +'<button class="sb-path" data-sm="self" type="button"><b>I’ll choose the look</b><span>Pick a style, save the room sets you like</span></button>'
+        +'<button class="sb-path" data-sm="self" type="button"><b>I’ll choose the look</b><span>Browse the lookbook and save the pieces you like</span></button>'
       +'</div>'
       +'<div class="sb-panel" id="sbPro"><p class="sb-note">Tell us who’s buying — at checkout, or in your notes — and our interior designers match the style, palette and pieces to your market. You approve every staged photo before it goes live.</p></div>'
-      +'<div class="sb-panel" id="sbSelf"><div class="sb-styles">'
-        +STY.map(function(s){return '<button type="button" class="sb-sty" data-sk="'+s.k+'"><span class="t"><img src="'+CAT+s.im+'.jpg" alt="'+s.n+'" loading="lazy"><span class="ck">✓</span></span><span class="nm">'+s.n+'</span></button>';}).join('')
-        +'</div><button type="button" class="linkbtn" id="openLook">Save specific room sets in the lookbook →</button></div>'
+      +'<div class="sb-panel" id="sbSelf">'
+        +'<p class="sb-note">Browse our full furniture catalogue and save the exact pieces you love — filter by room and style. Our designers place your picks, room by room.</p>'
+        +'<button type="button" class="btn-line sb-lookbtn" id="openLook">Open the lookbook →</button>'
+        +'<span class="sb-savedline" id="sbSavedLine"></span>'
+      +'</div>'
     +'</div>';
   }
   var savedRooms={};   // keyed "styleKey:roomName"
@@ -747,13 +769,8 @@
     var pro=document.getElementById('sbPro'), self=document.getElementById('sbSelf');
     if(pro) pro.classList.toggle('show', state.styleMode==='pro');
     if(self) self.classList.toggle('show', state.styleMode==='self');
-    box.querySelectorAll('.sb-sty').forEach(function(b){
-      var k=b.getAttribute('data-sk'), on=(k===state.stylePick);
-      b.classList.toggle('on', on);
-      var old=b.querySelector('.saved-pill'); if(old) old.remove();
-      var n=savedCount(k);
-      if(n){ var p=document.createElement('span'); p.className='saved-pill'; p.textContent=n+' saved'; b.querySelector('.t').appendChild(p); }
-    });
+    var sl=document.getElementById('sbSavedLine');
+    if(sl){ var n=Object.keys(savedItems).filter(function(k){return savedItems[k];}).length; sl.textContent = n? ('✓ '+n+' piece'+(n>1?'s':'')+' saved from the lookbook') : ''; }
   }
   // ---- video-game style "build your look" modal ----
   var gmPrev=0;
@@ -817,7 +834,7 @@
     updateLookCount();
   }
   function updateLookCount(){ var n=Object.keys(savedItems).filter(function(k){return savedItems[k];}).length; var el=document.getElementById('lmCount'); if(el) el.textContent=n+' piece'+(n===1?'':'s')+' saved'; }
-  function closeLookModal(){ document.getElementById('lookModal').classList.remove('open'); }
+  function closeLookModal(){ document.getElementById('lookModal').classList.remove('open'); syncStyle(); }
   // section grouping: which state fields each question controls
   var SECMAP={reno:['reno'],edit:['dusk','sky'],floor:['floor2d','floor'],tour:['pano360','tour']};
   var SECDEF={reno:'reno',edit:'dusk',floor:'floor',tour:'pano360'};
@@ -900,6 +917,19 @@
     var tot=money(lines().total);
     var r2=document.getElementById('run2'); if(r2) r2.textContent=tot;
     var r2b=document.getElementById('run2b'); if(r2b) r2b.textContent=tot;
+    renderCart();
+  }
+  // line-item breakdown shown from the footer total
+  function renderCart(){
+    var r=lines(), html;
+    if(!r.L.length){ html='<span class="cart-empty">Nothing added yet.</span>'; }
+    else {
+      html='<div class="cart-h">Your order</div><ul>'+r.L.map(function(x){
+        var free=(x[1]==='Free'), disc=(String(x[0]).toLowerCase().indexOf('discount')>=0);
+        return '<li class="'+(free?'cp-free':'')+(disc?' cp-disc':'')+'"><span>'+x[0]+'</span><span class="cp-price">'+x[1]+'</span></li>';
+      }).join('')+'</ul><div class="cart-tot"><span>Total</span><b>'+money(r.total)+'</b></div>';
+    }
+    ['cartPopA','cartPopB'].forEach(function(id){ var el=document.getElementById(id); if(el) el.innerHTML=html; });
   }
 
   // ---- STEP 3 ----
@@ -1028,6 +1058,18 @@
   document.getElementById('skipExtras').onclick=function(){ goStep(3); };
   document.getElementById('to3').onclick=function(){ goStep(3); };
   document.getElementById('back2').onclick=function(){ goStep(2); if(hasExtras) showS2('b'); };
+  // footer total → line-item breakdown popover
+  document.querySelectorAll('.cart-toggle').forEach(function(b){
+    b.onclick=function(e){ e.stopPropagation(); var pop=b.parentNode.querySelector('.cart-pop'), willOpen=!pop.classList.contains('show');
+      document.querySelectorAll('.cart-pop.show').forEach(function(p){p.classList.remove('show');});
+      document.querySelectorAll('.cart-toggle.open').forEach(function(t){t.classList.remove('open');});
+      if(willOpen){ pop.classList.add('show'); b.classList.add('open'); }
+    };
+  });
+  document.addEventListener('click',function(e){ if(e.target.closest('.cart-pop')) return;
+    document.querySelectorAll('.cart-pop.show').forEach(function(p){p.classList.remove('show');});
+    document.querySelectorAll('.cart-toggle.open').forEach(function(t){t.classList.remove('open');});
+  });
   document.getElementById('startOrder').onclick=function(){ alert('Mockup: this continues to photo upload and checkout on the live site.  Package: '+packName()+' — '+money(lines().total)); };
 
   // ---- per-service examples: real Bella work where available; nearest real image (flagged) as a stand-in otherwise ----
