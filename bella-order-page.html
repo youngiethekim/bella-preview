@@ -830,20 +830,20 @@
     hasExtras=(p.path==='listing');
     if(p.path==='listing'){
       document.getElementById('s2title').textContent='Let’s stage your listing.';
-      document.getElementById('s2sub').textContent='The essentials first — how many photos, and the look. Anything extra comes after, only if you want it.';
+      (function(){ var s=document.getElementById('s2sub'); s.textContent=''; s.style.display='none'; })();
       // --- 2a: three clear steps — count, upload, style ---
       box.innerHTML=
-        '<div class="stp" id="stp1"><div class="stp-h"><span class="stp-n">1</span><div class="stp-t"><b>Virtual staging</b><span>Empty rooms furnished by real interior designers · '+money(stageUnit())+' each, volume discounts apply.'+exLink('stage')+'</span></div></div>'
+        '<div class="stp" id="stp1"><div class="stp-h"><span class="stp-n">1</span><div class="stp-t"><b>Virtual staging</b><span>Designer-furnished rooms · '+money(stageUnit())+' each.'+exLink('stage')+'</span></div></div>'
           +'<div class="core-top">'+qicon('sofa')
-            +'<span class="lbl"><b>How many photos?</b><span>Choose how many rooms to stage — or upload them in step 2 and we’ll count for you.</span></span>'
+            +'<span class="lbl"><b>How many photos?</b><span>Or upload below — we’ll count them.</span></span>'
             +stepper('photos')+'</div>'
           +volMeter()
         +'</div>'
-        +'<div class="stp" id="stp2"><div class="stp-h"><span class="stp-n">2</span><div class="stp-t"><b>Upload your photos</b><span>Optional right now — drop them in, or send them after checkout.</span></div></div>'
+        +'<div class="stp" id="stp2"><div class="stp-h"><span class="stp-n">2</span><div class="stp-t"><b>Upload your photos</b><span>Optional — add now, or send later.</span></div></div>'
           +uploadBlock()
           +'<div class="removal-row" id="removalRow"><span class="lbl"><b>Furniture removal</b><span>Occupied or cluttered? We clear the room first, then stage it clean.</span></span><span class="freeprice">Included free</span><button class="toggle" data-tog="removal"></button></div>'
         +'</div>'
-        +'<div class="stp" id="stp3"><div class="stp-h"><span class="stp-n">3</span><div class="stp-t"><b>Choose the look</b><span>Let our designers pick what sells for your buyer, or choose a style yourself. Uploaded a photo? Tap it above to set a style per room.</span></div></div>'
+        +'<div class="stp" id="stp3"><div class="stp-h"><span class="stp-n">3</span><div class="stp-t"><b>Choose the look</b><span>Our designers pick, or choose your own.</span></div></div>'
           +styleBox()
           +'<div style="margin-top:16px;border-top:1px solid #DDE7DD;padding-top:14px"><div class="req-lab" style="color:var(--faint)">References &amp; inspiration — optional</div>'
           +miniUpload('refs','Share a look you love','Reference photos, a Pinterest screenshot, a room you admire — anything that helps our designers understand your vision.')+'</div>'
@@ -882,7 +882,7 @@
       }
     } else {
       document.getElementById('s2title').textContent='What do you need to show?';
-      document.getElementById('s2sub').textContent='Pick the visuals your sales office needs. We build them from your drawings, no finished home required.';
+      (function(){ var s=document.getElementById('s2sub'); s.style.display=''; s.textContent='Pick the visuals your sales office needs. We build them from your drawings, no finished home required.'; })();
       box.innerHTML=
         catHead('Built from your drawings','We need: architectural blueprints or plans (PDF/CAD) and property dimensions','Renders are built from your plans, so the drawings and dimensions are what make them accurate. You can upload them at checkout, or send them right after.')
        +toggleStep((state.commercial?'Commercial interior renders':'Interior 3D renders'),'Photoreal rooms from your plans','useInt','rint','+'+money(rInt())+' each',state.commercial?'crint':'rint')
@@ -970,7 +970,7 @@
   function uploadBlock(){
     return '<div class="up-block"><label class="up-zone" id="upZone"><input type="file" id="upInput" accept="image/*" multiple hidden>'
       +'<svg class="up-i"><use href="#i-upload"/></svg>'
-      +'<span class="up-t"><b id="upTitle">Have your photos? Drop them in</b><span id="upSub">We’ll count them and set the number for you — JPG or PNG. No photos yet? Just pick a number and send them later.</span></span>'
+      +'<span class="up-t"><b id="upTitle">Have your photos? Drop them in</b><span id="upSub">JPG or PNG. No photos yet? Pick a number and send them later.</span></span>'
       +'</label><div class="up-prog" id="upProg"></div><div class="up-thumbs" id="upThumbs"></div>'
       +'<div class="up-later"><button type="button" class="up-later-toggle" id="upLaterToggle">📷  Photos not ready? Send your photographer a direct upload link →</button>'
         +'<div class="up-later-panel" id="upLaterPanel">'
@@ -1083,7 +1083,7 @@
     var n=state.uploads.length, target=state.photos, remaining=Math.max(0, target-n);
     if(!n){
       document.getElementById('upTitle').textContent='Have your photos? Drop them in';
-      document.getElementById('upSub').textContent='We’ll count them and set the number for you — JPG or PNG. No photos yet? Just pick a number and send them later.';
+      document.getElementById('upSub').textContent='JPG or PNG. No photos yet? Pick a number and send them later.';
     } else if(remaining>0){
       document.getElementById('upTitle').textContent=n+' of '+target+' photos in';
       document.getElementById('upSub').textContent='Drop in '+remaining+' more, or send the rest to us later.';
