@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Revisions — Project Review | Bella Virtual</title>
+<meta name="description" content="Bella Virtual revision workspace: pin, draw and explain the exact changes you want on each staged photo, then track them through to approval.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FDFCFA;--ink:#232120;--soft:#5E5A56;--faint:#9C978F;--line:#E8E4DE;--line-2:#F0EDE8;
+    --dark:#1C1A18;--green:#3E6B4C;--gold:#B8985A;--red:#C4553F;--blue:#3E6076;
+    --amber:#B5892F;--pad:32px;--railL:196px;--railR:352px;--top:60px;--tools:48px
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--ink);font-family:"Jost",system-ui,sans-serif;font-weight:300;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow:hidden}
+  img{display:block;max-width:100%}
+  button{font-family:inherit;cursor:pointer}
+  .micro{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .btn{background:var(--ink);color:#fff;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;padding:10px 16px;border:0;transition:.18s}
+  .btn:hover{background:var(--green)}
+  .btn:disabled{background:#CFCAC2;cursor:not-allowed}
+  .btn-line{background:transparent;color:var(--ink);border:1px solid var(--line);padding:9px 15px;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;transition:.18s}
+  .btn-line:hover{border-color:var(--ink)}
+  .btn-sm{padding:7px 11px;font-size:10.5px}
+
+  /* top bar */
+  header{height:var(--top);display:flex;align-items:center;gap:20px;padding:0 var(--pad);border-bottom:1px solid var(--line);background:rgba(253,252,250,.96)}
+  .brandline{display:flex;align-items:baseline;gap:14px;min-width:0}
+  .logo{font-size:15px;letter-spacing:.42em;font-weight:400}
+  .proj{font-size:13.5px;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .proj b{color:var(--ink);font-weight:400}
+  .pstat{display:inline-flex;align-items:center;gap:7px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:5px 11px;border-radius:99px;white-space:nowrap}
+  .pstat i{width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block}
+  .st-delivered{color:var(--soft);background:#F0EDE8}
+  .st-revisions{color:var(--amber);background:#FBF3E2}
+  .st-studio{color:var(--blue);background:#E9F0F4}
+  .st-ready{color:var(--green);background:#EDF4EE}
+  .st-approved{color:#fff;background:var(--green)}
+  .spacer{margin-left:auto}
+  /* role switcher */
+  .roles{display:flex;align-items:center;gap:0;border:1px solid var(--line);border-radius:99px;overflow:hidden}
+  .roles button{background:transparent;border:0;padding:8px 13px;font-size:11px;letter-spacing:.04em;color:var(--soft);display:flex;align-items:center;gap:7px}
+  .roles button.on{background:var(--ink);color:#fff}
+  .roles .av{width:18px;height:18px;border-radius:50%;background:#d8d2c8 center/cover;font-size:9px;display:grid;place-items:center;color:#fff}
+  .roles button.on .av{background:rgba(255,255,255,.25)}
+
+  /* workspace grid */
+  .wsp{display:grid;grid-template-columns:var(--railL) 1fr var(--railR);height:calc(100% - var(--top))}
+  aside{overflow-y:auto}
+  .rail-l{border-right:1px solid var(--line);background:#fff;padding:14px 12px}
+  .rail-l .lbl{padding:2px 4px 10px;display:flex;justify-content:space-between;align-items:center}
+  .plist{display:flex;flex-direction:column;gap:8px}
+  .pitem{border:1px solid var(--line);background:#fff;padding:0;text-align:left;overflow:hidden;position:relative;transition:.15s}
+  .pitem:hover{border-color:var(--ink)}
+  .pitem.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+  .pitem .th{aspect-ratio:4/3;background:#eee center/cover;position:relative}
+  .pitem .cap{display:flex;justify-content:space-between;align-items:center;padding:7px 9px;gap:6px}
+  .pitem .cap b{font-size:12px;font-weight:400;text-transform:capitalize}
+  .pbadge{font-size:9.5px;letter-spacing:.04em;padding:2px 6px;border-radius:99px;white-space:nowrap}
+  .pb-open{background:#FBF3E2;color:var(--amber)}
+  .pb-rev{background:#E9F0F4;color:var(--blue)}
+  .pb-appr{background:#EDF4EE;color:var(--green)}
+  .pb-none{color:var(--faint)}
+
+  /* center stage */
+  .center{display:flex;flex-direction:column;min-width:0;background:#F4F2EF}
+  .toolbar{height:var(--tools);display:flex;align-items:center;gap:6px;padding:0 14px;border-bottom:1px solid var(--line);background:#fff;flex-wrap:nowrap;overflow-x:auto}
+  .tgrp{display:flex;align-items:center;gap:4px}
+  .tsep{width:1px;height:24px;background:var(--line);margin:0 6px;flex:none}
+  .tool{width:34px;height:34px;border:1px solid transparent;border-radius:6px;background:transparent;display:grid;place-items:center;color:var(--soft);flex:none}
+  .tool:hover{background:#F4F2EF;color:var(--ink)}
+  .tool.on{background:var(--ink);color:#fff}
+  .tool svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .tool.wide{width:auto;padding:0 12px;display:flex;align-items:center;gap:7px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+  .tool.wide svg{flex:none}
+  .swatches{display:flex;gap:4px;align-items:center}
+  .sw{width:18px;height:18px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);cursor:pointer}
+  .sw.on{box-shadow:0 0 0 2px var(--ink)}
+  .tb-note{margin-left:auto;font-size:11px;color:var(--faint);white-space:nowrap;padding-left:10px}
+
+  .stage-scroll{flex:1;overflow:auto;display:grid;place-items:center;padding:26px}
+  .stage{position:relative;max-width:min(100%,900px);width:100%;box-shadow:0 18px 50px -22px rgba(0,0,0,.45);background:#fff;user-select:none}
+  .stage.placing{cursor:crosshair}
+  .stage.drawing{cursor:crosshair}
+  .stage img.base{width:100%;display:block}
+  .stage img.orig{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .cmp-tag{position:absolute;top:10px;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:rgba(20,18,16,.62);padding:4px 9px;z-index:6;pointer-events:none}
+  .cmp-b{left:10px}.cmp-a{right:10px}
+  .handle{position:absolute;top:0;bottom:0;width:2px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.15);z-index:6;cursor:ew-resize;transform:translateX(-1px)}
+  .handle::after{content:"‹ ›";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;background:#fff;color:var(--ink);font-size:13px;display:grid;place-items:center;box-shadow:0 3px 10px rgba(0,0,0,.25)}
+  .draw-layer{position:absolute;inset:0;width:100%;height:100%;z-index:7;pointer-events:none}
+  .draw-layer.live{pointer-events:auto}
+  .pin-layer{position:absolute;inset:0;z-index:8}
+  .pin{position:absolute;transform:translate(-50%,-100%);z-index:9}
+  .pin .dot{width:26px;height:26px;border-radius:50% 50% 50% 2px;background:var(--red);color:#fff;font-size:12px;font-weight:400;display:grid;place-items:center;box-shadow:0 3px 9px rgba(0,0,0,.3);border:2px solid #fff;cursor:pointer;transition:.12s}
+  .pin.sel .dot{transform:scale(1.18)}
+  .pin.done .dot{background:var(--green)}
+  .pin.studio .dot{background:var(--blue)}
+
+  /* right rail — thread */
+  .rail-r{border-left:1px solid var(--line);background:#fff;display:flex;flex-direction:column}
+  .rail-r{overflow:hidden}
+  .thread-head{padding:15px 16px 12px;border-bottom:1px solid var(--line-2)}
+  .thread-head h2{font-size:15px;font-weight:400;display:flex;justify-content:space-between;align-items:center}
+  .thread-head .sub{font-size:11.5px;color:var(--faint);margin-top:3px}
+  .pm-strip{display:flex;gap:6px;padding:10px 16px;border-bottom:1px solid var(--line-2);background:#FAF9F7;flex-wrap:wrap}
+  .cards{flex:1;overflow-y:auto;padding:12px 16px 20px}
+  .empty{color:var(--faint);font-size:13px;text-align:center;padding:40px 20px}
+  .card{border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:10px;transition:.15s;background:#fff}
+  .card.sel{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+  .card .chd{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+  .card .cn{width:20px;height:20px;border-radius:50%;background:var(--red);color:#fff;font-size:11px;display:grid;place-items:center;flex:none}
+  .card.done .cn{background:var(--green)}.card.studio .cn{background:var(--blue)}
+  .card .who{font-size:11.5px;color:var(--soft);flex:1;min-width:0}
+  .card .who b{color:var(--ink);font-weight:400}
+  .card .who .rl{font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-left:5px}
+  .chip{font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:99px;white-space:nowrap}
+  .ch-open{background:#FBF3E2;color:var(--amber)}
+  .ch-studio{background:#E9F0F4;color:var(--blue)}
+  .ch-revised{background:#EFEAF4;color:#6B4E86}
+  .ch-approved{background:#EDF4EE;color:var(--green)}
+  .card .note{font-size:13.5px;color:var(--ink);white-space:pre-wrap;word-break:break-word}
+  .card .sketch{margin-top:8px;border:1px solid var(--line-2);border-radius:6px;overflow:hidden;position:relative;aspect-ratio:16/10;background:#F4F2EF center/cover}
+  .card .sketch svg{position:absolute;inset:0;width:100%;height:100%}
+  .replies{margin-top:9px;display:flex;flex-direction:column;gap:7px}
+  .reply{font-size:12.5px;color:var(--soft);padding-left:10px;border-left:2px solid var(--line)}
+  .reply b{color:var(--ink);font-weight:400}
+  .reply .rl{font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-left:4px}
+  .card .actions{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .replybox{display:flex;gap:6px;margin-top:9px}
+  .replybox input{flex:1;border:1px solid var(--line);border-radius:6px;padding:8px 10px;font-family:inherit;font-size:12.5px}
+  .replybox input:focus{outline:0;border-color:var(--ink)}
+  .linkbtn{background:transparent;border:0;color:var(--green);font-size:11.5px;letter-spacing:.03em;padding:4px 2px}
+  .linkbtn:hover{text-decoration:underline}
+  textarea.compose{width:100%;border:1px solid var(--ink);border-radius:8px;padding:11px;font-family:inherit;font-size:13.5px;resize:vertical;min-height:74px}
+  textarea.compose:focus{outline:0}
+  .compose-hint{font-size:11.5px;color:var(--faint);margin:8px 0 9px;line-height:1.45}
+  .compose-actions{display:flex;gap:7px}
+
+  /* modals */
+  .modal{position:fixed;inset:0;z-index:80;background:rgba(20,18,16,.6);display:none;align-items:center;justify-content:center;padding:24px}
+  .modal.open{display:flex}
+  .m-box{background:#fff;width:100%;max-width:460px;border-radius:10px;overflow:hidden;position:relative}
+  .m-box h3{font-size:18px;font-weight:400;padding:20px 22px 4px}
+  .m-box .m-body{padding:6px 22px 22px}
+  .m-body label{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin:12px 0 5px}
+  .m-body input{width:100%;border:1px solid var(--line);border-radius:7px;padding:10px 12px;font-family:inherit;font-size:14px}
+  .m-x{position:absolute;top:12px;right:14px;width:32px;height:32px;border:0;background:transparent;font-size:22px;color:var(--faint);line-height:1}
+  .m-x:hover{color:var(--ink)}
+  .guests{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .guest-pill{font-size:11.5px;background:#F0EDE8;border-radius:99px;padding:5px 11px;display:flex;gap:7px;align-items:center}
+
+  /* studio packet (large, printable) */
+  .packet{max-width:900px;max-height:88vh;overflow-y:auto;border-radius:10px}
+  .pk-head{display:flex;justify-content:space-between;align-items:flex-start;padding:24px 26px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:2}
+  .pk-head h3{padding:0;font-size:20px}
+  .pk-head .sub{font-size:12.5px;color:var(--soft);margin-top:4px}
+  .pk-body{padding:8px 26px 30px}
+  .pk-photo{padding:22px 0;border-bottom:1px solid var(--line-2);display:grid;grid-template-columns:1fr 260px;gap:24px;align-items:start}
+  .pk-photo:last-child{border-bottom:0}
+  .pk-fig{position:relative;border:1px solid var(--line)}
+  .pk-fig img{width:100%;display:block}
+  .pk-fig .pin{transform:translate(-50%,-100%)}
+  .pk-fig svg{position:absolute;inset:0;width:100%;height:100%}
+  .pk-list{font-size:13px}
+  .pk-list h4{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
+  .pk-list ol{list-style:none;counter-reset:r;display:flex;flex-direction:column;gap:9px}
+  .pk-list li{position:relative;padding-left:26px;line-height:1.4;color:var(--ink)}
+  .pk-list li .rn{position:absolute;left:0;top:0;width:19px;height:19px;border-radius:50%;background:var(--ink);color:#fff;font-size:11px;display:grid;place-items:center}
+  .pk-list li small{display:block;color:var(--faint);font-size:11px;margin-top:2px}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:13px;padding:12px 20px;border-radius:99px;z-index:120;opacity:0;transition:.25s;pointer-events:none}
+  .toast.show{opacity:1}
+
+  @media print{
+    body{overflow:visible;height:auto}
+    header,.wsp,.modal:not(.open){display:none!important}
+    .modal.open{position:static;background:#fff;padding:0;display:block}
+    .packet{max-height:none;box-shadow:none;max-width:100%}
+    .m-x,.pk-head .btn{display:none}
+  }
+  @media(max-width:1120px){
+    :root{--railR:300px;--railL:150px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brandline">
+    <span class="logo">BELLA</span>
+    <span class="proj"><b id="hProj">42 Bayview Terrace</b> · <span id="hOrder">#BV-10428</span></span>
+  </div>
+  <span class="pstat" id="hStatus"><i></i><span></span></span>
+  <span class="micro" id="hRound" style="color:var(--faint)"></span>
+  <div class="spacer"></div>
+  <div class="roles" id="roleSw">
+    <button data-role="agent" class="on"><span class="av">BB</span>Agent</button>
+    <button data-role="guest"><span class="av">RC</span>Realtor client</button>
+    <button data-role="pm"><span class="av">BV</span>Bella PM</button>
+  </div>
+  <button class="btn" id="primaryBtn">Submit to Bella</button>
+</header>
+
+<div class="wsp">
+  <!-- LEFT: photos -->
+  <aside class="rail-l">
+    <div class="lbl"><span class="micro">Photos</span><span class="micro" id="plCount"></span></div>
+    <div class="plist" id="plist"></div>
+  </aside>
+
+  <!-- CENTER: stage -->
+  <section class="center">
+    <div class="toolbar" id="toolbar">
+      <div class="tgrp">
+        <button class="tool wide" id="tCompare" title="Before / after"><svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M5 8l-3 4 3 4"/><path d="M19 8l3 4-3 4"/></svg>Compare</button>
+      </div>
+      <div class="tsep"></div>
+      <div class="tgrp" id="annoTools">
+        <button class="tool wide on" data-tool="pin" title="Add a request pin"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></svg>Add request</button>
+        <button class="tool" data-tool="arrow" title="Arrow"><svg viewBox="0 0 24 24"><path d="M5 19L19 5"/><path d="M11 5h8v8"/></svg></button>
+        <button class="tool" data-tool="circle" title="Circle"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="8" ry="6.2"/></svg></button>
+        <button class="tool" data-tool="free" title="Freehand"><svg viewBox="0 0 24 24"><path d="M4 16c3 0 3-8 6-8s3 8 6 8 4-3 4-3"/></svg></button>
+        <div class="swatches" id="swatches"></div>
+        <button class="tool" id="tUndo" title="Undo last sketch"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10H9"/></svg></button>
+        <button class="tool" id="tClear" title="Clear sketch on this request"><svg viewBox="0 0 24 24"><path d="M6 7h12M9 7V5h6v2M8 7l1 12h6l1-12"/></svg></button>
+      </div>
+      <span class="tb-note" id="tbNote"></span>
+    </div>
+    <div class="stage-scroll">
+      <div class="stage" id="stage">
+        <img class="base" id="baseImg" alt="">
+        <img class="orig" id="origImg" alt="" style="display:none">
+        <span class="cmp-tag cmp-b" id="cmpB" style="display:none">Original</span>
+        <span class="cmp-tag cmp-a" id="cmpA" style="display:none">Staged</span>
+        <div class="handle" id="handle" style="display:none;left:50%"></div>
+        <svg class="draw-layer" id="drawLayer" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+        <div class="pin-layer" id="pinLayer"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RIGHT: thread -->
+  <aside class="rail-r">
+    <div class="thread-head">
+      <h2><span id="thTitle">Requests</span> <button class="linkbtn" id="inviteBtn">+ Invite</button></h2>
+      <div class="sub" id="thSub">Click the image to drop a pin where you want a change.</div>
+    </div>
+    <div class="pm-strip" id="pmStrip" style="display:none"></div>
+    <div class="cards" id="cards"></div>
+  </aside>
+</div>
+
+<!-- INVITE MODAL -->
+<div class="modal" id="inviteModal">
+  <div class="m-box">
+    <button class="m-x" data-close="inviteModal">×</button>
+    <h3>Invite a collaborator</h3>
+    <div class="m-body">
+      <p class="compose-hint">Invite your buyer, seller, or co-agent to view this project and leave their own requests. They join as a <b>Realtor client</b> (view + comment, can't approve). <span class="chip ch-open" style="margin-left:4px">Demo</span></p>
+      <label>Name or email</label>
+      <input id="inviteName" placeholder="jordan@realty.com" autocomplete="off">
+      <div class="guests" id="guestList"></div>
+      <div style="margin-top:16px;display:flex;gap:8px"><button class="btn" id="inviteAdd">Send invite</button><button class="btn-line" data-close="inviteModal">Done</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- STUDIO PACKET MODAL -->
+<div class="modal" id="packetModal">
+  <div class="m-box packet">
+    <div class="pk-head">
+      <div>
+        <h3>Studio revision brief</h3>
+        <div class="sub" id="pkSub"></div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-line btn-sm" onclick="window.print()">Print / PDF</button>
+        <button class="btn btn-sm" id="pkSend">Mark sent to studio</button>
+        <button class="m-x" data-close="packetModal" style="position:static">×</button>
+      </div>
+    </div>
+    <div class="pk-body" id="pkBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+  var CDN='assets/projects/';
+  var LSKEY='bella-review-v1';
+
+  /* ---------------- seed data ---------------- */
+  function seed(){
+    var rooms=[
+      {id:'living',label:'Living room'},
+      {id:'kitchen',label:'Kitchen'},
+      {id:'dining',label:'Dining'},
+      {id:'primary',label:'Primary bedroom'},
+      {id:'bed2',label:'Bedroom 2'},
+      {id:'bed3',label:'Bedroom 3'}
+    ];
+    var photos=rooms.map(function(r){
+      return {id:r.id,label:r.label,originalURL:CDN+r.id+'-before.jpg',versions:[{v:1,url:CDN+r.id+'-after.jpg'}],pins:[]};
+    });
+    /* two sample requests on the living room, one on the kitchen — to show the concept */
+    photos[0].pins=[
+      {id:uid(),xPct:26,yPct:52,note:'Can we swap this artwork for something warmer? The blue feels cold against the staging.',drawing:[{type:'circle',color:'#C4553F',x1:14,y1:30,x2:38,y2:60}],author:'Beverly Bahm',role:'agent',ts:'Jul 22, 1:04 PM',status:'open',replies:[]},
+      {id:uid(),xPct:70,yPct:74,note:'Rug is a little small for the space — size up so it sits under the front sofa legs.',drawing:[],author:'Beverly Bahm',role:'agent',ts:'Jul 22, 1:06 PM',status:'open',replies:[{author:'Jordan (buyer)',role:'guest',text:'Agree, a bigger rug would help a lot.',ts:'Jul 22, 1:20 PM'}]}
+    ];
+    photos[1].pins=[
+      {id:uid(),xPct:52,yPct:40,note:'Add a couple of counter stools at the island so buyers picture eating here.',drawing:[{type:'arrow',color:'#C4553F',x1:40,y1:66,x2:52,y2:46}],author:'Beverly Bahm',role:'agent',ts:'Jul 22, 1:10 PM',status:'open',replies:[]}
+    ];
+    return {
+      id:'BV-10428', address:'42 Bayview Terrace, Toronto', order:'#BV-10428',
+      status:'delivered', round:1,
+      collaborators:[{name:'Jordan (buyer)',role:'guest'}],
+      photos:photos
+    };
+  }
+  function uid(){ uid._n=(uid._n||0)+1; return 'p'+uid._n+'_'+(''+Math.abs(hash(JSON.stringify(uid._n)+state_seedsalt()))).slice(0,4); }
+  function state_seedsalt(){ return 'bella'; }
+  function hash(s){ var h=0,i; for(i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))|0; } return h; }
+
+  /* ---------------- state ---------------- */
+  var P;                 // project
+  var role='agent';
+  var curId;             // current photo id
+  var tool='pin';        // pin | arrow | circle | free
+  var color='#C4553F';
+  var selPin=null;       // selected pin id
+  var composing=null;    // pin id being composed (new)
+  var compare=false;
+  var clipPct=50;
+  var COLORS=['#C4553F','#B8985A','#3E6B4C','#3E6076','#232120'];
+  var STATUS={
+    open:{label:'Open',chip:'ch-open',pin:''},
+    studio:{label:'Sent to studio',chip:'ch-studio',pin:'studio'},
+    revised:{label:'Revised',chip:'ch-revised',pin:'done'},
+    approved:{label:'Approved',chip:'ch-approved',pin:'done'}
+  };
+  var PSTATUS={
+    delivered:{label:'Delivered',cls:'st-delivered'},
+    revisions:{label:'Revisions requested',cls:'st-revisions'},
+    studio:{label:'With studio',cls:'st-studio'},
+    ready:{label:'Ready to review',cls:'st-ready'},
+    approved:{label:'Approved',cls:'st-approved'}
+  };
+
+  /* ---------------- persistence ---------------- */
+  function save(){ try{ localStorage.setItem(LSKEY, JSON.stringify(P)); }catch(e){} }
+  function load(){
+    try{ var raw=localStorage.getItem(LSKEY); if(raw){ P=JSON.parse(raw); return; } }catch(e){}
+    P=seed();
+  }
+
+  /* ---------------- helpers ---------------- */
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return (s==null?'':''+s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function photo(){ return P.photos.filter(function(p){return p.id===curId;})[0]; }
+  function curURL(p){ return p.versions[p.versions.length-1].url; }
+  function roleName(r){ return r==='pm'?'Bella (PM)':(r==='guest'?'Realtor client':'Agent'); }
+  function roleAvatar(r){ return r==='pm'?'BV':(r==='guest'?'RC':'BB'); }
+  function canAnnotate(){ return role==='agent'||role==='guest'; }
+  function canApprove(){ return role==='agent'; }
+  function canManage(){ return role==='pm'; }
+  function toast(msg){ var t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast._t); toast._t=setTimeout(function(){t.classList.remove('show');},2200); }
+
+  /* ---------------- draw layer rendering ---------------- */
+  var SVGNS='http://www.w3.org/2000/svg';
+  function strokeToEl(sh, dim){
+    var el;
+    if(sh.type==='free'){
+      el=document.createElementNS(SVGNS,'polyline');
+      el.setAttribute('points', sh.pts.map(function(p){return p[0]+','+p[1];}).join(' '));
+      el.setAttribute('fill','none');
+    } else if(sh.type==='circle'){
+      el=document.createElementNS(SVGNS,'ellipse');
+      el.setAttribute('cx',(sh.x1+sh.x2)/2); el.setAttribute('cy',(sh.y1+sh.y2)/2);
+      el.setAttribute('rx',Math.abs(sh.x2-sh.x1)/2); el.setAttribute('ry',Math.abs(sh.y2-sh.y1)/2);
+      el.setAttribute('fill','none');
+    } else if(sh.type==='arrow'){
+      var g=document.createElementNS(SVGNS,'g');
+      var ln=document.createElementNS(SVGNS,'line');
+      ln.setAttribute('x1',sh.x1); ln.setAttribute('y1',sh.y1); ln.setAttribute('x2',sh.x2); ln.setAttribute('y2',sh.y2);
+      ln.setAttribute('stroke',sh.color); ln.setAttribute('stroke-width',1.1); ln.setAttribute('vector-effect','non-scaling-stroke');
+      g.appendChild(ln);
+      var ang=Math.atan2(sh.y2-sh.y1, sh.x2-sh.x1), L=3.4;
+      [ang+2.6, ang-2.6].forEach(function(a){
+        var h=document.createElementNS(SVGNS,'line');
+        h.setAttribute('x1',sh.x2); h.setAttribute('y1',sh.y2);
+        h.setAttribute('x2',sh.x2+L*Math.cos(a)); h.setAttribute('y2',sh.y2+L*Math.sin(a));
+        h.setAttribute('stroke',sh.color); h.setAttribute('stroke-width',1.1); h.setAttribute('vector-effect','non-scaling-stroke');
+        g.appendChild(h);
+      });
+      return g;
+    }
+    if(el){ el.setAttribute('stroke',sh.color); el.setAttribute('stroke-width',1.1); el.setAttribute('vector-effect','non-scaling-stroke'); el.setAttribute('stroke-linecap','round'); el.setAttribute('stroke-linejoin','round'); }
+    return el;
+  }
+  function renderDraw(){
+    var svg=$('drawLayer'); svg.innerHTML='';
+    var p=photo(); if(!p) return;
+    p.pins.forEach(function(pin){
+      (pin.drawing||[]).forEach(function(sh){
+        var el=strokeToEl(sh); if(el){ el.style.opacity=(selPin&&selPin!==pin.id)?0.35:1; svg.appendChild(el); }
+      });
+    });
+    if(live.shape){ var el=strokeToEl(live.shape); if(el) svg.appendChild(el); }
+  }
+
+  /* ---------------- pins ---------------- */
+  function renderPins(){
+    var layer=$('pinLayer'); layer.innerHTML='';
+    var p=photo(); if(!p) return;
+    p.pins.forEach(function(pin,i){
+      var d=document.createElement('div');
+      d.className='pin '+(STATUS[pin.status].pin)+(selPin===pin.id?' sel':'');
+      d.style.left=pin.xPct+'%'; d.style.top=pin.yPct+'%';
+      d.innerHTML='<div class="dot">'+(i+1)+'</div>';
+      d.onclick=function(e){ e.stopPropagation(); selectPin(pin.id); };
+      layer.appendChild(d);
+    });
+  }
+
+  /* ---------------- stage image ---------------- */
+  function renderStage(){
+    var p=photo(); if(!p) return;
+    $('baseImg').src=curURL(p);
+    $('origImg').src=p.originalURL;
+    var showCmp=compare;
+    $('origImg').style.display=showCmp?'block':'none';
+    $('cmpB').style.display=showCmp?'block':'none';
+    $('cmpA').style.display=showCmp?'block':'none';
+    $('handle').style.display=showCmp?'block':'none';
+    applyClip();
+    $('tCompare').classList.toggle('on',compare);
+    renderDraw(); renderPins();
+  }
+  function applyClip(){
+    // original (before) on top, clipped to left clipPct
+    $('origImg').style.clipPath='inset(0 '+(100-clipPct)+'% 0 0)';
+    $('handle').style.left=clipPct+'%';
+  }
+
+  /* ---------------- photo list ---------------- */
+  function photoBadge(p){
+    var open=p.pins.filter(function(x){return x.status==='open'||x.status==='studio';}).length;
+    var appr=p.pins.length&&p.pins.every(function(x){return x.status==='approved';});
+    var rev=p.pins.some(function(x){return x.status==='revised';});
+    if(appr) return '<span class="pbadge pb-appr">approved</span>';
+    if(open) return '<span class="pbadge pb-open">'+open+' request'+(open>1?'s':'')+'</span>';
+    if(rev) return '<span class="pbadge pb-rev">revised ✓</span>';
+    return '<span class="pbadge pb-none">—</span>';
+  }
+  function renderList(){
+    var wrap=$('plist'); wrap.innerHTML='';
+    P.photos.forEach(function(p){
+      var b=document.createElement('button');
+      b.className='pitem'+(p.id===curId?' on':'');
+      b.innerHTML='<div class="th" style="background-image:url('+curURL(p)+')"></div>'
+        +'<div class="cap"><b>'+esc(p.label)+'</b>'+photoBadge(p)+'</div>';
+      b.onclick=function(){ curId=p.id; selPin=null; composing=null; render(); };
+      wrap.appendChild(b);
+    });
+    $('plCount').textContent=P.photos.length+' photos';
+  }
+
+  /* ---------------- thread / cards ---------------- */
+  function sketchThumb(pin,p){
+    var svg='<svg viewBox="0 0 100 100" preserveAspectRatio="none">'+(pin.drawing||[]).map(function(sh){ return shapeMarkup(sh); }).join('')+'</svg>';
+    return '<div class="sketch" style="background-image:url('+curURL(p)+')">'+svg+'</div>';
+  }
+  function shapeMarkup(sh){
+    if(sh.type==='free') return '<polyline points="'+sh.pts.map(function(p){return p[0]+','+p[1];}).join(' ')+'" fill="none" stroke="'+sh.color+'" stroke-width="1.2" vector-effect="non-scaling-stroke" stroke-linecap="round"/>';
+    if(sh.type==='circle') return '<ellipse cx="'+(sh.x1+sh.x2)/2+'" cy="'+(sh.y1+sh.y2)/2+'" rx="'+Math.abs(sh.x2-sh.x1)/2+'" ry="'+Math.abs(sh.y2-sh.y1)/2+'" fill="none" stroke="'+sh.color+'" stroke-width="1.2" vector-effect="non-scaling-stroke"/>';
+    if(sh.type==='arrow'){ var ang=Math.atan2(sh.y2-sh.y1,sh.x2-sh.x1),L=3.4; var h=[ang+2.6,ang-2.6].map(function(a){return '<line x1="'+sh.x2+'" y1="'+sh.y2+'" x2="'+(sh.x2+L*Math.cos(a))+'" y2="'+(sh.y2+L*Math.sin(a))+'" stroke="'+sh.color+'" stroke-width="1.2" vector-effect="non-scaling-stroke"/>';}).join(''); return '<line x1="'+sh.x1+'" y1="'+sh.y1+'" x2="'+sh.x2+'" y2="'+sh.y2+'" stroke="'+sh.color+'" stroke-width="1.2" vector-effect="non-scaling-stroke"/>'+h; }
+    return '';
+  }
+  function nextStatusBtn(pin){
+    var flow={open:'studio',studio:'revised',revised:'approved'};
+    var nx=flow[pin.status];
+    if(!nx) return '';
+    var lbl={studio:'Send to studio',revised:'Mark revised',approved:'Mark approved'}[nx];
+    return '<button class="btn-line btn-sm" data-adv="'+pin.id+'" data-to="'+nx+'">'+lbl+'</button>';
+  }
+  function renderCards(){
+    var wrap=$('cards'); wrap.innerHTML='';
+    var p=photo(); if(!p) return;
+    // composer for a new pin
+    if(composing){
+      var cp=p.pins.filter(function(x){return x.id===composing;})[0];
+      var idx=p.pins.indexOf(cp)+1;
+      var box=document.createElement('div');
+      box.className='card sel';
+      box.innerHTML='<div class="chd"><span class="cn">'+idx+'</span><span class="who"><b>New request</b><span class="rl">'+roleName(role)+'</span></span></div>'
+        +(cp.drawing.length?sketchThumb(cp,p):'')
+        +'<textarea class="compose" id="composeText" placeholder="Describe the change you want here…"></textarea>'
+        +'<div class="compose-hint">Tip: pick <b>Arrow</b>, <b>Circle</b> or <b>Freehand</b> above and sketch right on the photo to show exactly what you mean.</div>'
+        +'<div class="compose-actions"><button class="btn btn-sm" id="saveReq">Save request</button><button class="btn-line btn-sm" id="cancelReq">Cancel</button></div>';
+      wrap.appendChild(box);
+      var ta=$('composeText'); ta.focus();
+      $('saveReq').onclick=function(){ saveComposed(ta.value); };
+      $('cancelReq').onclick=function(){ cancelComposed(); };
+    }
+    if(!p.pins.length && !composing){
+      wrap.innerHTML='<div class="empty">No requests on this photo yet.<br>'+(canAnnotate()?'Click <b>Add request</b>, then click the spot you want changed.':'Switch to Agent or Realtor client to add one.')+'</div>';
+      return;
+    }
+    p.pins.forEach(function(pin,i){
+      if(composing===pin.id) return; // already shown as composer
+      var st=STATUS[pin.status];
+      var card=document.createElement('div');
+      card.className='card '+st.pin+(selPin===pin.id?' sel':'');
+      card.setAttribute('data-card',pin.id);
+      var html='<div class="chd"><span class="cn">'+(i+1)+'</span>'
+        +'<span class="who"><b>'+esc(pin.author)+'</b><span class="rl">'+roleName(pin.role)+'</span></span>'
+        +'<span class="chip '+st.chip+'">'+st.label+'</span></div>';
+      if(pin.drawing&&pin.drawing.length) html+=sketchThumb(pin,p);
+      html+='<div class="note">'+esc(pin.note)+'</div>';
+      if(pin.replies&&pin.replies.length){
+        html+='<div class="replies">'+pin.replies.map(function(r){
+          return '<div class="reply"><b>'+esc(r.author)+'</b><span class="rl">'+roleName(r.role)+'</span> · '+esc(r.ts)+'<br>'+esc(r.text)+'</div>';
+        }).join('')+'</div>';
+      }
+      html+='<div class="actions">';
+      if(canManage()) html+=nextStatusBtn(pin);
+      if(canManage()&&pin.status!=='approved') html+='<button class="linkbtn" data-reopen="'+pin.id+'">Reopen</button>';
+      html+='</div>';
+      html+='<div class="replybox"><input placeholder="Reply…" data-reply="'+pin.id+'"><button class="btn-line btn-sm" data-send="'+pin.id+'">Send</button></div>';
+      card.innerHTML=html;
+      card.onclick=function(e){ if(e.target.closest('button')||e.target.closest('input')) return; selectPin(pin.id); };
+      wrap.appendChild(card);
+    });
+    // wire actions
+    wrap.querySelectorAll('[data-adv]').forEach(function(b){ b.onclick=function(){ advance(b.getAttribute('data-adv'), b.getAttribute('data-to')); }; });
+    wrap.querySelectorAll('[data-reopen]').forEach(function(b){ b.onclick=function(){ setStatus(b.getAttribute('data-reopen'),'open'); toast('Reopened'); }; });
+    wrap.querySelectorAll('[data-send]').forEach(function(b){ b.onclick=function(){ var id=b.getAttribute('data-send'); var inp=wrap.querySelector('[data-reply="'+id+'"]'); addReply(id, inp.value); }; });
+    wrap.querySelectorAll('[data-reply]').forEach(function(inp){ inp.onkeydown=function(e){ if(e.key==='Enter'){ addReply(inp.getAttribute('data-reply'), inp.value); } }; });
+  }
+
+  /* ---------------- interactions ---------------- */
+  function selectPin(id){
+    selPin=id; composing=null; renderCards(); renderPins(); renderDraw();
+    var c=$('cards').querySelector('[data-card="'+id+'"]'); if(c) c.scrollIntoView({block:'nearest',behavior:'smooth'});
+  }
+  function addReply(id, text){
+    text=(text||'').trim(); if(!text) return;
+    var p=photo(), pin=p.pins.filter(function(x){return x.id===id;})[0]; if(!pin) return;
+    pin.replies=pin.replies||[]; pin.replies.push({author:roleName(role),role:role,text:text,ts:nowStr()});
+    save(); renderCards();
+  }
+  function advance(id,to){
+    setStatus(id,to);
+    if(to==='studio') toast('Marked sent to studio');
+    if(to==='revised') toast('Marked revised');
+    if(to==='approved') toast('Approved');
+  }
+  function setStatus(id,to){
+    var p=photo(), pin=p.pins.filter(function(x){return x.id===id;})[0]; if(!pin) return;
+    pin.status=to; recomputeProject(); save(); render();
+  }
+  function recomputeProject(){
+    var all=[]; P.photos.forEach(function(p){ p.pins.forEach(function(x){ all.push(x); }); });
+    if(!all.length){ P.status='delivered'; return; }
+    if(all.every(function(x){return x.status==='approved';})){ P.status='approved'; return; }
+    if(all.some(function(x){return x.status==='studio';})){ P.status='studio'; return; }
+    if(all.some(function(x){return x.status==='revised';})){ P.status='ready'; return; }
+    P.status='revisions';
+  }
+  function nowStr(){ return 'Just now'; }
+
+  /* placing a pin + drawing on the stage */
+  var live={down:false,shape:null};
+  function stagePct(e){
+    var r=$('stage').getBoundingClientRect();
+    var x=((e.clientX-r.left)/r.width)*100, y=((e.clientY-r.top)/r.height)*100;
+    return {x:Math.max(0,Math.min(100,x)), y:Math.max(0,Math.min(100,y))};
+  }
+  function onStageDown(e){
+    if(!canAnnotate()) return;
+    var pt=stagePct(e);
+    if(tool==='pin'){
+      // create a pin + open composer
+      var p=photo();
+      var pin={id:uid(),xPct:pt.x,yPct:pt.y,note:'',drawing:[],author:roleName(role)==='Agent'?'Beverly Bahm':(role==='guest'?(P.collaborators[0]?P.collaborators[0].name:'Realtor client'):'Bella'),role:role,ts:nowStr(),status:'open',replies:[]};
+      p.pins.push(pin); composing=pin.id; selPin=pin.id;
+      save(); renderPins(); renderCards(); renderList();
+      return;
+    }
+    // drawing tools — must have an active request (composing or selected & editable)
+    var target=composing||selPin;
+    if(!target){ toast('Add or select a request first, then sketch'); return; }
+    live.down=true; $('stage').classList.add('drawing');
+    if(tool==='free') live.shape={type:'free',color:color,pts:[[pt.x,pt.y]]};
+    else live.shape={type:tool,color:color,x1:pt.x,y1:pt.y,x2:pt.x,y2:pt.y};
+    renderDraw();
+  }
+  function onStageMove(e){
+    if(!live.down||!live.shape) return;
+    var pt=stagePct(e);
+    if(live.shape.type==='free') live.shape.pts.push([pt.x,pt.y]);
+    else { live.shape.x2=pt.x; live.shape.y2=pt.y; }
+    renderDraw();
+  }
+  function onStageUp(){
+    if(!live.down){ return; }
+    live.down=false; $('stage').classList.remove('drawing');
+    var target=composing||selPin;
+    if(live.shape&&target){
+      var p=photo(), pin=p.pins.filter(function(x){return x.id===target;})[0];
+      if(pin){ pin.drawing=pin.drawing||[]; pin.drawing.push(live.shape); save(); }
+    }
+    live.shape=null; renderDraw(); renderCards();
+  }
+  function undoSketch(){
+    var target=composing||selPin; if(!target){ toast('Select a request first'); return; }
+    var p=photo(), pin=p.pins.filter(function(x){return x.id===target;})[0];
+    if(pin&&pin.drawing&&pin.drawing.length){ pin.drawing.pop(); save(); renderDraw(); renderCards(); }
+  }
+  function clearSketch(){
+    var target=composing||selPin; if(!target){ toast('Select a request first'); return; }
+    var p=photo(), pin=p.pins.filter(function(x){return x.id===target;})[0];
+    if(pin){ pin.drawing=[]; save(); renderDraw(); renderCards(); }
+  }
+  function saveComposed(text){
+    text=(text||'').trim();
+    var p=photo(), pin=p.pins.filter(function(x){return x.id===composing;})[0];
+    if(!pin) return;
+    if(!text && (!pin.drawing||!pin.drawing.length)){ toast('Add a note or a sketch first'); return; }
+    pin.note=text||'(see sketch)';
+    composing=null; recomputeProject(); save(); render();
+    toast('Request added');
+  }
+  function cancelComposed(){
+    var p=photo(); p.pins=p.pins.filter(function(x){return x.id!==composing;});
+    composing=null; selPin=null; save(); render();
+  }
+
+  /* ---------------- primary button + PM strip ---------------- */
+  function renderPrimary(){
+    var btn=$('primaryBtn');
+    var openCount=0; P.photos.forEach(function(p){ p.pins.forEach(function(x){ if(x.status==='open') openCount++; }); });
+    if(role==='guest'){ btn.style.display='none'; }
+    else if(role==='pm'){ btn.style.display='inline-block'; btn.textContent='Send to studio'; btn.disabled=false; btn.onclick=openPacket; }
+    else { // agent
+      btn.style.display='inline-block';
+      if(P.status==='ready'){ btn.textContent='Approve project'; btn.disabled=false; btn.onclick=approveProject; }
+      else { btn.textContent='Submit '+openCount+' request'+(openCount===1?'':'s')+' to Bella'; btn.disabled=openCount===0; btn.onclick=submitToBella; }
+    }
+    // PM strip
+    var strip=$('pmStrip');
+    if(role==='pm'){
+      strip.style.display='flex';
+      strip.innerHTML='<button class="btn-line btn-sm" id="pmPacket">📋 Studio brief</button>'
+        +'<label class="btn-line btn-sm" style="cursor:pointer;position:relative">⬆ Push revised '+esc(photo()?photo().label.toLowerCase():'')+'<input type="file" id="pmUpload" accept="image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer"></label>'
+        +'<button class="btn-line btn-sm" id="pmResolveAll">Mark all sent</button>';
+      $('pmPacket').onclick=openPacket;
+      $('pmResolveAll').onclick=function(){ photo().pins.forEach(function(x){ if(x.status==='open') x.status='studio'; }); recomputeProject(); save(); render(); toast('All open requests on this photo sent to studio'); };
+      $('pmUpload').onchange=function(){ pushRevised(this); };
+    } else { strip.style.display='none'; strip.innerHTML=''; }
+  }
+  function submitToBella(){ P.status='revisions'; save(); render(); toast('Sent to Bella — we’ll relay it to the studio'); }
+  function approveProject(){ P.photos.forEach(function(p){ p.pins.forEach(function(x){ x.status='approved'; }); }); P.status='approved'; save(); render(); toast('Project approved 🎉'); }
+  function pushRevised(input){
+    var f=input.files&&input.files[0]; if(!f) return;
+    var r=new FileReader();
+    r.onload=function(){
+      var p=photo(); p.versions.push({v:p.versions.length+1,url:r.result});
+      p.pins.forEach(function(x){ if(x.status==='studio'||x.status==='open') x.status='revised'; });
+      compare=true; clipPct=50; recomputeProject(); save(); render();
+      toast('Revised '+p.label.toLowerCase()+' uploaded — client can review');
+    };
+    r.readAsDataURL(f);
+  }
+
+  /* ---------------- studio packet ---------------- */
+  function openPacket(){
+    var withReq=P.photos.filter(function(p){ return p.pins.some(function(x){return x.status==='open'||x.status==='studio';}); });
+    $('pkSub').textContent=P.address+' · '+P.order+' · Round '+P.round+' · '+withReq.reduce(function(a,p){return a+p.pins.length;},0)+' request(s) across '+withReq.length+' photo(s)';
+    var body=$('pkBody');
+    if(!withReq.length){ body.innerHTML='<div class="empty" style="padding:50px">No open requests to relay right now.</div>'; }
+    else{
+      body.innerHTML=withReq.map(function(p){
+        var pinsHtml=p.pins.map(function(pin,i){ return '<div class="pin '+STATUS[pin.status].pin+'" style="left:'+pin.xPct+'%;top:'+pin.yPct+'%"><div class="dot">'+(i+1)+'</div></div>'; }).join('');
+        var draws='<svg viewBox="0 0 100 100" preserveAspectRatio="none">'+p.pins.map(function(pin){ return (pin.drawing||[]).map(shapeMarkup).join(''); }).join('')+'</svg>';
+        var list=p.pins.map(function(pin,i){ return '<li><span class="rn">'+(i+1)+'</span>'+esc(pin.note)+'<small>'+esc(pin.author)+' · '+roleName(pin.role)+(pin.drawing&&pin.drawing.length?' · has sketch':'')+'</small></li>'; }).join('');
+        return '<div class="pk-photo"><div class="pk-fig"><img src="'+curURL(p)+'" alt="">'+draws+pinsHtml+'</div>'
+          +'<div class="pk-list"><h4>'+esc(p.label)+'</h4><ol>'+list+'</ol></div></div>';
+      }).join('');
+    }
+    openModal('packetModal');
+    $('pkSend').onclick=function(){ P.photos.forEach(function(p){ p.pins.forEach(function(x){ if(x.status==='open') x.status='studio'; }); }); P.status='studio'; save(); render(); closeModal('packetModal'); toast('Brief marked sent to studio'); };
+  }
+
+  /* ---------------- invite ---------------- */
+  function renderGuests(){
+    $('guestList').innerHTML=P.collaborators.map(function(c){ return '<span class="guest-pill">'+esc(c.name)+'</span>'; }).join('');
+  }
+  function addGuest(){
+    var v=$('inviteName').value.trim(); if(!v) return;
+    P.collaborators.push({name:v,role:'guest'}); $('inviteName').value=''; save(); renderGuests(); toast('Invite sent (demo)');
+  }
+
+  /* ---------------- modals ---------------- */
+  function openModal(id){ $(id).classList.add('open'); }
+  function closeModal(id){ $(id).classList.remove('open'); }
+  document.querySelectorAll('[data-close]').forEach(function(b){ b.onclick=function(){ closeModal(b.getAttribute('data-close')); }; });
+  document.querySelectorAll('.modal').forEach(function(m){ m.addEventListener('click',function(e){ if(e.target===m) m.classList.remove('open'); }); });
+
+  /* ---------------- top / status ---------------- */
+  function renderTop(){
+    $('hProj').textContent=P.address.split(',')[0];
+    $('hOrder').textContent=P.order;
+    var ps=PSTATUS[P.status];
+    var el=$('hStatus'); el.className='pstat '+ps.cls; el.querySelector('span').textContent=ps.label;
+    $('hRound').textContent='Round '+P.round+' · unlimited revisions';
+    $('thTitle').textContent=(photo()?photo().label:'')+' · requests';
+    $('thSub').textContent = canAnnotate()
+      ? 'Click the photo to drop a pin, then sketch and describe the change.'
+      : (role==='pm' ? 'Review each request, relay to the studio, and push the revised photo back.' : '');
+    $('inviteBtn').style.display = role==='agent' ? 'inline-block':'none';
+  }
+
+  /* ---------------- master render ---------------- */
+  function render(){ renderTop(); renderList(); renderStage(); renderCards(); renderPrimary(); syncToolAvailability(); }
+  function syncToolAvailability(){
+    var dim=!canAnnotate();
+    $('annoTools').style.opacity=dim?0.4:1;
+    $('annoTools').style.pointerEvents=dim?'none':'auto';
+    $('tbNote').textContent = dim ? (role==='pm'?'Bella PM — manage & relay requests':'View only') : '';
+  }
+
+  /* ---------------- events ---------------- */
+  // role switch
+  document.querySelectorAll('#roleSw button').forEach(function(b){
+    b.onclick=function(){
+      role=b.getAttribute('data-role');
+      document.querySelectorAll('#roleSw button').forEach(function(x){ x.classList.toggle('on',x===b); });
+      composing=null; if(tool!=='pin'){ /* keep */ }
+      render();
+    };
+  });
+  // tools
+  document.querySelectorAll('#annoTools [data-tool]').forEach(function(b){
+    b.onclick=function(){ tool=b.getAttribute('data-tool'); document.querySelectorAll('#annoTools [data-tool]').forEach(function(x){ x.classList.toggle('on',x===b); }); $('stage').classList.toggle('placing',tool==='pin'); };
+  });
+  $('tCompare').onclick=function(){ compare=!compare; renderStage(); };
+  $('tUndo').onclick=undoSketch;
+  $('tClear').onclick=clearSketch;
+  // swatches
+  (function(){ var w=$('swatches'); COLORS.forEach(function(c,i){ var s=document.createElement('button'); s.className='sw'+(c===color?' on':''); s.style.background=c; s.onclick=function(){ color=c; w.querySelectorAll('.sw').forEach(function(x){x.classList.remove('on');}); s.classList.add('on'); }; w.appendChild(s); }); })();
+  // stage pointer
+  var stage=$('stage');
+  stage.addEventListener('pointerdown',function(e){ if(e.target.closest('.pin')) return; if(e.target===$('handle')) return; onStageDown(e); });
+  window.addEventListener('pointermove',onStageMove);
+  window.addEventListener('pointerup',onStageUp);
+  // slider handle
+  (function(){
+    var h=$('handle'), dragging=false;
+    h.addEventListener('pointerdown',function(e){ dragging=true; e.stopPropagation(); });
+    window.addEventListener('pointermove',function(e){ if(!dragging) return; var r=stage.getBoundingClientRect(); clipPct=Math.max(0,Math.min(100,((e.clientX-r.left)/r.width)*100)); applyClip(); });
+    window.addEventListener('pointerup',function(){ dragging=false; });
+  })();
+  // invite
+  $('inviteBtn').onclick=function(){ renderGuests(); openModal('inviteModal'); };
+  $('inviteAdd').onclick=addGuest;
+  $('inviteName').addEventListener('keydown',function(e){ if(e.key==='Enter') addGuest(); });
+  // reset demo (double-click the logo)
+  document.querySelector('.logo').title='Double-click to reset demo';
+  document.querySelector('.logo').ondblclick=function(){ if(confirm('Reset the demo project to its starting state?')){ localStorage.removeItem(LSKEY); P=seed(); curId=P.photos[0].id; render(); toast('Demo reset'); } };
+
+  /* ---------------- boot ---------------- */
+  load();
+  curId=P.photos[0].id;
+  $('stage').classList.add('placing');
+  render();
+})();
+</script>
+</body>
+</html>
