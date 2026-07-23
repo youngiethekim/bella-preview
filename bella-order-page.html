@@ -188,6 +188,19 @@
   .req-up{margin-top:12px;display:none;padding-top:12px;border-top:1px dashed var(--line)}
   .req-up.show{display:block}
   .req-up .req-lab{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:2px}
+  .req-alt{margin-top:10px}
+  .req-alt-toggle{background:transparent;border:0;color:var(--green);font-family:inherit;font-size:12.5px;cursor:pointer;padding:2px 0}
+  .req-alt-toggle:hover{text-decoration:underline}
+  .req-email{display:none;margin-top:9px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+  .req-email.show{display:block}
+  .req-email-lab{display:block;font-size:12.5px;color:var(--soft);margin-bottom:9px;line-height:1.4}
+  .req-email-row{display:flex;gap:8px;flex-wrap:wrap}
+  .req-email-row input{flex:1;min-width:180px;border:1px solid var(--line);border-radius:6px;padding:9px 11px;font-family:inherit;font-size:14px}
+  .req-email-row input:focus{outline:0;border-color:var(--ink)}
+  .req-send{background:var(--ink);color:#fff;border:0;font-family:inherit;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:10px 15px;border-radius:6px;cursor:pointer;white-space:nowrap;transition:background .15s}
+  .req-send:hover{background:var(--green)}
+  .req-note{display:block;font-size:11.5px;color:var(--faint);margin-top:9px;line-height:1.4}
+  .req-sent{color:var(--green);font-size:12.5px;margin-top:8px}
   /* photographer panel */
   .up-later{margin-top:14px;border-top:1px solid #DDE7DD;padding-top:13px}
   .up-later-toggle{background:transparent;border:0;color:var(--green);font-family:inherit;font-size:13px;cursor:pointer;padding:2px 0}
@@ -287,12 +300,29 @@
   .up-prog .up-prog-lab .togo.done{color:var(--green)}
   .up-prog .up-bar{height:6px;background:var(--line-2);border-radius:99px;overflow:hidden}
   .up-prog .up-bar span{display:block;height:100%;background:var(--green);border-radius:99px;transition:width .25s}
-  .up-zone{display:flex;align-items:center;gap:13px;padding:14px 16px;border:1px dashed #C7C1B8;background:#fff;cursor:pointer;transition:border-color .15s,background .15s}
-  .up-zone:hover,.up-zone.drag{border-color:var(--green);background:#F7FAF7}
-  .up-zone.has{border-style:solid;border-color:#DDE7DD;background:#F7FAF7}
-  .up-zone .up-i{width:22px;height:22px;stroke:var(--green);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:0 0 22px}
-  .up-t b{display:block;font-size:14px;color:var(--ink);font-weight:400}
-  .up-t span{display:block;font-size:12px;color:var(--faint);margin-top:2px;line-height:1.4}
+  .up-zone{display:flex;align-items:center;gap:15px;padding:20px;border:2px dashed #BFD3C2;background:#F1F7F2;cursor:pointer;border-radius:10px;transition:border-color .15s,background .15s}
+  .up-zone:hover,.up-zone.drag{border-color:var(--green);background:#E7F1E9}
+  .up-zone.drag{box-shadow:0 0 0 3px rgba(62,107,76,.12)}
+  .up-zone.has{background:#F7FAF7;border-color:#CFE0D3}
+  .up-ic{width:46px;height:46px;border-radius:50%;background:#E1EDE3;display:grid;place-items:center;flex:none;transition:background .15s}
+  .up-zone:hover .up-ic,.up-zone.drag .up-ic{background:#D2E4D5}
+  .up-zone .up-i{width:22px;height:22px;stroke:var(--green);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .up-t{flex:1;min-width:0}
+  .up-t b{display:block;font-size:15px;color:var(--ink);font-weight:400}
+  .up-t span{display:block;font-size:12.5px;color:var(--soft);margin-top:2px;line-height:1.4}
+  .up-btn{margin-left:auto;background:var(--ink);color:#fff;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:11px 17px;border-radius:7px;white-space:nowrap;flex:none;transition:background .15s}
+  .up-zone:hover .up-btn,.up-zone.drag .up-btn{background:var(--green)}
+  @media(max-width:560px){.up-btn{display:none}}
+  /* designer's-choice-for-all checkbox */
+  .dc-row{display:flex;gap:12px;align-items:flex-start;margin-top:16px;padding:14px 16px;border:1px solid #DDE7DD;border-radius:8px;background:#fff;cursor:pointer}
+  .dc-row input{position:absolute;opacity:0;pointer-events:none}
+  .dc-box{width:20px;height:20px;border:1.5px solid var(--faint);border-radius:5px;flex:none;margin-top:1px;display:grid;place-items:center;transition:.15s}
+  .dc-row input:checked ~ .dc-box{background:var(--green);border-color:var(--green)}
+  .dc-box::after{content:"";width:9px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg);opacity:0;transition:.15s;margin-top:-2px}
+  .dc-row input:checked ~ .dc-box::after{opacity:1}
+  .dc-t b{display:block;font-weight:400;font-size:14.5px}
+  .dc-t span{display:block;font-size:12.5px;color:var(--faint);margin-top:2px;line-height:1.4}
+  .up-refs{margin-top:16px;border-top:1px solid #DDE7DD;padding-top:14px}
   .up-thumbs{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
   .up-th{position:relative;width:62px;height:62px;border:1px solid var(--line);overflow:hidden;border-radius:3px}
   .up-th img{width:100%;height:100%;object-fit:cover;display:block}
@@ -777,7 +807,7 @@
   function fp3d(){ return state.commercial?CFP3D:PR.FP3D; }
   var state={ proj:null, commercial:false, photos:8, mode:'ready', removal:false, reno:false, renoN:8, floor:false, fpn:1, floor2d:false, fp2dn:1, tour:false, dusk:false, duskN:8, sky:false, skyN:8, pano360:false, pano:3,
               rint:1, rext:1, rfp:1, useInt:true, useExt:true, useFp:true,
-              styleMode:'pro', stylePick:null, uploads:[], photog:{email:'',notes:'',sent:false}, files:{} };
+              styleMode:'pro', stylePick:null, uploads:[], photog:{email:'',notes:'',sent:false}, files:{}, designerAll:true };
 
   // saved lookbook pieces
   var saved=[]; try{ saved=JSON.parse(localStorage.getItem('bellaProject')||'[]'); }catch(e){}
@@ -833,20 +863,18 @@
       (function(){ var s=document.getElementById('s2sub'); s.textContent=''; s.style.display='none'; })();
       // --- 2a: three clear steps — count, upload, style ---
       box.innerHTML=
-        '<div class="stp" id="stp1"><div class="stp-h"><span class="stp-n">1</span><div class="stp-t"><b>Virtual staging</b><span>Designer-furnished rooms · '+money(stageUnit())+' each.'+exLink('stage')+'</span></div></div>'
-          +'<div class="core-top">'+qicon('sofa')
+        '<div class="stp" id="stp1"><div class="stp-h">'+qicon('sofa')+'<div class="stp-t"><b>Virtual staging</b><span>Designer-furnished rooms · '+money(stageUnit())+' each.'+exLink('stage')+'</span></div></div>'
+          +'<div class="core-top"><span class="stp-n">1</span>'
             +'<span class="lbl"><b>How many photos?</b><span>Or upload below — we’ll count them.</span></span>'
             +stepper('photos')+'</div>'
           +volMeter()
         +'</div>'
-        +'<div class="stp" id="stp2"><div class="stp-h"><span class="stp-n">2</span><div class="stp-t"><b>Upload your photos</b><span>Optional — add now, or send later.</span></div></div>'
+        +'<div class="stp" id="stp2"><div class="stp-h"><span class="stp-n">2</span><div class="stp-t"><b>Upload &amp; style your photos</b><span>Optional — add now, or send later. We’ll style each one for your buyer.</span></div></div>'
           +uploadBlock()
+          +'<label class="dc-row" id="dcRow"><input type="checkbox" id="dcAll" checked><span class="dc-box"></span><span class="dc-t"><b>Let our designers choose the style for every photo</b><span>Recommended — we match the look to your buyer. Or tap a photo above to set its own style.</span></span></label>'
+          +'<div class="up-refs"><div class="req-lab" style="color:var(--faint)">References &amp; inspiration — optional</div>'
+          +miniUpload('refs','Share a look you love','A Pinterest screenshot, a room you admire — anything that helps our designers understand your vision.')+'</div>'
           +'<div class="removal-row" id="removalRow"><span class="lbl"><b>Furniture removal</b><span>Occupied or cluttered? We clear the room first, then stage it clean.</span></span><span class="freeprice">Included free</span><button class="toggle" data-tog="removal"></button></div>'
-        +'</div>'
-        +'<div class="stp" id="stp3"><div class="stp-h"><span class="stp-n">3</span><div class="stp-t"><b>Choose the look</b><span>Our designers pick, or choose your own.</span></div></div>'
-          +styleBox()
-          +'<div style="margin-top:16px;border-top:1px solid #DDE7DD;padding-top:14px"><div class="req-lab" style="color:var(--faint)">References &amp; inspiration — optional</div>'
-          +miniUpload('refs','Share a look you love','Reference photos, a Pinterest screenshot, a room you admire — anything that helps our designers understand your vision.')+'</div>'
         +'</div>';
       // --- 2b: optional extras (a gentle nudge + the question sections) ---
       ex.innerHTML=
@@ -969,8 +997,9 @@
   // ---- optional inline photo upload (tied to the staging count; never required) ----
   function uploadBlock(){
     return '<div class="up-block"><label class="up-zone" id="upZone"><input type="file" id="upInput" accept="image/*" multiple hidden>'
-      +'<svg class="up-i"><use href="#i-upload"/></svg>'
-      +'<span class="up-t"><b id="upTitle">Have your photos? Drop them in</b><span id="upSub">JPG or PNG. No photos yet? Pick a number and send them later.</span></span>'
+      +'<span class="up-ic"><svg class="up-i"><use href="#i-upload"/></svg></span>'
+      +'<span class="up-t"><b id="upTitle">Drag &amp; drop your photos here</b><span id="upSub">or click to browse · JPG or PNG. No photos yet? Pick a number and send them later.</span></span>'
+      +'<span class="up-btn">Choose files</span>'
       +'</label><div class="up-prog" id="upProg"></div><div class="up-thumbs" id="upThumbs"></div>'
       +'<div class="up-later"><button type="button" class="up-later-toggle" id="upLaterToggle">📷  Photos not ready? Send your photographer a direct upload link →</button>'
         +'<div class="up-later-panel" id="upLaterPanel">'
@@ -991,7 +1020,14 @@
       +'<div class="mu-thumbs" data-upthumbs="'+key+'"></div>';
   }
   function reqUpload(key,title,sub,accept){
-    return '<div class="req-up" data-requp="'+key+'"><div class="req-lab">Upload what we need — on the spot</div>'+miniUpload('req_'+key,title,sub,accept)+'</div>';
+    return '<div class="req-up" data-requp="'+key+'"><div class="req-lab">Upload what we need — on the spot</div>'+miniUpload('req_'+key,title,sub,accept)
+      +'<div class="req-alt"><button type="button" class="req-alt-toggle" data-reqtoggle="'+key+'">Don’t have them handy? Send later, or email whoever does →</button>'
+        +'<div class="req-email" data-reqemail="'+key+'">'
+          +'<span class="req-email-lab">We’ll email a secure upload link — to your architect, photographer, or whoever has the files.</span>'
+          +'<div class="req-email-row"><input type="email" placeholder="architect@firm.com" data-reqmail="'+key+'"><button type="button" class="req-send" data-reqsend="'+key+'">Send link</button></div>'
+          +'<span class="req-note">Or just continue — you can upload from your project dashboard any time before we start.</span>'
+          +'<div class="req-sent" data-reqsent="'+key+'"></div>'
+        +'</div></div></div>';
   }
   function bindMiniUploads(){
     document.querySelectorAll('.mini-up[data-upkey]').forEach(function(zone){
@@ -1002,6 +1038,20 @@
       zone.addEventListener('drop',function(e){ if(e.dataTransfer&&e.dataTransfer.files) addMiniFiles(key,e.dataTransfer.files); });
     });
     Object.keys(state.files).forEach(renderMini);
+    // "send later / email whoever has the files" per requirement
+    document.querySelectorAll('.req-alt-toggle[data-reqtoggle]').forEach(function(t){
+      var key=t.getAttribute('data-reqtoggle');
+      t.onclick=function(){ document.querySelector('.req-email[data-reqemail="'+key+'"]').classList.toggle('show'); };
+    });
+    document.querySelectorAll('.req-send[data-reqsend]').forEach(function(b){
+      var key=b.getAttribute('data-reqsend');
+      b.onclick=function(){
+        var inp=document.querySelector('[data-reqmail="'+key+'"]'), sent=document.querySelector('[data-reqsent="'+key+'"]');
+        var em=(inp.value||'').trim();
+        if(!em||em.indexOf('@')<1){ sent.style.color='var(--amber)'; sent.textContent='Enter an email first.'; return; }
+        sent.style.color='var(--green)'; sent.textContent='✓ Upload link sent to '+em+' (demo). They can upload straight to this order.';
+      };
+    });
   }
   function addMiniFiles(key,files){
     state.files[key]=state.files[key]||[];
@@ -1041,9 +1091,10 @@
   // ---- per-photo style + before/after compare ----
   function styExemplar(k){ var s=STY.filter(function(x){return x.k===k;})[0]; return s?CAT+s.im+'.jpg':''; }
   function styName(k){ var s=STY.filter(function(x){return x.k===k;})[0]; return s?s.n:null; }
-  function resolveStyleKey(u){ var c=(u&&u.style)||'project'; if(c!=='project') return c; if(state.styleMode==='self'&&state.stylePick) return state.stylePick; return 'modern'; }
-  function afterLabel(u){ var c=(u&&u.style)||'project'; if(c==='project'){ if(state.styleMode==='self'&&state.stylePick) return styName(state.stylePick)+' example'; return 'Designers’ choice'; } return styName(c)+' example'; }
-  function thumbStyleTag(u){ var c=(u&&u.style)||'project'; if(c==='project') return (state.styleMode==='self'&&state.stylePick)? styName(state.stylePick) : 'Project style'; return styName(c); }
+  function resolveStyleKey(u){ var c=(u&&u.style)||'designer'; return c!=='designer'? c : 'modern'; }
+  function afterLabel(u){ var c=(u&&u.style)||'designer'; return c!=='designer'? styName(c)+' example' : 'Designer’s choice'; }
+  function thumbStyleTag(u){ var c=(u&&u.style)||'designer'; if(c!=='designer') return styName(c); return state.designerAll? 'Designer’s choice' : 'Tap to style'; }
+  function syncDesignerBox(){ var cb=document.getElementById('dcAll'); if(cb) cb.checked=state.designerAll; }
   var rsmIdx=0, rsmClip=50;
   function openRoomStyle(i){ rsmIdx=i; rsmClip=50; renderRoomStyle(); document.getElementById('roomStyleModal').classList.add('open'); }
   function renderRoomStyle(){
@@ -1053,11 +1104,16 @@
     document.getElementById('rsmAfter').src=styExemplar(resolveStyleKey(u));
     document.getElementById('rsmStyleTag').textContent=afterLabel(u);
     rsmApplyClip();
-    var chosen=(u.style||'project');
-    var chips='<button type="button" class="rsm-sty proj'+(chosen==='project'?' on':'')+'" data-sk="project"><span class="pj">✦</span><span class="snm">Project style</span></button>'
+    var chosen=(u.style||'designer');
+    var chips='<button type="button" class="rsm-sty proj'+(chosen==='designer'?' on':'')+'" data-sk="designer"><span class="pj">✦</span><span class="snm">Designer’s choice</span></button>'
       +STY.map(function(s){ return '<button type="button" class="rsm-sty'+(chosen===s.k?' on':'')+'" data-sk="'+s.k+'"><img src="'+CAT+s.im+'.jpg" alt="'+s.n+'" loading="lazy"><span class="snm">'+s.n+'</span></button>'; }).join('');
     var wrap=document.getElementById('rsmStyles'); wrap.innerHTML=chips;
-    wrap.querySelectorAll('.rsm-sty').forEach(function(b){ b.onclick=function(){ state.uploads[rsmIdx].style=b.getAttribute('data-sk'); renderRoomStyle(); renderUploads(); }; });
+    wrap.querySelectorAll('.rsm-sty').forEach(function(b){ b.onclick=function(){
+      var sk=b.getAttribute('data-sk'); state.uploads[rsmIdx].style=sk;
+      if(sk!=='designer') state.designerAll=false;
+      else state.designerAll=state.uploads.every(function(x){ return (x.style||'designer')==='designer'; });
+      syncDesignerBox(); renderRoomStyle(); renderUploads();
+    }; });
     document.getElementById('rsmPrev').disabled=rsmIdx<=0;
     document.getElementById('rsmNext').disabled=rsmIdx>=state.uploads.length-1;
   }
@@ -1070,7 +1126,12 @@
     ['dragenter','dragover'].forEach(function(ev){ zone.addEventListener(ev,function(e){ e.preventDefault(); zone.classList.add('drag'); }); });
     ['dragleave','drop'].forEach(function(ev){ zone.addEventListener(ev,function(e){ e.preventDefault(); zone.classList.remove('drag'); }); });
     zone.addEventListener('drop',function(e){ if(e.dataTransfer&&e.dataTransfer.files) addFiles(e.dataTransfer.files); });
-    renderUploads(); bindPhotographer(); bindMiniUploads();
+    renderUploads(); bindPhotographer(); bindMiniUploads(); bindDesigner();
+  }
+  function bindDesigner(){
+    var cb=document.getElementById('dcAll'); if(!cb) return;
+    cb.checked=state.designerAll;
+    cb.onchange=function(){ state.designerAll=cb.checked; if(cb.checked) state.uploads.forEach(function(u){ u.style='designer'; }); renderUploads(); };
   }
   function addFiles(files){
     [].slice.call(files).forEach(function(f){ if(f.type&&f.type.indexOf('image')===0){ state.uploads.push({name:f.name, url:URL.createObjectURL(f)}); } });
@@ -1082,8 +1143,8 @@
     var wrap=document.getElementById('upThumbs'), zone=document.getElementById('upZone'); if(!wrap||!zone) return;
     var n=state.uploads.length, target=state.photos, remaining=Math.max(0, target-n);
     if(!n){
-      document.getElementById('upTitle').textContent='Have your photos? Drop them in';
-      document.getElementById('upSub').textContent='JPG or PNG. No photos yet? Pick a number and send them later.';
+      document.getElementById('upTitle').textContent='Drag & drop your photos here';
+      document.getElementById('upSub').textContent='or click to browse · JPG or PNG. No photos yet? Pick a number and send them later.';
     } else if(remaining>0){
       document.getElementById('upTitle').textContent=n+' of '+target+' photos in';
       document.getElementById('upSub').textContent='Drop in '+remaining+' more, or send the rest to us later.';
