@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Control Center — Bella Ops</title>
+<meta name="description" content="Bella Virtual internal control center: manage every client order, relay revisions to the studio, and track delivery.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#FBFAF8;--ink:#232120;--soft:#5E5A56;--faint:#9C978F;--line:#E8E4DE;--line-2:#F0EDE8;--dark:#1C1A18;--green:#3E6B4C;--gold:#B8985A;--blue:#3E6076;--amber:#B5892F;--purple:#6B4E86;--red:#C4553F;--pad:34px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:"Jost",system-ui,sans-serif;font-weight:300;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{text-decoration:none;color:inherit}
+  .micro{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint)}
+  button{font-family:inherit;cursor:pointer}
+  .btn{display:inline-flex;align-items:center;gap:7px;background:var(--ink);color:#fff;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;padding:9px 15px;border:0;transition:.18s;border-radius:6px}
+  .btn:hover{background:var(--green)}
+  .btn-line{background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:8px 13px;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;transition:.15s}
+  .btn-line:hover{border-color:var(--ink)}
+  .btn-sm{padding:7px 11px;font-size:10.5px}
+
+  /* top bar */
+  header{position:sticky;top:0;z-index:40;background:#fff;border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;gap:22px;height:60px;padding:0 var(--pad);max-width:1440px;margin:0 auto}
+  .mark{font-size:15px;letter-spacing:.42em;font-weight:400}
+  .pill{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);border:1px solid rgba(62,107,76,.4);border-radius:999px;padding:5px 11px}
+  .nav .lk{font-size:13px;color:var(--soft)}
+  .nav .lk.on{color:var(--ink)}
+  .nav .lk:hover{color:var(--ink)}
+  .nav .sp{margin-left:auto}
+  .search{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:7px 11px;min-width:210px}
+  .search input{border:0;background:transparent;font-family:inherit;font-size:13px;outline:0;width:100%}
+  .search svg{width:15px;height:15px;stroke:var(--faint);fill:none;stroke-width:1.6;flex:none}
+  .acct{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--soft)}
+  .acct .av{width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;font-size:11px;display:grid;place-items:center}
+
+  .wrap{max-width:1440px;margin:0 auto;padding:26px var(--pad) 70px}
+  .h1row{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+  .h1row h1{font-size:26px;font-weight:300;letter-spacing:-.01em}
+  .h1row .sub{font-size:13px;color:var(--soft);margin-top:3px}
+
+  /* KPI row (clickable filters) */
+  .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:24px}
+  @media(max-width:1080px){.kpis{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:620px){.kpis{grid-template-columns:1fr 1fr}}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:9px;padding:15px 16px;cursor:pointer;transition:.14s;text-align:left}
+  .kpi:hover{border-color:var(--ink)}
+  .kpi.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+  .kpi b{display:block;font-size:26px;font-weight:300;line-height:1}
+  .kpi .lb{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-top:8px;display:flex;align-items:center;gap:6px}
+  .kpi .dot{width:7px;height:7px;border-radius:50%;background:currentColor;display:inline-block}
+  .c-new{color:var(--ink)} .c-production{color:var(--blue)} .c-studio{color:var(--purple)} .c-revision{color:var(--amber)} .c-ready{color:var(--green)} .c-delivered{color:var(--soft)}
+
+  .board{display:grid;grid-template-columns:1fr 340px;gap:22px;align-items:start}
+  @media(max-width:1080px){.board{grid-template-columns:1fr}}
+
+  /* orders table */
+  .panel{background:#fff;border:1px solid var(--line);border-radius:11px;overflow:hidden}
+  .panel-h{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px;border-bottom:1px solid var(--line-2);flex-wrap:wrap}
+  .panel-h h2{font-size:15px;font-weight:400}
+  .tabs{display:flex;gap:3px;flex-wrap:wrap}
+  .tabs button{font-size:12px;color:var(--soft);background:transparent;border:1px solid var(--line);border-radius:99px;padding:6px 12px;transition:.14s}
+  .tabs button:hover{border-color:var(--ink);color:var(--ink)}
+  .tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  table{width:100%;border-collapse:collapse}
+  thead th{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);text-align:left;font-weight:400;padding:11px 14px;border-bottom:1px solid var(--line-2);white-space:nowrap}
+  tbody td{padding:13px 14px;border-bottom:1px solid var(--line-2);font-size:13.5px;vertical-align:middle}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr{transition:background .12s}
+  tbody tr:hover{background:#FAF9F7}
+  .cli{display:flex;align-items:center;gap:9px}
+  .cli .av{width:28px;height:28px;border-radius:50%;background:#e6e1d9 center/cover;font-size:10px;display:grid;place-items:center;color:#fff;flex:none}
+  .cli b{font-weight:400}
+  .oid{font-size:11px;color:var(--faint);letter-spacing:.03em}
+  .prop b{font-weight:400;display:block}
+  .prop span{font-size:11.5px;color:var(--faint)}
+  .chip{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;padding:4px 9px;border-radius:99px;white-space:nowrap}
+  .chip .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+  .ch-new{color:var(--ink);background:#F0EDE8} .ch-production{color:var(--blue);background:#E9F0F4} .ch-studio{color:var(--purple);background:#EFEAF4} .ch-revision{color:var(--amber);background:#FBF3E2} .ch-ready{color:var(--green);background:#EDF4EE} .ch-delivered{color:#fff;background:var(--green)}
+  .studio-cell{font-size:12.5px}
+  .studio-cell.un{color:var(--amber)}
+  .sla{font-size:12.5px;white-space:nowrap}
+  .sla.over{color:var(--red)} .sla.soon{color:var(--amber)} .sla.ok{color:var(--soft)} .sla.done{color:var(--faint)}
+  .revbadge{display:inline-block;margin-left:6px;font-size:10px;background:var(--amber);color:#fff;border-radius:99px;padding:1px 7px}
+  .rowacts{display:flex;gap:6px;justify-content:flex-end}
+  .icobtn{width:30px;height:30px;border:1px solid var(--line);border-radius:6px;background:#fff;display:grid;place-items:center;color:var(--soft);transition:.14s}
+  .icobtn:hover{border-color:var(--ink);color:var(--ink)}
+  .icobtn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .empty{padding:40px;text-align:center;color:var(--faint);font-size:13px}
+
+  /* right rail */
+  .side .panel{margin-bottom:18px}
+  .relay{padding:6px 0}
+  .relay-item{padding:13px 18px;border-bottom:1px solid var(--line-2)}
+  .relay-item:last-child{border-bottom:0}
+  .relay-item .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .relay-item .top b{font-weight:400;font-size:13.5px}
+  .relay-item .top .n{font-size:11px;color:var(--amber)}
+  .relay-item .who{font-size:11.5px;color:var(--faint);margin-top:2px}
+  .relay-item .acts{display:flex;gap:6px;margin-top:10px}
+  .attn{padding:14px 18px}
+  .attn-row{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line-2);font-size:13px}
+  .attn-row:last-child{border-bottom:0}
+  .attn-row .ad{width:8px;height:8px;border-radius:50%;margin-top:6px;flex:none}
+  .attn-row .at b{font-weight:400}
+  .attn-row .at span{font-size:11.5px;color:var(--faint);display:block;margin-top:1px}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:13px;padding:12px 20px;border-radius:99px;z-index:120;opacity:0;transition:.25s;pointer-events:none}
+  .toast.show{opacity:1}
+
+  /* assign studio modal */
+  .modal{position:fixed;inset:0;z-index:80;background:rgba(20,18,16,.55);display:none;align-items:center;justify-content:center;padding:24px}
+  .modal.open{display:flex}
+  .m-box{background:#fff;border-radius:11px;width:100%;max-width:400px;padding:22px;position:relative}
+  .m-box h3{font-size:18px;font-weight:400;margin-bottom:4px}
+  .m-box p{font-size:13px;color:var(--soft);margin-bottom:14px}
+  .studio-opt{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border:1px solid var(--line);border-radius:8px;margin-bottom:7px;cursor:pointer;transition:.14s}
+  .studio-opt:hover{border-color:var(--ink)}
+  .studio-opt b{font-weight:400}
+  .studio-opt span{font-size:11.5px;color:var(--faint)}
+  .m-x{position:absolute;top:12px;right:14px;width:30px;height:30px;border:0;background:transparent;font-size:21px;color:var(--faint);line-height:1}
+  .m-x:hover{color:var(--ink)}
+</style>
+</head>
+<body>
+<header>
+  <div class="nav">
+    <a class="mark" href="bella-homepage-redesign.html">BELLA</a>
+    <span class="pill">Control Center</span>
+    <a class="lk on" href="#">Queue</a>
+    <a class="lk" href="#">Clients</a>
+    <a class="lk" href="#">Studio partners</a>
+    <span class="sp"></span>
+    <div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3-3"/></svg><input id="search" placeholder="Search orders, clients…"></div>
+    <div class="acct"><span class="av">BV</span>Bella Ops</div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="h1row">
+    <div>
+      <h1>Order queue</h1>
+      <div class="sub">Every live order across all clients — production, revisions and delivery.</div>
+    </div>
+    <div class="micro" id="todayLine"></div>
+  </div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="board">
+    <div class="panel">
+      <div class="panel-h">
+        <h2 id="tableTitle">All orders</h2>
+        <div class="tabs" id="tabs"></div>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr><th>Client</th><th>Property / service</th><th>Photos</th><th>Status</th><th>Studio</th><th>Due</th><th></th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <aside class="side">
+      <div class="panel">
+        <div class="panel-h"><h2>Revisions to relay</h2><span class="micro" id="relayCount"></span></div>
+        <div class="relay" id="relay"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-h"><h2>Needs attention</h2></div>
+        <div class="attn" id="attn"></div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div class="modal" id="assignModal">
+  <div class="m-box">
+    <button class="m-x" id="assignClose">×</button>
+    <h3>Assign to studio</h3>
+    <p id="assignFor">Order</p>
+    <div id="studioOpts"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  var ST={
+    new:{label:'New',chip:'ch-new',kpi:'c-new'},
+    production:{label:'In production',chip:'ch-production',kpi:'c-production'},
+    studio:{label:'With studio',chip:'ch-studio',kpi:'c-studio'},
+    revision:{label:'Revisions requested',chip:'ch-revision',kpi:'c-revision'},
+    ready:{label:'Ready to review',chip:'ch-ready',kpi:'c-ready'},
+    delivered:{label:'Delivered',chip:'ch-delivered',kpi:'c-delivered'}
+  };
+  var STUDIOS=[{n:'Studio A · Manila',s:'Staging + renders · avg 22h'},{n:'Studio B · Bengaluru',s:'Staging + floor plans · avg 26h'},{n:'Rove 3D',s:'Renders + tours · avg 30h'}];
+  /* SAMPLE cross-client order queue */
+  var ORDERS=[
+    {id:'BV-10428',client:'Beverly Bahm',av:'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=64&q=70&fm=jpg',addr:'42 Bayview Terrace',service:'Staging + floor plan',photos:8,status:'revision',studio:'Studio A · Manila',due:-3,rev:3},
+    {id:'BV-10502',client:'Beverly Bahm',av:'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=64&q=70&fm=jpg',addr:'120 Bayview Ave',service:'Staging + day-to-dusk',photos:6,status:'ready',studio:'Studio A · Manila',due:5,rev:0},
+    {id:'BV-10517',client:'Marcus Wu',av:'',addr:'8 Harbourfront Dr, #2401',service:'Staging (12 photos)',photos:12,status:'production',studio:'Studio B · Bengaluru',due:9,rev:0},
+    {id:'BV-10520',client:'Priya Anand',av:'',addr:'55 Rosewood Lane',service:'Virtual renovation + staging',photos:5,status:'new',studio:'',due:18,rev:0},
+    {id:'BV-10499',client:'Marcus Wu',av:'',addr:'1200 King St W, #705',service:'Renders + 3D tour',photos:4,status:'studio',studio:'Rove 3D',due:2,rev:1},
+    {id:'BV-10471',client:'Dana Osei',av:'',addr:'19 Maple Grove',service:'Staging + sky replacement',photos:9,status:'production',studio:'Studio A · Manila',due:-1,rev:0},
+    {id:'BV-10102',client:'Beverly Bahm',av:'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=64&q=70&fm=jpg',addr:'88 Lakeshore Rd',service:'Removal + staging (6)',photos:6,status:'delivered',studio:'Studio B · Bengaluru',due:0,rev:0},
+    {id:'BV-10460',client:'Priya Anand',av:'',addr:'240 Front St, #1810',service:'Commercial staging (8)',photos:8,status:'revision',studio:'Studio B · Bengaluru',due:6,rev:2}
+  ];
+
+  function $(id){return document.getElementById(id);}
+  function esc(s){return (s==null?'':''+s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function initials(n){return n.split(' ').map(function(x){return x[0];}).slice(0,2).join('').toUpperCase();}
+  function toast(m){var t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove('show');},2100);}
+  function avatar(o){ return o.av? '<span class="av" style="background-image:url('+o.av+')"></span>' : '<span class="av" style="background:var(--blue)">'+initials(o.client)+'</span>'; }
+  function sla(o){
+    if(o.status==='delivered') return '<span class="sla done">Delivered</span>';
+    if(o.due<0) return '<span class="sla over">'+Math.abs(o.due)+'h overdue</span>';
+    if(o.due<=6) return '<span class="sla soon">Due in '+o.due+'h</span>';
+    return '<span class="sla ok">Due in '+o.due+'h</span>';
+  }
+
+  var filter='all';
+  var FILTERS=[{k:'all',l:'All'},{k:'new',l:'New'},{k:'production',l:'In production'},{k:'studio',l:'With studio'},{k:'revision',l:'In revision'},{k:'ready',l:'Ready'},{k:'delivered',l:'Delivered'}];
+  var query='';
+
+  function match(o){
+    var okF = filter==='all' || o.status===filter;
+    var okQ = !query || (o.client+' '+o.addr+' '+o.id+' '+o.service).toLowerCase().indexOf(query)>-1;
+    return okF && okQ;
+  }
+
+  function renderKpis(){
+    var order=['new','production','studio','revision','ready','delivered'];
+    var counts={}; order.forEach(function(k){counts[k]=0;});
+    ORDERS.forEach(function(o){ counts[o.status]=(counts[o.status]||0)+1; });
+    $('kpis').innerHTML=order.map(function(k){
+      return '<button class="kpi'+(filter===k?' on':'')+'" data-k="'+k+'"><b>'+counts[k]+'</b><span class="lb '+ST[k].kpi+'"><span class="dot"></span>'+ST[k].label+'</span></button>';
+    }).join('');
+    $('kpis').querySelectorAll('.kpi').forEach(function(b){ b.onclick=function(){ filter=(filter===b.getAttribute('data-k'))?'all':b.getAttribute('data-k'); renderAll(); }; });
+  }
+  function renderTabs(){
+    $('tabs').innerHTML=FILTERS.map(function(f){ return '<button data-k="'+f.k+'"'+(filter===f.k?' class="on"':'')+'>'+f.l+'</button>'; }).join('');
+    $('tabs').querySelectorAll('button').forEach(function(b){ b.onclick=function(){ filter=b.getAttribute('data-k'); renderAll(); }; });
+  }
+  function advance(o){
+    var flow={new:'production',production:'studio',studio:'ready',revision:'studio',ready:'delivered'};
+    var nx=flow[o.status]; if(!nx) return;
+    o.status=nx; if(nx==='studio') o.rev=0;
+    toast(o.id+' → '+ST[nx].label); renderAll();
+  }
+  function renderRows(){
+    var list=ORDERS.filter(match);
+    var tb=$('rows');
+    if(!list.length){ tb.innerHTML='<tr><td colspan="7"><div class="empty">No orders in this view.</div></td></tr>'; }
+    else tb.innerHTML=list.map(function(o){
+      var st=ST[o.status];
+      return '<tr data-id="'+o.id+'">'
+        +'<td><div class="cli">'+avatar(o)+'<div><b>'+esc(o.client)+'</b><div class="oid">#'+o.id+'</div></div></div></td>'
+        +'<td class="prop"><b>'+esc(o.addr)+'</b><span>'+esc(o.service)+'</span></td>'
+        +'<td>'+o.photos+'</td>'
+        +'<td><span class="chip '+st.chip+'"><span class="dot"></span>'+st.label+'</span>'+(o.rev?'<span class="revbadge">'+o.rev+' req</span>':'')+'</td>'
+        +'<td>'+(o.studio? '<span class="studio-cell">'+esc(o.studio)+'</span>' : '<span class="studio-cell un">Unassigned</span>')+'</td>'
+        +'<td>'+sla(o)+'</td>'
+        +'<td><div class="rowacts">'
+          +'<a class="icobtn" href="bella-review.html" title="Open in review workspace"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg></a>'
+          +(o.studio?'':'<button class="icobtn" data-assign="'+o.id+'" title="Assign studio"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>')
+          +(o.status!=='delivered'?'<button class="icobtn" data-adv="'+o.id+'" title="Advance status"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>':'')
+        +'</div></td>'
+      +'</tr>';
+    }).join('');
+    tb.querySelectorAll('[data-adv]').forEach(function(b){ b.onclick=function(){ advance(byId(b.getAttribute('data-adv'))); }; });
+    tb.querySelectorAll('[data-assign]').forEach(function(b){ b.onclick=function(){ openAssign(b.getAttribute('data-assign')); }; });
+    $('tableTitle').textContent=(filter==='all'?'All orders':ST[filter]?ST[filter].label:'Orders')+' · '+list.length;
+  }
+  function byId(id){ return ORDERS.filter(function(o){return o.id===id;})[0]; }
+
+  function renderRelay(){
+    var list=ORDERS.filter(function(o){ return o.status==='revision'; });
+    $('relayCount').textContent=list.length+' waiting';
+    var el=$('relay');
+    if(!list.length){ el.innerHTML='<div class="empty" style="padding:26px">Nothing to relay — you\'re clear.</div>'; return; }
+    el.innerHTML=list.map(function(o){
+      return '<div class="relay-item"><div class="top"><b>'+esc(o.addr)+'</b><span class="n">'+o.rev+' request'+(o.rev>1?'s':'')+'</span></div>'
+        +'<div class="who">'+esc(o.client)+' · #'+o.id+(o.studio?' · '+esc(o.studio):' · unassigned')+'</div>'
+        +'<div class="acts"><a class="btn-line btn-sm" href="bella-review.html">Open in review</a><button class="btn btn-sm" data-relay="'+o.id+'">Send to studio</button></div></div>';
+    }).join('');
+    el.querySelectorAll('[data-relay]').forEach(function(b){ b.onclick=function(){ var o=byId(b.getAttribute('data-relay')); if(!o.studio){ openAssign(o.id); return; } o.status='studio'; o.rev=0; toast('Relayed '+o.id+' to '+o.studio); renderAll(); }; });
+  }
+  function renderAttn(){
+    var over=ORDERS.filter(function(o){ return o.due<0 && o.status!=='delivered'; });
+    var unassigned=ORDERS.filter(function(o){ return !o.studio; });
+    var ready=ORDERS.filter(function(o){ return o.status==='ready'; });
+    var items=[];
+    over.forEach(function(o){ items.push({c:'var(--red)',b:o.id+' is '+Math.abs(o.due)+'h overdue',s:o.addr+' · '+o.service}); });
+    unassigned.forEach(function(o){ items.push({c:'var(--amber)',b:o.id+' needs a studio',s:o.addr+' · '+esc(o.client)}); });
+    ready.forEach(function(o){ items.push({c:'var(--green)',b:o.id+' is ready for the client',s:o.addr+' · nudge '+o.client.split(' ')[0]}); });
+    if(!items.length){ $('attn').innerHTML='<div class="empty" style="padding:16px">All clear 🎉</div>'; return; }
+    $('attn').innerHTML=items.slice(0,7).map(function(i){ return '<div class="attn-row"><span class="ad" style="background:'+i.c+'"></span><div class="at"><b>'+esc(i.b)+'</b><span>'+esc(i.s)+'</span></div></div>'; }).join('');
+  }
+
+  /* assign studio modal */
+  var assignId=null;
+  function openAssign(id){ assignId=id; var o=byId(id); $('assignFor').textContent='#'+id+' · '+o.addr;
+    $('studioOpts').innerHTML=STUDIOS.map(function(s){ return '<button class="studio-opt" data-s="'+esc(s.n)+'"><span><b>'+esc(s.n)+'</b><br><span>'+esc(s.s)+'</span></span><span class="micro">assign →</span></button>'; }).join('');
+    $('studioOpts').querySelectorAll('.studio-opt').forEach(function(b){ b.onclick=function(){ var o=byId(assignId); o.studio=b.getAttribute('data-s'); if(o.status==='new') o.status='production'; closeAssign(); toast('#'+assignId+' assigned to '+o.studio); renderAll(); }; });
+    $('assignModal').classList.add('open');
+  }
+  function closeAssign(){ $('assignModal').classList.remove('open'); }
+  $('assignClose').onclick=closeAssign;
+  $('assignModal').addEventListener('click',function(e){ if(e.target===$('assignModal')) closeAssign(); });
+
+  $('search').addEventListener('input',function(){ query=this.value.toLowerCase().trim(); renderRows(); });
+  $('todayLine').textContent=ORDERS.length+' active orders · '+ORDERS.filter(function(o){return o.due<0&&o.status!=='delivered';}).length+' overdue';
+
+  function renderAll(){ renderKpis(); renderTabs(); renderRows(); renderRelay(); renderAttn(); }
+  renderAll();
+})();
+</script>
+</body>
+</html>
