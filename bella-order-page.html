@@ -250,6 +250,34 @@
   .rec-nudge .btn-line{white-space:nowrap}
   .rec-nudge.done{opacity:.6}
   @media(max-width:520px){.rec-nudge{flex-wrap:wrap}.rec-nudge .btn-line{width:100%;text-align:center}}
+  /* ===== lookbook pop-up ===== */
+  .lookmodal{background:rgba(16,14,12,.58);padding:4vh 4vw}
+  .lookmodal .lm-box{max-width:960px;width:100%;max-height:92vh;display:flex;flex-direction:column;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 44px 110px -30px rgba(0,0,0,.62)}
+  .lm-top{display:flex;justify-content:space-between;align-items:flex-start;padding:22px 24px 15px;border-bottom:1px solid var(--line-2)}
+  .lm-kick{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+  .lm-title{font-size:22px;font-weight:400;margin-top:4px;letter-spacing:-.01em}
+  .lm-x{width:36px;height:36px;border-radius:50%;background:var(--bg);border:1px solid var(--line);color:var(--ink);font-size:20px;line-height:1;cursor:pointer;flex:0 0 36px;transition:.15s}
+  .lm-x:hover{background:var(--line-2)}
+  .lm-filters{padding:13px 24px;border-bottom:1px solid var(--line-2);display:flex;flex-direction:column;gap:8px}
+  .lm-frow{display:flex;gap:6px;flex-wrap:wrap}
+  .lm-chip{font-family:inherit;font-size:12.5px;background:#fff;border:1px solid var(--line);padding:7px 13px;cursor:pointer;color:var(--soft);transition:.14s;white-space:nowrap}
+  .lm-chip:hover{border-color:var(--ink)}
+  .lm-chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .lm-grid{flex:1;overflow-y:auto;padding:16px 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;align-content:start}
+  @media(max-width:760px){.lm-grid{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:520px){.lm-grid{grid-template-columns:repeat(2,1fr)}}
+  .lm-item{position:relative;aspect-ratio:1.15;border:1px solid var(--line);overflow:hidden;cursor:pointer;background:#EFECE8}
+  .lm-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}
+  .lm-item:hover img{transform:scale(1.05)}
+  .lm-item .h{position:absolute;top:7px;right:7px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.9);display:grid;place-items:center;transition:.15s;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+  .lm-item .h svg{width:15px;height:15px;stroke:var(--soft);fill:none;stroke-width:1.7}
+  .lm-item.on{border-color:var(--green);box-shadow:inset 0 0 0 2px var(--green)}
+  .lm-item.on .h{background:var(--green)}
+  .lm-item.on .h svg{stroke:#fff;fill:#fff}
+  .lm-item .tag{position:absolute;left:0;bottom:0;font-size:10px;letter-spacing:.02em;background:rgba(20,18,16,.72);color:#fff;padding:4px 8px}
+  .lm-loading{grid-column:1/-1;color:var(--faint);font-size:14px;padding:34px;text-align:center}
+  .lm-foot{display:flex;justify-content:space-between;align-items:center;padding:14px 24px;border-top:1px solid var(--line-2)}
+  .lm-count{font-size:13px;color:var(--soft)}
   .sectog{width:52px;height:30px;border-radius:99px;background:var(--line);border:0;cursor:pointer;position:relative;transition:background .2s;flex:0 0 52px}
   .sectog::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
   .sectog.on{background:var(--green)}
@@ -516,6 +544,22 @@
   </div>
 </div>
 
+<!-- lookbook pop-up (opens from the order flow; browse, select, close — no page change) -->
+<div class="pmodal lookmodal" id="lookModal">
+  <div class="lm-box">
+    <div class="lm-top">
+      <div><span class="lm-kick">The lookbook</span><h3 class="lm-title">Browse the furniture</h3></div>
+      <button class="lm-x" id="lookClose" type="button" aria-label="Close">×</button>
+    </div>
+    <div class="lm-filters">
+      <div class="lm-frow" id="lmRooms"></div>
+      <div class="lm-frow" id="lmStyles"></div>
+    </div>
+    <div class="lm-grid" id="lmGrid"><p class="lm-loading">Loading the lookbook…</p></div>
+    <div class="lm-foot"><span class="lm-count" id="lmCount">0 saved</span><button class="btn" id="lmDone" type="button">Done</button></div>
+  </div>
+</div>
+
 <script>
 (function(){
   var P={ empty:{unit:45,stage:'Virtual staging',path:'listing',blurb:'Vacant rooms, furnished by a designer'},
@@ -603,16 +647,16 @@
          +section('reno','Do you need to virtually renovate it?','See what a modern renovation would look like — updated floors, cabinets and finishes — to show buyers the home’s full potential.',
              subQty('Virtual renovation','Modernize the dated finishes, then furnish. Pick how many photos to renovate.','reno','renoN','photos','+'+money(PR.RENO)+' / photo','reno')
             +'<div class="sec-note">Not every photo needs it — renovate just the dated rooms (like a tired kitchen or bath) and stage the rest as-is. You provide photos of the space.</div>')
+         +section('tour','Do you need a 3D tour?','Keep buyers on your listing longer; out-of-town buyers can walk it without a showing.',
+             subQty('360° virtual staging','We stitch and stage your 360° photos into one walkable tour','pano360','pano','rooms','+$'+PR.PANO+' / photo','')
+              .replace('</span></span><span class="qtywrap"','. <button type="button" class="linkbtn" id="panoExample">See a sample &amp; what we need →</button></span></span><span class="qtywrap"')
+            +subRow('Virtual house tour','A walkable tour built from your listing photos','tour','+'+money(PR.TOUR),'tour'))
          +section('edit','Do you need photo editing?','Small edits, big first impression — brighter, warmer, more clicks online.',
              subQty('Day-to-dusk edits','Turn a daytime exterior into a twilight hero shot. You provide the daytime photos.','dusk','duskN','photos','+'+money(PR.DUSK)+' / photo','dusk')
             +subQty('Sky replacement &amp; retouching','Swap grey skies, clean up blemishes. You provide the exterior photos.','sky','skyN','photos','+'+money(PR.SKY)+' / photo',''))
          +section('floor','Do you need floor plans?','Buyers understand the space before they visit. Priced per floor.',
              subStep('2D floor plan','A clean, labelled layout','floor2d','fp2dn','+'+money(PR.FP2D)+' / floor','floor2d')
             +subStep('3D floor plan','Furnished, so buyers can walk each level','floor','fpn','+'+money(fp3d())+' / floor','floor'))
-         +section('tour','Do you need a 3D tour?','Keep buyers on your listing longer; out-of-town buyers can walk it without a showing.',
-             subQty('360° virtual staging','We stitch and stage your 360° photos into one walkable tour','pano360','pano','rooms','+$'+PR.PANO+' / photo','')
-              .replace('</span></span><span class="qtywrap"','. <button type="button" class="linkbtn" id="panoExample">See a sample &amp; what we need →</button></span></span><span class="qtywrap"')
-            +subRow('Virtual house tour','A walkable tour built from your listing photos','tour','+'+money(PR.TOUR),'tour'))
        +'</div>';
       var pex=document.getElementById('panoExample');
       if(pex) pex.onclick=function(){ document.getElementById('panoModal').classList.add('open'); };
@@ -683,7 +727,7 @@
       +'<div class="sb-panel" id="sbPro"><p class="sb-note">Tell us who’s buying — at checkout, or in your notes — and our interior designers match the style, palette and pieces to your market. You approve every staged photo before it goes live.</p></div>'
       +'<div class="sb-panel" id="sbSelf"><div class="sb-styles">'
         +STY.map(function(s){return '<button type="button" class="sb-sty" data-sk="'+s.k+'"><span class="t"><img src="'+CAT+s.im+'.jpg" alt="'+s.n+'" loading="lazy"><span class="ck">✓</span></span><span class="nm">'+s.n+'</span></button>';}).join('')
-        +'</div><a class="linkbtn" href="bella-lookbook.html">Save specific room sets in the lookbook →</a></div>'
+        +'</div><button type="button" class="linkbtn" id="openLook">Browse the full lookbook →</button></div>'
     +'</div>';
   }
   var savedRooms={};   // keyed "styleKey:roomName"
@@ -693,6 +737,7 @@
     var box=document.getElementById('stylebox'); if(!box) return;
     box.querySelectorAll('.sb-path').forEach(function(b){ b.onclick=function(){ state.styleMode=b.getAttribute('data-sm'); syncStyle(); }; });
     box.querySelectorAll('.sb-sty').forEach(function(b){ b.onclick=function(){ openStyleModal(b.getAttribute('data-sk')); }; });
+    var ol=document.getElementById('openLook'); if(ol) ol.onclick=openLookModal;
     syncStyle();
   }
   function syncStyle(){
@@ -743,6 +788,35 @@
     el.textContent = n===0?'Pick your rooms' : n+' room'+(n>1?'s':'')+' styled';
     if(bump){ el.classList.add('bump'); setTimeout(function(){ el.classList.remove('bump'); },200); }
   }
+  // ---- lookbook pop-up (browse the full catalog without leaving the order) ----
+  var LOOK=null, lookRoom='All', lookStyle='All', savedItems={};
+  var HEART='<svg viewBox="0 0 24 24"><path d="M12 20s-7-4.6-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.4-7 10-7 10z"/></svg>';
+  function uniq(a){ var s=[]; a.forEach(function(x){ if(s.indexOf(x)<0) s.push(x); }); return s; }
+  function openLookModal(){
+    document.getElementById('lookModal').classList.add('open');
+    if(LOOK){ renderLook(); return; }
+    fetch('bella-catalog/manifest.json').then(function(r){return r.json();}).then(function(j){ LOOK=j; buildLookFilters(); renderLook(); })
+      .catch(function(){ document.getElementById('lmGrid').innerHTML='<p class="lm-loading">Couldn’t load the lookbook right now.</p>'; });
+  }
+  function buildLookFilters(){
+    var rooms=['All'].concat(uniq(LOOK.map(function(i){return i.r;})).sort());
+    var styles=['All'].concat(uniq(LOOK.map(function(i){return i.s;})).sort());
+    document.getElementById('lmRooms').innerHTML=rooms.map(function(r){return '<button class="lm-chip'+(r===lookRoom?' on':'')+'" data-room="'+r+'">'+r+'</button>';}).join('');
+    document.getElementById('lmStyles').innerHTML=styles.map(function(s){return '<button class="lm-chip'+(s===lookStyle?' on':'')+'" data-style="'+s+'">'+s+'</button>';}).join('');
+    document.querySelectorAll('#lmRooms .lm-chip').forEach(function(c){ c.onclick=function(){ lookRoom=c.getAttribute('data-room'); buildLookFilters(); renderLook(); }; });
+    document.querySelectorAll('#lmStyles .lm-chip').forEach(function(c){ c.onclick=function(){ lookStyle=c.getAttribute('data-style'); buildLookFilters(); renderLook(); }; });
+  }
+  function renderLook(){
+    var items=LOOK.filter(function(i){ return (lookRoom==='All'||i.r===lookRoom)&&(lookStyle==='All'||i.s===lookStyle); });
+    var grid=document.getElementById('lmGrid');
+    grid.innerHTML=items.length? items.map(function(i){ var on=!!savedItems[i.f];
+      return '<div class="lm-item'+(on?' on':'')+'" data-f="'+i.f+'"><img src="'+CAT+i.f+'" alt="'+i.s+' '+i.r+'" loading="lazy"><span class="h">'+HEART+'</span><span class="tag">'+i.r+' · '+i.s+'</span></div>';
+    }).join('') : '<p class="lm-loading">Nothing in this filter yet.</p>';
+    grid.querySelectorAll('.lm-item').forEach(function(el){ el.onclick=function(){ var f=el.getAttribute('data-f'); savedItems[f]=!savedItems[f]; el.classList.toggle('on',savedItems[f]); updateLookCount(); }; });
+    updateLookCount();
+  }
+  function updateLookCount(){ var n=Object.keys(savedItems).filter(function(k){return savedItems[k];}).length; var el=document.getElementById('lmCount'); if(el) el.textContent=n+' piece'+(n===1?'':'s')+' saved'; }
+  function closeLookModal(){ document.getElementById('lookModal').classList.remove('open'); }
   // section grouping: which state fields each question controls
   var SECMAP={reno:['reno'],edit:['dusk','sky'],floor:['floor2d','floor'],tour:['pano360','tour']};
   var SECDEF={reno:'reno',edit:'dusk',floor:'floor',tour:'pano360'};
@@ -1028,6 +1102,15 @@
     document.getElementById('gmUse').onclick=closeStyleModal;
     sm.addEventListener('click',function(e){ if(e.target===sm) closeStyleModal(); });
     window.addEventListener('keydown',function(e){ if(e.key==='Escape' && sm.classList.contains('open')) closeStyleModal(); });
+  })();
+
+  // lookbook pop-up: close on X, Done, outside click, or Escape
+  (function(){
+    var lm=document.getElementById('lookModal');
+    document.getElementById('lookClose').onclick=closeLookModal;
+    document.getElementById('lmDone').onclick=closeLookModal;
+    lm.addEventListener('click',function(e){ if(e.target===lm) closeLookModal(); });
+    window.addEventListener('keydown',function(e){ if(e.key==='Escape' && lm.classList.contains('open')) closeLookModal(); });
   })();
 })();
 </script>
