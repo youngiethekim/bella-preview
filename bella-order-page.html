@@ -263,10 +263,11 @@
   .lm-chip{font-family:inherit;font-size:12.5px;background:#fff;border:1px solid var(--line);padding:7px 13px;cursor:pointer;color:var(--soft);transition:.14s;white-space:nowrap}
   .lm-chip:hover{border-color:var(--ink)}
   .lm-chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-  .lm-grid{flex:1;overflow-y:auto;padding:16px 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;align-content:start}
-  @media(max-width:760px){.lm-grid{grid-template-columns:repeat(3,1fr)}}
-  @media(max-width:520px){.lm-grid{grid-template-columns:repeat(2,1fr)}}
-  .lm-item{position:relative;aspect-ratio:1.15;border:1px solid var(--line);overflow:hidden;cursor:pointer;background:#EFECE8}
+  .lm-grid{flex:1;overflow-y:auto;padding:16px 24px;display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:170px;gap:8px;align-content:start}
+  @media(max-width:760px){.lm-grid{grid-template-columns:repeat(3,1fr);grid-auto-rows:150px}}
+  @media(max-width:520px){.lm-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:150px}}
+  .lm-item{position:relative;height:170px;border:1px solid var(--line);overflow:hidden;cursor:pointer;background:#EFECE8}
+  @media(max-width:760px){.lm-item{height:150px}}
   .lm-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}
   .lm-item:hover img{transform:scale(1.05)}
   .lm-item .h{position:absolute;top:7px;right:7px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.9);display:grid;place-items:center;transition:.15s;box-shadow:0 1px 4px rgba(0,0,0,.15)}
