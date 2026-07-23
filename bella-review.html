@@ -50,22 +50,38 @@
   .roles button.on .av{background:rgba(255,255,255,.25)}
 
   /* workspace grid */
-  .wsp{display:grid;grid-template-columns:var(--railL) 1fr var(--railR);height:calc(100% - var(--top))}
+  .wsp{display:grid;grid-template-columns:1fr var(--railR);height:calc(100% - var(--top))}
   aside{overflow-y:auto}
-  .rail-l{border-right:1px solid var(--line);background:#fff;padding:14px 12px}
-  .rail-l .lbl{padding:2px 4px 10px;display:flex;justify-content:space-between;align-items:center}
-  .plist{display:flex;flex-direction:column;gap:8px}
-  .pitem{border:1px solid var(--line);background:#fff;padding:0;text-align:left;overflow:hidden;position:relative;transition:.15s}
-  .pitem:hover{border-color:var(--ink)}
-  .pitem.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
-  .pitem .th{aspect-ratio:4/3;background:#eee center/cover;position:relative}
-  .pitem .cap{display:flex;justify-content:space-between;align-items:center;padding:7px 9px;gap:6px}
-  .pitem .cap b{font-size:12px;font-weight:400;text-transform:capitalize}
   .pbadge{font-size:9.5px;letter-spacing:.04em;padding:2px 6px;border-radius:99px;white-space:nowrap}
   .pb-open{background:#FBF3E2;color:var(--amber)}
   .pb-rev{background:#E9F0F4;color:var(--blue)}
   .pb-appr{background:#EDF4EE;color:var(--green)}
   .pb-none{color:var(--faint)}
+
+  /* version bar (Frame.io-style) */
+  .versionbar{display:flex;align-items:center;gap:12px;padding:9px 16px;border-top:1px solid var(--line);background:#FAF9F7;flex:none;flex-wrap:wrap}
+  .vlabel{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+  .vpills{display:flex;gap:4px;flex-wrap:wrap}
+  .vpill{font-family:inherit;font-size:12px;color:var(--soft);background:#fff;border:1px solid var(--line);padding:6px 12px;cursor:pointer;border-radius:99px;transition:.12s;white-space:nowrap}
+  .vpill:hover{border-color:var(--ink);color:var(--ink)}
+  .vpill.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .vpill .vd{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-left:6px;vertical-align:1px}
+  .vcmp{display:flex;align-items:center;gap:8px;margin-left:auto;flex-wrap:wrap}
+  .vcmp select{font-family:inherit;font-size:12.5px;padding:6px 8px;border:1px solid var(--line);background:#fff;color:var(--ink)}
+  .vcmp .arrows{color:var(--faint)}
+  .vtoggle{font-family:inherit;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:8px 13px;border:1px solid var(--line);background:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:.15s}
+  .vtoggle:hover{border-color:var(--ink)}
+  .vtoggle.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .vtoggle svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.6}
+
+  /* filmstrip of photos, underneath the stage */
+  .filmstrip{display:flex;gap:8px;padding:12px 16px;overflow-x:auto;border-top:1px solid var(--line);background:#fff;flex:none;scrollbar-width:thin}
+  .fs-item{flex:0 0 138px;border:1px solid var(--line);background:#fff;cursor:pointer;overflow:hidden;transition:.15s;text-align:left;padding:0}
+  .fs-item:hover{border-color:var(--ink)}
+  .fs-item.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+  .fs-item .th{height:82px;background:#eee center/cover}
+  .fs-item .cap{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:6px 9px}
+  .fs-item .cap b{font-size:11.5px;font-weight:400;text-transform:capitalize;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
   /* center stage */
   .center{display:flex;flex-direction:column;min-width:0;background:#F4F2EF}
@@ -207,19 +223,9 @@
 </header>
 
 <div class="wsp">
-  <!-- LEFT: photos -->
-  <aside class="rail-l">
-    <div class="lbl"><span class="micro">Photos</span><span class="micro" id="plCount"></span></div>
-    <div class="plist" id="plist"></div>
-  </aside>
-
   <!-- CENTER: stage -->
   <section class="center">
     <div class="toolbar" id="toolbar">
-      <div class="tgrp">
-        <button class="tool wide" id="tCompare" title="Before / after"><svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M5 8l-3 4 3 4"/><path d="M19 8l3 4-3 4"/></svg>Compare</button>
-      </div>
-      <div class="tsep"></div>
       <div class="tgrp" id="annoTools">
         <button class="tool wide on" data-tool="pin" title="Add a request pin"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></svg>Add request</button>
         <button class="tool" data-tool="arrow" title="Arrow"><svg viewBox="0 0 24 24"><path d="M5 19L19 5"/><path d="M11 5h8v8"/></svg></button>
@@ -242,6 +248,8 @@
         <div class="pin-layer" id="pinLayer"></div>
       </div>
     </div>
+    <div class="versionbar" id="versionBar"></div>
+    <div class="filmstrip" id="filmstrip"></div>
   </section>
 
   <!-- RIGHT: thread -->
@@ -338,6 +346,8 @@
   var composing=null;    // pin id being composed (new)
   var compare=false;
   var clipPct=50;
+  var viewKey=null;          // single version shown when not comparing (null => latest)
+  var cmpLeft='orig', cmpRight=null;  // compared pair (right null => latest)
   var COLORS=['#C4553F','#B8985A','#3E6B4C','#3E6076','#232120'];
   var STATUS={
     open:{label:'Open',chip:'ch-open',pin:''},
@@ -365,6 +375,15 @@
   function esc(s){ return (s==null?'':''+s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function photo(){ return P.photos.filter(function(p){return p.id===curId;})[0]; }
   function curURL(p){ return p.versions[p.versions.length-1].url; }
+  function frames(p){
+    var f=[{key:'orig',label:'Original',url:p.originalURL,latest:false}];
+    p.versions.forEach(function(v){ f.push({key:'v'+v.v,label:'V'+v.v,url:v.url,latest:false}); });
+    if(f.length>1) f[f.length-1].latest=true;
+    return f;
+  }
+  function latestKey(p){ return 'v'+p.versions.length; }
+  function frameURL(p,key){ var fr=frames(p),i; for(i=0;i<fr.length;i++) if(fr[i].key===key) return fr[i].url; return fr[fr.length-1].url; }
+  function frameLabel(p,key){ var fr=frames(p),i; for(i=0;i<fr.length;i++) if(fr[i].key===key) return fr[i].label+(fr[i].latest?' · latest':''); return key; }
   function roleName(r){ return r==='pm'?'Bella (PM)':(r==='guest'?'Realtor client':'Agent'); }
   function roleAvatar(r){ return r==='pm'?'BV':(r==='guest'?'RC':'BB'); }
   function canAnnotate(){ return role==='agent'||role==='guest'; }
@@ -432,15 +451,21 @@
   /* ---------------- stage image ---------------- */
   function renderStage(){
     var p=photo(); if(!p) return;
-    $('baseImg').src=curURL(p);
-    $('origImg').src=p.originalURL;
-    var showCmp=compare;
-    $('origImg').style.display=showCmp?'block':'none';
-    $('cmpB').style.display=showCmp?'block':'none';
-    $('cmpA').style.display=showCmp?'block':'none';
-    $('handle').style.display=showCmp?'block':'none';
+    var lk=latestKey(p);
+    if(compare){
+      var rk=cmpRight||lk;
+      $('baseImg').src=frameURL(p,rk);
+      $('origImg').src=frameURL(p,cmpLeft);
+      $('origImg').style.display='block';
+      $('cmpB').style.display='block'; $('cmpB').textContent=frameLabel(p,cmpLeft);
+      $('cmpA').style.display='block'; $('cmpA').textContent=frameLabel(p,rk);
+      $('handle').style.display='block';
+    } else {
+      $('baseImg').src=frameURL(p,viewKey||lk);
+      $('origImg').style.display='none';
+      $('cmpB').style.display='none'; $('cmpA').style.display='none'; $('handle').style.display='none';
+    }
     applyClip();
-    $('tCompare').classList.toggle('on',compare);
     renderDraw(); renderPins();
   }
   function applyClip(){
@@ -459,17 +484,47 @@
     if(rev) return '<span class="pbadge pb-rev">revised ✓</span>';
     return '<span class="pbadge pb-none">—</span>';
   }
-  function renderList(){
-    var wrap=$('plist'); wrap.innerHTML='';
+  function renderFilmstrip(){
+    var wrap=$('filmstrip'); wrap.innerHTML='';
     P.photos.forEach(function(p){
       var b=document.createElement('button');
-      b.className='pitem'+(p.id===curId?' on':'');
+      b.className='fs-item'+(p.id===curId?' on':'');
       b.innerHTML='<div class="th" style="background-image:url('+curURL(p)+')"></div>'
         +'<div class="cap"><b>'+esc(p.label)+'</b>'+photoBadge(p)+'</div>';
-      b.onclick=function(){ curId=p.id; selPin=null; composing=null; render(); };
+      b.onclick=function(){ curId=p.id; selPin=null; composing=null; viewKey=null; compare=false; render(); };
       wrap.appendChild(b);
     });
-    $('plCount').textContent=P.photos.length+' photos';
+  }
+  function renderVersionBar(){
+    var bar=$('versionBar'); var p=photo(); if(!p) return;
+    var fr=frames(p), lk=latestKey(p);
+    var html='<span class="vlabel">Version</span><div class="vpills">'
+      +fr.map(function(f){
+        var active=!compare && (viewKey||lk)===f.key;
+        return '<button class="vpill'+(active?' on':'')+'" data-vk="'+f.key+'">'+f.label+(f.latest?'<span class="vd"></span>':'')+'</button>';
+      }).join('')+'</div>';
+    html+='<div class="vcmp">';
+    if(fr.length>1){
+      html+='<button class="vtoggle'+(compare?' on':'')+'" id="vToggle"><svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M5 8l-3 4 3 4"/><path d="M19 8l3 4-3 4"/></svg>Compare</button>';
+      if(compare){
+        var opt=function(sel){ return fr.map(function(f){ return '<option value="'+f.key+'"'+(sel===f.key?' selected':'')+'>'+f.label+'</option>'; }).join(''); };
+        html+='<select id="cmpLeftSel">'+opt(cmpLeft)+'</select><span class="arrows">↔ drag to wipe ↔</span><select id="cmpRightSel">'+opt(cmpRight||lk)+'</select>';
+      }
+    } else {
+      html+='<span class="vlabel" style="letter-spacing:.02em;text-transform:none">One version so far — revised versions appear here to compare.</span>';
+    }
+    html+='</div>';
+    bar.innerHTML=html;
+    bar.querySelectorAll('.vpill').forEach(function(b){ b.onclick=function(){ compare=false; viewKey=b.getAttribute('data-vk'); renderStage(); renderVersionBar(); }; });
+    if($('vToggle')) $('vToggle').onclick=function(){
+      compare=!compare;
+      if(compare){ if(!cmpRight) cmpRight=lk; if(cmpLeft===(cmpRight||lk)) cmpLeft='orig'; clipPct=50; }
+      renderStage(); renderVersionBar();
+    };
+    if(compare && $('cmpLeftSel')){
+      $('cmpLeftSel').onchange=function(){ cmpLeft=this.value; renderStage(); renderVersionBar(); };
+      $('cmpRightSel').onchange=function(){ cmpRight=this.value; renderStage(); renderVersionBar(); };
+    }
   }
 
   /* ---------------- thread / cards ---------------- */
@@ -591,7 +646,7 @@
       var p=photo();
       var pin={id:uid(),xPct:pt.x,yPct:pt.y,note:'',drawing:[],author:roleName(role)==='Agent'?'Beverly Bahm':(role==='guest'?(P.collaborators[0]?P.collaborators[0].name:'Realtor client'):'Bella'),role:role,ts:nowStr(),status:'open',replies:[]};
       p.pins.push(pin); composing=pin.id; selPin=pin.id;
-      save(); renderPins(); renderCards(); renderList();
+      save(); renderPins(); renderCards(); renderFilmstrip();
       return;
     }
     // drawing tools — must have an active request (composing or selected & editable)
@@ -674,7 +729,10 @@
     r.onload=function(){
       var p=photo(); p.versions.push({v:p.versions.length+1,url:r.result});
       p.pins.forEach(function(x){ if(x.status==='studio'||x.status==='open') x.status='revised'; });
-      compare=true; clipPct=50; recomputeProject(); save(); render();
+      // auto-open a compare of the new version vs the one before it
+      compare=true; clipPct=50; cmpRight=latestKey(p);
+      cmpLeft = p.versions.length>1 ? 'v'+(p.versions.length-1) : 'orig';
+      viewKey=null; recomputeProject(); save(); render();
       toast('Revised '+p.label.toLowerCase()+' uploaded — client can review');
     };
     r.readAsDataURL(f);
@@ -729,7 +787,7 @@
   }
 
   /* ---------------- master render ---------------- */
-  function render(){ renderTop(); renderList(); renderStage(); renderCards(); renderPrimary(); syncToolAvailability(); }
+  function render(){ renderTop(); renderFilmstrip(); renderVersionBar(); renderStage(); renderCards(); renderPrimary(); syncToolAvailability(); }
   function syncToolAvailability(){
     var dim=!canAnnotate();
     $('annoTools').style.opacity=dim?0.4:1;
@@ -751,7 +809,6 @@
   document.querySelectorAll('#annoTools [data-tool]').forEach(function(b){
     b.onclick=function(){ tool=b.getAttribute('data-tool'); document.querySelectorAll('#annoTools [data-tool]').forEach(function(x){ x.classList.toggle('on',x===b); }); $('stage').classList.toggle('placing',tool==='pin'); };
   });
-  $('tCompare').onclick=function(){ compare=!compare; renderStage(); };
   $('tUndo').onclick=undoSketch;
   $('tClear').onclick=clearSketch;
   // swatches
