@@ -173,6 +173,20 @@
   .qtywrap{display:flex;align-items:center;gap:9px}
   .qunit{font-size:12px;color:var(--faint);white-space:nowrap}
   .subrow.off .qtywrap{opacity:.32;pointer-events:none}
+  /* optional inline photo upload (under the staging count) */
+  .up-block{margin-top:15px}
+  .up-zone{display:flex;align-items:center;gap:13px;padding:14px 16px;border:1px dashed #C7C1B8;background:#fff;cursor:pointer;transition:border-color .15s,background .15s}
+  .up-zone:hover,.up-zone.drag{border-color:var(--green);background:#F7FAF7}
+  .up-zone.has{border-style:solid;border-color:#DDE7DD;background:#F7FAF7}
+  .up-zone .up-i{width:22px;height:22px;stroke:var(--green);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:0 0 22px}
+  .up-t b{display:block;font-size:14px;color:var(--ink);font-weight:400}
+  .up-t span{display:block;font-size:12px;color:var(--faint);margin-top:2px;line-height:1.4}
+  .up-thumbs{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+  .up-th{position:relative;width:62px;height:62px;border:1px solid var(--line);overflow:hidden;border-radius:3px}
+  .up-th img{width:100%;height:100%;object-fit:cover;display:block}
+  .up-x{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:rgba(20,18,16,.74);color:#fff;border:0;font-size:12px;line-height:1;cursor:pointer;display:grid;place-items:center}
+  .up-x:hover{background:rgba(20,18,16,.94)}
+  .reqtag-done{background:var(--green);color:#fff}
   /* inline "the look" chooser (under virtual staging) */
   .stylebox{margin-top:18px;padding-top:18px;border-top:1px solid #DDE7DD}
   .sb-lab{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:11px}
@@ -623,7 +637,7 @@
   function fp3d(){ return state.commercial?CFP3D:PR.FP3D; }
   var state={ proj:null, commercial:false, photos:8, mode:'ready', removal:false, reno:false, renoN:8, floor:false, fpn:1, floor2d:false, fp2dn:1, tour:false, dusk:false, duskN:8, sky:false, skyN:8, pano360:false, pano:3,
               rint:1, rext:1, rfp:1, useInt:true, useExt:true, useFp:true,
-              styleMode:'pro', stylePick:null };
+              styleMode:'pro', stylePick:null, uploads:[] };
 
   // saved lookbook pieces
   var saved=[]; try{ saved=JSON.parse(localStorage.getItem('bellaProject')||'[]'); }catch(e){}
@@ -682,6 +696,7 @@
         '<div class="core"><div class="core-top">'+qicon('sofa')
          +'<span class="lbl"><b>Virtual staging</b><span>Empty rooms furnished by real interior designers · '+money(stageUnit())+' each, volume discounts apply'+exLink('stage')+'</span></span>'
          +stepper('photos')+'</div>'
+         +uploadBlock()
          +'<div class="removal-row" id="removalRow"><span class="lbl"><b>Furniture removal</b><span>Occupied or cluttered? We clear the room first, then stage it clean.</span></span><span class="freeprice">Included free</span><button class="toggle" data-tog="removal"></button></div>'
          +styleBox()
        +'</div>'
@@ -724,7 +739,7 @@
        +toggleStep('Furnished 3D floor plans','Walk the layout','useFp','rfp','+'+money(fp3d())+' each','floor')
        +'<p class="tiers">Volume pricing, applied automatically — <b>3+</b> save 5% · <b>6+</b> save 10% · <b>11+</b> save 15% · <b>21+</b> save 20%.</p>';
     }
-    bind(); bindStyle(); sync();
+    bind(); bindStyle(); bindUpload(); sync();
   }
   function exLink(ex){ return ex? ' <button type="button" class="linkbtn" data-ex="'+ex+'">See a sample &amp; what we need →</button>' : ''; }
   function qicon(ic){ return ic? '<svg class="qico"><use href="#i-'+ic+'"/></svg>' : ''; }
@@ -754,6 +769,35 @@
       +'<span class="price">'+price+'</span><button class="toggle" data-tog="'+tkey+'"></button></div>';
   }
   function subStep(name,sub,tkey,qkey,price,ex){ return subQty(name,sub,tkey,qkey,'floors',price,ex); }
+  // ---- optional inline photo upload (tied to the staging count; never required) ----
+  function uploadBlock(){
+    return '<div class="up-block"><label class="up-zone" id="upZone"><input type="file" id="upInput" accept="image/*" multiple hidden>'
+      +'<svg class="up-i"><use href="#i-upload"/></svg>'
+      +'<span class="up-t"><b id="upTitle">Have your photos? Drop them in</b><span id="upSub">We’ll count them and set the number for you — JPG or PNG. No photos yet? Just pick a number and send them later.</span></span>'
+      +'</label><div class="up-thumbs" id="upThumbs"></div></div>';
+  }
+  function bindUpload(){
+    var zone=document.getElementById('upZone'), input=document.getElementById('upInput'); if(!zone||!input) return;
+    input.onchange=function(){ addFiles(input.files); input.value=''; };
+    ['dragenter','dragover'].forEach(function(ev){ zone.addEventListener(ev,function(e){ e.preventDefault(); zone.classList.add('drag'); }); });
+    ['dragleave','drop'].forEach(function(ev){ zone.addEventListener(ev,function(e){ e.preventDefault(); zone.classList.remove('drag'); }); });
+    zone.addEventListener('drop',function(e){ if(e.dataTransfer&&e.dataTransfer.files) addFiles(e.dataTransfer.files); });
+    renderUploads();
+  }
+  function addFiles(files){
+    [].slice.call(files).forEach(function(f){ if(f.type&&f.type.indexOf('image')===0){ state.uploads.push({name:f.name, url:URL.createObjectURL(f)}); } });
+    if(state.uploads.length) state.photos=state.uploads.length;
+    renderUploads(); sync();
+  }
+  function renderUploads(){
+    var wrap=document.getElementById('upThumbs'), zone=document.getElementById('upZone'); if(!wrap||!zone) return;
+    var n=state.uploads.length;
+    document.getElementById('upTitle').textContent = n? (n+' photo'+(n>1?'s':'')+' ready') : 'Have your photos? Drop them in';
+    document.getElementById('upSub').textContent = n? 'We’ll stage these. Add more, or remove any below.' : 'We’ll count them and set the number for you — JPG or PNG. No photos yet? Just pick a number and send them later.';
+    zone.classList.toggle('has', n>0);
+    wrap.innerHTML=state.uploads.map(function(u,i){ return '<div class="up-th"><img src="'+u.url+'" alt=""><button type="button" class="up-x" data-i="'+i+'" aria-label="Remove">×</button></div>'; }).join('');
+    wrap.querySelectorAll('.up-x').forEach(function(b){ b.onclick=function(e){ e.preventDefault(); e.stopPropagation(); var i=+b.getAttribute('data-i'); state.uploads.splice(i,1); if(state.uploads.length) state.photos=state.uploads.length; renderUploads(); sync(); }; });
+  }
   // ---- inline "the look" chooser: designers pick, or you pick a style + save room sets ----
   var CAT='https://youngiethekim.github.io/bella-preview/bella-catalog/items/';
   var STY=[
@@ -1028,6 +1072,10 @@
     var anyUp=active.some(function(k){ return REQ[k].up; });
     var cards=active.map(function(k){
       var r=REQ[k];
+      if(k==='stage' && state.uploads.length){
+        return '<div class="reqcard"><div class="reqcard-h"><span class="reqsvc">'+r.svc+'</span><span class="reqtag reqtag-done">✓ '+state.uploads.length+' received</span></div>'
+          +'<ul class="reqlist"><li>Your '+state.uploads.length+' photo'+(state.uploads.length>1?'s are':' is')+' attached to this order — nothing else needed here.</li></ul></div>';
+      }
       return '<div class="reqcard'+(r.up?' reqcard-up':'')+'">'
         +'<div class="reqcard-h"><span class="reqsvc">'+r.svc+'</span>'
         +(r.up?'<span class="reqtag">Upload needed</span>':'<span class="reqtag reqtag-soft">You provide</span>')+'</div>'
