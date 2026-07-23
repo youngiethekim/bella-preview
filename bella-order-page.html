@@ -242,17 +242,33 @@
   .subrow.off .qtywrap{opacity:.32;pointer-events:none}
   /* live volume-savings meter */
   .vol{margin-top:16px;padding-top:15px;border-top:1px solid var(--line-2)}
-  .vol-lab{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:10px}
-  .vol-tiers{display:flex;gap:6px;flex-wrap:wrap}
-  .vt{flex:1 1 auto;min-width:78px;text-align:center;font-size:12px;color:var(--faint);background:#fff;border:1px solid var(--line);padding:9px 8px;transition:.18s;position:relative}
-  .vt b{display:block;font-size:14px;color:var(--soft);font-weight:400;margin-bottom:2px;transition:.18s}
-  .vt.reached{background:#F1F5F1;border-color:#CFE0D3;color:var(--green)}
-  .vt.reached b{color:var(--green)}
-  .vt.next{border-color:var(--ink);border-style:dashed;color:var(--ink)}
-  .vt.next b{color:var(--ink)}
-  .vol-msg{font-size:13px;color:var(--soft);margin-top:11px;line-height:1.5}
+  .vol-lab{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:11px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .vol-lab .vol-hint{text-transform:none;letter-spacing:0;font-size:11px;color:var(--green)}
+  .vol-tiers{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  @media(max-width:560px){.vol-tiers{grid-template-columns:1fr 1fr}}
+  .vt{font-family:inherit;text-align:center;background:#fff;border:1px solid var(--line);padding:11px 6px 10px;transition:.16s;position:relative;cursor:pointer;border-radius:8px}
+  .vt:hover{border-color:var(--ink);transform:translateY(-1px)}
+  .vt b{display:block;font-size:14px;color:var(--ink);font-weight:400}
+  .vt .vt-off{display:block;font-size:11.5px;color:var(--soft);margin:2px 0 4px}
+  .vt .vt-pp{display:block;font-size:12px;color:var(--faint)}
+  .vt.reached{background:#F1F5F1;border-color:#CFE0D3}
+  .vt.reached b,.vt.reached .vt-off{color:var(--green)}
+  .vt.active{border-color:var(--green);box-shadow:0 0 0 1px var(--green);background:#EDF4EE}
+  .vt.next{border-style:dashed;border-color:var(--ink)}
+  .vt.next::after{content:"next";position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;background:var(--ink);color:#fff;padding:1px 7px;border-radius:99px}
+  .vol-econ{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:14px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px 15px}
+  .ve-main{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .ve-pp{font-size:26px;color:var(--ink);font-weight:300;line-height:1}
+  .ve-pp i{font-size:13px;color:var(--faint);font-style:normal;margin-left:2px}
+  .ve-tot{font-size:13px;color:var(--soft)}
+  .ve-tot b{color:var(--ink);font-weight:400}
+  .ve-save{font-size:12.5px;color:var(--green);background:#EDF4EE;border:1px solid #CFE0D3;padding:5px 11px;border-radius:99px;white-space:nowrap}
+  .ve-save.muted{color:var(--faint);background:#F4F2EF;border-color:var(--line)}
+  .vol-msg{font-size:13px;color:var(--soft);margin-top:11px;line-height:1.55;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .vol-msg b{color:var(--ink);font-weight:500}
-  .vol-msg .vol-now{color:var(--green);font-weight:400}
+  .vol-msg .vol-now{color:var(--green)}
+  .vol-add{font-family:inherit;background:var(--ink);color:#fff;border:0;border-radius:99px;font-size:12px;padding:8px 14px;cursor:pointer;white-space:nowrap;transition:.15s}
+  .vol-add:hover{background:var(--green)}
   /* optional inline photo upload (under the staging count) */
   .up-th{cursor:zoom-in}
   .up-th .up-zoom{position:absolute;left:3px;bottom:3px;width:18px;height:18px;border-radius:4px;background:rgba(20,18,16,.6);display:grid;place-items:center;opacity:0;transition:.15s;pointer-events:none}
@@ -892,22 +908,48 @@
       +'<span class="price">'+price+'</span><button class="toggle" data-tog="'+tkey+'"></button></div>';
   }
   function subStep(name,sub,tkey,qkey,price,ex){ return subQty(name,sub,tkey,qkey,'floors',price,ex); }
-  // ---- live volume-savings meter (tied to the staging photo count) ----
+  // ---- live volume-savings meter: clickable pricing ladder + economics + next-tier nudge ----
   var VTIERS=[{m:3,d:5},{m:6,d:10},{m:11,d:15},{m:21,d:20}];
+  function money2(n){ var r=Math.round(n*100)/100; return '$'+(r%1===0? r.toLocaleString('en-US') : r.toFixed(2)); }
+  function photoPrice(d){ return stageUnit()*(1-d/100); }
+  function setPhotos(n){ state.photos=Math.max(1, n|0); sync(); }
   function volMeter(){
-    return '<div class="vol"><div class="vol-lab">Volume savings — the more photos, the less each one costs</div>'
-      +'<div class="vol-tiers">'+VTIERS.map(function(t){return '<span class="vt" data-min="'+t.m+'"><b>'+t.m+'+</b>'+t.d+'% off</span>';}).join('')+'</div>'
+    return '<div class="vol"><div class="vol-lab"><span>Volume savings — the more photos, the less each costs</span><span class="vol-hint">Tap a tier to set your count →</span></div>'
+      +'<div class="vol-tiers">'+VTIERS.map(function(t){
+          return '<button type="button" class="vt" data-min="'+t.m+'"><b>'+t.m+'+</b><span class="vt-off">'+t.d+'% off</span><span class="vt-pp">'+money2(photoPrice(t.d))+'/photo</span></button>';
+        }).join('')+'</div>'
+      +'<div class="vol-econ" id="volEcon"></div>'
       +'<div class="vol-msg" id="volMsg"></div></div>';
   }
   function syncVol(){
-    var vt=document.querySelectorAll('.vt'); if(!vt.length) return;
-    var p=state.photos, cur=0, next=null;
-    VTIERS.forEach(function(t){ if(p>=t.m) cur=t.d; });
-    for(var i=0;i<VTIERS.length;i++){ if(VTIERS[i].m>p){ next=VTIERS[i]; break; } }
-    vt.forEach(function(el){ var m=+el.getAttribute('data-min'); el.classList.toggle('reached',p>=m); el.classList.toggle('next',!!next&&m===next.m); });
-    var msg=document.getElementById('volMsg'); if(!msg) return;
-    if(cur>0){ msg.innerHTML='<span class="vol-now">You’re saving '+cur+'% on every staged photo.</span>'+(next?' Add <b>'+(next.m-p)+' more</b> to save '+next.d+'%.':' You’ve reached the top tier — nice.'); }
-    else { msg.innerHTML='Add <b>'+(3-p)+' more</b> photo'+((3-p)>1?'s':'')+' to unlock 5% off every photo.'; }
+    var tiles=document.querySelectorAll('.vt'); if(!tiles.length) return;
+    var p=state.photos, base=stageUnit(), df=volDisc(p), d=Math.round(df*100);
+    var per=base*(1-df), total=base*p*(1-df), saved=base*p*df;
+    var next=null, i; for(i=0;i<VTIERS.length;i++){ if(VTIERS[i].m>p){ next=VTIERS[i]; break; } }
+    var curMin=0; VTIERS.forEach(function(t){ if(p>=t.m) curMin=t.m; });
+    tiles.forEach(function(el){ var m=+el.getAttribute('data-min');
+      el.classList.toggle('reached', p>=m);
+      el.classList.toggle('active', p>=m && m===curMin);
+      el.classList.toggle('next', !!next && m===next.m);
+      el.onclick=function(){ setPhotos(m); };
+    });
+    var econ=document.getElementById('volEcon');
+    if(econ){
+      econ.innerHTML='<div class="ve-main"><span class="ve-pp">'+money2(per)+'<i>/photo</i></span>'
+        +'<span class="ve-tot">×&nbsp;'+p+' photo'+(p>1?'s':'')+' = <b>'+money(total)+'</b></span></div>'
+        +(saved>0? '<span class="ve-save">You save '+money(saved)+' ('+d+'% off)</span>' : '<span class="ve-save muted">No discount yet</span>');
+    }
+    var msg=document.getElementById('volMsg');
+    if(msg){
+      if(next){
+        var addN=next.m-p, nper=photoPrice(next.d), nsaved=base*next.m*(next.d/100);
+        msg.innerHTML='<button type="button" class="vol-add" id="volAdd">+ Add '+addN+' photo'+(addN>1?'s':'')+'</button>'
+          +'<span>to unlock <b>'+next.d+'% off</b> — every photo drops to <b>'+money2(nper)+'</b>, saving '+money(nsaved)+' in total.</span>';
+      } else {
+        msg.innerHTML='<span class="vol-now">✓ Top tier unlocked — '+money2(per)+'/photo, your best price.</span>';
+      }
+    }
+    var add=document.getElementById('volAdd'); if(add&&next) add.onclick=function(){ setPhotos(next.m); };
   }
   // enlarge an uploaded photo
   function openPhoto(url){ if(!url) return; document.getElementById('pvImg').src=url; document.getElementById('photoView').classList.add('open'); }
