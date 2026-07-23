@@ -172,6 +172,59 @@
   .stp .up-block{margin-top:0}
   .stp .sb-lab{display:none}
   .stp .stylebox{margin-top:0;padding-top:0;border-top:0}
+  /* generic mini uploader (references + per-service requirements) */
+  .mini-up{display:flex;align-items:center;gap:13px;border:1.5px dashed var(--line);border-radius:8px;padding:12px 15px;cursor:pointer;background:#fff;transition:.15s;margin-top:10px}
+  .mini-up:hover,.mini-up.drag{border-color:var(--green);background:#F7FAF7}
+  .mini-up .up-i{width:22px;height:22px;flex:none;color:var(--green)}
+  .mini-up .mu-t{flex:1;min-width:0}
+  .mini-up .mu-t b{font-weight:400;font-size:14px;display:block}
+  .mini-up .mu-t span{font-size:12px;color:var(--faint)}
+  .mini-up .mu-count{font-size:12px;color:var(--green);white-space:nowrap}
+  .mu-thumbs{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .mu-th{position:relative;width:58px;height:58px;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+  .mu-th img{width:100%;height:100%;object-fit:cover}
+  .mu-th .mu-file{width:100%;height:100%;display:grid;place-items:center;font-size:8.5px;color:var(--faint);padding:4px;text-align:center;background:#F4F2EF;word-break:break-word;line-height:1.2}
+  .mu-th .mu-x{position:absolute;top:2px;right:2px;width:16px;height:16px;border:0;border-radius:50%;background:rgba(20,18,16,.7);color:#fff;font-size:11px;line-height:1;cursor:pointer}
+  .req-up{margin-top:12px;display:none;padding-top:12px;border-top:1px dashed var(--line)}
+  .req-up.show{display:block}
+  .req-up .req-lab{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:2px}
+  /* photographer panel */
+  .up-later{margin-top:14px;border-top:1px solid #DDE7DD;padding-top:13px}
+  .up-later-toggle{background:transparent;border:0;color:var(--green);font-family:inherit;font-size:13px;cursor:pointer;padding:2px 0}
+  .up-later-toggle:hover{text-decoration:underline}
+  .up-later-panel{display:none;margin-top:11px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+  .up-later-panel.show{display:block}
+  .up-later-panel label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);display:block;margin:2px 0 5px}
+  .up-later-panel input,.up-later-panel textarea{width:100%;border:1px solid var(--line);border-radius:6px;padding:9px 11px;font-family:inherit;font-size:14px}
+  .up-later-panel textarea{min-height:110px;resize:vertical}
+  .up-later-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:11px}
+  .up-later-sent{color:var(--green);font-size:13px;margin-top:10px}
+  /* per-photo style tag on thumbnails */
+  .up-th .up-style{position:absolute;left:4px;top:4px;font-size:9px;letter-spacing:.02em;background:rgba(20,18,16,.74);color:#fff;padding:2px 7px;border-radius:99px;pointer-events:none;max-width:calc(100% - 12px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  /* room style modal */
+  .rsm-box{max-width:640px}
+  .rsm-head{display:flex;align-items:baseline;gap:10px;margin:0 4px 12px}
+  .rsm-head b{font-size:18px;font-weight:400}
+  .rsm-head span{font-size:12.5px;color:var(--faint)}
+  .rsm-compare{position:relative;border-radius:8px;overflow:hidden;background:#eee;aspect-ratio:3/2;user-select:none}
+  .rsm-compare img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .rsm-before{z-index:2}
+  .rsm-compare .cmp-tag{position:absolute;top:10px;z-index:4;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:rgba(20,18,16,.6);padding:4px 9px;border-radius:99px;pointer-events:none}
+  .rsm-compare .cmp-tag.l{left:10px}.rsm-compare .cmp-tag.r{right:10px}
+  .rsm-handle{position:absolute;top:0;bottom:0;width:2px;background:#fff;z-index:5;cursor:ew-resize;box-shadow:0 0 0 1px rgba(0,0,0,.15);transform:translateX(-1px)}
+  .rsm-handle::after{content:"‹ ›";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:32px;height:32px;border-radius:50%;background:#fff;color:var(--ink);font-size:12px;display:grid;place-items:center;box-shadow:0 3px 10px rgba(0,0,0,.25)}
+  .rsm-note{font-size:12px;color:var(--faint);margin:10px 4px;line-height:1.5}
+  .rsm-styles{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:6px;margin:0 2px 14px}
+  .rsm-sty{border:1px solid var(--line);border-radius:7px;overflow:hidden;cursor:pointer;background:#fff;padding:0;transition:.12s}
+  .rsm-sty:hover{border-color:var(--ink)}
+  .rsm-sty.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+  .rsm-sty img{width:100%;height:52px;object-fit:cover;display:block}
+  .rsm-sty .snm{display:block;font-size:11px;padding:5px 4px;text-align:center}
+  .rsm-sty.proj{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:82px;gap:4px}
+  .rsm-sty.proj .pj{font-size:19px;color:var(--green);line-height:1}
+  .rsm-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:2px 2px 0}
+  .rsm-nav .navb{background:transparent;border:0;color:var(--soft);font-size:13px;cursor:pointer;padding:6px 4px;font-family:inherit}
+  .rsm-nav .navb:disabled{color:var(--line);cursor:default}
   .secs{display:flex;flex-direction:column;gap:6px}
   .sec{background:#fff;border:1px solid var(--line);transition:border-color .15s}
   .sec.open{border-color:#CFC9C0}
@@ -661,6 +714,24 @@
   <img id="pvImg" alt="Your uploaded photo">
 </div>
 
+<!-- per-room style + before/after compare -->
+<div class="pmodal" id="roomStyleModal">
+  <div class="box rsm-box">
+    <button class="pclose" id="rsmClose" type="button" aria-label="Close">×</button>
+    <div class="rsm-head"><b>Style this room</b><span id="rsmCount"></span></div>
+    <div class="rsm-compare" id="rsmCompare">
+      <img class="rsm-after" id="rsmAfter" alt="Style example">
+      <img class="rsm-before" id="rsmBefore" alt="Your photo">
+      <span class="cmp-tag l">Your photo</span>
+      <span class="cmp-tag r" id="rsmStyleTag">Style</span>
+      <div class="rsm-handle" id="rsmHandle"></div>
+    </div>
+    <p class="rsm-note">Slide to compare your room with the look. This is a style <b>example</b> — your actual photo will be staged in this style by our designers, and you approve it before it goes live.</p>
+    <div class="rsm-styles" id="rsmStyles"></div>
+    <div class="rsm-nav"><button class="navb" id="rsmPrev" type="button">← Previous</button><button class="navb" id="rsmDone" type="button" style="color:var(--green)">Done</button><button class="navb" id="rsmNext" type="button">Next →</button></div>
+  </div>
+</div>
+
 <script>
 (function(){
   var P={ empty:{unit:45,stage:'Virtual staging',path:'listing',blurb:'Vacant rooms, furnished by a designer'},
@@ -678,7 +749,7 @@
   function fp3d(){ return state.commercial?CFP3D:PR.FP3D; }
   var state={ proj:null, commercial:false, photos:8, mode:'ready', removal:false, reno:false, renoN:8, floor:false, fpn:1, floor2d:false, fp2dn:1, tour:false, dusk:false, duskN:8, sky:false, skyN:8, pano360:false, pano:3,
               rint:1, rext:1, rfp:1, useInt:true, useExt:true, useFp:true,
-              styleMode:'pro', stylePick:null, uploads:[] };
+              styleMode:'pro', stylePick:null, uploads:[], photog:{email:'',notes:'',sent:false}, files:{} };
 
   // saved lookbook pieces
   var saved=[]; try{ saved=JSON.parse(localStorage.getItem('bellaProject')||'[]'); }catch(e){}
@@ -744,8 +815,10 @@
           +uploadBlock()
           +'<div class="removal-row" id="removalRow"><span class="lbl"><b>Furniture removal</b><span>Occupied or cluttered? We clear the room first, then stage it clean.</span></span><span class="freeprice">Included free</span><button class="toggle" data-tog="removal"></button></div>'
         +'</div>'
-        +'<div class="stp" id="stp3"><div class="stp-h"><span class="stp-n">3</span><div class="stp-t"><b>Choose the look</b><span>Let our designers pick what sells for your buyer, or choose a style yourself.</span></div></div>'
+        +'<div class="stp" id="stp3"><div class="stp-h"><span class="stp-n">3</span><div class="stp-t"><b>Choose the look</b><span>Let our designers pick what sells for your buyer, or choose a style yourself. Uploaded a photo? Tap it above to set a style per room.</span></div></div>'
           +styleBox()
+          +'<div style="margin-top:16px;border-top:1px solid #DDE7DD;padding-top:14px"><div class="req-lab" style="color:var(--faint)">References &amp; inspiration — optional</div>'
+          +miniUpload('refs','Share a look you love','Reference photos, a Pinterest screenshot, a room you admire — anything that helps our designers understand your vision.')+'</div>'
         +'</div>';
       // --- 2b: optional extras (a gentle nudge + the question sections) ---
       ex.innerHTML=
@@ -753,17 +826,21 @@
        +'<div class="secs">'
          +section('reno','Do you need to virtually renovate it?','See what a modern renovation would look like — updated floors, cabinets and finishes — to show buyers the home’s full potential.',
              subQty('Virtual renovation','Modernize the dated finishes, then furnish. Pick how many photos to renovate.','reno','renoN','photos','+'+money(PR.RENO)+' / photo','reno')
-            +'<div class="sec-note">Not every photo needs it — renovate just the dated rooms (like a tired kitchen or bath) and stage the rest as-is. You provide photos of the space.</div>')
+            +'<div class="sec-note">Not every photo needs it — renovate just the dated rooms (like a tired kitchen or bath) and stage the rest as-is. You provide photos of the space.</div>'
+            +reqUpload('reno','Photos of the rooms to renovate','Current photos of the dated space, in good light'))
          +section('tour','Do you need a 3D tour?','Keep buyers on your listing longer; out-of-town buyers can walk it without a showing.',
              subQty('360° virtual staging','We stitch and stage your 360° photos into one walkable tour','pano360','pano','rooms','+$'+PR.PANO+' / photo','')
               .replace('</span></span><span class="qtywrap"','. <button type="button" class="linkbtn" id="panoExample">See a sample &amp; what we need →</button></span></span><span class="qtywrap"')
-            +subRow('Virtual house tour','A walkable tour built from your listing photos','tour','+'+money(PR.TOUR),'tour'))
+            +subRow('Virtual house tour','A walkable tour built from your listing photos','tour','+'+money(PR.TOUR),'tour')
+            +reqUpload('tour','Your 360° photos','Equirectangular 360° shots — one per room you want walkable'))
          +section('edit','Do you need photo editing?','Small edits, big first impression — brighter, warmer, more clicks online.',
              subQty('Day-to-dusk edits','Turn a daytime exterior into a twilight hero shot. You provide the daytime photos.','dusk','duskN','photos','+'+money(PR.DUSK)+' / photo','dusk')
-            +subQty('Sky replacement &amp; retouching','Swap grey skies, clean up blemishes. You provide the exterior photos.','sky','skyN','photos','+'+money(PR.SKY)+' / photo',''))
+            +subQty('Sky replacement &amp; retouching','Swap grey skies, clean up blemishes. You provide the exterior photos.','sky','skyN','photos','+'+money(PR.SKY)+' / photo','')
+            +reqUpload('edit','Your exterior / daytime photos','The shots you want turned to dusk or sky-swapped'))
          +section('floor','Do you need floor plans?','Buyers understand the space before they visit. Priced per floor.',
              subStep('2D floor plan','A clean, labelled layout','floor2d','fp2dn','+'+money(PR.FP2D)+' / floor','floor2d')
-            +subStep('3D floor plan','Furnished, so buyers can walk each level','floor','fpn','+'+money(fp3d())+' / floor','floor'))
+            +subStep('3D floor plan','Furnished, so buyers can walk each level','floor','fpn','+'+money(fp3d())+' / floor','floor')
+            +reqUpload('floor','Blueprints, plans or dimensions','PDF, CAD, JPG or PNG — or measurements for each floor','.pdf,.dwg,.dxf,.jpg,.jpeg,.png,image/*'))
        +'</div>';
       var pex=document.getElementById('panoExample');
       if(pex) pex.onclick=function(){ document.getElementById('panoModal').classList.add('open'); };
@@ -840,15 +917,106 @@
     return '<div class="up-block"><label class="up-zone" id="upZone"><input type="file" id="upInput" accept="image/*" multiple hidden>'
       +'<svg class="up-i"><use href="#i-upload"/></svg>'
       +'<span class="up-t"><b id="upTitle">Have your photos? Drop them in</b><span id="upSub">We’ll count them and set the number for you — JPG or PNG. No photos yet? Just pick a number and send them later.</span></span>'
-      +'</label><div class="up-thumbs" id="upThumbs"></div></div>';
+      +'</label><div class="up-thumbs" id="upThumbs"></div>'
+      +'<div class="up-later"><button type="button" class="up-later-toggle" id="upLaterToggle">📷  Photos not ready? Send your photographer a direct upload link →</button>'
+        +'<div class="up-later-panel" id="upLaterPanel">'
+          +'<label>Photographer’s email</label><input type="email" id="photogEmail" placeholder="photographer@studio.com" autocomplete="off">'
+          +'<label style="margin-top:12px">Instructions for this shoot <span style="text-transform:none;letter-spacing:0;color:var(--faint)">— edit as needed</span></label><textarea id="photogNotes"></textarea>'
+          +'<div class="up-later-row"><button type="button" id="photogSend" style="background:var(--ink);color:#fff;border:0;font-family:inherit;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:11px 17px;cursor:pointer;border-radius:6px">Send upload link</button><span style="font-size:12px;color:var(--faint)">They get a secure link to upload straight to this order — you don’t relay files.</span></div>'
+          +'<div class="up-later-sent" id="photogSent"></div>'
+        +'</div></div>'
+      +'</div>';
   }
+  // ---- generic mini uploader (references + per-service requirements) ----
+  function escF(s){ return (''+s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function miniUpload(key,title,sub,accept){
+    return '<label class="mini-up" data-upkey="'+key+'"><input type="file" accept="'+(accept||'image/*')+'" multiple hidden>'
+      +'<svg class="up-i"><use href="#i-upload"/></svg>'
+      +'<span class="mu-t"><b>'+title+'</b><span>'+sub+'</span></span>'
+      +'<span class="mu-count" data-upcount="'+key+'"></span></label>'
+      +'<div class="mu-thumbs" data-upthumbs="'+key+'"></div>';
+  }
+  function reqUpload(key,title,sub,accept){
+    return '<div class="req-up" data-requp="'+key+'"><div class="req-lab">Upload what we need — on the spot</div>'+miniUpload('req_'+key,title,sub,accept)+'</div>';
+  }
+  function bindMiniUploads(){
+    document.querySelectorAll('.mini-up[data-upkey]').forEach(function(zone){
+      var key=zone.getAttribute('data-upkey'), input=zone.querySelector('input');
+      input.onchange=function(){ addMiniFiles(key,input.files); input.value=''; };
+      ['dragenter','dragover'].forEach(function(ev){ zone.addEventListener(ev,function(e){ e.preventDefault(); zone.classList.add('drag'); }); });
+      ['dragleave','drop'].forEach(function(ev){ zone.addEventListener(ev,function(e){ e.preventDefault(); zone.classList.remove('drag'); }); });
+      zone.addEventListener('drop',function(e){ if(e.dataTransfer&&e.dataTransfer.files) addMiniFiles(key,e.dataTransfer.files); });
+    });
+    Object.keys(state.files).forEach(renderMini);
+  }
+  function addMiniFiles(key,files){
+    state.files[key]=state.files[key]||[];
+    [].slice.call(files).forEach(function(f){ var isImg=f.type&&f.type.indexOf('image')===0; state.files[key].push({name:f.name,url:isImg?URL.createObjectURL(f):'',img:isImg}); });
+    renderMini(key);
+  }
+  function renderMini(key){
+    var wrap=document.querySelector('[data-upthumbs="'+key+'"]'), cnt=document.querySelector('[data-upcount="'+key+'"]'), arr=state.files[key]||[];
+    if(cnt) cnt.textContent=arr.length? (arr.length+' file'+(arr.length>1?'s':'')) : '';
+    if(!wrap) return;
+    wrap.innerHTML=arr.map(function(f,i){ return '<div class="mu-th">'+(f.img?'<img src="'+f.url+'" alt="">':'<span class="mu-file">'+escF(f.name)+'</span>')+'<button type="button" class="mu-x" data-i="'+i+'" aria-label="Remove">×</button></div>'; }).join('');
+    wrap.querySelectorAll('.mu-x').forEach(function(b){ b.onclick=function(e){ e.preventDefault(); e.stopPropagation(); state.files[key].splice(+b.getAttribute('data-i'),1); renderMini(key); }; });
+  }
+  // show a service's requirement uploader only once that service is switched on
+  function secActive(k){ if(k==='reno')return state.reno; if(k==='tour')return state.tour||state.pano360; if(k==='edit')return state.dusk||state.sky; if(k==='floor')return state.floor||state.floor2d; return false; }
+  function syncReqUploads(){ document.querySelectorAll('.req-up[data-requp]').forEach(function(el){ el.classList.toggle('show', secActive(el.getAttribute('data-requp'))); }); }
+  // ---- photographer: send a direct upload link + instructions ----
+  function photogDefaultNotes(){
+    var n=state.photos, a=(document.getElementById('addr')&&document.getElementById('addr').value)||'this listing';
+    return 'Hi — could you shoot and upload '+n+' photo'+(n>1?'s':'')+' for a Bella Virtual staging order.\n\nWhat we need:\n• One clean, wide, level shot per room — chest height, shoot into a corner\n• Blinds up, every light on, rooms tidy\n• JPG or PNG, highest resolution\n• Upload straight to the secure link below — no need to send them to me\n\nFull shot list: bellavirtual.com/resources (phone photo guide). Thank you!';
+  }
+  function bindPhotographer(){
+    var t=document.getElementById('upLaterToggle'); if(!t) return;
+    var panel=document.getElementById('upLaterPanel'), notes=document.getElementById('photogNotes'), email=document.getElementById('photogEmail'), send=document.getElementById('photogSend'), sent=document.getElementById('photogSent');
+    if(state.photog.email) email.value=state.photog.email;
+    notes.value=state.photog.notes||photogDefaultNotes();
+    if(state.photog.sent){ panel.classList.add('show'); sent.textContent='✓ Upload link sent to '+state.photog.email+' (demo). They can upload straight to this order.'; }
+    t.onclick=function(){ panel.classList.toggle('show'); if(panel.classList.contains('show')&&!notes.value) notes.value=photogDefaultNotes(); };
+    send.onclick=function(){
+      var em=(email.value||'').trim();
+      if(!em||em.indexOf('@')<1){ sent.style.color='var(--amber)'; sent.textContent='Enter the photographer’s email first.'; return; }
+      state.photog={email:em,notes:notes.value,sent:true};
+      sent.style.color='var(--green)'; sent.textContent='✓ Upload link + instructions sent to '+em+' (demo). They can upload straight to this order.';
+      var s2=document.getElementById('stp2'); if(s2) s2.classList.add('done');
+    };
+  }
+  // ---- per-photo style + before/after compare ----
+  function styExemplar(k){ var s=STY.filter(function(x){return x.k===k;})[0]; return s?CAT+s.im+'.jpg':''; }
+  function styName(k){ var s=STY.filter(function(x){return x.k===k;})[0]; return s?s.n:null; }
+  function resolveStyleKey(u){ var c=(u&&u.style)||'project'; if(c!=='project') return c; if(state.styleMode==='self'&&state.stylePick) return state.stylePick; return 'modern'; }
+  function afterLabel(u){ var c=(u&&u.style)||'project'; if(c==='project'){ if(state.styleMode==='self'&&state.stylePick) return styName(state.stylePick)+' example'; return 'Designers’ choice'; } return styName(c)+' example'; }
+  function thumbStyleTag(u){ var c=(u&&u.style)||'project'; if(c==='project') return (state.styleMode==='self'&&state.stylePick)? styName(state.stylePick) : 'Project style'; return styName(c); }
+  var rsmIdx=0, rsmClip=50;
+  function openRoomStyle(i){ rsmIdx=i; rsmClip=50; renderRoomStyle(); document.getElementById('roomStyleModal').classList.add('open'); }
+  function renderRoomStyle(){
+    var u=state.uploads[rsmIdx]; if(!u) return;
+    document.getElementById('rsmCount').textContent='Photo '+(rsmIdx+1)+' of '+state.uploads.length;
+    document.getElementById('rsmBefore').src=u.url;
+    document.getElementById('rsmAfter').src=styExemplar(resolveStyleKey(u));
+    document.getElementById('rsmStyleTag').textContent=afterLabel(u);
+    rsmApplyClip();
+    var chosen=(u.style||'project');
+    var chips='<button type="button" class="rsm-sty proj'+(chosen==='project'?' on':'')+'" data-sk="project"><span class="pj">✦</span><span class="snm">Project style</span></button>'
+      +STY.map(function(s){ return '<button type="button" class="rsm-sty'+(chosen===s.k?' on':'')+'" data-sk="'+s.k+'"><img src="'+CAT+s.im+'.jpg" alt="'+s.n+'" loading="lazy"><span class="snm">'+s.n+'</span></button>'; }).join('');
+    var wrap=document.getElementById('rsmStyles'); wrap.innerHTML=chips;
+    wrap.querySelectorAll('.rsm-sty').forEach(function(b){ b.onclick=function(){ state.uploads[rsmIdx].style=b.getAttribute('data-sk'); renderRoomStyle(); renderUploads(); }; });
+    document.getElementById('rsmPrev').disabled=rsmIdx<=0;
+    document.getElementById('rsmNext').disabled=rsmIdx>=state.uploads.length-1;
+  }
+  function rsmApplyClip(){ var b=document.getElementById('rsmBefore'), h=document.getElementById('rsmHandle'); if(b) b.style.clipPath='inset(0 '+(100-rsmClip)+'% 0 0)'; if(h) h.style.left=rsmClip+'%'; }
+  function closeRoomStyle(){ document.getElementById('roomStyleModal').classList.remove('open'); }
+
   function bindUpload(){
     var zone=document.getElementById('upZone'), input=document.getElementById('upInput'); if(!zone||!input) return;
     input.onchange=function(){ addFiles(input.files); input.value=''; };
     ['dragenter','dragover'].forEach(function(ev){ zone.addEventListener(ev,function(e){ e.preventDefault(); zone.classList.add('drag'); }); });
     ['dragleave','drop'].forEach(function(ev){ zone.addEventListener(ev,function(e){ e.preventDefault(); zone.classList.remove('drag'); }); });
     zone.addEventListener('drop',function(e){ if(e.dataTransfer&&e.dataTransfer.files) addFiles(e.dataTransfer.files); });
-    renderUploads();
+    renderUploads(); bindPhotographer(); bindMiniUploads();
   }
   function addFiles(files){
     [].slice.call(files).forEach(function(f){ if(f.type&&f.type.indexOf('image')===0){ state.uploads.push({name:f.name, url:URL.createObjectURL(f)}); } });
@@ -861,9 +1029,9 @@
     document.getElementById('upTitle').textContent = n? (n+' photo'+(n>1?'s':'')+' ready') : 'Have your photos? Drop them in';
     document.getElementById('upSub').textContent = n? 'We’ll stage these. Add more, or remove any below.' : 'We’ll count them and set the number for you — JPG or PNG. No photos yet? Just pick a number and send them later.';
     zone.classList.toggle('has', n>0);
-    var s2=document.getElementById('stp2'); if(s2) s2.classList.toggle('done', n>0);
-    wrap.innerHTML=state.uploads.map(function(u,i){ return '<div class="up-th" data-i="'+i+'"><img src="'+u.url+'" alt=""><span class="up-zoom">'+ZOOM+'</span><button type="button" class="up-x" data-i="'+i+'" aria-label="Remove">×</button></div>'; }).join('');
-    wrap.querySelectorAll('.up-th').forEach(function(el){ el.onclick=function(e){ if(e.target.closest('.up-x')) return; openPhoto(state.uploads[+el.getAttribute('data-i')].url); }; });
+    var s2=document.getElementById('stp2'); if(s2) s2.classList.toggle('done', n>0 || state.photog.sent);
+    wrap.innerHTML=state.uploads.map(function(u,i){ return '<div class="up-th" data-i="'+i+'"><img src="'+u.url+'" alt=""><span class="up-style">'+escF(thumbStyleTag(u))+'</span><span class="up-zoom">'+ZOOM+'</span><button type="button" class="up-x" data-i="'+i+'" aria-label="Remove">×</button></div>'; }).join('');
+    wrap.querySelectorAll('.up-th').forEach(function(el){ el.onclick=function(e){ if(e.target.closest('.up-x')) return; openRoomStyle(+el.getAttribute('data-i')); }; });
     wrap.querySelectorAll('.up-x').forEach(function(b){ b.onclick=function(e){ e.preventDefault(); e.stopPropagation(); var i=+b.getAttribute('data-i'); state.uploads.splice(i,1); if(state.uploads.length) state.photos=state.uploads.length; renderUploads(); sync(); }; });
   }
   // ---- inline "the look" chooser: designers pick, or you pick a style + save room sets ----
@@ -1073,7 +1241,7 @@
     var tot=money(lines().total);
     var r2=document.getElementById('run2'); if(r2) r2.textContent=tot;
     var r2b=document.getElementById('run2b'); if(r2b) r2b.textContent=tot;
-    syncVol(); renderCart();
+    syncVol(); syncReqUploads(); renderCart();
   }
   // line-item breakdown shown from the footer total
   function renderCart(){
@@ -1331,6 +1499,22 @@
     document.getElementById('pvClose').onclick=closePhoto;
     pv.addEventListener('click',function(e){ if(e.target===pv) closePhoto(); });
     window.addEventListener('keydown',function(e){ if(e.key==='Escape' && pv.classList.contains('open')) closePhoto(); });
+  })();
+
+  // per-room style modal: close, nav, and drag-to-wipe
+  (function(){
+    var m=document.getElementById('roomStyleModal');
+    document.getElementById('rsmClose').onclick=closeRoomStyle;
+    document.getElementById('rsmDone').onclick=closeRoomStyle;
+    m.addEventListener('click',function(e){ if(e.target===m) closeRoomStyle(); });
+    window.addEventListener('keydown',function(e){ if(e.key==='Escape' && m.classList.contains('open')) closeRoomStyle(); });
+    document.getElementById('rsmPrev').onclick=function(){ if(rsmIdx>0){ rsmIdx--; rsmClip=50; renderRoomStyle(); } };
+    document.getElementById('rsmNext').onclick=function(){ if(rsmIdx<state.uploads.length-1){ rsmIdx++; rsmClip=50; renderRoomStyle(); } };
+    var cmp=document.getElementById('rsmCompare'), dragging=false;
+    function setFromEvent(e){ var r=cmp.getBoundingClientRect(); var x=(e.touches?e.touches[0].clientX:e.clientX)-r.left; rsmClip=Math.max(0,Math.min(100,x/r.width*100)); rsmApplyClip(); }
+    cmp.addEventListener('pointerdown',function(e){ dragging=true; setFromEvent(e); });
+    window.addEventListener('pointermove',function(e){ if(dragging) setFromEvent(e); });
+    window.addEventListener('pointerup',function(){ dragging=false; });
   })();
 })();
 </script>
