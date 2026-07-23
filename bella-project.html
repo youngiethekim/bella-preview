@@ -64,10 +64,41 @@
   /* shop the look */
   .shop{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
   @media(max-width:900px){.shop{grid-template-columns:1fr 1fr}}
-  .brand{border:1px solid var(--line);background:#fff;padding:18px 18px 20px;display:flex;flex-direction:column;gap:6px}
+  .shop-lead{font-size:13.5px;color:var(--soft);margin:2px 0 16px;max-width:74ch;line-height:1.6}
+  .brand{border:1px solid var(--line);background:#fff;padding:18px 18px 18px;display:flex;flex-direction:column;gap:6px;text-align:left;font-family:inherit;cursor:pointer;transition:border-color .15s,transform .15s,box-shadow .15s;position:relative}
+  .brand:hover{border-color:var(--ink);transform:translateY(-2px);box-shadow:0 14px 30px -18px rgba(0,0,0,.4)}
+  .brand:focus-visible{outline:2px solid var(--green);outline-offset:2px}
   .brand .br-i{width:22px;height:22px;color:var(--ink);margin-bottom:4px}
-  .brand .bp{font-size:15.5px;color:var(--ink)}
+  .brand .bp{font-size:15.5px;color:var(--ink);line-height:1.25}
   .brand .bn{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--green)}
+  .brand .bprice{font-size:13px;color:var(--soft);margin-top:2px}
+  .brand .bprice s{color:var(--faint);margin-right:6px}
+  .brand .bshop{margin-top:12px;padding-top:12px;border-top:1px solid var(--line-2);font-size:12px;letter-spacing:.03em;color:var(--ink);display:flex;align-items:center;justify-content:space-between}
+  .brand .bshop svg{width:14px;height:14px;transition:transform .15s}
+  .brand:hover .bshop svg{transform:translateX(3px)}
+  .brand .bsave{position:absolute;top:14px;right:14px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);background:#F1F5F1;border:1px solid #CFE0D3;padding:3px 8px;border-radius:99px}
+
+  /* shop-this modal */
+  .smodal{position:fixed;inset:0;z-index:120;background:rgba(20,18,16,.62);display:none;align-items:center;justify-content:center;padding:24px}
+  .smodal.open{display:flex}
+  .sm-box{background:#fff;width:100%;max-width:440px;position:relative;box-shadow:0 30px 80px -24px rgba(0,0,0,.55)}
+  .sm-x{position:absolute;top:12px;right:12px;width:34px;height:34px;border:0;background:transparent;font-size:22px;line-height:1;color:var(--faint);cursor:pointer}
+  .sm-x:hover{color:var(--ink)}
+  .sm-head{padding:26px 28px 20px;border-bottom:1px solid var(--line-2)}
+  .sm-head .br-i{width:24px;height:24px;color:var(--ink)}
+  .sm-head .smn{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-top:12px}
+  .sm-head h3{font-size:22px;font-weight:300;margin-top:4px}
+  .sm-head .smpr{font-size:14px;color:var(--soft);margin-top:6px}
+  .sm-head .smpr s{color:var(--faint);margin-right:7px}
+  .sm-body{padding:22px 28px 26px}
+  .sm-code{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#FAF7EF;border:1px dashed rgba(231,195,106,.7);padding:13px 16px;margin-bottom:8px}
+  .sm-code .lab{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  .sm-code .code{font-size:16px;letter-spacing:.06em;color:var(--ink)}
+  .sm-code button{font-family:inherit;font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:var(--ink);color:#fff;border:0;padding:8px 12px;cursor:pointer;transition:background .2s}
+  .sm-code button:hover{background:var(--green)}
+  .sm-note{font-size:12.5px;color:var(--soft);line-height:1.55;margin:4px 0 18px}
+  .sm-acts{display:flex;flex-direction:column;gap:8px}
+  .sm-acts .btn{width:100%}
   /* generic sprite icon + tabs */
   .svgi{stroke:currentColor;fill:none;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round;width:18px;height:18px}
   .svgi.bi{width:15px;height:15px;margin-right:7px;vertical-align:-2px}
@@ -254,10 +285,35 @@
     <h2><svg class="svgi hd-i"><use href="#i-sofa"/></svg>Furniture used</h2>
     <span class="micro">The designer pieces we staged your listing with</span>
   </div>
+  <p class="shop-lead">Love the look in person? Because we staged this listing, you and your buyer can shop the exact pieces at a Bella client discount. Tap any item to buy it direct, or have us order it for you at the preferred rate. <span class="flag" style="margin-left:4px">Sample pricing</span></p>
   <div class="shop" id="shopGrid"></div>
   <!-- SAMPLE styling note — pull the real designer's notes per project on the live tool -->
   <p class="furn-note"><svg class="svgi hd-i" style="color:var(--gold)"><use href="#i-tag"/></svg><b style="font-weight:400">The look:</b> warm transitional staging chosen for this market — a boucle accent chair, oak-and-brass coffee table, and a low-profile linen sofa keep sightlines open, while soft neutrals and layered textures help buyers picture themselves living here. <span class="flag" style="margin-left:6px">Sample</span></p>
 </section>
+
+<!-- SHOP-THIS-PIECE MODAL -->
+<div class="smodal" id="shopModal" aria-hidden="true">
+  <div class="sm-box" role="dialog" aria-modal="true" aria-labelledby="smPiece">
+    <button class="sm-x" id="smClose" type="button" aria-label="Close">×</button>
+    <div class="sm-head">
+      <svg class="svgi br-i"><use href="#i-tag"/></svg>
+      <div class="smn" id="smName">Brand</div>
+      <h3 id="smPiece">Piece</h3>
+      <div class="smpr" id="smPrice"></div>
+    </div>
+    <div class="sm-body">
+      <div class="sm-code">
+        <div><div class="lab">Your client discount code</div><div class="code" id="smCode">CODE</div></div>
+        <button type="button" id="smCopy">Copy</button>
+      </div>
+      <p class="sm-note">Because Bella furnished this listing, you get preferred pricing on the exact pieces we staged with. Buy it yourself with the code, or let us place the order for you at the client rate.</p>
+      <div class="sm-acts">
+        <a class="btn" id="smBuy" href="#" target="_blank" rel="noopener">Buy direct →</a>
+        <a class="btn btn-line" id="smContact" href="#">Have Bella order it at my discount</a>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- MARKETING MATERIALS -->
 <div class="tab-panel" id="panel-marketing">
@@ -365,16 +421,51 @@
     }).join('');
   }
 
-  /* shop the look — SAMPLE brands + codes */
+  /* shop the look — SAMPLE brands, prices + client-discount codes.
+     url = the real retailer; buyers can shop it directly, or order through Bella at the client rate. */
   var BRANDS=[
-    {n:'Sundays',p:'Boucle accent chair',c:'BELLA-SUN15'},
-    {n:'Rove Concepts',p:'Oak &amp; brass coffee table',c:'BELLA-ROVE10'},
-    {n:'Maiden Home',p:'Low-profile linen sofa',c:'BELLA-MAIDEN'},
-    {n:'Article',p:'Layered wool area rug',c:'BELLA-ART20'}
+    {n:'Sundays',p:'Boucle accent chair',c:'BELLA-SUN15',pr:'$1,095',was:'$1,290',off:'15% off',url:'https://www.sundays.company'},
+    {n:'Rove Concepts',p:'Oak &amp; brass coffee table',c:'BELLA-ROVE10',pr:'$845',was:'$940',off:'10% off',url:'https://www.roveconcepts.com'},
+    {n:'Maiden Home',p:'Low-profile linen sofa',c:'BELLA-MAIDEN',pr:'$2,720',was:'$3,400',off:'20% off',url:'https://www.maidenhome.com'},
+    {n:'Article',p:'Layered wool area rug',c:'BELLA-ART20',pr:'$396',was:'$495',off:'20% off',url:'https://www.article.com'}
   ];
-  document.getElementById('shopGrid').innerHTML=BRANDS.map(function(b){
-    return '<div class="brand"><svg class="svgi br-i"><use href="#i-tag"/></svg><span class="bp">'+b.p+'</span><span class="bn">'+b.n+'</span></div>';
+  var arrow='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+  document.getElementById('shopGrid').innerHTML=BRANDS.map(function(b,i){
+    return '<button type="button" class="brand" data-piece="'+i+'">'
+      +'<span class="bsave">'+b.off+'</span>'
+      +'<svg class="svgi br-i"><use href="#i-tag"/></svg>'
+      +'<span class="bp">'+b.p+'</span><span class="bn">'+b.n+'</span>'
+      +'<span class="bprice"><s>'+b.was+'</s>'+b.pr+'</span>'
+      +'<span class="bshop">Shop this piece '+arrow+'</span></button>';
   }).join('');
+
+  /* shop-this modal: buy direct, or order through Bella at the client discount */
+  (function(){
+    var m=document.getElementById('shopModal'); if(!m) return;
+    function open(i){
+      var b=BRANDS[i];
+      m.querySelector('#smName').textContent=b.n;
+      m.querySelector('#smPiece').innerHTML=b.p;
+      m.querySelector('#smPrice').innerHTML='<s>'+b.was+'</s>'+b.pr+' · <span style="color:var(--green)">'+b.off+' as a Bella client</span>';
+      m.querySelector('#smCode').textContent=b.c;
+      var buy=m.querySelector('#smBuy'); buy.href=b.url; buy.textContent='Buy at '+b.n.replace('&amp;','&')+' →';
+      var mail=m.querySelector('#smContact');
+      mail.href='mailto:hello@bellavirtual.com?subject='+encodeURIComponent('Order the '+b.p.replace('&amp;','&')+' at my Bella client discount')
+        +'&body='+encodeURIComponent('Hi Bella team,\n\nI’d like to order the '+b.p.replace('&amp;','&')+' ('+b.n.replace('&amp;','&')+') from my staged listing at the client rate. Code: '+b.c+'.\n\nThanks!');
+      m.classList.add('open');
+    }
+    function close(){ m.classList.remove('open'); }
+    document.getElementById('shopGrid').querySelectorAll('.brand').forEach(function(el){
+      el.onclick=function(){ open(+el.getAttribute('data-piece')); };
+    });
+    m.querySelector('#smClose').onclick=close;
+    m.addEventListener('click',function(e){ if(e.target===m) close(); });
+    window.addEventListener('keydown',function(e){ if(e.key==='Escape'&&m.classList.contains('open')) close(); });
+    m.querySelector('#smCopy').onclick=function(){
+      var code=m.querySelector('#smCode').textContent, btn=this;
+      (navigator.clipboard?navigator.clipboard.writeText(code):Promise.reject()).then(function(){ btn.textContent='Copied'; setTimeout(function(){btn.textContent='Copy';},1400); },function(){ btn.textContent='Copy'; });
+    };
+  })();
 
   /* orders — current + sample past */
   var ORDERS=[
