@@ -272,8 +272,13 @@
   .vol{margin-top:16px;padding-top:15px;border-top:1px solid var(--line-2)}
   .vol-lab{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:11px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
   .vol-lab .vol-hint{text-transform:none;letter-spacing:0;font-size:11px;color:var(--green)}
-  .vol-tiers{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .vol-tiers{display:none;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+  .vol-tiers.show{display:grid}
   @media(max-width:560px){.vol-tiers{grid-template-columns:1fr 1fr}}
+  .vol-tiers-toggle{background:transparent;border:0;font-family:inherit;font-size:12px;color:var(--green);cursor:pointer;padding:9px 2px 2px;display:inline-flex;align-items:center;gap:6px}
+  .vol-tiers-toggle::after{content:"▾";font-size:10px;transition:transform .15s}
+  .vol-tiers-toggle.on::after{transform:rotate(180deg)}
+  .vol-tiers-toggle:hover{text-decoration:underline}
   .vt{font-family:inherit;text-align:center;background:#fff;border:1px solid var(--line);padding:11px 6px 10px;transition:.16s;position:relative;cursor:pointer;border-radius:8px}
   .vt:hover{border-color:var(--ink);transform:translateY(-1px)}
   .vt b{display:block;font-size:14px;color:var(--ink);font-weight:400}
@@ -985,12 +990,13 @@
   function photoPrice(d){ return stageUnit()*(1-d/100); }
   function setPhotos(n){ state.photos=Math.max(1, n|0); sync(); }
   function volMeter(){
-    return '<div class="vol"><div class="vol-lab"><span>Volume savings — the more photos, the less each costs</span><span class="vol-hint">Tap a tier to set your count →</span></div>'
-      +'<div class="vol-tiers">'+VTIERS.map(function(t){
-          return '<button type="button" class="vt" data-min="'+t.m+'"><b>'+t.m+'+</b><span class="vt-off">'+t.d+'% off</span></button>';
-        }).join('')+'</div>'
+    return '<div class="vol">'
       +'<div class="vol-econ" id="volEcon"></div>'
-      +'<div class="vol-msg" id="volMsg"></div></div>';
+      +'<div class="vol-msg" id="volMsg"></div>'
+      +'<button type="button" class="vol-tiers-toggle" id="volTiersToggle">See all volume discounts</button>'
+      +'<div class="vol-tiers" id="volTiers">'+VTIERS.map(function(t){
+          return '<button type="button" class="vt" data-min="'+t.m+'"><b>'+t.m+'+</b><span class="vt-off">'+t.d+'% off</span></button>';
+        }).join('')+'</div></div>';
   }
   function syncVol(){
     var tiles=document.querySelectorAll('.vt'); if(!tiles.length) return;
@@ -1021,6 +1027,8 @@
       }
     }
     var add=document.getElementById('volAdd'); if(add&&next) add.onclick=function(){ setPhotos(next.m); };
+    var tt=document.getElementById('volTiersToggle'), tiersWrap=document.getElementById('volTiers');
+    if(tt&&tiersWrap) tt.onclick=function(){ var on=tiersWrap.classList.toggle('show'); tt.classList.toggle('on',on); tt.textContent=on?'Hide volume discounts':'See all volume discounts'; };
   }
   // enlarge an uploaded photo
   function openPhoto(url){ if(!url) return; document.getElementById('pvImg').src=url; document.getElementById('photoView').classList.add('open'); }
