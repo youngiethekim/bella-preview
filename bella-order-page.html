@@ -89,6 +89,19 @@
   .up-refs-fp svg{width:22px;height:22px;stroke:var(--green);fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;flex:none}
   .up-refs-fp b{color:var(--ink);font-weight:500}
   .config{margin-top:24px;display:grid;gap:5px}
+  .proj-details{background:#fff;border:1px solid var(--line);border-radius:11px;padding:20px 22px;margin:24px 0 8px}
+  .proj-details .pd-h{margin-bottom:15px}
+  .proj-details .pd-h b{font-weight:400;font-size:16px;display:block}
+  .proj-details .pd-h span{font-size:12.5px;color:var(--faint)}
+  .pd-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:14px}
+  @media(max-width:600px){.pd-grid{grid-template-columns:1fr}}
+  .pd-field{display:flex;flex-direction:column}
+  .pd-field.pd-full{margin-top:14px}
+  .pd-field label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:6px}
+  .pd-field label .opt{text-transform:none;letter-spacing:0;color:var(--faint)}
+  .pd-field input,.pd-field textarea{border:1px solid var(--line);border-radius:7px;padding:10px 12px;font-family:inherit;font-size:14px}
+  .pd-field input:focus,.pd-field textarea:focus{outline:0;border-color:var(--ink)}
+  .pd-field textarea{min-height:74px;resize:vertical}
   .qrow{background:#fff;border:1px solid var(--line);padding:24px 26px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
   .qrow .lbl{flex:1;min-width:200px}
   .qrow .lbl b{font-weight:400;font-size:16.5px;display:block}
@@ -738,6 +751,14 @@
       <h2>Here's your package.</h2>
       <p>Built from your answers. Toggle the extras to fine-tune, then start your order.</p>
     </div>
+    <div class="proj-details">
+      <div class="pd-h"><b>Project details</b><span>So we can label your files and brief the design team.</span></div>
+      <div class="pd-grid">
+        <div class="pd-field"><label>Property address</label><input id="pdAddr" placeholder="123 Main St, City, ST" autocomplete="off"></div>
+        <div class="pd-field"><label>Listing agent</label><input id="pdAgent" placeholder="Your name" autocomplete="off"></div>
+      </div>
+      <div class="pd-field pd-full"><label>Notes about this project <span class="opt">optional</span></label><textarea id="pdNotes" placeholder="Anything the team should know — the buyer you're targeting, the vibe, timing, features to highlight or keep…"></textarea></div>
+    </div>
     <div class="summary">
       <div class="rec">
         <span class="micro">Recommended for you</span>
@@ -1147,8 +1168,9 @@
     var panel=document.getElementById('upLaterPanel'), notes=document.getElementById('photogNotes'), email=document.getElementById('photogEmail'), send=document.getElementById('photogSend'), sent=document.getElementById('photogSent');
     if(state.photog.email) email.value=state.photog.email;
     notes.value=state.photog.notes||photogDefaultNotes();
-    if(state.photog.sent){ cb.checked=true; panel.classList.add('show'); if(mt){ document.getElementById('morePanel').classList.add('show'); mt.classList.add('on'); } sent.textContent='✓ Upload link sent to '+state.photog.email+' (demo). They can upload straight to this order.'; }
-    cb.onchange=function(){ panel.classList.toggle('show',cb.checked); if(cb.checked&&!notes.value) notes.value=photogDefaultNotes(); };
+    function toggleUploader(hide){ var ub=document.querySelector('#stp2 .up-block'); if(ub) ub.style.display=hide?'none':''; }
+    if(state.photog.sent){ cb.checked=true; panel.classList.add('show'); toggleUploader(true); sent.textContent='✓ Upload link sent to '+state.photog.email+' (demo). They can upload straight to this order.'; }
+    cb.onchange=function(){ panel.classList.toggle('show',cb.checked); toggleUploader(cb.checked); if(cb.checked&&!notes.value) notes.value=photogDefaultNotes(); };
     send.onclick=function(){
       var em=(email.value||'').trim();
       if(!em||em.indexOf('@')<1){ sent.style.color='var(--amber)'; sent.textContent='Enter the photographer’s email first.'; return; }
