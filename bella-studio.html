@@ -236,6 +236,17 @@
   .vc-add{flex:none;width:54px;min-height:59px;border:1.5px dashed var(--line);border-radius:7px;display:grid;place-items:center;cursor:pointer;color:var(--faint);font-size:11px;line-height:1.1;text-align:center;transition:.14s}
   .vc-add:hover{border-color:var(--green);color:var(--green);background:#F4F8F4}
   .vc-add .plus{font-size:17px;display:block}
+  /* per-version approval status */
+  .vchip .vdot{position:absolute;top:2px;left:3px;width:9px;height:9px;border-radius:50%;border:1.5px solid #fff;z-index:2}
+  .vdot.pending{background:var(--amber)} .vdot.approved{background:var(--green)} .vdot.changes{background:var(--red)}
+  .vc-status{display:flex;align-items:center;gap:8px;margin-top:10px;padding:9px 11px;border-radius:8px;font-size:12.5px}
+  .vc-status .vi{font-size:13px}
+  .vc-status .approve{margin-left:auto;font-size:10px;letter-spacing:.05em;text-transform:uppercase;background:rgba(0,0,0,.07);border:0;border-radius:99px;padding:5px 11px;cursor:pointer;color:inherit;white-space:nowrap}
+  .vc-status .approve:hover{background:rgba(0,0,0,.14)}
+  .vs-pending{background:#FBF3E2;color:#8a6d33} .vs-pending .vi{color:var(--amber)}
+  .vs-approved{background:#EDF4EE;color:var(--green)}
+  .vs-changes{background:#F7E9E4;color:#a6503e}
+  .vc-badge.st-approved{background:var(--green);color:#fff}
 </style>
 </head>
 <body>
@@ -439,17 +450,25 @@
   var versions={};   // key jobId:roomId -> [{label,url}]
   var viewingV={};   // key -> index currently viewed
   function vkey(j,r){ return j.id+':'+r.id; }
+  var VSTATUS={ pending:{lb:'Awaiting Bella + client approval',cls:'vs-pending',ic:'⏳'}, approved:{lb:'Approved &amp; accepted',cls:'vs-approved',ic:'✓'}, changes:{lb:'Changes requested — upload a fix',cls:'vs-changes',ic:'✎'} };
+  function v1status(j){ if(j.status==='revision') return 'changes'; if(j.status==='ready'||j.status==='done') return 'approved'; return 'pending'; }
   function initVersions(j){
     if(!j.rooms) return;
     var staged=(j.status!=='assigned');
-    j.rooms.forEach(function(r){ var k=vkey(j,r); if(!versions[k]){ versions[k]=[{label:'Original',url:A+r.id+'-before.jpg'}]; if(staged) versions[k].push({label:'v1',url:A+r.id+'-after.jpg'}); } });
+    j.rooms.forEach(function(r){ var k=vkey(j,r); if(!versions[k]){ versions[k]=[{label:'Original',url:A+r.id+'-before.jpg'}]; if(staged) versions[k].push({label:'v1',url:A+r.id+'-after.jpg',status:v1status(j)}); } });
+  }
+  function statusPill(v,isCurrent,k){
+    if(!v.status) return '<div class="vc-status" style="background:#F4F2EF;color:var(--faint)"><span class="vi">◦</span>Source photo — nothing to approve</div>';
+    var s=VSTATUS[v.status];
+    var btn=(v.status==='pending'&&isCurrent)?'<button type="button" class="approve" data-approve="'+k+'">Mark approved ▸ demo</button>':'';
+    return '<div class="vc-status '+s.cls+'"><span class="vi">'+s.ic+'</span>'+s.lb+(isCurrent?'':' · older version')+btn+'</div>';
   }
   function renderVersions(j){
     initVersions(j);
     return '<div class="vgrid">'+j.rooms.map(function(r){
       var k=vkey(j,r), arr=versions[k], cur=arr.length-1, view=(viewingV[k]!=null?viewingV[k]:cur), dc=r.style==='designer';
       var badge=(view===cur)?'<span class="vc-badge latest">★ '+esc(arr[cur].label)+' · latest</span>':'<span class="vc-badge">Viewing '+esc(arr[view].label)+'</span>';
-      var strip=arr.map(function(v,i){ return '<button type="button" class="vchip'+(i===view?' viewing':'')+(i===cur?' cur':'')+'" data-k="'+k+'" data-i="'+i+'"><img src="'+v.url+'" alt=""><span class="vl">'+esc(v.label)+'</span></button>'; }).join('')
+      var strip=arr.map(function(v,i){ var dot=v.status?'<span class="vdot '+v.status+'"></span>':''; return '<button type="button" class="vchip'+(i===view?' viewing':'')+(i===cur?' cur':'')+'" data-k="'+k+'" data-i="'+i+'">'+dot+'<img src="'+v.url+'" alt=""><span class="vl">'+esc(v.label)+'</span></button>'; }).join('')
         +'<label class="vc-add" data-addk="'+k+'"><input type="file" accept="image/*" multiple hidden><span class="plus">+</span>New</label>';
       return '<div class="vcard" data-card="'+k+'">'
         +'<div class="vc-stage" data-stage="'+k+'">'
@@ -458,8 +477,19 @@
           +'<span class="vc-cmptag l">Original</span><span class="vc-cmptag r">'+esc(arr[view].label)+'</span><div class="vc-handle"></div>'
         +'</div>'
         +'<div class="vc-foot"><div class="vc-name">'+esc(r.label)+'<span class="vc-style">'+(dc?'✦ Designer':esc(STY[r.style]||r.style))+'</span></div>'
-          +'<div class="vc-strip">'+strip+'</div></div></div>';
+          +'<div class="vc-strip">'+strip+'</div>'
+          +'<div class="vc-statuswrap" data-status="'+k+'">'+statusPill(arr[view],view===cur,k)+'</div>'
+        +'</div></div>';
     }).join('')+'</div>';
+  }
+  function wireApprove(scope){ (scope||document).querySelectorAll('.approve[data-approve]').forEach(function(b){ b.onclick=function(){ approveVersion(b.getAttribute('data-approve')); }; }); }
+  function approveVersion(k){
+    var arr=versions[k], cur=arr.length-1; arr[cur].status='approved';
+    var card=document.querySelector('.vcard[data-card="'+k+'"]'); if(!card) return;
+    var chip=card.querySelector('.vchip[data-i="'+cur+'"]'), dot=chip?chip.querySelector('.vdot'):null;
+    if(chip){ if(dot) dot.className='vdot approved'; else chip.insertAdjacentHTML('afterbegin','<span class="vdot approved"></span>'); }
+    if((viewingV[k]!=null?viewingV[k]:cur)===cur){ var w=card.querySelector('.vc-statuswrap'); w.innerHTML=statusPill(arr[cur],true,k); wireApprove(card); }
+    toast('Marked approved & accepted (demo)');
   }
   function refreshCard(k){
     var card=document.querySelector('.vcard[data-card="'+k+'"]'); if(!card) return;
@@ -470,10 +500,11 @@
     if(view===cur){ badge.className='vc-badge latest'; badge.textContent='★ '+arr[cur].label+' · latest'; }
     else { badge.className='vc-badge'; badge.textContent='Viewing '+arr[view].label; }
     card.querySelectorAll('.vchip').forEach(function(b){ var i=+b.getAttribute('data-i'); b.classList.toggle('viewing',i===view); b.classList.toggle('cur',i===cur); });
+    var w=card.querySelector('.vc-statuswrap'); if(w){ w.innerHTML=statusPill(arr[view],view===cur,k); wireApprove(card); }
   }
   function addVersion(k,files){
     var arr=versions[k]; if(!arr) return; var added=0;
-    [].slice.call(files).forEach(function(f){ if(f.type&&f.type.indexOf('image')===0){ var vn=arr.filter(function(v){return v.label!=='Original';}).length+1; arr.push({label:'v'+vn,url:URL.createObjectURL(f)}); added++; } });
+    [].slice.call(files).forEach(function(f){ if(f.type&&f.type.indexOf('image')===0){ var vn=arr.filter(function(v){return v.label!=='Original';}).length+1; arr.push({label:'v'+vn,url:URL.createObjectURL(f),status:'pending'}); added++; } });
     if(!added) return;
     viewingV[k]=arr.length-1;
     renderDetail();
@@ -482,6 +513,7 @@
     toast('New version saved · '+arr[arr.length-1].label);
   }
   function bindVersions(j){
+    wireApprove(document);
     document.querySelectorAll('.vchip').forEach(function(b){ b.onclick=function(){ viewingV[b.getAttribute('data-k')]=+b.getAttribute('data-i'); refreshCard(b.getAttribute('data-k')); }; });
     document.querySelectorAll('.vc-add').forEach(function(l){ var inp=l.querySelector('input'); inp.onchange=function(){ addVersion(l.getAttribute('data-addk'),inp.files); inp.value=''; }; });
     document.querySelectorAll('.vc-cmp').forEach(function(b){ b.onclick=function(){ var st=document.querySelector('.vc-stage[data-stage="'+b.getAttribute('data-cmpk')+'"]'); var on=st.classList.toggle('cmp'); b.classList.toggle('on',on); if(on&&!st.style.getPropertyValue('--cmpX')) st.style.setProperty('--cmpX','50%'); }; });
