@@ -313,7 +313,42 @@
   .gg-h.done{color:var(--green)} .gg-h.done .cnt{background:#EDF4EE;color:var(--green)}
   .ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:11px}
   .gtile{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;cursor:pointer;padding:0;text-align:left;transition:.15s;position:relative;font-family:inherit}
+  .gtile[draggable]{cursor:grab}
+  .gtile.dragging{opacity:.5;cursor:grabbing}
   .gtile:hover{border-color:var(--ink);transform:translateY(-2px);box-shadow:0 12px 26px -16px rgba(0,0,0,.45)}
+  .status-lanes{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:2px 0 18px}
+  .status-lanes .sl-lab{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);margin-right:4px}
+  .slane{border:1.5px dashed var(--line);border-radius:99px;padding:8px 15px;font-size:12px;color:var(--soft);transition:.14s;white-space:nowrap}
+  .slane.drop-hi{border-style:solid;transform:scale(1.06)}
+  .slane.sl-progress.drop-hi{border-color:var(--blue);background:#E9F0F4;color:#33566c}
+  .slane.sl-qa.drop-hi{border-color:var(--purple);background:#EFEAF4;color:#5c4676}
+  .slane.sl-client.drop-hi{border-color:var(--amber);background:#FBF3E2;color:#8a6d33}
+  .slane.sl-approved.drop-hi{border-color:var(--green);background:#EDF4EE;color:var(--green)}
+  .gtile.sel{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold)}
+  /* embedded work pane */
+  .wp{border:1px solid var(--line);border-radius:14px;background:#fff;padding:16px;margin-bottom:22px;display:grid;grid-template-columns:1.5fr 1fr;gap:20px}
+  @media(max-width:860px){.wp{grid-template-columns:1fr}}
+  .wp-main .vc-stage{aspect-ratio:4/3;border-radius:10px;overflow:hidden}
+  .wp-main .vc-stage .vpin{position:absolute;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50% 50% 50% 3px;background:var(--amber);color:#fff;font-size:12px;display:grid;place-items:center;border:2px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.4);z-index:3}
+  .wp-side{display:flex;flex-direction:column;min-width:0}
+  .wp-kind{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--gold)}
+  .wp-title{font-size:22px;font-weight:300;margin:6px 0 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .wp-title .gver{font-size:11px;color:var(--faint);border:1px solid var(--line);border-radius:99px;padding:2px 9px}
+  .wp-up{margin-top:14px;border:2px dashed #BFD3C2;border-radius:10px;padding:13px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:.15s;background:#F1F7F2}
+  .wp-up:hover,.wp-up.drag{border-color:var(--green);background:#E7F1E9}
+  .wp-up .ui{width:36px;height:36px;border-radius:50%;background:#E1EDE3;display:grid;place-items:center;flex:none}
+  .wp-up .ui svg{width:18px;height:18px;stroke:var(--green);fill:none;stroke-width:1.7}
+  .wp-up b{font-weight:400;font-size:13.5px;display:block}
+  .wp-up span{font-size:12px;color:var(--soft)}
+  .wp-insp{grid-column:1 / -1;border-top:1px solid var(--line-2);padding-top:15px}
+  .wp-insp-h{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:11px;display:flex;align-items:baseline;gap:8px}
+  .wp-insp-h b{color:var(--green);letter-spacing:0;font-size:14px;text-transform:none;font-weight:400}
+  .wp-insp-refs{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:11px}
+  .wp-ref{width:130px}
+  .wp-ref img{width:100%;height:88px;object-fit:cover;border-radius:8px;border:1px solid var(--line);display:block}
+  .wp-ref span{font-size:11px;color:var(--faint);display:block;margin-top:4px}
+  .wp-insp-note{font-size:13px;color:#5b5140;line-height:1.5;background:#FAF7EF;border:1px solid #EADFC5;border-radius:8px;padding:11px 13px}
+  .wp-insp-note b{font-weight:500}
   .gtile.done{border-color:#CFE0D3}
   .gtile.drop-hi{box-shadow:0 0 0 2px var(--green)}
   .gth{aspect-ratio:4/3;background:#e9e6e1 center/cover;position:relative}
@@ -548,8 +583,18 @@
   }
 
   /* ---------- PHOTO VERSION BOARD ---------- */
+  var CAT='https://youngiethekim.github.io/bella-preview/bella-catalog/items/';
+  var STYLEREFS={
+    designer:['LR_MDRN_L148','DR_MDRN_D107','BD_MDRN_B403'], modern:['LR_MDRN_L148','DR_MDRN_D107','BD_MDRN_B403'],
+    scandi:['LR_SCND_L381','DR_SCND_D350','BD_SCND_B355'], coastal:['LR_COAST_L521','DR_COAS_D1117','BD_COAS_B390'],
+    midcentury:['LR_MCM_L446','DR_MCM_316','BD_MCM_B444'], farmhouse:['LR_FARM_L382','KT_FARM_K112','BD_FARM_B394'],
+    contemporary:['LR_CONT_L387','DR_CONT_D310','BD_CONT_428']
+  };
+  var RPFX={LR:'Living room',DR:'Dining',BD:'Bedroom',KT:'Kitchen',BA:'Bath'};
+  function styleRefs(sk){ var codes=STYLEREFS[sk]||STYLEREFS.modern; return codes.map(function(c){ return {label:RPFX[c.split('_')[0]]||'Set piece', url:CAT+c+'.jpg'}; }); }
   var versions={};   // key jobId:roomId -> [{label,url}]
   var viewingV={};   // key -> index currently viewed
+  var selRoom=null;  // room id shown in the embedded work pane
   function vkey(j,r){ return j.id+':'+r.id; }
   var VSTATUS={
     progress:{lb:'In progress',who:'studio working',short:'In progress',cls:'vs-progress',ic:'✎'},
@@ -602,27 +647,55 @@
     }).join('')+'</div>';
   }
   function statusShort(st){ return VSTATUS[st]? VSTATUS[st].short : st; }
-  function grow(j,r){
+  function gtile(j,r){
     var k=vkey(j,r), arr=versions[k], cur=arr.length-1, st=arr[cur].status||'progress', done=(st==='approved');
     var reqs=(st==='changes')?(j.revisions||[]).filter(function(x){return x.rid===r.id;}):[];
-    var sub = done? 'Approved &amp; accepted by the client' : (reqs.length? '<b style="color:var(--amber);font-weight:400">'+reqs.length+' change'+(reqs.length>1?'s':'')+'</b> to make on this photo' : VSTATUS[st].lb+' · '+VSTATUS[st].who);
-    return '<button type="button" class="grow'+(done?' done':'')+'" data-room="'+r.id+'">'
-      +'<span class="gth" style="background-image:url('+arr[cur].url+')">'+(done?'<span class="gcheck">✓</span>':'')+(reqs.length?'<span class="gpc">'+reqs.length+'</span>':'')+'</span>'
-      +'<span class="ginfo"><b>'+esc(r.label)+'<span class="gver">'+esc(arr[cur].label)+'</span></b><span class="gsub">'+sub+'</span></span>'
-      +'<span class="gright"><span class="gst st-'+st+'">'+VSTATUS[st].ic+' '+statusShort(st)+'</span><span class="ggo">'+(done?'View →':'Work on it →')+'</span></span>'
-      +'</button>';
+    var pins=reqs.map(function(rq){return '<span class="gpin" style="left:'+rq.x+'%;top:'+rq.y+'%">'+rq.n+'</span>';}).join('');
+    var badge= done? '<span class="gbadge done">✓ Complete</span>' : (reqs.length? '<span class="gbadge">'+reqs.length+' change'+(reqs.length>1?'s':'')+'</span>' : '<span class="gbadge">'+esc(arr[cur].label)+'</span>');
+    return '<button type="button" class="gtile'+(done?' done':'')+(r.id===selRoom?' sel':'')+'" data-room="'+r.id+'" draggable="true">'
+      +'<div class="gth" style="background-image:url('+arr[cur].url+')">'+badge+pins+'<div class="ghover">'+(done?'View versions':'Open &amp; work on it')+' →</div></div>'
+      +'<div class="gcap"><b>'+esc(r.label)+'</b><span class="gst st-'+st+'">'+VSTATUS[st].ic+' '+statusShort(st)+'</span></div></button>';
+  }
+  function workPane(j,rid){
+    var k=vkey(j,{id:rid}), arr=versions[k], cur=arr.length-1, view=(viewingV[k]!=null?viewingV[k]:cur);
+    var r=j.rooms.filter(function(x){return x.id===rid;})[0]; if(!r) return '';
+    var st=arr[cur].status||'progress', dc=(r.style==='designer'), styleName=(dc?'Designer’s choice':(STY[r.style]||r.style));
+    var reqs=(st==='changes')?(j.revisions||[]).filter(function(x){return x.rid===rid;}):[];
+    var pins=(view===cur)?reqs.map(function(rq){return '<span class="vpin" style="left:'+rq.x+'%;top:'+rq.y+'%">'+rq.n+'</span>';}).join(''):'';
+    var badge=(view===cur)?'★ '+esc(arr[cur].label)+' · latest':'Viewing '+esc(arr[view].label);
+    var strip=arr.map(function(v,i){ var dot=v.status?'<span class="vdot '+v.status+'"></span>':''; return '<button type="button" class="vchip'+(i===view?' viewing':'')+(i===cur?' cur':'')+'" data-k="'+k+'" data-i="'+i+'"><img src="'+v.url+'" alt="">'+dot+'<span class="vl">'+esc(v.label)+'</span></button>'; }).join('')
+      +'<label class="vc-add" data-addk="'+k+'"><input type="file" accept="image/*" multiple hidden><span class="plus">+</span>New</label>';
+    var reqList=reqs.length? '<div class="kc-reqs"><div class="kc-reqs-h">'+reqs.length+' change'+(reqs.length>1?'s':'')+' to make</div>'+reqs.map(function(rq){return '<div class="kc-req"><span class="rn">'+rq.n+'</span>'+esc(rq.t)+'</div>';}).join('')+'</div>':'';
+    var refs=styleRefs(r.style);
+    var insp='<div class="wp-insp"><div class="wp-insp-h">Furniture set to stage with · <b>'+esc(styleName)+'</b>'+(dc?' — algorithm-matched to the buyer':'')+'</div>'
+      +'<div class="wp-insp-refs">'+refs.map(function(x){return '<div class="wp-ref"><img src="'+x.url+'" loading="lazy" alt=""><span>'+esc(x.label)+'</span></div>';}).join('')+'</div>'
+      +'<div class="wp-insp-note"><b>Buyer &amp; direction:</b> '+esc(j.buyer)+'</div></div>';
+    return '<div class="wp">'
+      +'<div class="wp-main"><div class="vc-stage" data-stage="'+k+'"><img class="vc-img" src="'+arr[view].url+'" alt=""><img class="vc-orig" src="'+arr[0].url+'" alt=""><span class="vc-badge latest">'+badge+'</span><button type="button" class="vc-cmp" data-cmpk="'+k+'">Compare</button><span class="vc-cmptag l">Original</span><span class="vc-cmptag r">'+esc(arr[view].label)+'</span><div class="vc-handle"></div>'+pins+'</div></div>'
+      +'<div class="wp-side"><div class="wp-kind">'+(reqs.length?'Fix requested changes':'Stage this room')+'</div><div class="wp-title">'+esc(r.label)+'<span class="gver">'+(dc?'✦ Designer':esc(styleName))+'</span></div>'
+        +reqList
+        +'<div class="vc-statuswrap" data-status="'+k+'">'+statusPill(arr[view],view===cur,k)+'</div>'
+        +'<div class="vc-strip">'+strip+'</div>'
+        +'<label class="wp-up" data-addk="'+k+'"><input type="file" accept="image/*" multiple hidden><span class="ui"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/></svg></span><span><b>Drop your finished photo here</b><span>saves as the next version</span></span></label>'
+      +'</div>'
+      +insp
+    +'</div>';
   }
   function renderVersions(j){
     initVersions(j);
     var toDo=[], done=[];
     j.rooms.forEach(function(r){ var a=versions[vkey(j,r)]; (a[a.length-1].status==='approved'?done:toDo).push(r); });
+    if(!j.rooms.some(function(r){return r.id===selRoom;})) selRoom=(toDo[0]||j.rooms[0]||{}).id;
+    var pane = selRoom? workPane(j, selRoom) : '';
     var banner = allApproved(j)? '<div class="vdone-banner"><span style="font-size:22px">🎉</span><div class="bt"><b>Job complete — every photo approved &amp; accepted</b><span>All '+j.rooms.length+' photos signed off by the client.</span></div><button type="button" class="reopen" data-reopenjob="1">Reopen ▸ in progress</button></div>' : '';
-    var bulk='<div class="vbulk"><label class="vbulk-drop" id="vbulkDrop"><input type="file" id="vbulkInput" accept="image/*" multiple hidden><span class="bi"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/></svg></span><span class="bt"><b>Bulk upload finished photos</b><span>Drop many at once, then drop each onto its row below</span></span><span class="vbulk-btn">Choose files</span></label><div class="vtray" id="vtray"></div></div>';
-    var g='<div class="gallery-group"><div class="gg-h">🔧 To stage <span class="cnt">'+toDo.length+'</span></div>'
-      +(toDo.length? '<div class="grows">'+toDo.map(function(r){return grow(j,r);}).join('')+'</div>' : '<div class="kempty">Nothing to work on — all done 🎉</div>')+'</div>'
+    var bulk='<div class="vbulk"><label class="vbulk-drop" id="vbulkDrop"><input type="file" id="vbulkInput" accept="image/*" multiple hidden><span class="bi"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/></svg></span><span class="bt"><b>Bulk upload finished photos</b><span>Drop many at once, then drop each onto its photo below</span></span><span class="vbulk-btn">Choose files</span></label><div class="vtray" id="vtray"></div></div>';
+    var lanes='<div class="status-lanes"><span class="sl-lab">Drag a photo onto a stage →</span>'
+      +['progress','qa','client','approved'].map(function(c){ var s=VSTATUS[c]; return '<span class="slane sl-'+c+'" data-lane="'+c+'">'+s.ic+' '+s.short+'</span>'; }).join('')+'</div>';
+    var g='<div class="gallery-group"><div class="gg-h">🔧 In progress <span class="cnt">'+toDo.length+'</span></div>'
+      +(toDo.length? '<div class="ggrid">'+toDo.map(function(r){return gtile(j,r);}).join('')+'</div>' : '<div class="kempty">Nothing to work on — all done 🎉</div>')+'</div>'
       +'<div class="gallery-group"><div class="gg-h done">✓ Completed <span class="cnt">'+done.length+'</span></div>'
-      +(done.length? '<div class="grows">'+done.map(function(r){return grow(j,r);}).join('')+'</div>' : '<div class="kempty">None accepted yet</div>')+'</div>';
-    return banner+bulk+g;
+      +(done.length? '<div class="ggrid">'+done.map(function(r){return gtile(j,r);}).join('')+'</div>' : '<div class="kempty">None accepted yet</div>')+'</div>';
+    return banner+pane+bulk+lanes+g;
   }
   function setVersionStatus(k,status){ var arr=versions[k]; if(!arr) return; if(arr[arr.length-1].status===status) return; arr[arr.length-1].status=status; reRender(); toast('Moved to · '+VSTATUS[status].lb+' ('+VSTATUS[status].who+')'); }
   function wireApprove(scope){ var s=scope||document;
@@ -676,13 +749,34 @@
     toast('New version saved · '+arr[arr.length-1].label);
   }
   function bindVersions(j){
-    wireApprove(document); // completion-banner reopen
-    document.querySelectorAll('.grow[data-room]').forEach(function(row){
-      row.onclick=function(){ openFocusAt(j, row.getAttribute('data-room')); };
-      // rows accept a dropped bulk-tray photo → new version for that photo
-      row.addEventListener('dragover',function(e){ if(dragKind!=='tray') return; e.preventDefault(); e.dataTransfer.dropEffect='move'; row.classList.add('drop-hi'); });
-      row.addEventListener('dragleave',function(e){ if(!row.contains(e.relatedTarget)) row.classList.remove('drop-hi'); });
-      row.addEventListener('drop',function(e){ if(dragKind!=='tray') return; e.preventDefault(); row.classList.remove('drop-hi'); var d=e.dataTransfer.getData('text/plain'); if(d.indexOf('T:')===0) placeFromTray(j.id+':'+row.getAttribute('data-room'), +d.slice(2)); });
+    wireApprove(document); // advance / reopen / reopen-job
+    // work-pane: version filmstrip
+    document.querySelectorAll('.vc-strip .vchip').forEach(function(b){ b.onclick=function(){ viewingV[b.getAttribute('data-k')]=+b.getAttribute('data-i'); reRender(); }; });
+    // work-pane: upload (both the strip "+ New" and the big drop)
+    document.querySelectorAll('[data-addk]').forEach(function(l){ var inp=l.querySelector('input'); if(inp) inp.onchange=function(){ addVersion(l.getAttribute('data-addk'),inp.files); inp.value=''; }; });
+    // work-pane: compare toggle + drag
+    document.querySelectorAll('.vc-cmp[data-cmpk]').forEach(function(b){ b.onclick=function(){ var st=document.querySelector('.vc-stage[data-stage="'+b.getAttribute('data-cmpk')+'"]'); var on=st.classList.toggle('cmp'); b.classList.toggle('on',on); if(on&&!st.style.getPropertyValue('--cmpX')) st.style.setProperty('--cmpX','50%'); }; });
+    document.querySelectorAll('.vc-stage[data-stage]').forEach(function(st){
+      var dr=false; function set(e){ var r=st.getBoundingClientRect(); st.style.setProperty('--cmpX',Math.max(0,Math.min(100,(e.clientX-r.left)/r.width*100))+'%'); }
+      st.addEventListener('pointerdown',function(e){ if(!st.classList.contains('cmp')) return; dr=true; set(e); });
+      window.addEventListener('pointermove',function(e){ if(dr) set(e); });
+      window.addEventListener('pointerup',function(){ dr=false; });
+    });
+    // status lanes = drop targets to set a photo's stage
+    document.querySelectorAll('.slane[data-lane]').forEach(function(lane){
+      lane.addEventListener('dragover',function(e){ if(dragKind!=='card') return; e.preventDefault(); e.dataTransfer.dropEffect='move'; lane.classList.add('drop-hi'); });
+      lane.addEventListener('dragleave',function(){ lane.classList.remove('drop-hi'); });
+      lane.addEventListener('drop',function(e){ if(dragKind!=='card') return; e.preventDefault(); lane.classList.remove('drop-hi'); var d=e.dataTransfer.getData('text/plain'); if(d.indexOf('C:')===0) setVersionStatus(d.slice(2), lane.getAttribute('data-lane')); });
+    });
+    // gallery tiles: click loads into the work pane above; drag onto a lane sets status; accepts a bulk photo
+    document.querySelectorAll('.gtile[data-room]').forEach(function(tile){
+      var rid=tile.getAttribute('data-room'), k=j.id+':'+rid;
+      tile.onclick=function(){ selRoom=rid; viewingV[k]=null; reRender(); var wp=document.querySelector('.wp'); if(wp) wp.scrollIntoView({block:'nearest',behavior:'smooth'}); };
+      tile.addEventListener('dragstart',function(e){ e.dataTransfer.setData('text/plain','C:'+k); e.dataTransfer.effectAllowed='move'; dragKind='card'; tile.classList.add('dragging'); });
+      tile.addEventListener('dragend',function(){ tile.classList.remove('dragging'); dragKind=null; document.querySelectorAll('.slane.drop-hi,.gtile.drop-hi').forEach(function(x){x.classList.remove('drop-hi');}); });
+      tile.addEventListener('dragover',function(e){ if(dragKind!=='tray') return; e.preventDefault(); tile.classList.add('drop-hi'); });
+      tile.addEventListener('dragleave',function(e){ if(!tile.contains(e.relatedTarget)) tile.classList.remove('drop-hi'); });
+      tile.addEventListener('drop',function(e){ if(dragKind!=='tray') return; e.preventDefault(); tile.classList.remove('drop-hi'); var d=e.dataTransfer.getData('text/plain'); if(d.indexOf('T:')===0) placeFromTray(k, +d.slice(2)); });
     });
     var bd=$('vbulkDrop'), bi=$('vbulkInput');
     if(bd&&bi){ bi.onchange=function(){ addBulk(bi.files); bi.value=''; };
