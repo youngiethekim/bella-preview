@@ -203,6 +203,39 @@
   .confetti{position:absolute;top:-10px;width:9px;height:14px;opacity:0}
   .f-complete.show .confetti{animation:fall linear forwards}
   @keyframes fall{0%{opacity:1;transform:translateY(-10px) rotate(0)}100%{opacity:.9;transform:translateY(105vh) rotate(540deg)}}
+
+  /* PHOTO VERSION BOARD — per-photo version history */
+  .vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:12px}
+  .vcard{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;transition:box-shadow .2s}
+  .vcard.levelup{animation:vlevel .8s ease}
+  @keyframes vlevel{0%{box-shadow:0 0 0 0 rgba(184,152,90,.65)}100%{box-shadow:0 0 0 16px rgba(184,152,90,0)}}
+  .vc-stage{position:relative;aspect-ratio:4/3;background:#14161c;overflow:hidden;user-select:none}
+  .vc-img,.vc-orig{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+  .vc-orig{display:none;z-index:2}
+  .vc-stage.cmp .vc-orig{display:block;clip-path:inset(0 calc(100% - var(--cmpX,50%)) 0 0)}
+  .vc-handle{position:absolute;top:0;bottom:0;left:var(--cmpX,50%);width:2px;background:#fff;z-index:4;display:none;cursor:ew-resize;transform:translateX(-1px);box-shadow:0 0 0 1px rgba(0,0,0,.2)}
+  .vc-stage.cmp .vc-handle{display:block}
+  .vc-handle::after{content:"‹ ›";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:28px;height:28px;border-radius:50%;background:#fff;color:var(--ink);font-size:11px;display:grid;place-items:center;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+  .vc-badge{position:absolute;top:8px;left:8px;z-index:5;font-size:10px;letter-spacing:.05em;text-transform:uppercase;background:rgba(20,18,16,.72);color:#fff;padding:4px 9px;border-radius:99px;display:inline-flex;align-items:center;gap:5px}
+  .vc-badge.latest{background:var(--gold);color:#1c1a18}
+  .vc-cmp{position:absolute;top:8px;right:8px;z-index:5;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;background:rgba(20,18,16,.6);color:#fff;border:0;padding:5px 10px;border-radius:99px;cursor:pointer}
+  .vc-cmp.on{background:#fff;color:var(--ink)}
+  .vc-cmptag{position:absolute;bottom:8px;z-index:5;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.55);padding:3px 8px;border-radius:99px;display:none}
+  .vc-stage.cmp .vc-cmptag{display:block}
+  .vc-cmptag.l{left:8px}.vc-cmptag.r{right:8px}
+  .vc-foot{padding:11px 13px}
+  .vc-name{font-size:14px;font-weight:400;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .vc-name .vc-style{font-size:11px;color:var(--green);white-space:nowrap}
+  .vc-strip{display:flex;gap:6px;margin-top:10px;overflow-x:auto;padding-bottom:2px}
+  .vchip{flex:none;border:1px solid var(--line);border-radius:7px;background:#fff;cursor:pointer;padding:0;width:54px;transition:.13s;position:relative;overflow:hidden}
+  .vchip img{width:100%;height:38px;object-fit:cover;display:block}
+  .vchip .vl{display:block;font-size:9px;letter-spacing:.03em;padding:3px 0;color:var(--soft);text-align:center}
+  .vchip.viewing{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+  .vchip.cur{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+  .vchip.cur::after{content:"★";position:absolute;top:2px;right:3px;font-size:9px;color:var(--gold);text-shadow:0 1px 2px rgba(0,0,0,.5)}
+  .vc-add{flex:none;width:54px;min-height:59px;border:1.5px dashed var(--line);border-radius:7px;display:grid;place-items:center;cursor:pointer;color:var(--faint);font-size:11px;line-height:1.1;text-align:center;transition:.14s}
+  .vc-add:hover{border-color:var(--green);color:var(--green);background:#F4F8F4}
+  .vc-add .plus{font-size:17px;display:block}
 </style>
 </head>
 <body>
@@ -381,7 +414,7 @@
         +'<div class="block"><div class="sec-t">Services to produce</div><div class="svc-list">'
           +j.services.map(function(s){ return '<div class="svc"><span class="si">'+(SIC[s.k]||'▤')+'</span><span><b>'+esc(s.n)+'</b><span>'+esc(s.s)+'</span></span><span class="qty">'+esc(s.qty)+'</span></div>'; }).join('')
         +'</div></div>'
-        + (j.rooms.length? '<div class="block"><div class="sec-t">Shot list &amp; styles ('+j.rooms.length+')</div><div class="shots">'+shots+'</div></div>' : '')
+        + (j.rooms.length? '<div class="block"><div class="sec-t">Photo versions — original, current &amp; every revision</div>'+renderVersions(j)+'</div>' : '')
         + upBlock
       +'</div><div>'
         +'<div class="card"><h4>Job details</h4>'
@@ -399,7 +432,66 @@
     var subm=$('submitBtn'); if(subm) subm.onclick=function(){ j.status='qa'; toast('#'+j.id+' submitted for Bella QA'); renderList(); renderDetail(); };
     var ask=$('askBtn'); if(ask) ask.onclick=function(){ toast('Question sent to Bella (demo)'); };
     var fb=$('focusBtn'); if(fb) fb.onclick=function(){ openFocus(j); };
-    bindUp(j);
+    bindUp(j); bindVersions(j);
+  }
+
+  /* ---------- PHOTO VERSION BOARD ---------- */
+  var versions={};   // key jobId:roomId -> [{label,url}]
+  var viewingV={};   // key -> index currently viewed
+  function vkey(j,r){ return j.id+':'+r.id; }
+  function initVersions(j){
+    if(!j.rooms) return;
+    var staged=(j.status!=='assigned');
+    j.rooms.forEach(function(r){ var k=vkey(j,r); if(!versions[k]){ versions[k]=[{label:'Original',url:A+r.id+'-before.jpg'}]; if(staged) versions[k].push({label:'v1',url:A+r.id+'-after.jpg'}); } });
+  }
+  function renderVersions(j){
+    initVersions(j);
+    return '<div class="vgrid">'+j.rooms.map(function(r){
+      var k=vkey(j,r), arr=versions[k], cur=arr.length-1, view=(viewingV[k]!=null?viewingV[k]:cur), dc=r.style==='designer';
+      var badge=(view===cur)?'<span class="vc-badge latest">★ '+esc(arr[cur].label)+' · latest</span>':'<span class="vc-badge">Viewing '+esc(arr[view].label)+'</span>';
+      var strip=arr.map(function(v,i){ return '<button type="button" class="vchip'+(i===view?' viewing':'')+(i===cur?' cur':'')+'" data-k="'+k+'" data-i="'+i+'"><img src="'+v.url+'" alt=""><span class="vl">'+esc(v.label)+'</span></button>'; }).join('')
+        +'<label class="vc-add" data-addk="'+k+'"><input type="file" accept="image/*" multiple hidden><span class="plus">+</span>New</label>';
+      return '<div class="vcard" data-card="'+k+'">'
+        +'<div class="vc-stage" data-stage="'+k+'">'
+          +'<img class="vc-img" src="'+arr[view].url+'" alt=""><img class="vc-orig" src="'+arr[0].url+'" alt="">'
+          +badge+'<button type="button" class="vc-cmp" data-cmpk="'+k+'">Compare</button>'
+          +'<span class="vc-cmptag l">Original</span><span class="vc-cmptag r">'+esc(arr[view].label)+'</span><div class="vc-handle"></div>'
+        +'</div>'
+        +'<div class="vc-foot"><div class="vc-name">'+esc(r.label)+'<span class="vc-style">'+(dc?'✦ Designer':esc(STY[r.style]||r.style))+'</span></div>'
+          +'<div class="vc-strip">'+strip+'</div></div></div>';
+    }).join('')+'</div>';
+  }
+  function refreshCard(k){
+    var card=document.querySelector('.vcard[data-card="'+k+'"]'); if(!card) return;
+    var arr=versions[k], cur=arr.length-1, view=(viewingV[k]!=null?viewingV[k]:cur);
+    card.querySelector('.vc-img').src=arr[view].url;
+    card.querySelector('.vc-cmptag.r').textContent=arr[view].label;
+    var badge=card.querySelector('.vc-badge');
+    if(view===cur){ badge.className='vc-badge latest'; badge.textContent='★ '+arr[cur].label+' · latest'; }
+    else { badge.className='vc-badge'; badge.textContent='Viewing '+arr[view].label; }
+    card.querySelectorAll('.vchip').forEach(function(b){ var i=+b.getAttribute('data-i'); b.classList.toggle('viewing',i===view); b.classList.toggle('cur',i===cur); });
+  }
+  function addVersion(k,files){
+    var arr=versions[k]; if(!arr) return; var added=0;
+    [].slice.call(files).forEach(function(f){ if(f.type&&f.type.indexOf('image')===0){ var vn=arr.filter(function(v){return v.label!=='Original';}).length+1; arr.push({label:'v'+vn,url:URL.createObjectURL(f)}); added++; } });
+    if(!added) return;
+    viewingV[k]=arr.length-1;
+    renderDetail();
+    var card=document.querySelector('.vcard[data-card="'+k+'"]');
+    if(card){ card.classList.add('levelup'); }
+    toast('New version saved · '+arr[arr.length-1].label);
+  }
+  function bindVersions(j){
+    document.querySelectorAll('.vchip').forEach(function(b){ b.onclick=function(){ viewingV[b.getAttribute('data-k')]=+b.getAttribute('data-i'); refreshCard(b.getAttribute('data-k')); }; });
+    document.querySelectorAll('.vc-add').forEach(function(l){ var inp=l.querySelector('input'); inp.onchange=function(){ addVersion(l.getAttribute('data-addk'),inp.files); inp.value=''; }; });
+    document.querySelectorAll('.vc-cmp').forEach(function(b){ b.onclick=function(){ var st=document.querySelector('.vc-stage[data-stage="'+b.getAttribute('data-cmpk')+'"]'); var on=st.classList.toggle('cmp'); b.classList.toggle('on',on); if(on&&!st.style.getPropertyValue('--cmpX')) st.style.setProperty('--cmpX','50%'); }; });
+    document.querySelectorAll('.vc-stage').forEach(function(st){
+      var dragging=false;
+      function set(e){ var r=st.getBoundingClientRect(); var x=((e.clientX)-r.left)/r.width*100; st.style.setProperty('--cmpX',Math.max(0,Math.min(100,x))+'%'); }
+      st.addEventListener('pointerdown',function(e){ if(!st.classList.contains('cmp')) return; dragging=true; set(e); });
+      window.addEventListener('pointermove',function(e){ if(dragging) set(e); });
+      window.addEventListener('pointerup',function(){ dragging=false; });
+    });
   }
 
   /* ---------- FOCUS MODE: game-like task runner ---------- */
