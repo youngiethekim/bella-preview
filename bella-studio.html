@@ -104,10 +104,14 @@
   .note-card p{font-size:13.5px;color:#5b5140;line-height:1.55}
   /* revision requests */
   .rev-list{display:flex;flex-direction:column;gap:9px}
-  .rev-item{border:1px solid #EADFC5;background:#FBF7EE;border-radius:8px;padding:12px 14px}
-  .rev-item .rn{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--amber);color:#fff;font-size:11px;margin-right:8px;vertical-align:-4px}
+  .rev-item{display:flex;gap:14px;border:1px solid #EADFC5;background:#FBF7EE;border-radius:8px;padding:12px 14px;align-items:flex-start}
+  .rev-photo{width:128px;flex:none;aspect-ratio:4/3;border-radius:6px;background:#eee center/cover;position:relative;overflow:hidden;border:1px solid rgba(0,0,0,.06)}
+  .rev-pin{position:absolute;transform:translate(-50%,-50%);width:22px;height:22px;border-radius:50% 50% 50% 2px;background:var(--amber);color:#fff;font-size:11px;display:grid;place-items:center;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.35)}
+  .rev-body{flex:1;min-width:0}
+  .rev-loc{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:#8a6d33;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+  .rev-loc .rn{width:17px;height:17px;border-radius:50%;background:var(--amber);color:#fff;font-size:10px;display:grid;place-items:center}
   .rev-item .rt{font-size:13.5px;color:var(--ink)}
-  .rev-item .rw{font-size:11.5px;color:var(--faint);margin-top:4px;padding-left:28px}
+  .rev-item .rw{font-size:11.5px;color:var(--faint);margin-top:5px}
   /* upload */
   .up{border:2px dashed #BFD3C2;background:#F1F7F2;border-radius:10px;padding:18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:.15s}
   .up:hover,.up.drag{border-color:var(--green);background:#E7F1E9}
@@ -179,9 +183,9 @@
       rooms:[room('living','Living room','designer'),room('kitchen','Kitchen','designer')],
       files:[{n:'8 room photos.zip',ok:true}],
       revisions:[
-        {n:1,room:'Living room',t:'Swap the artwork for something warmer; the blue feels cold against the staging.',by:'Agent'},
-        {n:2,room:'Living room',t:'Rug is a little small; size up so it sits under the front sofa legs.',by:'Agent'},
-        {n:3,room:'Kitchen',t:'Add a couple of counter stools at the island.',by:'Agent'}
+        {n:1,room:'Living room',rid:'living',x:26,y:48,t:'Swap the artwork for something warmer; the blue feels cold against the staging.',by:'Agent'},
+        {n:2,room:'Living room',rid:'living',x:71,y:72,t:'Rug is a little small; size up so it sits under the front sofa legs.',by:'Agent'},
+        {n:3,room:'Kitchen',rid:'kitchen',x:52,y:42,t:'Add a couple of counter stools at the island.',by:'Agent'}
       ] },
     {id:'BV-10502', studio:'B', ptype:'Residential · empty listing', addr:'120 Bayview Ave', due:5, status:'qa',
       services:[{k:'stage',n:'Virtual staging',s:'Furnish empty rooms',qty:'6 photos'}],
@@ -262,8 +266,14 @@
                  : '<div class="file missing"><span class="fi">!</span>'+esc(f.n)+' — not provided yet<span class="dl" style="color:var(--amber)">Waiting</span></div>';
     }).join('');
 
-    var revBlock = j.revisions.length? '<div class="block"><div class="sec-t">Changes requested · round '+(j.status==='revision'?'current':'')+'</div><div class="rev-list">'
-      +j.revisions.map(function(rq){ return '<div class="rev-item"><div class="rt"><span class="rn">'+rq.n+'</span>'+esc(rq.room)+' — '+esc(rq.t)+'</div><div class="rw">Requested by '+esc(rq.by)+'</div></div>'; }).join('')
+    var revBlock = j.revisions.length? '<div class="block"><div class="sec-t">Changes requested — each pinned to its exact photo</div><div class="rev-list">'
+      +j.revisions.map(function(rq){
+        var img=rq.rid? A+rq.rid+'-after.jpg' : '';
+        return '<div class="rev-item">'
+          +(img? '<div class="rev-photo" style="background-image:url('+img+')"><span class="rev-pin" style="left:'+rq.x+'%;top:'+rq.y+'%">'+rq.n+'</span></div>' : '')
+          +'<div class="rev-body"><div class="rev-loc"><span class="rn">'+rq.n+'</span>'+esc(rq.room)+' · pin '+rq.n+'</div>'
+          +'<div class="rt">'+esc(rq.t)+'</div><div class="rw">Requested by '+esc(rq.by)+'</div></div></div>';
+      }).join('')
       +'</div></div>' : '';
 
     var delivs=(deliverables[j.id]||[]);
