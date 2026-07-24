@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Billing &amp; credits | Bella Virtual</title>
+<meta name="description" content="Your Bella Virtual billing: prepaid credit balance, top-up packs, plan, payment method and invoice history.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#FDFCFA;--ink:#232120;--soft:#5E5A56;--faint:#9C978F;--line:#E8E4DE;--line-2:#F0EDE8;--dark:#1C1A18;--green:#3E6B4C;--gold:#B8985A;--blue:#3E6076;--pad:44px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:"Jost",system-ui,sans-serif;font-weight:300;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{text-decoration:none;color:inherit}
+  img{display:block;max-width:100%}
+  button{font-family:inherit;cursor:pointer}
+  h1,h2,h3{font-weight:300;letter-spacing:-.012em;line-height:1.15}
+  .micro{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .btn{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:#fff;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;padding:12px 20px;border:0;cursor:pointer;transition:.2s;border-radius:2px}
+  .btn:hover{background:var(--green)}
+  .btn-line{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  .btn-line:hover{border-color:var(--ink)}
+  .btn-sm{padding:8px 14px;font-size:11px}
+
+  header{position:sticky;top:0;z-index:40;background:rgba(253,252,250,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line-2)}
+  .nav{display:flex;align-items:center;gap:26px;height:64px;padding:0 var(--pad);max-width:1200px;margin:0 auto}
+  .mark{font-size:15px;letter-spacing:.5em;font-weight:400}
+  .nav .lk{font-size:13px;color:var(--soft)}
+  .nav .lk.on,.nav .lk:hover{color:var(--ink)}
+  .nav .sp{margin-left:auto}
+  .acct{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--soft)}
+  .acct .av{width:30px;height:30px;border-radius:50%;background:#e6e1d9 center/cover;border:1px solid var(--line)}
+
+  .wrap{max-width:1200px;margin:0 auto;padding:34px var(--pad) 80px}
+  h1.page{font-size:clamp(26px,3vw,34px);margin-bottom:4px}
+  .lead{font-size:14px;color:var(--soft);margin-bottom:26px}
+  .proto{display:inline-block;font-size:11px;letter-spacing:.06em;color:var(--gold);border:1px solid #E7D9B6;background:#FBF6EA;padding:4px 10px;border-radius:99px;margin-left:10px}
+
+  .top{display:grid;grid-template-columns:1.3fr 1fr;gap:6px;margin-bottom:34px}
+  @media(max-width:820px){.top{grid-template-columns:1fr}}
+  .balance{background:linear-gradient(135deg,#20304A,#1C1A18);color:#fff;border-radius:12px;padding:28px 30px;display:flex;flex-direction:column;justify-content:space-between}
+  .balance .lb{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9FB0C4}
+  .balance .amt{font-size:52px;font-weight:300;line-height:1;margin:10px 0 4px}
+  .balance .amt small{font-size:20px;color:#B9C2CE}
+  .balance .eq{font-size:13px;color:#B9C2CE}
+  .balance .row{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+  .balance .btn{background:#fff;color:var(--ink)} .balance .btn:hover{background:var(--green);color:#fff}
+  .balance .btn-line{color:#fff;border-color:rgba(255,255,255,.3)} .balance .btn-line:hover{border-color:#fff}
+  .plan{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px 26px}
+  .plan .lb{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .plan h3{font-size:22px;margin:8px 0 4px}
+  .plan p{font-size:13.5px;color:var(--soft)}
+  .plan .feat{list-style:none;margin:14px 0 0;display:flex;flex-direction:column;gap:7px}
+  .plan .feat li{font-size:13px;color:var(--soft);padding-left:20px;position:relative}
+  .plan .feat li::before{content:"✓";position:absolute;left:0;color:var(--green)}
+  .plan .up{margin-top:16px}
+
+  .sec{margin-bottom:38px}
+  .sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .sec-h h2{font-size:19px}
+  .sec-h .note{font-size:12.5px;color:var(--faint)}
+
+  .packs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  @media(max-width:820px){.packs{grid-template-columns:1fr 1fr}}
+  .pack{border:1px solid var(--line);border-radius:10px;padding:20px 18px;background:#fff;text-align:center;position:relative;transition:.14s;display:flex;flex-direction:column;gap:4px}
+  .pack:hover{border-color:var(--ink);transform:translateY(-2px)}
+  .pack.best{border-color:var(--green)}
+  .pack .tag{position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;background:var(--green);color:#fff;padding:3px 9px;border-radius:99px;white-space:nowrap}
+  .pack .pay{font-size:26px;font-weight:300;line-height:1;margin-top:4px}
+  .pack .bonus{font-size:12.5px;color:var(--green)}
+  .pack .gets{font-size:12px;color:var(--faint)}
+  .pack .approx{font-size:11.5px;color:var(--faint);margin-top:2px}
+  .pack .btn{margin-top:12px;width:100%;justify-content:center}
+
+  .pm{display:flex;align-items:center;gap:16px;border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:#fff;flex-wrap:wrap}
+  .pm .cardface{width:56px;height:36px;border-radius:6px;background:linear-gradient(135deg,#3a3a42,#1c1a18);display:grid;place-items:center;color:#fff;font-size:9px;letter-spacing:.1em;flex:none}
+  .pm .cinfo b{font-weight:400}
+  .pm .cinfo span{font-size:12.5px;color:var(--faint);display:block}
+  .pm .btn-line{margin-left:auto}
+
+  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  thead th{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);text-align:left;font-weight:400;padding:12px 16px;border-bottom:1px solid var(--line-2)}
+  tbody td{padding:13px 16px;border-bottom:1px solid var(--line-2);font-size:13.5px}
+  tbody tr:last-child td{border-bottom:0}
+  .amt-pos{color:var(--green)} .amt-neg{color:var(--ink)}
+  td .st{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--green)}
+  td .rc{text-align:right}
+  th.rc{text-align:right}
+
+  .how{background:#F5F7F5;border:1px solid #DDE7DD;border-radius:10px;padding:20px 24px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  @media(max-width:820px){.how{grid-template-columns:1fr}}
+  .how .h{font-size:13px;color:var(--ink);margin-bottom:4px}
+  .how .h b{font-weight:400}
+  .how p{font-size:12.5px;color:var(--soft);line-height:1.5}
+
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:13px;padding:12px 20px;border-radius:99px;z-index:120;opacity:0;transition:.25s;pointer-events:none}
+  .toast.show{opacity:1}
+  footer{border-top:1px solid var(--line);padding:26px var(--pad);text-align:center;font-size:12px;color:var(--faint)}
+</style>
+</head>
+<body>
+<header>
+  <div class="nav">
+    <a class="mark" href="bella-homepage-redesign.html">BELLA</a>
+    <a class="lk" href="bella-dashboard.html">Dashboard</a>
+    <a class="lk" href="bella-order-page.html">New order</a>
+    <a class="lk on" href="bella-billing.html">Billing</a>
+    <a class="lk" href="bella-resources.html">Resources</a>
+    <span class="sp"></span>
+    <div class="acct"><span class="av" style="background-image:url('https://images.unsplash.com/photo-1580489944761-15a19d654956?w=80&q=70&fm=jpg')"></span>Beverly Bahm</div>
+    <a class="lk" href="bella-login.html">Sign out</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <h1 class="page">Billing &amp; credits<span class="proto">Prototype · no real payment is processed</span></h1>
+  <div class="lead">Prepay once, then every order draws from your balance. No card at checkout, and bigger top-ups earn bonus credits.</div>
+
+  <div class="top">
+    <div class="balance">
+      <div>
+        <div class="lb">Credit balance</div>
+        <div class="amt">$<span id="bal">420</span></div>
+        <div class="eq" id="balEq"></div>
+      </div>
+      <div class="row"><button class="btn" id="topBtn">Top up</button><a class="btn-line btn" href="bella-order-page.html">Place an order</a></div>
+    </div>
+    <div class="plan">
+      <div class="lb">Current plan</div>
+      <h3 id="planName">Pay-as-you-go</h3>
+      <p id="planDesc">Buy credits when you need them. No monthly fee.</p>
+      <ul class="feat">
+        <li>Volume bonus on every top-up</li>
+        <li>Credits never expire</li>
+        <li>Add teammates &amp; guests free</li>
+      </ul>
+      <button class="btn-line btn btn-sm up" id="planBtn">See Pro plan →</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><h2>Top up your balance</h2><span class="note">1 credit = $1 · bigger packs earn bonus credits</span></div>
+    <div class="packs" id="packs"></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><h2>Payment method</h2></div>
+    <div class="pm">
+      <span class="cardface">VISA</span>
+      <div class="cinfo"><b>Visa ending 4242</b><span>Expires 08/27 · Beverly Bahm</span></div>
+      <button class="btn-line btn btn-sm" id="pmBtn">Update card</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><h2>Transaction history</h2></div>
+    <table>
+      <thead><tr><th>Date</th><th>Description</th><th>Status</th><th class="rc">Amount</th><th class="rc">Balance</th></tr></thead>
+      <tbody id="txns"></tbody>
+    </table>
+  </div>
+
+  <div class="how">
+    <div><div class="h"><b>1 · Top up</b></div><p>Add credits to your balance. Bigger packs earn bonus credits (up to 20% extra), mirroring our volume pricing.</p></div>
+    <div><div class="h"><b>2 · Order</b></div><p>Place staging, render or floor-plan orders as usual. The total is drawn from your balance, with no card needed at checkout.</p></div>
+    <div><div class="h"><b>3 · Running low</b></div><p>If an order exceeds your balance, you pay just the difference on your saved card. We’ll remind you before you run out.</p></div>
+  </div>
+</div>
+
+<footer>Bella Virtual Staging · Billing mockup · <a href="bella-dashboard.html">Back to dashboard</a></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  /* wallet state (prototype only — nothing is charged) */
+  var balance=420;
+  var PACKS=[
+    {pay:250,bonusPct:5},
+    {pay:500,bonusPct:10,best:true},
+    {pay:1000,bonusPct:15},
+    {pay:2500,bonusPct:20}
+  ];
+  var TXNS=[
+    {d:'Jul 22',desc:'Order #BV-10428 · Staging + floor plan',amt:-396,bal:420},
+    {d:'Jul 20',desc:'Top-up · $500 pack (+$50 bonus)',amt:+550,bal:816},
+    {d:'Jul 12',desc:'Order #BV-10102 · Removal + staging',amt:-243,bal:266},
+    {d:'Jul 1',desc:'Top-up · $500 pack (+$50 bonus)',amt:+550,bal:509}
+  ];
+  function $(id){return document.getElementById(id);}
+  function toast(m){var t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove('show');},2200);}
+  function money(n){return '$'+Math.abs(n).toLocaleString('en-US');}
+  function credits(pay,pct){return pay+Math.round(pay*pct/100);}
+
+  function renderBal(){
+    $('bal').textContent=balance.toLocaleString('en-US');
+    $('balEq').textContent='≈ '+Math.floor(balance/45)+' staged photos at $45 each';
+  }
+  function renderPacks(){
+    $('packs').innerHTML=PACKS.map(function(p,i){
+      var got=credits(p.pay,p.bonusPct), bonus=got-p.pay;
+      return '<div class="pack'+(p.best?' best':'')+'" data-i="'+i+'">'+(p.best?'<span class="tag">Most popular</span>':'')
+        +'<div class="micro" style="letter-spacing:.08em">Pay</div>'
+        +'<div class="pay">'+money(p.pay)+'</div>'
+        +'<div class="bonus">+'+money(bonus)+' bonus ('+p.bonusPct+'%)</div>'
+        +'<div class="gets">Get '+money(got)+' in credits</div>'
+        +'<div class="approx">≈ '+Math.floor(got/45)+' staged photos</div>'
+        +'<button class="btn btn-sm">Buy</button></div>';
+    }).join('');
+    $('packs').querySelectorAll('.pack').forEach(function(el){ el.querySelector('.btn').onclick=function(){ buy(PACKS[+el.getAttribute('data-i')]); }; });
+  }
+  function renderTxns(){
+    $('txns').innerHTML=TXNS.map(function(t){
+      return '<tr><td>'+t.d+'</td><td>'+t.desc+'</td><td><span class="st">'+(t.amt>0?'Paid':'Applied')+'</span></td>'
+        +'<td class="rc '+(t.amt>0?'amt-pos':'amt-neg')+'">'+(t.amt>0?'+':'−')+money(t.amt)+'</td>'
+        +'<td class="rc">'+money(t.bal)+'</td></tr>';
+    }).join('');
+  }
+  function buy(p){
+    var got=credits(p.pay,p.bonusPct), bonus=got-p.pay;
+    balance+=got;
+    TXNS.unshift({d:'Just now',desc:'Top-up · '+money(p.pay)+' pack (+'+money(bonus)+' bonus)',amt:+got,bal:balance});
+    renderBal(); renderTxns();
+    toast('Added '+money(got)+' in credits (demo — no charge)');
+  }
+  $('topBtn').onclick=function(){ document.querySelector('.pack.best .btn').scrollIntoView({behavior:'smooth',block:'center'}); document.querySelector('#packs').style.outline=''; toast('Pick a top-up pack below'); };
+  $('pmBtn').onclick=function(){ toast('Prototype — card management opens your payment provider on the live site.'); };
+  var proPlan=false;
+  $('planBtn').onclick=function(){
+    proPlan=!proPlan;
+    if(proPlan){ $('planName').textContent='Pro'; $('planDesc').textContent='$299/mo. Includes $330 in credits, priority 24h turnaround, and 10% off every order.'; $('planBtn').textContent='Switch to Pay-as-you-go'; toast('Pro plan selected (demo)'); }
+    else { $('planName').textContent='Pay-as-you-go'; $('planDesc').textContent='Buy credits when you need them. No monthly fee.'; $('planBtn').textContent='See Pro plan →'; }
+  };
+
+  renderBal(); renderPacks(); renderTxns();
+})();
+</script>
+</body>
+</html>
