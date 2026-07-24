@@ -67,7 +67,15 @@
   .choice span{font-size:13.5px;color:var(--faint);display:block;margin-top:3px}
 
   /* step 2 config */
-  .config{margin-top:30px;display:grid;gap:5px}
+  .reassure{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 4px}
+  .ru{display:flex;align-items:center;gap:9px;background:#F7FAF7;border:1px solid #DDE7DD;border-radius:99px;padding:9px 15px;font-size:12.5px;color:var(--soft)}
+  .ru b{color:var(--ink);font-weight:500}
+  .ru svg{width:16px;height:16px;stroke:var(--green);fill:none;stroke-width:1.6;flex:none}
+  .ru .star{fill:var(--gold);stroke:var(--gold)}
+  .val-note{margin-top:12px;font-size:13px;color:var(--soft);display:flex;align-items:flex-start;gap:9px;background:#FBF8F0;border:1px solid #EADFC5;border-radius:10px;padding:12px 15px;line-height:1.5}
+  .val-note svg{width:17px;height:17px;stroke:var(--gold);fill:none;stroke-width:1.6;flex:none;margin-top:1px}
+  .val-note b{color:#5b5140;font-weight:500}
+  .config{margin-top:24px;display:grid;gap:5px}
   .qrow{background:#fff;border:1px solid var(--line);padding:24px 26px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
   .qrow .lbl{flex:1;min-width:200px}
   .qrow .lbl b{font-weight:400;font-size:16.5px;display:block}
@@ -654,6 +662,14 @@
         <h2 id="s2title">Let’s stage your listing.</h2>
         <p id="s2sub">The essentials first — how many photos, and the look. Anything extra comes after, only if you want it.</p>
       </div>
+      <div class="reassure">
+        <div class="ru"><svg class="star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.3l6.1-.7z"/></svg><span><b>4.9</b> · loved by agents on thousands of listings</span></div>
+        <div class="ru"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.5 0 2-1 2-2s-.6-1.4-.6-2.2c0-.9.7-1.6 1.6-1.6H18a3 3 0 0 0 3-3c0-3.9-4-6.2-9-6.2z"/><circle cx="7.5" cy="11" r="1"/><circle cx="12" cy="8" r="1"/><circle cx="16" cy="10.5" r="1"/></svg><span>Staged by <b>real interior designers</b>, not just AI</span></div>
+        <div class="ru"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M12 3h0"/></svg><span>MLS-ready in <b>24–48 hours</b></span></div>
+        <div class="ru"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 5v6h-6"/></svg><span><b>Unlimited revisions</b>, free for 2 weeks</span></div>
+        <div class="ru"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="2.5"/></svg><span>You <b>approve every photo</b> before it goes live</span></div>
+      </div>
+      <div class="val-note"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg><span><b>Why more rooms is worth it:</b> 95% of buyers start online, and listings that show every room staged get more clicks and more showings. Empty rooms make a home feel smaller. A full set of staged photos sells the whole home, not just one room.</span></div>
       <div class="config" id="config"></div>
       <div class="wiz-foot">
         <button class="btn-line" id="back1">← Back</button>
