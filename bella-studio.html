@@ -28,8 +28,14 @@
   header{height:var(--top);display:flex;align-items:center;gap:18px;padding:0 26px;background:#fff;border-bottom:1px solid var(--line)}
   .mark{font-size:15px;letter-spacing:.42em;font-weight:400}
   .pill{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);border:1px solid rgba(107,78,134,.4);border-radius:999px;padding:5px 11px}
-  .who{margin-left:auto;display:flex;align-items:center;gap:9px;font-size:13px;color:var(--soft)}
-  .who .av{width:28px;height:28px;border-radius:50%;background:var(--purple);color:#fff;font-size:11px;display:grid;place-items:center}
+  .who{margin-left:auto;display:flex;align-items:center;gap:11px}
+  .who .av{width:32px;height:32px;border-radius:50%;background:var(--purple);color:#fff;font-size:11px;display:grid;place-items:center;flex:none}
+  .who .whoinfo{line-height:1.25}
+  .who .whoinfo b{font-weight:400;font-size:13.5px;display:block}
+  .who .whoinfo span{font-size:11px;color:var(--faint)}
+  .who .switch{margin-left:6px;display:flex;align-items:center;gap:6px;border-left:1px solid var(--line);padding-left:12px}
+  .who .switch .lb{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+  .who select{font-family:inherit;font-size:12.5px;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:6px 9px;background:#fff;cursor:pointer}
   .gated{font-size:11px;color:var(--faint)}
 
   .wsp{display:grid;grid-template-columns:340px 1fr;height:calc(100% - var(--top))}
@@ -121,8 +127,8 @@
 <header>
   <a class="mark" href="bella-cms.html">BELLA</a>
   <span class="pill">Studio Portal</span>
-  <span class="gated">Scoped access — no client identities or pricing</span>
-  <div class="who"><span class="av">SA</span>Studio A · Manila</div>
+  <span class="gated">Scoped access · no client identities or pricing</span>
+  <div class="who" id="who"></div>
 </header>
 
 <div class="wsp">
@@ -147,38 +153,68 @@
     done:{label:'Approved',chip:'ch-done'}
   };
   function room(id,label,style){ return {id:id,label:label,style:style,orig:A+id+'-before.jpg'}; }
-  /* SAMPLE jobs assigned to this studio. Client identity + pricing are intentionally absent. */
+  /* Contractor network — each partner has their own scoped dashboard, filtered to their assignments. */
+  var CONTRACTORS={
+    A:{name:'Studio A · Manila',av:'SA',spec:'Virtual staging & photo editing'},
+    B:{name:'Studio B · Bengaluru',av:'SB',spec:'Staging & floor plans'},
+    rove:{name:'Rove 3D',av:'R3',spec:'3D renders & virtual tours'}
+  };
+  function param(k){ try{ return new URLSearchParams(location.search).get(k); }catch(e){ return null; } }
+  var cur = CONTRACTORS[param('studio')] ? param('studio') : 'A';
+  /* SAMPLE jobs across contractors. Client identity + pricing are intentionally absent. */
   var JOBS=[
-    {id:'BV-10531', ptype:'Residential · empty listing', addr:'240 Aspen Ridge', due:20, status:'assigned',
-      services:[{k:'stage',n:'Virtual staging',s:'Furnish empty rooms',qty:'6 photos'},{k:'floor',n:'2D floor plan',s:'Clean labelled layout',qty:'1 floor'}],
-      buyer:'Target buyer: young family, mid-market. Warm, family-friendly — not cold or ultra-modern.',
+    {id:'BV-10531', studio:'A', ptype:'Residential · empty listing', addr:'240 Aspen Ridge', due:20, status:'assigned',
+      services:[{k:'stage',n:'Virtual staging',s:'Furnish empty rooms',qty:'6 photos'}],
+      buyer:'Target buyer: young family, mid-market. Warm, family-friendly, not cold or ultra-modern.',
       rooms:[room('living','Living room','designer'),room('kitchen','Kitchen','designer'),room('dining','Dining','designer'),room('primary','Primary bedroom','designer'),room('bed2','Bedroom 2','scandi'),room('bed3','Bedroom 3','designer')],
-      files:[{n:'6 room photos.zip',ok:true},{n:'Reference — Pinterest board.pdf',ok:true}], revisions:[] },
-    {id:'BV-10471', ptype:'Residential · empty listing', addr:'19 Maple Grove', due:-1, status:'inprogress',
+      files:[{n:'6 room photos.zip',ok:true},{n:'Reference · Pinterest board.pdf',ok:true}], revisions:[] },
+    {id:'BV-10471', studio:'A', ptype:'Residential · empty listing', addr:'19 Maple Grove', due:-1, status:'inprogress',
       services:[{k:'stage',n:'Virtual staging',s:'Furnish empty rooms',qty:'9 photos'},{k:'sky',n:'Sky replacement',s:'Swap grey skies on exteriors',qty:'2 photos'}],
       buyer:'Target buyer: downsizing couple. Transitional, calm, uncluttered.',
       rooms:[room('living','Living room','contemporary'),room('primary','Primary bedroom','contemporary'),room('dining','Dining','contemporary')],
       files:[{n:'9 room photos.zip',ok:true},{n:'2 exterior photos.zip',ok:true}], revisions:[] },
-    {id:'BV-10428', ptype:'Residential · empty listing', addr:'42 Bayview Terrace', due:-3, status:'revision',
-      services:[{k:'stage',n:'Virtual staging',s:'Furnish empty rooms',qty:'8 photos'},{k:'floor',n:'3D floor plan',s:'Furnished, walkable',qty:'1 floor'}],
+    {id:'BV-10428', studio:'A', ptype:'Residential · empty listing', addr:'42 Bayview Terrace', due:-3, status:'revision',
+      services:[{k:'stage',n:'Virtual staging',s:'Furnish empty rooms',qty:'8 photos'}],
       buyer:'Target buyer: professional couple. Warm modern, sells the feeling of home.',
       rooms:[room('living','Living room','designer'),room('kitchen','Kitchen','designer')],
-      files:[{n:'8 room photos.zip',ok:true},{n:'Blueprints.pdf',ok:false}],
+      files:[{n:'8 room photos.zip',ok:true}],
       revisions:[
-        {n:1,room:'Living room',t:'Swap the artwork for something warmer — the blue feels cold against the staging.',by:'Agent'},
-        {n:2,room:'Living room',t:'Rug is a little small — size up so it sits under the front sofa legs.',by:'Agent'},
+        {n:1,room:'Living room',t:'Swap the artwork for something warmer; the blue feels cold against the staging.',by:'Agent'},
+        {n:2,room:'Living room',t:'Rug is a little small; size up so it sits under the front sofa legs.',by:'Agent'},
         {n:3,room:'Kitchen',t:'Add a couple of counter stools at the island.',by:'Agent'}
       ] },
-    {id:'BV-10502', ptype:'Residential · empty listing', addr:'120 Bayview Ave', due:5, status:'qa',
-      services:[{k:'stage',n:'Virtual staging',s:'Furnish empty rooms',qty:'6 photos'},{k:'dusk',n:'Day-to-dusk',s:'Twilight exterior',qty:'1 photo'}],
+    {id:'BV-10502', studio:'B', ptype:'Residential · empty listing', addr:'120 Bayview Ave', due:5, status:'qa',
+      services:[{k:'stage',n:'Virtual staging',s:'Furnish empty rooms',qty:'6 photos'}],
       buyer:'Target buyer: first-time buyer. Bright, aspirational, Scandinavian-leaning.',
       rooms:[room('primary','Primary bedroom','scandi'),room('living','Living room','scandi')],
-      files:[{n:'6 room photos.zip',ok:true}], revisions:[] }
+      files:[{n:'6 room photos.zip',ok:true}], revisions:[] },
+    {id:'BV-10535', studio:'B', ptype:'Residential · resale', addr:'305 Harbour St, #1204', due:14, status:'assigned',
+      services:[{k:'floor',n:'3D floor plan',s:'Furnished, walkable, per level',qty:'2 floors'}],
+      buyer:'Deliverable spec: light, neutral furnishing to match the staging brand.',
+      rooms:[],
+      files:[{n:'Architectural blueprints.pdf',ok:true},{n:'Floor dimensions.pdf',ok:false}], revisions:[] },
+    {id:'BV-10540', studio:'rove', ptype:'Commercial · not built yet', addr:'1200 King St W · Tower B', due:30, status:'assigned',
+      services:[{k:'rint',n:'Interior 3D renders',s:'Photoreal rooms from plans',qty:'4 renders'},{k:'rext',n:'Exterior 3D render',s:'Streetscape elevation',qty:'1 render'}],
+      buyer:'Deliverable spec: bright, aspirational, evening light. Sales-centre quality.',
+      rooms:[],
+      files:[{n:'CAD drawings.zip',ok:true},{n:'Materials & finishes schedule.pdf',ok:true},{n:'Site photos.zip',ok:false}], revisions:[] },
+    {id:'BV-10499', studio:'rove', ptype:'Residential · pre-construction', addr:'88 Lakeshore · Suite 705', due:2, status:'inprogress',
+      services:[{k:'tour',n:'3D virtual tour',s:'Walkable, stitched from renders',qty:'1 tour'}],
+      buyer:'Deliverable spec: seamless walkthrough, staged in a warm contemporary look.',
+      rooms:[],
+      files:[{n:'Unit plans.pdf',ok:true},{n:'Render set (interior).zip',ok:true}], revisions:[] }
   ];
   var STY={designer:'Designer’s choice',modern:'Modern',scandi:'Scandinavian',coastal:'Coastal',midcentury:'Mid-century',farmhouse:'Farmhouse',contemporary:'Contemporary'};
 
-  var curId=JOBS[0].id, filter='all';
+  var curId=(JOBS.filter(function(j){return j.studio===cur;})[0]||{}).id, filter='all';
   var deliverables={}; // jobId -> [urls]
+  function renderHeader(){
+    var c=CONTRACTORS[cur];
+    var opts=Object.keys(CONTRACTORS).map(function(k){return '<option value="'+k+'"'+(k===cur?' selected':'')+'>'+CONTRACTORS[k].name+'</option>';}).join('');
+    $('who').innerHTML='<span class="av">'+c.av+'</span><div class="whoinfo"><b>'+c.name+'</b><span>'+c.spec+'</span></div>'
+      +'<span class="switch"><span class="lb">View as</span><select id="studioSwitch">'+opts+'</select></span>';
+    $('studioSwitch').onchange=function(){ location.search='?studio='+this.value; };
+  }
   function $(id){return document.getElementById(id);}
   function esc(s){return (s==null?'':''+s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
   function job(){ return JOBS.filter(function(j){return j.id===curId;})[0]; }
@@ -191,7 +227,7 @@
     $('filters').querySelectorAll('button').forEach(function(b){ b.onclick=function(){ filter=b.getAttribute('data-k'); renderList(); }; });
   }
   function renderList(){
-    var list=JOBS.filter(function(j){ return filter==='all'||j.status===filter; });
+    var list=JOBS.filter(function(j){ return j.studio===cur && (filter==='all'||j.status===filter); });
     $('jobCount').textContent=list.length+' job'+(list.length===1?'':'s');
     $('jobs').innerHTML=list.map(function(j){
       var st=ST[j.status];
@@ -203,7 +239,7 @@
     $('jobs').querySelectorAll('.job').forEach(function(el){ el.onclick=function(){ curId=el.getAttribute('data-id'); renderList(); renderDetail(); }; });
   }
 
-  var SIC={stage:'▤',floor:'▦',dusk:'☾',sky:'☁',tour:'◍',reno:'✎'};
+  var SIC={stage:'▤',floor:'▦',dusk:'☾',sky:'☁',tour:'◍',reno:'✎',rint:'◳',rext:'⌂'};
   function renderDetail(){
     var j=job(); if(!j){ $('detail').innerHTML='<div class="detail-empty">Select a job.</div>'; return; }
     var st=ST[j.status];
@@ -232,7 +268,7 @@
 
     var delivs=(deliverables[j.id]||[]);
     var upBlock = (j.status==='inprogress'||j.status==='revision')? '<div class="block"><div class="sec-t">Upload your deliverables</div>'
-      +'<label class="up" id="upZone"><input type="file" id="upInput" accept="image/*" multiple hidden><span class="ui"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/></svg></span><span class="ut"><b>Drop the staged photos here</b><span>or click to browse · we run QA before the client sees them</span></span><span class="up-btn">Choose files</span></label>'
+      +'<label class="up" id="upZone"><input type="file" id="upInput" accept="image/*" multiple hidden><span class="ui"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/></svg></span><span class="ut"><b>Drop your finished files here</b><span>or click to browse · we run QA before the client sees them</span></span><span class="up-btn">Choose files</span></label>'
       +'<div class="deliv" id="deliv">'+delivs.map(function(u){return '<div class="dt"><img src="'+u+'"></div>';}).join('')+'</div></div>' : '';
 
     $('detail').innerHTML=
@@ -243,13 +279,14 @@
         +'<div class="block"><div class="sec-t">Services to produce</div><div class="svc-list">'
           +j.services.map(function(s){ return '<div class="svc"><span class="si">'+(SIC[s.k]||'▤')+'</span><span><b>'+esc(s.n)+'</b><span>'+esc(s.s)+'</span></span><span class="qty">'+esc(s.qty)+'</span></div>'; }).join('')
         +'</div></div>'
-        +'<div class="block"><div class="sec-t">Shot list &amp; styles ('+j.rooms.length+')</div><div class="shots">'+shots+'</div></div>'
+        + (j.rooms.length? '<div class="block"><div class="sec-t">Shot list &amp; styles ('+j.rooms.length+')</div><div class="shots">'+shots+'</div></div>' : '')
         + upBlock
       +'</div><div>'
         +'<div class="card"><h4>Job details</h4>'
           +'<div class="kv"><span>Turnaround</span><b class="'+(j.due<0&&j.status!=='done'?'over':'')+'">'+(j.status==='done'?'Done':(j.due<0?Math.abs(j.due)+'h overdue':'Due in '+j.due+'h'))+'</b></div>'
-          +'<div class="kv"><span>Photos to stage</span><b>'+j.rooms.length+'</b></div>'
+          +(j.rooms.length? '<div class="kv"><span>Photos to stage</span><b>'+j.rooms.length+'</b></div>' : '')
           +'<div class="kv"><span>Services</span><b>'+j.services.length+'</b></div>'
+          +'<div class="kv"><span>Contractor</span><b>'+esc(CONTRACTORS[cur].name)+'</b></div>'
           +'<div class="kv"><span>Status</span><b>'+st.label+'</b></div>'
         +'</div>'
         +'<div class="card note-card"><h4>Buyer &amp; direction</h4><p>'+esc(j.buyer)+'</p></div>'
@@ -274,7 +311,7 @@
     renderDetail();
   }
 
-  renderFilters(); renderList(); renderDetail();
+  renderHeader(); renderFilters(); renderList(); renderDetail();
 })();
 </script>
 </body>
