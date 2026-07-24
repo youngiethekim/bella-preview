@@ -67,11 +67,21 @@
   .choice span{font-size:13.5px;color:var(--faint);display:block;margin-top:3px}
 
   /* step 2 config */
-  .reassure{display:flex;flex-wrap:wrap;gap:14px 26px;margin:20px 0 2px}
-  .ru{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--soft)}
+  .reassure{display:grid;grid-template-columns:1fr 1fr;gap:10px 34px;margin:20px 0 2px;max-width:640px}
+  @media(max-width:560px){.reassure{grid-template-columns:1fr}}
+  .ru{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--soft)}
   .ru b{color:var(--ink);font-weight:500}
-  .ru svg{width:18px;height:18px;stroke:var(--green);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
-  .ru .star{fill:var(--gold);stroke:var(--gold)}
+  .ru .ck{width:16px;height:16px;flex:none;stroke:var(--green);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  /* more options disclosure */
+  .more-wrap{margin-top:8px}
+  .more-toggle{background:transparent;border:0;color:var(--soft);font-family:inherit;font-size:13px;cursor:pointer;padding:8px 2px;display:inline-flex;align-items:center;gap:8px}
+  .more-toggle:hover{color:var(--ink)}
+  .more-toggle .mt-ic{width:19px;height:19px;border:1px solid var(--line);border-radius:5px;display:grid;place-items:center;font-size:14px;line-height:1;transition:.15s}
+  .more-toggle.on .mt-ic{transform:rotate(45deg);border-color:var(--ink)}
+  .more-toggle .mt-sub{color:var(--faint);font-size:12px}
+  .more-panel{display:none;margin-top:8px}
+  .more-panel.show{display:block}
+  .more-panel .dc-row{margin-top:0}
   .config{margin-top:24px;display:grid;gap:5px}
   .qrow{background:#fff;border:1px solid var(--line);padding:24px 26px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
   .qrow .lbl{flex:1;min-width:200px}
@@ -665,11 +675,11 @@
         <p id="s2sub">The essentials first — how many photos, and the look. Anything extra comes after, only if you want it.</p>
       </div>
       <div class="reassure">
-        <div class="ru"><svg class="star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.3l6.1-.7z"/></svg><span><b>4.9</b> · loved by agents on thousands of listings</span></div>
-        <div class="ru"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.5 0 2-1 2-2s-.6-1.4-.6-2.2c0-.9.7-1.6 1.6-1.6H18a3 3 0 0 0 3-3c0-3.9-4-6.2-9-6.2z"/><circle cx="7.5" cy="11" r="1"/><circle cx="12" cy="8" r="1"/><circle cx="16" cy="10.5" r="1"/></svg><span>Staged by <b>real interior designers</b></span></div>
-        <div class="ru"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2"/></svg><span>MLS-ready in <b>24–48 hours</b></span></div>
-        <div class="ru"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 5v6h-6"/></svg><span><b>Unlimited revisions</b>, free 2 weeks</span></div>
-        <div class="ru"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="2.5"/></svg><span>You <b>approve every photo</b> first</span></div>
+        <div class="ru"><svg class="ck" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span><b>4.9★</b> loved by agents on thousands of listings</span></div>
+        <div class="ru"><svg class="ck" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span>Staged by <b>real interior designers</b></span></div>
+        <div class="ru"><svg class="ck" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span>MLS-ready in <b>24–48 hours</b></span></div>
+        <div class="ru"><svg class="ck" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span><b>Unlimited revisions</b>, free for 2 weeks</span></div>
+        <div class="ru"><svg class="ck" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span>You <b>approve every photo</b> before it goes live</span></div>
       </div>
       <div class="config" id="config"></div>
       <div class="wiz-foot">
@@ -889,9 +899,13 @@
         +'<div class="stp" id="stp2"><div class="stp-h"><span class="stp-n">2</span><div class="stp-t"><b>Upload &amp; style your photos</b><span>Optional — add now, or send later. We’ll style each one for your buyer.</span></div></div>'
           +uploadBlock()
           +'<label class="dc-row" id="dcRow"><input type="checkbox" id="dcAll" checked><span class="dc-box"></span><span class="dc-t"><b>Let our designers choose the style for every photo</b><span>Recommended — we match the look to your buyer. Or tap a photo above to set its own style.</span></span></label>'
-          +'<div class="up-refs"><div class="req-lab" style="color:var(--faint)">References &amp; inspiration — optional</div>'
-          +miniUpload('refs','Share a look you love','A Pinterest screenshot, a room you admire — anything that helps our designers understand your vision.')+'</div>'
           +'<div class="removal-row" id="removalRow"><span class="lbl"><b>Furniture removal</b><span>Occupied or cluttered? We clear the room first, then stage it clean.</span></span><span class="freeprice">Included free</span><button class="toggle" data-tog="removal"></button></div>'
+          +'<div class="more-wrap"><button type="button" class="more-toggle" id="moreToggle"><span class="mt-ic">+</span> More options <span class="mt-sub">photographer link · references &amp; inspiration</span></button>'
+            +'<div class="more-panel" id="morePanel">'
+              +photographerBlock()
+              +'<div class="up-refs"><div class="req-lab" style="color:var(--faint)">References &amp; inspiration — optional</div>'
+              +miniUpload('refs','Share a look you love','A Pinterest screenshot, a room you admire — anything that helps our designers understand your vision.')+'</div>'
+            +'</div></div>'
         +'</div>';
       // --- 2b: optional extras (a gentle nudge + the question sections) ---
       ex.innerHTML=
@@ -1018,13 +1032,15 @@
       +'<span class="up-t"><b id="upTitle">Drag &amp; drop your photos here</b><span id="upSub">or click to browse · JPG or PNG. No photos yet? Pick a number and send them later.</span></span>'
       +'<span class="up-btn">Choose files</span>'
       +'</label><div class="up-prog" id="upProg"></div><div class="up-thumbs" id="upThumbs"></div><div class="up-hint" id="upHint"></div>'
-      +'<div class="up-later"><button type="button" class="up-later-toggle" id="upLaterToggle">📷  Photos not ready? Send your photographer a direct upload link →</button>'
-        +'<div class="up-later-panel" id="upLaterPanel">'
-          +'<label>Photographer’s email</label><input type="email" id="photogEmail" placeholder="photographer@studio.com" autocomplete="off">'
-          +'<label style="margin-top:12px">Instructions for this shoot <span style="text-transform:none;letter-spacing:0;color:var(--faint)">— edit as needed</span></label><textarea id="photogNotes"></textarea>'
-          +'<div class="up-later-row"><button type="button" id="photogSend" style="background:var(--ink);color:#fff;border:0;font-family:inherit;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:11px 17px;cursor:pointer;border-radius:6px">Send upload link</button><span style="font-size:12px;color:var(--faint)">They get a secure link to upload straight to this order — you don’t relay files.</span></div>'
-          +'<div class="up-later-sent" id="photogSent"></div>'
-        +'</div></div>'
+      +'</div>';
+  }
+  function photographerBlock(){
+    return '<label class="dc-row" id="upLaterRow"><input type="checkbox" id="upLaterCb"><span class="dc-box"></span><span class="dc-t"><b>My photos aren’t ready yet</b><span>Send your photographer a secure link to upload them straight to this order.</span></span></label>'
+      +'<div class="up-later-panel" id="upLaterPanel">'
+        +'<label>Photographer’s email</label><input type="email" id="photogEmail" placeholder="photographer@studio.com" autocomplete="off">'
+        +'<label style="margin-top:12px">Instructions for this shoot <span style="text-transform:none;letter-spacing:0;color:var(--faint)">— edit as needed</span></label><textarea id="photogNotes"></textarea>'
+        +'<div class="up-later-row"><button type="button" id="photogSend" style="background:var(--ink);color:#fff;border:0;font-family:inherit;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:11px 17px;cursor:pointer;border-radius:6px">Send upload link</button><span style="font-size:12px;color:var(--faint)">They get a secure link to upload straight to this order — you don’t relay files.</span></div>'
+        +'<div class="up-later-sent" id="photogSent"></div>'
       +'</div>';
   }
   // ---- generic mini uploader (references + per-service requirements) ----
@@ -1091,12 +1107,14 @@
     return 'Hi — could you shoot and upload '+n+' photo'+(n>1?'s':'')+' for a Bella Virtual staging order.\n\nWhat we need:\n• One clean, wide, level shot per room — chest height, shoot into a corner\n• Blinds up, every light on, rooms tidy\n• JPG or PNG, highest resolution\n• Upload straight to the secure link below — no need to send them to me\n\nFull shot list: bellavirtual.com/resources (phone photo guide). Thank you!';
   }
   function bindPhotographer(){
-    var t=document.getElementById('upLaterToggle'); if(!t) return;
+    var mt=document.getElementById('moreToggle');
+    if(mt){ mt.onclick=function(){ var p=document.getElementById('morePanel'); var on=p.classList.toggle('show'); mt.classList.toggle('on',on); }; }
+    var cb=document.getElementById('upLaterCb'); if(!cb) return;
     var panel=document.getElementById('upLaterPanel'), notes=document.getElementById('photogNotes'), email=document.getElementById('photogEmail'), send=document.getElementById('photogSend'), sent=document.getElementById('photogSent');
     if(state.photog.email) email.value=state.photog.email;
     notes.value=state.photog.notes||photogDefaultNotes();
-    if(state.photog.sent){ panel.classList.add('show'); sent.textContent='✓ Upload link sent to '+state.photog.email+' (demo). They can upload straight to this order.'; }
-    t.onclick=function(){ panel.classList.toggle('show'); if(panel.classList.contains('show')&&!notes.value) notes.value=photogDefaultNotes(); };
+    if(state.photog.sent){ cb.checked=true; panel.classList.add('show'); if(mt){ document.getElementById('morePanel').classList.add('show'); mt.classList.add('on'); } sent.textContent='✓ Upload link sent to '+state.photog.email+' (demo). They can upload straight to this order.'; }
+    cb.onchange=function(){ panel.classList.toggle('show',cb.checked); if(cb.checked&&!notes.value) notes.value=photogDefaultNotes(); };
     send.onclick=function(){
       var em=(email.value||'').trim();
       if(!em||em.indexOf('@')<1){ sent.style.color='var(--amber)'; sent.textContent='Enter the photographer’s email first.'; return; }
