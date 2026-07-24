@@ -125,6 +125,84 @@
   .deliv .dt img{width:100%;height:100%;object-fit:cover}
   .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:13px;padding:12px 20px;border-radius:99px;z-index:120;opacity:0;transition:.25s;pointer-events:none}
   .toast.show{opacity:1}
+
+  /* focus-mode entry buttons */
+  .focus-cta{background:linear-gradient(120deg,#3E6B4C,#2f5a3d);color:#fff;border:0;font-family:inherit;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;padding:12px 18px;border-radius:8px;display:inline-flex;align-items:center;gap:9px;cursor:pointer;transition:.16s;box-shadow:0 6px 18px -8px rgba(62,107,76,.7)}
+  .focus-cta:hover{transform:translateY(-1px);box-shadow:0 10px 24px -8px rgba(62,107,76,.75)}
+  .focus-cta .pl{font-size:15px}
+
+  /* FOCUS MODE — game-like task runner */
+  .focus{position:fixed;inset:0;z-index:200;background:radial-gradient(1200px 800px at 50% -10%,#26313f,#14161c 60%);display:none;flex-direction:column;color:#EEF0F3}
+  .focus.open{display:flex}
+  .f-top{display:flex;align-items:center;gap:16px;padding:16px 26px}
+  .f-top .f-id{font-size:12px;letter-spacing:.06em;color:#9FB0C4}
+  .f-top .f-id b{color:#fff;font-weight:400}
+  .f-top .f-x{margin-left:auto;width:36px;height:36px;border-radius:8px;border:1px solid rgba(255,255,255,.16);background:transparent;color:#cdd4de;font-size:20px;cursor:pointer;line-height:1}
+  .f-top .f-x:hover{background:rgba(255,255,255,.08);color:#fff}
+  .f-xp{font-size:12px;color:#9FB0C4}
+  .f-xp b{color:var(--gold);font-weight:400}
+  /* progress dots */
+  .f-prog{display:flex;align-items:center;gap:8px;padding:0 26px 6px}
+  .f-track{flex:1;height:8px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}
+  .f-track span{display:block;height:100%;background:linear-gradient(90deg,var(--green),#7fbf94);border-radius:99px;transition:width .4s cubic-bezier(.5,1.6,.4,1)}
+  .f-dots{display:flex;gap:6px}
+  .f-dot{width:26px;height:26px;border-radius:8px;border:1px solid rgba(255,255,255,.16);display:grid;place-items:center;font-size:11px;color:#9FB0C4;cursor:pointer;transition:.15s;background:rgba(255,255,255,.03)}
+  .f-dot.cur{border-color:var(--gold);color:#fff;box-shadow:0 0 0 2px rgba(184,152,90,.3)}
+  .f-dot.done{background:var(--green);border-color:var(--green);color:#fff}
+  .f-count{font-size:12.5px;color:#9FB0C4;white-space:nowrap}
+
+  .f-stage{flex:1;display:grid;grid-template-columns:1.5fr 1fr;gap:26px;padding:14px 26px 22px;min-height:0}
+  @media(max-width:900px){.f-stage{grid-template-columns:1fr;overflow-y:auto}}
+  .f-visual{position:relative;border-radius:14px;overflow:hidden;background:#0d0f13 center/contain no-repeat;min-height:0;border:1px solid rgba(255,255,255,.08);display:grid;place-items:center}
+  .f-visual img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+  .f-pin{position:absolute;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50% 50% 50% 3px;background:var(--gold);color:#1c1a18;font-size:15px;font-weight:500;display:grid;place-items:center;border:3px solid #fff;box-shadow:0 4px 14px rgba(0,0,0,.5);animation:pinpulse 1.6s ease-in-out infinite}
+  @keyframes pinpulse{0%,100%{box-shadow:0 4px 14px rgba(0,0,0,.5),0 0 0 0 rgba(184,152,90,.5)}50%{box-shadow:0 4px 14px rgba(0,0,0,.5),0 0 0 12px rgba(184,152,90,0)}}
+  .f-tag{position:absolute;top:12px;left:12px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:rgba(0,0,0,.55);color:#fff;padding:5px 11px;border-radius:99px}
+
+  .f-side{display:flex;flex-direction:column;min-height:0}
+  .f-kind{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+  .f-title{font-size:24px;font-weight:300;margin:8px 0 4px;letter-spacing:-.01em;color:#fff}
+  .f-loc{font-size:12.5px;color:#9FB0C4;margin-bottom:16px}
+  .f-instr{font-size:16px;line-height:1.5;color:#E6E9ED;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:16px 18px}
+  .f-instr .by{font-size:12px;color:#8F9AA8;margin-top:8px}
+  .f-up{margin-top:14px;border:2px dashed rgba(127,191,148,.5);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:.15s;background:rgba(62,107,76,.12)}
+  .f-up:hover,.f-up.drag{border-color:#7fbf94;background:rgba(62,107,76,.22)}
+  .f-up .ui{width:38px;height:38px;border-radius:50%;background:rgba(127,191,148,.2);display:grid;place-items:center;flex:none}
+  .f-up .ui svg{width:19px;height:19px;stroke:#9fe0b3;fill:none;stroke-width:1.7}
+  .f-up b{font-weight:400;font-size:14px;color:#fff;display:block}
+  .f-up span{font-size:12px;color:#9FB0C4}
+  .f-up .done-chip{margin-left:auto;color:#7fbf94;font-size:12.5px}
+  .f-thumbs{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+  .f-thumbs .t{width:46px;height:46px;border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,.15)}
+  .f-thumbs .t img{width:100%;height:100%;object-fit:cover}
+
+  .f-actions{margin-top:auto;padding-top:16px;display:flex;align-items:center;gap:10px}
+  .f-nav{width:44px;height:44px;border-radius:10px;border:1px solid rgba(255,255,255,.16);background:transparent;color:#cdd4de;font-size:18px;cursor:pointer;flex:none}
+  .f-nav:hover:not(:disabled){background:rgba(255,255,255,.08);color:#fff}
+  .f-nav:disabled{opacity:.3;cursor:default}
+  .f-done{flex:1;height:52px;border:0;border-radius:10px;background:var(--gold);color:#1c1a18;font-family:inherit;font-size:14px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center;gap:9px}
+  .f-done:hover{background:#c9a968}
+  .f-done.is-done{background:rgba(127,191,148,.18);color:#7fbf94;border:1px solid rgba(127,191,148,.4)}
+  .f-hint{text-align:center;font-size:11px;color:#6B7684;padding:0 26px 14px}
+  .f-hint kbd{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:1px 6px;font-family:inherit;font-size:11px;color:#cdd4de}
+  /* burst on done */
+  .f-burst{position:absolute;inset:0;pointer-events:none;display:grid;place-items:center;z-index:5}
+  .f-burst .chk{width:120px;height:120px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:60px;opacity:0;transform:scale(.4)}
+  .f-burst.go .chk{animation:burst .7s cubic-bezier(.3,1.5,.5,1) forwards}
+  @keyframes burst{0%{opacity:0;transform:scale(.4)}30%{opacity:1;transform:scale(1.05)}70%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.15)}}
+
+  /* completion */
+  .f-complete{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;z-index:8;background:radial-gradient(800px 500px at 50% 40%,#2a3a2f,#14161c 70%)}
+  .f-complete.show{display:flex}
+  .f-complete .trophy{font-size:64px}
+  .f-complete h2{font-size:32px;font-weight:300;color:#fff}
+  .f-complete p{font-size:15px;color:#9FB0C4;max-width:40ch}
+  .f-complete .cbtns{display:flex;gap:10px;margin-top:8px}
+  .f-complete .btn-primary{background:var(--gold);color:#1c1a18;border:0;font-family:inherit;font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:14px 24px;border-radius:10px;cursor:pointer}
+  .f-complete .btn-ghost{background:transparent;color:#cdd4de;border:1px solid rgba(255,255,255,.2);font-family:inherit;font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:14px 22px;border-radius:10px;cursor:pointer}
+  .confetti{position:absolute;top:-10px;width:9px;height:14px;opacity:0}
+  .f-complete.show .confetti{animation:fall linear forwards}
+  @keyframes fall{0%{opacity:1;transform:translateY(-10px) rotate(0)}100%{opacity:.9;transform:translateY(105vh) rotate(540deg)}}
 </style>
 </head>
 <body>
@@ -142,6 +220,17 @@
     <div id="jobs"></div>
   </aside>
   <section class="detail" id="detail"><div class="detail-empty">Select a job to see its production brief.</div></section>
+</div>
+
+<div class="focus" id="focus">
+  <div class="f-top"><div class="f-id" id="fId"></div><div class="f-xp" id="fXp"></div><button class="f-x" id="fClose" title="Exit (Esc)">×</button></div>
+  <div class="f-prog"><span class="f-count" id="fCount"></span><div class="f-track"><span id="fBar"></span></div><div class="f-dots" id="fDots"></div></div>
+  <div class="f-stage" id="fStage"></div>
+  <div class="f-hint">Shortcuts: <kbd>←</kbd> <kbd>→</kbd> move · <kbd>Enter</kbd> mark done · <kbd>U</kbd> upload · <kbd>Esc</kbd> exit</div>
+  <div class="f-complete" id="fComplete">
+    <div class="trophy">🏆</div><h2>Round complete!</h2><p id="fcMsg"></p>
+    <div class="cbtns"><button class="btn-primary" id="fcSubmit">Submit round for QA</button><button class="btn-ghost" id="fcBack">Back to brief</button></div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -248,9 +337,12 @@
     var j=job(); if(!j){ $('detail').innerHTML='<div class="detail-empty">Select a job.</div>'; return; }
     var st=ST[j.status];
     var actions='';
-    if(j.status==='assigned') actions='<button class="btn" id="startBtn">Start job</button>';
-    else if(j.status==='inprogress') actions='<button class="btn-line btn-sm" id="askBtn">Ask Bella</button><button class="btn" id="submitBtn">Submit for QA</button>';
-    else if(j.status==='revision') actions='<button class="btn-line btn-sm" id="askBtn">Ask Bella</button><button class="btn" id="submitBtn">Submit revised for QA</button>';
+    var nTasks=buildTasks(j).length;
+    var focusable=(j.status==='assigned'||j.status==='inprogress'||j.status==='revision') && nTasks;
+    var focusBtn=focusable? '<button class="focus-cta" id="focusBtn"><span class="pl">▶</span>'+(j.revisions.length? ('Work through '+j.revisions.length+' change'+(j.revisions.length>1?'s':'')) : ('Focus mode · '+nTasks+' task'+(nTasks>1?'s':'')))+'</button>' : '';
+    if(j.status==='assigned') actions=focusBtn+'<button class="btn" id="startBtn">Start job</button>';
+    else if(j.status==='inprogress') actions=focusBtn+'<button class="btn-line btn-sm" id="askBtn">Ask Bella</button><button class="btn" id="submitBtn">Submit for QA</button>';
+    else if(j.status==='revision') actions=focusBtn+'<button class="btn-line btn-sm" id="askBtn">Ask Bella</button><button class="btn" id="submitBtn">Submit revised for QA</button>';
     else if(j.status==='qa') actions='<span class="micro" style="color:var(--purple)">Awaiting Bella QA</span>';
     else if(j.status==='done') actions='<span class="micro" style="color:var(--green)">Approved &amp; delivered</span>';
 
@@ -306,8 +398,90 @@
     var sb=$('startBtn'); if(sb) sb.onclick=function(){ j.status='inprogress'; toast('#'+j.id+' started'); renderList(); renderDetail(); };
     var subm=$('submitBtn'); if(subm) subm.onclick=function(){ j.status='qa'; toast('#'+j.id+' submitted for Bella QA'); renderList(); renderDetail(); };
     var ask=$('askBtn'); if(ask) ask.onclick=function(){ toast('Question sent to Bella (demo)'); };
+    var fb=$('focusBtn'); if(fb) fb.onclick=function(){ openFocus(j); };
     bindUp(j);
   }
+
+  /* ---------- FOCUS MODE: game-like task runner ---------- */
+  function buildTasks(j){
+    if(j.revisions && j.revisions.length){
+      return j.revisions.map(function(rq){ return {kind:'Revision request',title:'Change '+rq.n,loc:rq.room+' · pin '+rq.n,instr:rq.t,by:'Requested by '+rq.by,img:(rq.rid?A+rq.rid+'-after.jpg':''),pin:(rq.rid?{x:rq.x,y:rq.y,n:rq.n}:null),tag:'Fix this spot'}; });
+    }
+    if(j.rooms && j.rooms.length){
+      return j.rooms.map(function(r,i){ var dc=r.style==='designer'; return {kind:'Stage this room',title:r.label,loc:'Photo '+(i+1)+' of '+j.rooms.length,instr:'Furnish in '+(dc?'the designer’s choice':(STY[r.style]||r.style))+' style, matched to the buyer’s taste.',by:'',img:r.orig,pin:null,tag:(dc?'✦ Designer’s choice':(STY[r.style]||r.style))}; });
+    }
+    return (j.services||[]).map(function(s){ return {kind:'Produce',title:s.n,loc:s.qty,instr:s.s,by:'',img:'',pin:null,tag:s.qty}; });
+  }
+  var fJob=null, fTasks=[], fIdx=0, fDone=[], fUploads={};
+  function openFocus(j){ fJob=j; fTasks=buildTasks(j); fIdx=0; fDone=fTasks.map(function(){return false;}); fUploads={}; $('fComplete').classList.remove('show'); $('focus').classList.add('open'); renderFocus(); }
+  function closeFocus(){ $('focus').classList.remove('open'); }
+  function nextUndone(){ var i; for(i=fIdx+1;i<fTasks.length;i++){ if(!fDone[i]) return i; } for(i=0;i<fTasks.length;i++){ if(!fDone[i]) return i; } return fIdx; }
+  function renderFocus(){
+    var t=fTasks[fIdx]; if(!t) return;
+    var doneCount=fDone.filter(Boolean).length;
+    $('fId').innerHTML='<b>#'+fJob.id+'</b> · '+esc(fJob.addr);
+    $('fXp').innerHTML=doneCount+' / '+fTasks.length+' done · <b>+'+(doneCount*10)+' XP</b>';
+    $('fCount').textContent='Task '+(fIdx+1)+' of '+fTasks.length;
+    $('fBar').style.width=Math.round(doneCount/fTasks.length*100)+'%';
+    $('fDots').innerHTML=fTasks.map(function(x,i){ return '<button class="f-dot'+(i===fIdx?' cur':'')+(fDone[i]?' done':'')+'" data-i="'+i+'">'+(fDone[i]?'✓':(i+1))+'</button>'; }).join('');
+    $('fDots').querySelectorAll('.f-dot').forEach(function(b){ b.onclick=function(){ fIdx=+b.getAttribute('data-i'); renderFocus(); }; });
+    var pin=t.pin? '<span class="f-pin" style="left:'+t.pin.x+'%;top:'+t.pin.y+'%">'+t.pin.n+'</span>' : '';
+    var visual= t.img
+      ? '<div class="f-visual"><img src="'+t.img+'" alt=""><span class="f-tag">'+esc(t.tag)+'</span>'+pin+'<div class="f-burst" id="fBurst"><div class="chk">✓</div></div></div>'
+      : '<div class="f-visual"><span class="f-tag">'+esc(t.tag)+'</span><div style="color:#6B7684;font-size:14px">Produced from the source files →</div><div class="f-burst" id="fBurst"><div class="chk">✓</div></div></div>';
+    var ups=(fUploads[fIdx]||[]), done=fDone[fIdx];
+    $('fStage').innerHTML=visual
+      +'<div class="f-side"><div class="f-kind">'+esc(t.kind)+'</div><div class="f-title">'+esc(t.title)+'</div><div class="f-loc">'+esc(t.loc)+'</div>'
+        +'<div class="f-instr">'+esc(t.instr)+(t.by?'<div class="by">'+esc(t.by)+'</div>':'')+'</div>'
+        +'<label class="f-up" id="fUp"><input type="file" id="fUpInput" accept="image/*" multiple hidden><span class="ui"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/></svg></span><span><b>Drop your finished file here</b><span>the result for this task</span></span>'+(ups.length?'<span class="done-chip">'+ups.length+' uploaded</span>':'')+'</label>'
+        +(ups.length?'<div class="f-thumbs">'+ups.map(function(u){return '<div class="t"><img src="'+u+'"></div>';}).join('')+'</div>':'')
+        +'<div class="f-actions"><button class="f-nav" id="fPrev" title="Previous (←)">‹</button>'
+          +'<button class="f-done'+(done?' is-done':'')+'" id="fDoneBtn">'+(done?'✓ Done · press → for next':'Mark done')+'</button>'
+          +'<button class="f-nav" id="fNext" title="Next (→)">›</button></div>'
+      +'</div>';
+    $('fPrev').disabled=fIdx<=0; $('fNext').disabled=fIdx>=fTasks.length-1;
+    $('fPrev').onclick=function(){ if(fIdx>0){fIdx--;renderFocus();} };
+    $('fNext').onclick=function(){ if(fIdx<fTasks.length-1){fIdx++;renderFocus();} };
+    $('fDoneBtn').onclick=doneTask;
+    bindFocusUp();
+  }
+  function bindFocusUp(){
+    var zone=$('fUp'), input=$('fUpInput'); if(!zone||!input) return;
+    input.onchange=function(){ addFocusUp(input.files); input.value=''; };
+    ['dragenter','dragover'].forEach(function(ev){ zone.addEventListener(ev,function(e){e.preventDefault();zone.classList.add('drag');}); });
+    ['dragleave','drop'].forEach(function(ev){ zone.addEventListener(ev,function(e){e.preventDefault();zone.classList.remove('drag');}); });
+    zone.addEventListener('drop',function(e){ e.preventDefault(); if(e.dataTransfer&&e.dataTransfer.files) addFocusUp(e.dataTransfer.files); });
+  }
+  function addFocusUp(files){
+    fUploads[fIdx]=fUploads[fIdx]||[];
+    [].slice.call(files).forEach(function(f){ if(f.type&&f.type.indexOf('image')===0) fUploads[fIdx].push(URL.createObjectURL(f)); });
+    renderFocus();
+  }
+  function burst(){ var b=$('fBurst'); if(!b) return; b.classList.remove('go'); void b.offsetWidth; b.classList.add('go'); }
+  function doneTask(){
+    var was=fDone[fIdx]; fDone[fIdx]=true; renderFocus(); if(!was) burst();
+    setTimeout(function(){ if(fDone.every(Boolean)){ showComplete(); return; } fIdx=nextUndone(); renderFocus(); }, 680);
+  }
+  var CONF=['#B8985A','#3E6B4C','#7fbf94','#E7C36A','#fff','#3E6076'];
+  function showComplete(){
+    var c=$('fComplete');
+    $('fcMsg').textContent='All '+fTasks.length+' task'+(fTasks.length>1?'s':'')+' done for '+fJob.addr+'. Nice work — that’s +'+(fTasks.length*10)+' XP.';
+    var conf=''; for(var i=0;i<34;i++){ var left=(i*97+13)%100, dur=(2.2+((i*37)%16)/10).toFixed(2), delay=(((i*53)%20)/10).toFixed(2), col=CONF[i%CONF.length]; conf+='<span class="confetti" style="left:'+left+'%;background:'+col+';animation-duration:'+dur+'s;animation-delay:'+delay+'s"></span>'; }
+    c.insertAdjacentHTML('afterbegin', '<div id="confHolder">'+conf+'</div>');
+    c.classList.add('show');
+  }
+  $('fClose').onclick=closeFocus;
+  $('fcBack').onclick=function(){ var h=$('confHolder'); if(h) h.remove(); closeFocus(); };
+  $('fcSubmit').onclick=function(){ if(fJob){ fJob.status='qa'; } var h=$('confHolder'); if(h) h.remove(); $('fComplete').classList.remove('show'); closeFocus(); renderList(); renderDetail(); toast('#'+(fJob?fJob.id:'')+' submitted for Bella QA'); };
+  document.addEventListener('keydown',function(e){
+    if(!$('focus').classList.contains('open')) return;
+    if($('fComplete').classList.contains('show')){ if(e.key==='Escape'){ $('fcBack').click(); } return; }
+    if(e.key==='ArrowRight'){ if(fIdx<fTasks.length-1){fIdx++;renderFocus();} }
+    else if(e.key==='ArrowLeft'){ if(fIdx>0){fIdx--;renderFocus();} }
+    else if(e.key==='Enter'){ e.preventDefault(); doneTask(); }
+    else if(e.key==='Escape'){ closeFocus(); }
+    else if(e.key.toLowerCase()==='u'){ var i=$('fUpInput'); if(i){ e.preventDefault(); i.click(); } }
+  });
   function bindUp(j){
     var zone=$('upZone'), input=$('upInput'); if(!zone||!input) return;
     input.onchange=function(){ addDeliv(j,input.files); input.value=''; };
