@@ -305,6 +305,50 @@
   .kc-req{display:flex;gap:7px;font-size:12px;color:var(--ink);line-height:1.35;margin-bottom:5px}
   .kc-req:last-child{margin-bottom:0}
   .kc-req .rn{flex:none;width:16px;height:16px;border-radius:50%;background:var(--amber);color:#fff;font-size:9.5px;display:grid;place-items:center;margin-top:1px}
+  /* simple photo gallery (to-do vs completed) */
+  .gallery-group{margin-top:18px}
+  .gallery-group:first-child{margin-top:0}
+  .gg-h{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:11px;display:flex;align-items:center;gap:9px}
+  .gg-h .cnt{background:var(--line-2);border-radius:99px;padding:1px 9px;color:var(--soft);letter-spacing:0}
+  .gg-h.done{color:var(--green)} .gg-h.done .cnt{background:#EDF4EE;color:var(--green)}
+  .ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:11px}
+  .gtile{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;cursor:pointer;padding:0;text-align:left;transition:.15s;position:relative;font-family:inherit}
+  .gtile:hover{border-color:var(--ink);transform:translateY(-2px);box-shadow:0 12px 26px -16px rgba(0,0,0,.45)}
+  .gtile.done{border-color:#CFE0D3}
+  .gtile.drop-hi{box-shadow:0 0 0 2px var(--green)}
+  .gth{aspect-ratio:4/3;background:#e9e6e1 center/cover;position:relative}
+  .gbadge{position:absolute;top:8px;left:8px;font-size:10px;letter-spacing:.04em;text-transform:uppercase;padding:4px 9px;border-radius:99px;background:rgba(20,18,16,.72);color:#fff}
+  .gbadge.done{background:var(--green)}
+  .gpin{position:absolute;transform:translate(-50%,-50%);width:20px;height:20px;border-radius:50% 50% 50% 2px;background:var(--amber);color:#fff;font-size:10px;display:grid;place-items:center;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+  .ghover{position:absolute;inset:0;background:rgba(20,18,16,.52);color:#fff;display:flex;align-items:center;justify-content:center;gap:7px;font-size:13.5px;opacity:0;transition:.15s}
+  .gtile:hover .ghover{opacity:1}
+  .gcap{padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .gcap b{font-weight:400;font-size:14.5px}
+  .gst{font-size:10.5px;letter-spacing:.03em;padding:3px 9px;border-radius:99px;white-space:nowrap}
+  .gst.st-progress{background:#E9F0F4;color:#33566c} .gst.st-qa{background:#EFEAF4;color:#5c4676} .gst.st-client{background:#FBF3E2;color:#8a6d33} .gst.st-changes{background:#F7E9E4;color:#a6503e} .gst.st-approved{background:#EDF4EE;color:var(--green)}
+  /* focus status/advance control */
+  .f-status{margin-top:12px;font-size:12.5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:11px 13px;color:#cdd4de}
+  .f-status .f-adv{background:var(--gold);color:#1c1a18;border:0;border-radius:99px;font-family:inherit;font-size:11px;letter-spacing:.04em;padding:7px 13px;cursor:pointer;margin-left:auto}
+  .f-status.fv-approved{background:rgba(62,107,76,.16);border-color:rgba(127,191,148,.35);color:#9fe0b3}
+  .f-status.fv-changes{background:rgba(196,85,63,.14);border-color:rgba(227,160,143,.35);color:#e3a08f}
+  /* photo rows */
+  .grows{display:flex;flex-direction:column;gap:8px}
+  .grow{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:11px;background:#fff;padding:10px 14px;cursor:pointer;transition:.14s;text-align:left;font-family:inherit;width:100%}
+  .grow:hover{border-color:var(--ink);box-shadow:0 6px 18px -12px rgba(0,0,0,.32)}
+  .grow.done{border-color:#CFE0D3;background:#FBFCFB}
+  .grow.drop-hi{box-shadow:0 0 0 2px var(--green)}
+  .grow .gth{width:76px;height:56px;flex:none;border-radius:8px;background:#e9e6e1 center/cover;position:relative;overflow:hidden}
+  .grow .gcheck{position:absolute;inset:0;background:rgba(62,107,76,.35);color:#fff;display:grid;place-items:center;font-size:22px}
+  .grow .gpc{position:absolute;top:3px;right:3px;background:var(--amber);color:#fff;font-size:10px;border-radius:99px;padding:1px 7px}
+  .grow .ginfo{flex:1;min-width:0}
+  .grow .ginfo b{font-weight:400;font-size:15px;display:flex;align-items:center;gap:8px}
+  .grow .gver{font-size:11px;color:var(--faint);border:1px solid var(--line);border-radius:99px;padding:1px 7px}
+  .grow .gsub{font-size:12.5px;color:var(--soft);margin-top:3px}
+  .grow .gright{display:flex;align-items:center;gap:14px;flex:none}
+  .grow .gst{font-size:11px;letter-spacing:.02em;padding:5px 11px;border-radius:99px;white-space:nowrap;display:inline-flex;align-items:center;gap:5px}
+  .grow .gst.st-progress{background:#E9F0F4;color:#33566c} .grow .gst.st-qa{background:#EFEAF4;color:#5c4676} .grow .gst.st-client{background:#FBF3E2;color:#8a6d33} .grow .gst.st-changes{background:#F7E9E4;color:#a6503e} .grow .gst.st-approved{background:#EDF4EE;color:var(--green)}
+  .grow .ggo{font-size:12.5px;color:var(--green);white-space:nowrap}
+  @media(max-width:640px){.grow .gst{display:none}}
 </style>
 </head>
 <body>
@@ -478,7 +522,7 @@
     $('detail').innerHTML=
       '<div class="d-head"><div><div class="kick">Production brief <span class="pid">#'+j.id+'</span></div><h2>'+esc(j.addr)+'</h2><div class="sub">'+esc(j.ptype)+' · <span class="chip '+st.chip+'" style="vertical-align:2px"><span class="dot"></span>'+st.label+'</span></div></div>'
         +'<div class="d-actions">'+actions+'</div></div>'
-      + (j.rooms.length? '<div class="block" style="margin-top:18px"><div class="sec-t">Photo board — each photo sits in its current stage · drag <b style="color:var(--soft)">⠿</b> to move it</div>'+renderVersions(j)+'</div>' : '')
+      + (j.rooms.length? '<div class="block" style="margin-top:18px"><div class="sec-t">Photos to stage — tap a photo to work on it</div>'+renderVersions(j)+'</div>' : '')
       +'<div class="d-grid"><div>'
         +'<div class="block"><div class="sec-t">Services to produce</div><div class="svc-list">'
           +j.services.map(function(s){ return '<div class="svc"><span class="si">'+(SIC[s.k]||'▤')+'</span><span><b>'+esc(s.n)+'</b><span>'+esc(s.s)+'</span></span><span class="qty">'+esc(s.qty)+'</span></div>'; }).join('')
@@ -557,11 +601,28 @@
         +'<div class="kcol-body" data-colbody="'+c+'">'+ (cards.length? cards.map(function(r){return kcard(j,r);}).join('') : '<div class="kempty">Drop a photo here</div>') +'</div></div>';
     }).join('')+'</div>';
   }
+  function statusShort(st){ return VSTATUS[st]? VSTATUS[st].short : st; }
+  function grow(j,r){
+    var k=vkey(j,r), arr=versions[k], cur=arr.length-1, st=arr[cur].status||'progress', done=(st==='approved');
+    var reqs=(st==='changes')?(j.revisions||[]).filter(function(x){return x.rid===r.id;}):[];
+    var sub = done? 'Approved &amp; accepted by the client' : (reqs.length? '<b style="color:var(--amber);font-weight:400">'+reqs.length+' change'+(reqs.length>1?'s':'')+'</b> to make on this photo' : VSTATUS[st].lb+' · '+VSTATUS[st].who);
+    return '<button type="button" class="grow'+(done?' done':'')+'" data-room="'+r.id+'">'
+      +'<span class="gth" style="background-image:url('+arr[cur].url+')">'+(done?'<span class="gcheck">✓</span>':'')+(reqs.length?'<span class="gpc">'+reqs.length+'</span>':'')+'</span>'
+      +'<span class="ginfo"><b>'+esc(r.label)+'<span class="gver">'+esc(arr[cur].label)+'</span></b><span class="gsub">'+sub+'</span></span>'
+      +'<span class="gright"><span class="gst st-'+st+'">'+VSTATUS[st].ic+' '+statusShort(st)+'</span><span class="ggo">'+(done?'View →':'Work on it →')+'</span></span>'
+      +'</button>';
+  }
   function renderVersions(j){
     initVersions(j);
+    var toDo=[], done=[];
+    j.rooms.forEach(function(r){ var a=versions[vkey(j,r)]; (a[a.length-1].status==='approved'?done:toDo).push(r); });
     var banner = allApproved(j)? '<div class="vdone-banner"><span style="font-size:22px">🎉</span><div class="bt"><b>Job complete — every photo approved &amp; accepted</b><span>All '+j.rooms.length+' photos signed off by the client.</span></div><button type="button" class="reopen" data-reopenjob="1">Reopen ▸ in progress</button></div>' : '';
-    var bulk='<div class="vbulk"><label class="vbulk-drop" id="vbulkDrop"><input type="file" id="vbulkInput" accept="image/*" multiple hidden><span class="bi"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/></svg></span><span class="bt"><b>Bulk upload finished photos</b><span>Drop many at once, then drag each onto the right photo card</span></span><span class="vbulk-btn">Choose files</span></label><div class="vtray" id="vtray"></div></div>';
-    return banner+bulk+renderBoard(j);
+    var bulk='<div class="vbulk"><label class="vbulk-drop" id="vbulkDrop"><input type="file" id="vbulkInput" accept="image/*" multiple hidden><span class="bi"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/></svg></span><span class="bt"><b>Bulk upload finished photos</b><span>Drop many at once, then drop each onto its row below</span></span><span class="vbulk-btn">Choose files</span></label><div class="vtray" id="vtray"></div></div>';
+    var g='<div class="gallery-group"><div class="gg-h">🔧 To stage <span class="cnt">'+toDo.length+'</span></div>'
+      +(toDo.length? '<div class="grows">'+toDo.map(function(r){return grow(j,r);}).join('')+'</div>' : '<div class="kempty">Nothing to work on — all done 🎉</div>')+'</div>'
+      +'<div class="gallery-group"><div class="gg-h done">✓ Completed <span class="cnt">'+done.length+'</span></div>'
+      +(done.length? '<div class="grows">'+done.map(function(r){return grow(j,r);}).join('')+'</div>' : '<div class="kempty">None accepted yet</div>')+'</div>';
+    return banner+bulk+g;
   }
   function setVersionStatus(k,status){ var arr=versions[k]; if(!arr) return; if(arr[arr.length-1].status===status) return; arr[arr.length-1].status=status; reRender(); toast('Moved to · '+VSTATUS[status].lb+' ('+VSTATUS[status].who+')'); }
   function wireApprove(scope){ var s=scope||document;
@@ -615,45 +676,26 @@
     toast('New version saved · '+arr[arr.length-1].label);
   }
   function bindVersions(j){
-    wireApprove(document);
-    document.querySelectorAll('.vchip').forEach(function(b){ b.onclick=function(){ viewingV[b.getAttribute('data-k')]=+b.getAttribute('data-i'); refreshCard(b.getAttribute('data-k')); }; });
-    document.querySelectorAll('.vc-add').forEach(function(l){ var inp=l.querySelector('input'); inp.onchange=function(){ addVersion(l.getAttribute('data-addk'),inp.files); inp.value=''; }; });
-    document.querySelectorAll('.vc-cmp').forEach(function(b){ b.onclick=function(){ var st=document.querySelector('.vc-stage[data-stage="'+b.getAttribute('data-cmpk')+'"]'); var on=st.classList.toggle('cmp'); b.classList.toggle('on',on); if(on&&!st.style.getPropertyValue('--cmpX')) st.style.setProperty('--cmpX','50%'); }; });
-    document.querySelectorAll('.vc-stage').forEach(function(st){
-      var dragging=false;
-      function set(e){ var r=st.getBoundingClientRect(); var x=((e.clientX)-r.left)/r.width*100; st.style.setProperty('--cmpX',Math.max(0,Math.min(100,x))+'%'); }
-      st.addEventListener('pointerdown',function(e){ if(!st.classList.contains('cmp')) return; dragging=true; set(e); });
-      window.addEventListener('pointermove',function(e){ if(dragging) set(e); });
-      window.addEventListener('pointerup',function(){ dragging=false; });
+    wireApprove(document); // completion-banner reopen
+    document.querySelectorAll('.grow[data-room]').forEach(function(row){
+      row.onclick=function(){ openFocusAt(j, row.getAttribute('data-room')); };
+      // rows accept a dropped bulk-tray photo → new version for that photo
+      row.addEventListener('dragover',function(e){ if(dragKind!=='tray') return; e.preventDefault(); e.dataTransfer.dropEffect='move'; row.classList.add('drop-hi'); });
+      row.addEventListener('dragleave',function(e){ if(!row.contains(e.relatedTarget)) row.classList.remove('drop-hi'); });
+      row.addEventListener('drop',function(e){ if(dragKind!=='tray') return; e.preventDefault(); row.classList.remove('drop-hi'); var d=e.dataTransfer.getData('text/plain'); if(d.indexOf('T:')===0) placeFromTray(j.id+':'+row.getAttribute('data-room'), +d.slice(2)); });
     });
-    // bulk uploader
     var bd=$('vbulkDrop'), bi=$('vbulkInput');
     if(bd&&bi){ bi.onchange=function(){ addBulk(bi.files); bi.value=''; };
       ['dragenter','dragover'].forEach(function(ev){ bd.addEventListener(ev,function(e){ e.preventDefault(); bd.classList.add('drag'); }); });
       ['dragleave','drop'].forEach(function(ev){ bd.addEventListener(ev,function(e){ e.preventDefault(); bd.classList.remove('drag'); }); });
       bd.addEventListener('drop',function(e){ if(e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files.length) addBulk(e.dataTransfer.files); });
     }
-    // drag a card between columns via its ⠿ handle (Trello-style)
-    document.querySelectorAll('.kdrag[data-drag]').forEach(function(h){
-      var card=h.closest('.vcard');
-      h.addEventListener('mousedown',function(){ card.setAttribute('draggable','true'); });
-      h.addEventListener('touchstart',function(){ card.setAttribute('draggable','true'); });
-      card.addEventListener('dragstart',function(e){ e.dataTransfer.setData('text/plain','C:'+card.getAttribute('data-card')); e.dataTransfer.effectAllowed='move'; dragKind='card'; card.classList.add('dragging'); });
-      card.addEventListener('dragend',function(){ card.classList.remove('dragging'); card.setAttribute('draggable','false'); dragKind=null; document.querySelectorAll('.kcol-body.drop-hi').forEach(function(x){x.classList.remove('drop-hi');}); });
-    });
-    // columns accept dropped cards → change that photo's stage
-    document.querySelectorAll('.kcol-body').forEach(function(body){
-      body.addEventListener('dragover',function(e){ if(dragKind!=='card') return; e.preventDefault(); e.dataTransfer.dropEffect='move'; body.classList.add('drop-hi'); });
-      body.addEventListener('dragleave',function(e){ if(!body.contains(e.relatedTarget)) body.classList.remove('drop-hi'); });
-      body.addEventListener('drop',function(e){ if(dragKind!=='card') return; e.preventDefault(); body.classList.remove('drop-hi'); var d=e.dataTransfer.getData('text/plain'); if(d.indexOf('C:')===0) setVersionStatus(d.slice(2), body.getAttribute('data-colbody')); });
-    });
-    // cards accept dropped tray items → add as a new version
-    document.querySelectorAll('.vcard').forEach(function(card){
-      card.addEventListener('dragover',function(e){ if(dragKind!=='tray') return; e.preventDefault(); e.dataTransfer.dropEffect='move'; card.classList.add('drop-hi'); });
-      card.addEventListener('dragleave',function(e){ if(!card.contains(e.relatedTarget)) card.classList.remove('drop-hi'); });
-      card.addEventListener('drop',function(e){ if(dragKind!=='tray') return; e.preventDefault(); card.classList.remove('drop-hi'); var d=e.dataTransfer.getData('text/plain'); if(d.indexOf('T:')===0) placeFromTray(card.getAttribute('data-card'), +d.slice(2)); });
-    });
     renderTray();
+  }
+  function openFocusAt(j, rid){
+    openFocus(j);
+    var idx=-1; for(var i=0;i<fTasks.length;i++){ if(fTasks[i].rid===rid){ idx=i; break; } }
+    if(idx>=0){ fIdx=idx; renderFocus(); }
   }
 
   /* ---------- FOCUS MODE: game-like task runner ---------- */
@@ -666,11 +708,13 @@
     }
     return (j.services||[]).map(function(s){ return {kind:'Produce',title:s.n,loc:s.qty,instr:s.s,by:'',img:'',pin:null,tag:s.qty}; });
   }
-  function focusVerLine(t){
+  function focusStatus(t){
     if(!t.rid||!fJob) return '';
     var k=fJob.id+':'+t.rid, arr=versions[k]; if(!arr||!arr.length) return '';
-    var v=arr[arr.length-1], s=v.status?VSTATUS[v.status]:null;
-    return '<div class="f-verline"><b>'+esc(v.label)+'</b>'+(s?' · <span class="fv-'+v.status+'">'+s.ic+' '+s.short+'</span>':'')+'</div>';
+    var v=arr[arr.length-1], stt=v.status||'progress', s=VSTATUS[stt];
+    var act = VFLOW[stt]? '<button class="f-adv" data-fadv="'+k+'">'+VADV[stt]+'</button>'
+            : (stt==='approved'? '<button class="f-adv" data-freopen="'+k+'">Reopen ▸</button>':'');
+    return '<div class="f-status fv-'+stt+'"><span><b style="font-weight:400;color:#fff">'+esc(v.label)+' · '+s.ic+' '+s.lb+'</b> · '+s.who+'</span>'+act+'</div>';
   }
   var fJob=null, fTasks=[], fIdx=0, fDone=[], fUploads={};
   function openFocus(j){ fJob=j; fTasks=buildTasks(j); fIdx=0; fDone=fTasks.map(function(){return false;}); fUploads={}; $('fComplete').classList.remove('show'); $('focus').classList.add('open'); renderFocus(); }
@@ -686,13 +730,14 @@
     $('fDots').innerHTML=fTasks.map(function(x,i){ return '<button class="f-dot'+(i===fIdx?' cur':'')+(fDone[i]?' done':'')+'" data-i="'+i+'">'+(fDone[i]?'✓':(i+1))+'</button>'; }).join('');
     $('fDots').querySelectorAll('.f-dot').forEach(function(b){ b.onclick=function(){ fIdx=+b.getAttribute('data-i'); renderFocus(); }; });
     var pin=t.pin? '<span class="f-pin" style="left:'+t.pin.x+'%;top:'+t.pin.y+'%">'+t.pin.n+'</span>' : '';
-    var visual= t.img
-      ? '<div class="f-visual"><img src="'+t.img+'" alt=""><span class="f-tag">'+esc(t.tag)+'</span>'+pin+'<div class="f-burst" id="fBurst"><div class="chk">✓</div></div></div>'
+    var imgUrl=t.img; if(t.rid&&fJob){ var kk=fJob.id+':'+t.rid, aa=versions[kk]; if(aa&&aa.length) imgUrl=aa[aa.length-1].url; }
+    var visual= imgUrl
+      ? '<div class="f-visual"><img src="'+imgUrl+'" alt=""><span class="f-tag">'+esc(t.tag)+'</span>'+pin+'<div class="f-burst" id="fBurst"><div class="chk">✓</div></div></div>'
       : '<div class="f-visual"><span class="f-tag">'+esc(t.tag)+'</span><div style="color:#6B7684;font-size:14px">Produced from the source files →</div><div class="f-burst" id="fBurst"><div class="chk">✓</div></div></div>';
     var ups=(fUploads[fIdx]||[]), done=fDone[fIdx];
     $('fStage').innerHTML=visual
       +'<div class="f-side"><div class="f-kind">'+esc(t.kind)+'</div><div class="f-title">'+esc(t.title)+'</div><div class="f-loc">'+esc(t.loc)+'</div>'
-        +focusVerLine(t)
+        +focusStatus(t)
         +'<div class="f-instr">'+esc(t.instr)+(t.by?'<div class="by">'+esc(t.by)+'</div>':'')+'</div>'
         +'<label class="f-up" id="fUp"><input type="file" id="fUpInput" accept="image/*" multiple hidden><span class="ui"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/></svg></span><span><b>Drop your fix here → saves as the next version</b><span>the result for this task</span></span>'+(ups.length?'<span class="done-chip">'+ups.length+' uploaded</span>':'')+'</label>'
         +(ups.length?'<div class="f-thumbs">'+ups.map(function(u){return '<div class="t"><img src="'+u+'"></div>';}).join('')+'</div>':'')
@@ -704,6 +749,8 @@
     $('fPrev').onclick=function(){ if(fIdx>0){fIdx--;renderFocus();} };
     $('fNext').onclick=function(){ if(fIdx<fTasks.length-1){fIdx++;renderFocus();} };
     $('fDoneBtn').onclick=doneTask;
+    var fa=$('fStage').querySelector('[data-fadv]'); if(fa) fa.onclick=function(){ var k=fa.getAttribute('data-fadv'),arr=versions[k],v=arr[arr.length-1],nx=VFLOW[v.status]; if(nx){ v.status=nx; renderFocus(); toast('Moved to · '+VSTATUS[nx].short+' ('+VSTATUS[nx].who+')'); } };
+    var fr=$('fStage').querySelector('[data-freopen]'); if(fr) fr.onclick=function(){ var k=fr.getAttribute('data-freopen'); versions[k][versions[k].length-1].status='progress'; renderFocus(); toast('Reopened · in progress'); };
     bindFocusUp();
   }
   function bindFocusUp(){
