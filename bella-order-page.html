@@ -82,6 +82,12 @@
   .more-panel{display:none;margin-top:8px}
   .more-panel.show{display:block}
   .more-panel .dc-row{margin-top:0}
+  .up-refs-note{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;color:var(--soft);line-height:1.5;margin:8px 0 4px}
+  .up-refs-note svg{width:17px;height:17px;stroke:var(--gold);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none;margin-top:1px}
+  .up-refs-note b{color:var(--ink);font-weight:500}
+  .up-refs-fp{display:flex;gap:11px;align-items:flex-start;background:#F7FAF7;border:1px solid #DDE7DD;border-radius:9px;padding:12px 14px;margin-top:14px;font-size:12.5px;color:var(--soft);line-height:1.5}
+  .up-refs-fp svg{width:22px;height:22px;stroke:var(--green);fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;flex:none}
+  .up-refs-fp b{color:var(--ink);font-weight:500}
   .config{margin-top:24px;display:grid;gap:5px}
   .qrow{background:#fff;border:1px solid var(--line);padding:24px 26px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
   .qrow .lbl{flex:1;min-width:200px}
@@ -925,7 +931,10 @@
             +'<div class="more-panel" id="morePanel">'
               +photographerBlock()
               +'<div class="up-refs"><div class="req-lab" style="color:var(--faint)">References &amp; inspiration — optional</div>'
-              +miniUpload('refs','Share a look you love','A Pinterest screenshot, a room you admire — anything that helps our designers understand your vision.')+'</div>'
+              +'<p class="up-refs-note"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1 1 2.5h6c0-1.5.3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg><span><b>The more we know about your project, the better we stage it.</b> Share a look you love, a Pinterest board, or notes on the vibe.</span></p>'
+              +miniUpload('refs','Share a look you love','A Pinterest screenshot, a room you admire, notes on the vibe — anything that helps our designers.')
+              +'<div class="up-refs-fp"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="1"/><path d="M3.5 10h9M12.5 3.5v17M12.5 15h8"/></svg><div><b>Have a floor plan? It really helps.</b> A layout (even a rough sketch or the MLS floor plan) lets our designers scale furniture correctly and stage the whole flow of the home.</div></div>'
+              +miniUpload('floorplan','Upload a floor plan','PDF, JPG or PNG — or a quick sketch with rough dimensions.','.pdf,.jpg,.jpeg,.png,image/*')+'</div>'
             +'</div></div>'
         +'</div>';
       // --- 2b: optional extras (a gentle nudge + the question sections) ---
