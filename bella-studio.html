@@ -162,7 +162,10 @@
   .f-side{display:flex;flex-direction:column;min-height:0}
   .f-kind{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
   .f-title{font-size:24px;font-weight:300;margin:8px 0 4px;letter-spacing:-.01em;color:#fff}
-  .f-loc{font-size:12.5px;color:#9FB0C4;margin-bottom:16px}
+  .f-loc{font-size:12.5px;color:#9FB0C4;margin-bottom:12px}
+  .f-verline{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:#cdd4de;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:99px;padding:5px 12px;margin-bottom:14px}
+  .f-verline b{font-weight:400;color:#fff}
+  .fv-progress{color:#8fb6cf} .fv-qa{color:#b79fd6} .fv-client{color:var(--gold)} .fv-changes{color:#e3a08f} .fv-approved{color:#7fbf94}
   .f-instr{font-size:16px;line-height:1.5;color:#E6E9ED;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:16px 18px}
   .f-instr .by{font-size:12px;color:#8F9AA8;margin-top:8px}
   .f-up{margin-top:14px;border:2px dashed rgba(127,191,148,.5);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:.15s;background:rgba(62,107,76,.12)}
@@ -238,7 +241,10 @@
   .vc-add .plus{font-size:17px;display:block}
   /* per-version approval status */
   .vchip .vdot{position:absolute;top:2px;left:3px;width:9px;height:9px;border-radius:50%;border:1.5px solid #fff;z-index:2}
-  .vdot.pending{background:var(--amber)} .vdot.approved{background:var(--green)} .vdot.changes{background:var(--red)}
+  .vdot.progress{background:var(--blue)} .vdot.qa{background:var(--purple)} .vdot.client{background:var(--amber)} .vdot.approved{background:var(--green)} .vdot.changes{background:var(--red)}
+  .vs-progress{background:#E9F0F4;color:#33566c} .vs-progress .vi{color:var(--blue)}
+  .vs-qa{background:#EFEAF4;color:#5c4676} .vs-qa .vi{color:var(--purple)}
+  .vs-client{background:#FBF3E2;color:#8a6d33} .vs-client .vi{color:var(--amber)}
   .vc-status{display:flex;align-items:center;gap:8px;margin-top:10px;padding:9px 11px;border-radius:8px;font-size:12.5px}
   .vc-status .vi{font-size:13px}
   .vc-status .approve{margin-left:auto;font-size:10px;letter-spacing:.05em;text-transform:uppercase;background:rgba(0,0,0,.07);border:0;border-radius:99px;padding:5px 11px;cursor:pointer;color:inherit;white-space:nowrap}
@@ -247,6 +253,39 @@
   .vs-approved{background:#EDF4EE;color:var(--green)}
   .vs-changes{background:#F7E9E4;color:#a6503e}
   .vc-badge.st-approved{background:var(--green);color:#fff}
+  /* bulk upload + drag-to-place tray */
+  .vbulk{margin-bottom:12px}
+  .vbulk-drop{display:flex;align-items:center;gap:13px;border:2px dashed #BFD3C2;border-radius:10px;background:#F1F7F2;padding:13px 15px;cursor:pointer;transition:.15s}
+  .vbulk-drop:hover,.vbulk-drop.drag{border-color:var(--green);background:#E7F1E9}
+  .vbulk-drop .bi{width:38px;height:38px;border-radius:50%;background:#E1EDE3;display:grid;place-items:center;flex:none}
+  .vbulk-drop .bi svg{width:18px;height:18px;stroke:var(--green);fill:none;stroke-width:1.7}
+  .vbulk-drop .bt b{font-weight:400;font-size:14px;display:block}
+  .vbulk-drop .bt span{font-size:12px;color:var(--soft)}
+  .vbulk-btn{margin-left:auto;background:var(--ink);color:#fff;font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:9px 14px;border-radius:6px;flex:none}
+  .vtray{display:none;margin-top:11px;background:#FBF7EE;border:1px solid #EADFC5;border-radius:9px;padding:11px 13px}
+  .vtray.has{display:block}
+  .vtray-lab{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);margin-bottom:8px}
+  .vtray-items{display:flex;gap:8px;flex-wrap:wrap}
+  .tray-item{position:relative;width:72px;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff;cursor:grab}
+  .tray-item:active{cursor:grabbing}
+  .tray-item.dragging{opacity:.4}
+  .tray-item img{width:100%;height:48px;object-fit:cover;display:block;pointer-events:none}
+  .tray-item .tn{display:block;font-size:8.5px;color:var(--soft);padding:3px 5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tray-item .tx{position:absolute;top:2px;right:2px;width:15px;height:15px;border:0;border-radius:50%;background:rgba(20,18,16,.7);color:#fff;font-size:10px;line-height:1;cursor:pointer}
+  .vtray-auto{margin-top:10px;background:#fff;border:1px solid var(--line);border-radius:99px;font-size:11px;letter-spacing:.03em;padding:7px 13px;cursor:pointer;color:var(--ink)}
+  .vtray-auto:hover{border-color:var(--ink)}
+  .vcard.drop-hi{box-shadow:0 0 0 2px var(--green)}
+  .vcard.drop-hi .vc-stage::after{content:"Drop here → new version";position:absolute;inset:0;background:rgba(62,107,76,.6);color:#fff;display:grid;place-items:center;font-size:12px;letter-spacing:.04em;z-index:9}
+  /* completion */
+  .vcard.complete{border-color:var(--green);box-shadow:0 0 0 1px var(--green)}
+  .vdone-banner{display:flex;align-items:center;gap:12px;background:linear-gradient(120deg,#EDF4EE,#ddefe3);border:1px solid #CFE0D3;border-radius:11px;padding:13px 16px;margin-bottom:12px}
+  .vdone-banner .bt{flex:1}
+  .vdone-banner .bt b{font-weight:400;color:var(--green);display:block;font-size:14.5px}
+  .vdone-banner .bt span{font-size:12px;color:#5a7a63}
+  .vdone-banner .reopen{background:#fff;border:1px solid #CFE0D3;color:var(--green);font-family:inherit;font-size:11px;letter-spacing:.05em;text-transform:uppercase;padding:10px 15px;border-radius:7px;cursor:pointer;white-space:nowrap}
+  .vdone-banner .reopen:hover{background:var(--green);color:#fff}
+  .vc-status .reopen{margin-left:auto;font-size:10px;letter-spacing:.05em;text-transform:uppercase;background:rgba(0,0,0,.07);border:0;border-radius:99px;padding:5px 11px;cursor:pointer;color:inherit;white-space:nowrap}
+  .vc-status .reopen:hover{background:rgba(0,0,0,.14)}
 </style>
 </head>
 <body>
@@ -450,8 +489,16 @@
   var versions={};   // key jobId:roomId -> [{label,url}]
   var viewingV={};   // key -> index currently viewed
   function vkey(j,r){ return j.id+':'+r.id; }
-  var VSTATUS={ pending:{lb:'Awaiting Bella + client approval',cls:'vs-pending',ic:'⏳'}, approved:{lb:'Approved &amp; accepted',cls:'vs-approved',ic:'✓'}, changes:{lb:'Changes requested — upload a fix',cls:'vs-changes',ic:'✎'} };
-  function v1status(j){ if(j.status==='revision') return 'changes'; if(j.status==='ready'||j.status==='done') return 'approved'; return 'pending'; }
+  var VSTATUS={
+    progress:{lb:'In progress',who:'studio working',short:'In progress',cls:'vs-progress',ic:'✎'},
+    qa:{lb:'In QA',who:'Bella reviewing',short:'In QA',cls:'vs-qa',ic:'🔍'},
+    client:{lb:'Awaiting approval',who:'with the client',short:'Awaiting client',cls:'vs-client',ic:'⏳'},
+    changes:{lb:'Changes requested',who:'back to the studio',short:'Changes requested',cls:'vs-changes',ic:'↩'},
+    approved:{lb:'Approved & accepted',who:'complete',short:'Complete',cls:'vs-approved',ic:'✓'}
+  };
+  var VFLOW={progress:'qa',qa:'client',client:'approved'};
+  var VADV={progress:'Submit to QA ▸',qa:'Pass QA → client ▸',client:'Client approves ▸'};
+  function v1status(j){ if(j.status==='revision') return 'changes'; if(j.status==='ready') return 'client'; if(j.status==='qa') return 'qa'; if(j.status==='done') return 'approved'; return 'progress'; }
   function initVersions(j){
     if(!j.rooms) return;
     var staged=(j.status!=='assigned');
@@ -459,18 +506,23 @@
   }
   function statusPill(v,isCurrent,k){
     if(!v.status) return '<div class="vc-status" style="background:#F4F2EF;color:var(--faint)"><span class="vi">◦</span>Source photo — nothing to approve</div>';
-    var s=VSTATUS[v.status];
-    var btn=(v.status==='pending'&&isCurrent)?'<button type="button" class="approve" data-approve="'+k+'">Mark approved ▸ demo</button>':'';
-    return '<div class="vc-status '+s.cls+'"><span class="vi">'+s.ic+'</span>'+s.lb+(isCurrent?'':' · older version')+btn+'</div>';
+    var s=VSTATUS[v.status], btn='';
+    if(isCurrent && VFLOW[v.status]) btn='<button type="button" class="approve" data-adv="'+k+'">'+VADV[v.status]+'</button>';
+    else if(isCurrent && v.status==='approved') btn='<button type="button" class="reopen" data-reopen="'+k+'">Reopen ▸ in progress</button>';
+    else if(isCurrent && v.status==='changes') btn='<span style="margin-left:auto;font-size:11px;opacity:.75">upload a fix →</span>';
+    return '<div class="vc-status '+s.cls+'"><span class="vi">'+s.ic+'</span><span><b style="font-weight:400">'+s.lb+'</b> · '+s.who+(isCurrent?'':' · older version')+'</span>'+btn+'</div>';
   }
+  function allApproved(j){ return j.rooms && j.rooms.length>0 && j.rooms.every(function(r){ var a=versions[vkey(j,r)]; return a && a[a.length-1].status==='approved'; }); }
   function renderVersions(j){
     initVersions(j);
-    return '<div class="vgrid">'+j.rooms.map(function(r){
-      var k=vkey(j,r), arr=versions[k], cur=arr.length-1, view=(viewingV[k]!=null?viewingV[k]:cur), dc=r.style==='designer';
+    var banner = allApproved(j)? '<div class="vdone-banner"><span style="font-size:22px">🎉</span><div class="bt"><b>Job complete — every photo approved &amp; accepted</b><span>All '+j.rooms.length+' photos signed off by the client.</span></div><button type="button" class="reopen" data-reopenjob="1">Reopen ▸ in progress</button></div>' : '';
+    var bulk='<div class="vbulk"><label class="vbulk-drop" id="vbulkDrop"><input type="file" id="vbulkInput" accept="image/*" multiple hidden><span class="bi"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/></svg></span><span class="bt"><b>Bulk upload finished photos</b><span>Drop many at once, then drag each onto the right photo below</span></span><span class="vbulk-btn">Choose files</span></label><div class="vtray" id="vtray"></div></div>';
+    return banner+bulk+'<div class="vgrid">'+j.rooms.map(function(r){
+      var k=vkey(j,r), arr=versions[k], cur=arr.length-1, view=(viewingV[k]!=null?viewingV[k]:cur), dc=r.style==='designer', complete=(arr[cur].status==='approved');
       var badge=(view===cur)?'<span class="vc-badge latest">★ '+esc(arr[cur].label)+' · latest</span>':'<span class="vc-badge">Viewing '+esc(arr[view].label)+'</span>';
       var strip=arr.map(function(v,i){ var dot=v.status?'<span class="vdot '+v.status+'"></span>':''; return '<button type="button" class="vchip'+(i===view?' viewing':'')+(i===cur?' cur':'')+'" data-k="'+k+'" data-i="'+i+'">'+dot+'<img src="'+v.url+'" alt=""><span class="vl">'+esc(v.label)+'</span></button>'; }).join('')
         +'<label class="vc-add" data-addk="'+k+'"><input type="file" accept="image/*" multiple hidden><span class="plus">+</span>New</label>';
-      return '<div class="vcard" data-card="'+k+'">'
+      return '<div class="vcard'+(complete?' complete':'')+'" data-card="'+k+'">'
         +'<div class="vc-stage" data-stage="'+k+'">'
           +'<img class="vc-img" src="'+arr[view].url+'" alt=""><img class="vc-orig" src="'+arr[0].url+'" alt="">'
           +badge+'<button type="button" class="vc-cmp" data-cmpk="'+k+'">Compare</button>'
@@ -482,15 +534,35 @@
         +'</div></div>';
     }).join('')+'</div>';
   }
-  function wireApprove(scope){ (scope||document).querySelectorAll('.approve[data-approve]').forEach(function(b){ b.onclick=function(){ approveVersion(b.getAttribute('data-approve')); }; }); }
-  function approveVersion(k){
-    var arr=versions[k], cur=arr.length-1; arr[cur].status='approved';
-    var card=document.querySelector('.vcard[data-card="'+k+'"]'); if(!card) return;
-    var chip=card.querySelector('.vchip[data-i="'+cur+'"]'), dot=chip?chip.querySelector('.vdot'):null;
-    if(chip){ if(dot) dot.className='vdot approved'; else chip.insertAdjacentHTML('afterbegin','<span class="vdot approved"></span>'); }
-    if((viewingV[k]!=null?viewingV[k]:cur)===cur){ var w=card.querySelector('.vc-statuswrap'); w.innerHTML=statusPill(arr[cur],true,k); wireApprove(card); }
-    toast('Marked approved & accepted (demo)');
+  function wireApprove(scope){ var s=scope||document;
+    s.querySelectorAll('[data-adv]').forEach(function(b){ b.onclick=function(){ advanceVersion(b.getAttribute('data-adv')); }; });
+    s.querySelectorAll('[data-reopen]').forEach(function(b){ b.onclick=function(){ reopenVersion(b.getAttribute('data-reopen')); }; });
+    s.querySelectorAll('[data-reopenjob]').forEach(function(b){ b.onclick=reopenJob; });
   }
+  function reRender(){ var d=$('detail'), s=d?d.scrollTop:0; renderDetail(); var d2=$('detail'); if(d2) d2.scrollTop=s; }
+  function advanceVersion(k){ var arr=versions[k], v=arr[arr.length-1], nx=VFLOW[v.status]; if(!nx) return; v.status=nx; reRender(); toast('Moved to · '+VSTATUS[nx].lb+' ('+VSTATUS[nx].who+')'); }
+  function reopenVersion(k){ var arr=versions[k]; arr[arr.length-1].status='progress'; reRender(); toast('Reopened '+arr[arr.length-1].label+' · back in progress'); }
+  function reopenJob(){ var j=job(); if(!j||!j.rooms) return; j.rooms.forEach(function(r){ var a=versions[vkey(j,r)]; if(a&&a[a.length-1].status==='approved') a[a.length-1].status='pending'; }); if(j.status==='qa'||j.status==='done') j.status='inprogress'; reRender(); renderList(); toast('Job reopened · back in progress'); }
+  /* ---- bulk upload + drag-to-place tray ---- */
+  var bulkTray=[];
+  function addVersionUrl(k,url){ var arr=versions[k]; if(!arr) return null; var vn=arr.filter(function(v){return v.label!=='Original';}).length+1; arr.push({label:'v'+vn,url:url,status:'progress'}); viewingV[k]=arr.length-1; return 'v'+vn; }
+  function addBulk(files){ [].slice.call(files).forEach(function(f){ if(f.type&&f.type.indexOf('image')===0) bulkTray.push({name:f.name,url:URL.createObjectURL(f)}); }); renderTray(); }
+  function renderTray(){
+    var t=$('vtray'); if(!t) return;
+    if(!bulkTray.length){ t.classList.remove('has'); t.innerHTML=''; return; }
+    t.classList.add('has');
+    t.innerHTML='<div class="vtray-lab">Unplaced uploads · drag each onto the right photo →</div><div class="vtray-items">'
+      +bulkTray.map(function(u,i){ return '<div class="tray-item" draggable="true" data-ti="'+i+'"><img src="'+u.url+'" alt=""><span class="tn">'+esc(u.name)+'</span><button type="button" class="tx" data-tx="'+i+'">×</button></div>'; }).join('')
+      +'</div><button type="button" class="vtray-auto" id="vtrayAuto">✨ Auto-match by filename</button>';
+    t.querySelectorAll('.tray-item').forEach(function(el){
+      el.addEventListener('dragstart',function(e){ e.dataTransfer.setData('text/plain',el.getAttribute('data-ti')); e.dataTransfer.effectAllowed='move'; el.classList.add('dragging'); });
+      el.addEventListener('dragend',function(){ el.classList.remove('dragging'); });
+    });
+    t.querySelectorAll('.tx').forEach(function(b){ b.onclick=function(e){ e.stopPropagation(); bulkTray.splice(+b.getAttribute('data-tx'),1); renderTray(); }; });
+    var am=$('vtrayAuto'); if(am) am.onclick=autoMatchTray;
+  }
+  function placeFromTray(k,i){ var u=bulkTray[i]; if(!u) return; addVersionUrl(k,u.url); bulkTray.splice(i,1); reRender(); var card=document.querySelector('.vcard[data-card="'+k+'"]'); if(card) card.classList.add('levelup'); toast('Placed '+u.name); }
+  function autoMatchTray(){ var j=job(); if(!j||!j.rooms) return; var placed=0; for(var i=bulkTray.length-1;i>=0;i--){ var nm=bulkTray[i].name.toLowerCase(); var r=j.rooms.filter(function(rm){ var lbl=rm.label.toLowerCase(); return nm.indexOf(rm.id)>-1||nm.indexOf(lbl.replace(/\s+/g,''))>-1||nm.indexOf(lbl.split(' ')[0])>-1; })[0]; if(r){ addVersionUrl(vkey(j,r),bulkTray[i].url); bulkTray.splice(i,1); placed++; } } reRender(); toast(placed?('Auto-placed '+placed+' photo'+(placed>1?'s':'')):'No filename matches — drag them manually'); }
   function refreshCard(k){
     var card=document.querySelector('.vcard[data-card="'+k+'"]'); if(!card) return;
     var arr=versions[k], cur=arr.length-1, view=(viewingV[k]!=null?viewingV[k]:cur);
@@ -504,7 +576,7 @@
   }
   function addVersion(k,files){
     var arr=versions[k]; if(!arr) return; var added=0;
-    [].slice.call(files).forEach(function(f){ if(f.type&&f.type.indexOf('image')===0){ var vn=arr.filter(function(v){return v.label!=='Original';}).length+1; arr.push({label:'v'+vn,url:URL.createObjectURL(f),status:'pending'}); added++; } });
+    [].slice.call(files).forEach(function(f){ if(f.type&&f.type.indexOf('image')===0){ var vn=arr.filter(function(v){return v.label!=='Original';}).length+1; arr.push({label:'v'+vn,url:URL.createObjectURL(f),status:'progress'}); added++; } });
     if(!added) return;
     viewingV[k]=arr.length-1;
     renderDetail();
@@ -524,21 +596,41 @@
       window.addEventListener('pointermove',function(e){ if(dragging) set(e); });
       window.addEventListener('pointerup',function(){ dragging=false; });
     });
+    // bulk uploader
+    var bd=$('vbulkDrop'), bi=$('vbulkInput');
+    if(bd&&bi){ bi.onchange=function(){ addBulk(bi.files); bi.value=''; };
+      ['dragenter','dragover'].forEach(function(ev){ bd.addEventListener(ev,function(e){ e.preventDefault(); bd.classList.add('drag'); }); });
+      ['dragleave','drop'].forEach(function(ev){ bd.addEventListener(ev,function(e){ e.preventDefault(); bd.classList.remove('drag'); }); });
+      bd.addEventListener('drop',function(e){ if(e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files.length) addBulk(e.dataTransfer.files); });
+    }
+    // cards are drop targets for tray items
+    document.querySelectorAll('.vcard').forEach(function(card){
+      card.addEventListener('dragover',function(e){ if(!bulkTray.length) return; e.preventDefault(); e.dataTransfer.dropEffect='move'; card.classList.add('drop-hi'); });
+      card.addEventListener('dragleave',function(e){ if(!card.contains(e.relatedTarget)) card.classList.remove('drop-hi'); });
+      card.addEventListener('drop',function(e){ e.preventDefault(); card.classList.remove('drop-hi'); var i=e.dataTransfer.getData('text/plain'); if(i!=='') placeFromTray(card.getAttribute('data-card'), +i); });
+    });
+    renderTray();
   }
 
   /* ---------- FOCUS MODE: game-like task runner ---------- */
   function buildTasks(j){
     if(j.revisions && j.revisions.length){
-      return j.revisions.map(function(rq){ return {kind:'Revision request',title:'Change '+rq.n,loc:rq.room+' · pin '+rq.n,instr:rq.t,by:'Requested by '+rq.by,img:(rq.rid?A+rq.rid+'-after.jpg':''),pin:(rq.rid?{x:rq.x,y:rq.y,n:rq.n}:null),tag:'Fix this spot'}; });
+      return j.revisions.map(function(rq){ return {kind:'Revision request',title:'Change '+rq.n,loc:rq.room+' · pin '+rq.n,instr:rq.t,by:'Requested by '+rq.by,img:(rq.rid?A+rq.rid+'-after.jpg':''),pin:(rq.rid?{x:rq.x,y:rq.y,n:rq.n}:null),tag:'Fix this spot',rid:rq.rid}; });
     }
     if(j.rooms && j.rooms.length){
-      return j.rooms.map(function(r,i){ var dc=r.style==='designer'; return {kind:'Stage this room',title:r.label,loc:'Photo '+(i+1)+' of '+j.rooms.length,instr:'Furnish in '+(dc?'the designer’s choice':(STY[r.style]||r.style))+' style, matched to the buyer’s taste.',by:'',img:r.orig,pin:null,tag:(dc?'✦ Designer’s choice':(STY[r.style]||r.style))}; });
+      return j.rooms.map(function(r,i){ var dc=r.style==='designer'; return {kind:'Stage this room',title:r.label,loc:'Photo '+(i+1)+' of '+j.rooms.length,instr:'Furnish in '+(dc?'the designer’s choice':(STY[r.style]||r.style))+' style, matched to the buyer’s taste.',by:'',img:r.orig,pin:null,tag:(dc?'✦ Designer’s choice':(STY[r.style]||r.style)),rid:r.id}; });
     }
     return (j.services||[]).map(function(s){ return {kind:'Produce',title:s.n,loc:s.qty,instr:s.s,by:'',img:'',pin:null,tag:s.qty}; });
   }
+  function focusVerLine(t){
+    if(!t.rid||!fJob) return '';
+    var k=fJob.id+':'+t.rid, arr=versions[k]; if(!arr||!arr.length) return '';
+    var v=arr[arr.length-1], s=v.status?VSTATUS[v.status]:null;
+    return '<div class="f-verline"><b>'+esc(v.label)+'</b>'+(s?' · <span class="fv-'+v.status+'">'+s.ic+' '+s.short+'</span>':'')+'</div>';
+  }
   var fJob=null, fTasks=[], fIdx=0, fDone=[], fUploads={};
   function openFocus(j){ fJob=j; fTasks=buildTasks(j); fIdx=0; fDone=fTasks.map(function(){return false;}); fUploads={}; $('fComplete').classList.remove('show'); $('focus').classList.add('open'); renderFocus(); }
-  function closeFocus(){ $('focus').classList.remove('open'); }
+  function closeFocus(){ $('focus').classList.remove('open'); renderDetail(); }
   function nextUndone(){ var i; for(i=fIdx+1;i<fTasks.length;i++){ if(!fDone[i]) return i; } for(i=0;i<fTasks.length;i++){ if(!fDone[i]) return i; } return fIdx; }
   function renderFocus(){
     var t=fTasks[fIdx]; if(!t) return;
@@ -556,8 +648,9 @@
     var ups=(fUploads[fIdx]||[]), done=fDone[fIdx];
     $('fStage').innerHTML=visual
       +'<div class="f-side"><div class="f-kind">'+esc(t.kind)+'</div><div class="f-title">'+esc(t.title)+'</div><div class="f-loc">'+esc(t.loc)+'</div>'
+        +focusVerLine(t)
         +'<div class="f-instr">'+esc(t.instr)+(t.by?'<div class="by">'+esc(t.by)+'</div>':'')+'</div>'
-        +'<label class="f-up" id="fUp"><input type="file" id="fUpInput" accept="image/*" multiple hidden><span class="ui"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/></svg></span><span><b>Drop your finished file here</b><span>the result for this task</span></span>'+(ups.length?'<span class="done-chip">'+ups.length+' uploaded</span>':'')+'</label>'
+        +'<label class="f-up" id="fUp"><input type="file" id="fUpInput" accept="image/*" multiple hidden><span class="ui"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/></svg></span><span><b>Drop your fix here → saves as the next version</b><span>the result for this task</span></span>'+(ups.length?'<span class="done-chip">'+ups.length+' uploaded</span>':'')+'</label>'
         +(ups.length?'<div class="f-thumbs">'+ups.map(function(u){return '<div class="t"><img src="'+u+'"></div>';}).join('')+'</div>':'')
         +'<div class="f-actions"><button class="f-nav" id="fPrev" title="Previous (←)">‹</button>'
           +'<button class="f-done'+(done?' is-done':'')+'" id="fDoneBtn">'+(done?'✓ Done · press → for next':'Mark done')+'</button>'
@@ -578,7 +671,11 @@
   }
   function addFocusUp(files){
     fUploads[fIdx]=fUploads[fIdx]||[];
-    [].slice.call(files).forEach(function(f){ if(f.type&&f.type.indexOf('image')===0) fUploads[fIdx].push(URL.createObjectURL(f)); });
+    var t=fTasks[fIdx], k=(t&&t.rid&&fJob)?fJob.id+':'+t.rid:null;
+    if(k&&!versions[k]) initVersions(fJob);
+    var made=null;
+    [].slice.call(files).forEach(function(f){ if(f.type&&f.type.indexOf('image')===0){ var url=URL.createObjectURL(f); fUploads[fIdx].push(url); if(k&&versions[k]) made=addVersionUrl(k,url); } });
+    if(made) toast('Saved to version history · '+made);
     renderFocus();
   }
   function burst(){ var b=$('fBurst'); if(!b) return; b.classList.remove('go'); void b.offsetWidth; b.classList.add('go'); }
