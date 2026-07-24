@@ -53,11 +53,12 @@
   .due{font-size:12px} .due.over{color:var(--red)} .due.soon{color:var(--amber)} .due.ok{color:var(--faint)}
 
   /* brief detail */
-  .detail{overflow-y:auto;padding:26px 32px 60px}
+  .detail{overflow-y:auto;padding:0 32px 60px}
   .detail-empty{height:100%;display:grid;place-items:center;color:var(--faint);font-size:14px}
-  .d-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:22px}
-  .d-head .kick{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--purple)}
-  .d-head h2{font-size:24px;font-weight:300;margin-top:6px;letter-spacing:-.01em}
+  .d-head{position:sticky;top:0;z-index:6;background:rgba(251,250,248,.97);backdrop-filter:blur(6px);display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin:0 -32px 22px;padding:20px 32px 18px}
+  .d-head .kick{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);display:flex;align-items:center;gap:8px}
+  .d-head .kick .pid{background:var(--purple);color:#fff;border-radius:5px;padding:2px 8px;letter-spacing:.06em}
+  .d-head h2{font-size:24px;font-weight:400;margin-top:7px;letter-spacing:-.01em}
   .d-head .sub{font-size:13px;color:var(--soft);margin-top:5px}
   .d-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
   .d-grid{display:grid;grid-template-columns:1fr 300px;gap:30px;align-items:start}
@@ -235,7 +236,7 @@
       +'<div class="deliv" id="deliv">'+delivs.map(function(u){return '<div class="dt"><img src="'+u+'"></div>';}).join('')+'</div></div>' : '';
 
     $('detail').innerHTML=
-      '<div class="d-head"><div><div class="kick">Production brief · #'+j.id+'</div><h2>'+esc(j.addr)+'</h2><div class="sub">'+esc(j.ptype)+' · <span class="chip '+st.chip+'" style="vertical-align:2px"><span class="dot"></span>'+st.label+'</span></div></div>'
+      '<div class="d-head"><div><div class="kick">Production brief <span class="pid">#'+j.id+'</span></div><h2>'+esc(j.addr)+'</h2><div class="sub">'+esc(j.ptype)+' · <span class="chip '+st.chip+'" style="vertical-align:2px"><span class="dot"></span>'+st.label+'</span></div></div>'
         +'<div class="d-actions">'+actions+'</div></div>'
       +'<div class="d-grid"><div>'
         + revBlock
