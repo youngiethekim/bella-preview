@@ -70,6 +70,23 @@
   .pcard .oid{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-top:9px}
   .pcard .rev-note{font-size:12.5px;color:var(--amber);margin-top:10px;display:flex;align-items:center;gap:7px}
   .pcard .rev-note svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.5}
+  /* revision round-trip loop */
+  .revloop{margin-top:12px;border:1px solid #EADFC5;background:#FBF7EE;border-radius:8px;padding:11px 13px}
+  .revloop .rl-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:9px}
+  .revloop .rl-round{font-size:12px;letter-spacing:.04em;color:#8a6d33;font-weight:400}
+  .revloop .rl-round b{color:var(--amber)}
+  .revloop .rl-n{font-size:11px;color:var(--faint)}
+  .revloop .rl-steps{display:flex;gap:0}
+  .revloop .rl-step{flex:1;position:relative;text-align:center;font-size:9.5px;letter-spacing:.02em;color:var(--faint);padding-top:14px}
+  .revloop .rl-step::before{content:"";position:absolute;top:3px;left:50%;width:9px;height:9px;border-radius:50%;background:#E4DECF;transform:translateX(-50%);z-index:2}
+  .revloop .rl-step::after{content:"";position:absolute;top:7px;left:-50%;width:100%;height:2px;background:#E4DECF;z-index:1}
+  .revloop .rl-step:first-child::after{display:none}
+  .revloop .rl-step.done{color:var(--soft)}
+  .revloop .rl-step.done::before{background:var(--green)}
+  .revloop .rl-step.done::after{background:var(--green)}
+  .revloop .rl-step.on{color:var(--amber)}
+  .revloop .rl-step.on::before{background:var(--amber);box-shadow:0 0 0 3px rgba(181,137,47,.18)}
+  .revloop .rl-msg{font-size:11.5px;color:#8a6d33;margin-top:10px;line-height:1.45}
   .pcard .acts{display:flex;gap:7px;margin-top:16px;flex-wrap:wrap}
   .pcard .acts .btn,.pcard .acts .btn-line{flex:0 0 auto}
   .progress{margin-top:12px}
@@ -178,9 +195,9 @@
   };
   /* SAMPLE project set — a spread of statuses to show the whole lifecycle */
   var PROJECTS=[
-    {id:'BV-10428',addr:'42 Bayview Terrace, Toronto',svc:'Listing staging + floor plan',photos:8,status:'revisions',date:'Delivered Jul 22',img:A+'living-after.jpg',current:true,revText:'Round 1 · 3 requests sent to Bella'},
-    {id:'BV-10502',addr:'120 Bayview Ave, Toronto',svc:'Staging + day-to-dusk',photos:6,status:'ready',date:'Revised Jul 21',img:A+'primary-after.jpg',revText:'Revised kitchen ready for your review'},
-    {id:'BV-10501',addr:'305 Harbour St, Toronto',svc:'Virtual renovation + staging',photos:5,status:'progress',date:'Started Jul 20',img:A+'bed2-before.jpg',pct:55,pctText:'Staging in progress · est. delivery Jul 24'},
+    {id:'BV-10428',addr:'42 Bayview Terrace, Toronto',svc:'Listing staging + floor plan',photos:8,status:'revisions',date:'Delivered Jul 22',img:A+'living-after.jpg',current:true,round:2,revText:'You sent 2 more changes — round 2 on its way to the studio'},
+    {id:'BV-10502',addr:'120 Bayview Ave, Toronto',svc:'Staging + day-to-dusk',photos:6,status:'ready',date:'Revised Jul 21',img:A+'primary-after.jpg',round:2,revText:'Round 2 revisions are back — ready to review'},
+    {id:'BV-10501',addr:'305 Harbour St, Toronto',svc:'Virtual renovation + staging',photos:5,status:'studio',date:'Started Jul 20',img:A+'bed2-before.jpg',round:1,revText:'Round 1 changes are with the studio'},
     {id:'BV-10102',addr:'88 Lakeshore Rd, Oakville',svc:'Furniture removal + staging',photos:6,status:'delivered',date:'Delivered Jul 12',img:A+'dining-after.jpg'},
     {id:'BV-9840',addr:'12 Maple Grove, Toronto',svc:'Day-to-dusk + staging',photos:10,status:'approved',date:'Approved Jun 28',img:A+'bed3-after.jpg'}
   ];
@@ -238,6 +255,15 @@
     }
     return a.join('');
   }
+  var REVSTEPS=['Requested','With studio','Revised','Your review'];
+  var REVIDX={revisions:0,studio:1,ready:3};
+  function revLoop(p){
+    var cur=REVIDX[p.status];
+    var steps=REVSTEPS.map(function(s,i){ var cls=i<cur?'done':(i===cur?'on':''); return '<span class="rl-step '+cls+'">'+s+'</span>'; }).join('');
+    return '<div class="revloop"><div class="rl-top"><span class="rl-round">Revision <b>round '+(p.round||1)+'</b></span></div>'
+      +'<div class="rl-steps">'+steps+'</div>'
+      +(p.revText?'<div class="rl-msg">'+esc(p.revText)+'</div>':'')+'</div>';
+  }
   function card(p){
     var st=ST[p.status];
     var html='<div class="pcard">'
@@ -246,7 +272,8 @@
         +'<div class="addr">'+esc(p.addr.split(',')[0])+'</div>'
         +'<div class="meta">'+esc(p.svc)+' · '+p.photos+' photos</div>'
         +'<div class="oid">#'+p.id+' · '+esc(p.date)+'</div>';
-    if(p.revText) html+='<div class="rev-note"><svg viewBox="0 0 24 24"><path d="M12 20s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="8" r="2.2"/></svg>'+esc(p.revText)+'</div>';
+    if(REVIDX[p.status]!==undefined) html+=revLoop(p);
+    else if(p.revText) html+='<div class="rev-note"><svg viewBox="0 0 24 24"><path d="M12 20s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="8" r="2.2"/></svg>'+esc(p.revText)+'</div>';
     if(p.pct!=null) html+='<div class="progress"><div class="bar"><span style="width:'+p.pct+'%"></span></div><div class="lb">'+esc(p.pctText||'')+'</div></div>';
     html+='<div class="acts">'+actions(p)+'</div>';
     html+='</div></div>';
