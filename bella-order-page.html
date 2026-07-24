@@ -67,14 +67,11 @@
   .choice span{font-size:13.5px;color:var(--faint);display:block;margin-top:3px}
 
   /* step 2 config */
-  .reassure{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 4px}
-  .ru{display:flex;align-items:center;gap:9px;background:#F7FAF7;border:1px solid #DDE7DD;border-radius:99px;padding:9px 15px;font-size:12.5px;color:var(--soft)}
+  .reassure{display:flex;flex-wrap:wrap;gap:14px 26px;margin:20px 0 2px}
+  .ru{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--soft)}
   .ru b{color:var(--ink);font-weight:500}
-  .ru svg{width:16px;height:16px;stroke:var(--green);fill:none;stroke-width:1.6;flex:none}
+  .ru svg{width:18px;height:18px;stroke:var(--green);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
   .ru .star{fill:var(--gold);stroke:var(--gold)}
-  .val-note{margin-top:12px;font-size:13px;color:var(--soft);display:flex;align-items:flex-start;gap:9px;background:#FBF8F0;border:1px solid #EADFC5;border-radius:10px;padding:12px 15px;line-height:1.5}
-  .val-note svg{width:17px;height:17px;stroke:var(--gold);fill:none;stroke-width:1.6;flex:none;margin-top:1px}
-  .val-note b{color:#5b5140;font-weight:500}
   .config{margin-top:24px;display:grid;gap:5px}
   .qrow{background:#fff;border:1px solid var(--line);padding:24px 26px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
   .qrow .lbl{flex:1;min-width:200px}
@@ -221,7 +218,7 @@
   .up-later-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:11px}
   .up-later-sent{color:var(--green);font-size:13px;margin-top:10px}
   /* per-photo style tag on thumbnails */
-  .up-th .up-style{position:absolute;left:4px;top:4px;font-size:9px;letter-spacing:.02em;background:rgba(20,18,16,.74);color:#fff;padding:2px 7px;border-radius:99px;pointer-events:none;max-width:calc(100% - 12px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .up-th .up-style{position:absolute;left:0;right:0;bottom:0;font-size:9.5px;letter-spacing:.01em;background:rgba(20,18,16,.78);color:#fff;padding:4px 6px;display:flex;align-items:center;justify-content:center;gap:3px;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   /* room style modal */
   .rsm-box{max-width:640px}
   .rsm-head{display:flex;align-items:baseline;gap:10px;margin:0 4px 12px}
@@ -332,8 +329,13 @@
   .dc-t span{display:block;font-size:12.5px;color:var(--faint);margin-top:2px;line-height:1.4}
   .up-refs{margin-top:16px;border-top:1px solid #DDE7DD;padding-top:14px}
   .up-thumbs{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
-  .up-th{position:relative;width:62px;height:62px;border:1px solid var(--line);overflow:hidden;border-radius:3px}
+  .up-th{position:relative;width:92px;height:92px;border:1px solid var(--line);overflow:hidden;border-radius:7px;cursor:pointer}
   .up-th img{width:100%;height:100%;object-fit:cover;display:block}
+  .up-set{position:absolute;inset:0;background:rgba(20,18,16,.48);color:#fff;display:flex;align-items:center;justify-content:center;gap:6px;font-size:11.5px;opacity:0;transition:.15s}
+  .up-set svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:1.6}
+  .up-th:hover .up-set{opacity:1}
+  .up-hint{font-size:12.5px;color:var(--soft);margin-top:12px;line-height:1.5}
+  .up-hint b{color:var(--ink);font-weight:500}
   .up-th.empty{border:1.5px dashed var(--line);background:#fff;display:grid;place-items:center;cursor:pointer;color:var(--faint);padding:0;transition:.14s}
   .up-th.empty:hover{border-color:var(--green);color:var(--green);background:#F7FAF7}
   .up-th.empty svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.7}
@@ -664,12 +666,11 @@
       </div>
       <div class="reassure">
         <div class="ru"><svg class="star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.3l6.1-.7z"/></svg><span><b>4.9</b> · loved by agents on thousands of listings</span></div>
-        <div class="ru"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.5 0 2-1 2-2s-.6-1.4-.6-2.2c0-.9.7-1.6 1.6-1.6H18a3 3 0 0 0 3-3c0-3.9-4-6.2-9-6.2z"/><circle cx="7.5" cy="11" r="1"/><circle cx="12" cy="8" r="1"/><circle cx="16" cy="10.5" r="1"/></svg><span>Staged by <b>real interior designers</b>, not just AI</span></div>
-        <div class="ru"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M12 3h0"/></svg><span>MLS-ready in <b>24–48 hours</b></span></div>
-        <div class="ru"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 5v6h-6"/></svg><span><b>Unlimited revisions</b>, free for 2 weeks</span></div>
-        <div class="ru"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="2.5"/></svg><span>You <b>approve every photo</b> before it goes live</span></div>
+        <div class="ru"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.5 0 2-1 2-2s-.6-1.4-.6-2.2c0-.9.7-1.6 1.6-1.6H18a3 3 0 0 0 3-3c0-3.9-4-6.2-9-6.2z"/><circle cx="7.5" cy="11" r="1"/><circle cx="12" cy="8" r="1"/><circle cx="16" cy="10.5" r="1"/></svg><span>Staged by <b>real interior designers</b></span></div>
+        <div class="ru"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2"/></svg><span>MLS-ready in <b>24–48 hours</b></span></div>
+        <div class="ru"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 5v6h-6"/></svg><span><b>Unlimited revisions</b>, free 2 weeks</span></div>
+        <div class="ru"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="2.5"/></svg><span>You <b>approve every photo</b> first</span></div>
       </div>
-      <div class="val-note"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg><span><b>Why more rooms is worth it:</b> 95% of buyers start online, and listings that show every room staged get more clicks and more showings. Empty rooms make a home feel smaller. A full set of staged photos sells the whole home, not just one room.</span></div>
       <div class="config" id="config"></div>
       <div class="wiz-foot">
         <button class="btn-line" id="back1">← Back</button>
@@ -1016,7 +1017,7 @@
       +'<span class="up-ic"><svg class="up-i"><use href="#i-upload"/></svg></span>'
       +'<span class="up-t"><b id="upTitle">Drag &amp; drop your photos here</b><span id="upSub">or click to browse · JPG or PNG. No photos yet? Pick a number and send them later.</span></span>'
       +'<span class="up-btn">Choose files</span>'
-      +'</label><div class="up-prog" id="upProg"></div><div class="up-thumbs" id="upThumbs"></div>'
+      +'</label><div class="up-prog" id="upProg"></div><div class="up-thumbs" id="upThumbs"></div><div class="up-hint" id="upHint"></div>'
       +'<div class="up-later"><button type="button" class="up-later-toggle" id="upLaterToggle">📷  Photos not ready? Send your photographer a direct upload link →</button>'
         +'<div class="up-later-panel" id="upLaterPanel">'
           +'<label>Photographer’s email</label><input type="email" id="photogEmail" placeholder="photographer@studio.com" autocomplete="off">'
@@ -1181,10 +1182,11 @@
           +'<div class="up-bar"><span style="width:'+pct+'%"></span></div>';
       } else { prog.classList.remove('show'); prog.innerHTML=''; }
     }
-    var filled=state.uploads.map(function(u,i){ return '<div class="up-th" data-i="'+i+'"><img src="'+u.url+'" alt=""><span class="up-style">'+escF(thumbStyleTag(u))+'</span><span class="up-zoom">'+ZOOM+'</span><button type="button" class="up-x" data-i="'+i+'" aria-label="Remove">×</button></div>'; }).join('');
+    var filled=state.uploads.map(function(u,i){ return '<div class="up-th" data-i="'+i+'"><img src="'+u.url+'" alt=""><span class="up-set"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-1 2-2s-.6-1.4-.6-2.2c0-.9.7-1.6 1.6-1.6H18a3 3 0 0 0 3-3c0-3.9-4-6.2-9-6.2z"/></svg>Set style</span><span class="up-style">'+escF(thumbStyleTag(u))+' ▾</span><button type="button" class="up-x" data-i="'+i+'" aria-label="Remove">×</button></div>'; }).join('');
     // show empty slots for the photos still to come, so the missing spots are visible
     var empties=''; if(n>0){ for(var e=0;e<remaining;e++){ empties+='<button type="button" class="up-th empty" aria-label="Add a photo"><span class="es-n">'+(n+e+1)+'</span><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>'; } }
     wrap.innerHTML=filled+empties;
+    var hint=document.getElementById('upHint'); if(hint) hint.innerHTML = n? 'Each photo gets its own style — <b>click a photo to change its look</b>, or leave them all to our designers below.' : '';
     wrap.querySelectorAll('.up-th[data-i]').forEach(function(el){ el.onclick=function(e){ if(e.target.closest('.up-x')) return; openRoomStyle(+el.getAttribute('data-i')); }; });
     wrap.querySelectorAll('.up-th.empty').forEach(function(el){ el.onclick=function(){ document.getElementById('upInput').click(); }; });
     wrap.querySelectorAll('.up-x').forEach(function(b){ b.onclick=function(e){ e.preventDefault(); e.stopPropagation(); var i=+b.getAttribute('data-i'); state.uploads.splice(i,1); renderUploads(); sync(); }; });
