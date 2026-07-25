@@ -262,14 +262,12 @@
   .rsm-handle{position:absolute;top:0;bottom:0;width:2px;background:#fff;z-index:5;cursor:ew-resize;box-shadow:0 0 0 1px rgba(0,0,0,.15);transform:translateX(-1px)}
   .rsm-handle::after{content:"‹ ›";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:32px;height:32px;border-radius:50%;background:#fff;color:var(--ink);font-size:12px;display:grid;place-items:center;box-shadow:0 3px 10px rgba(0,0,0,.25)}
   .rsm-note{font-size:12px;color:var(--faint);margin:10px 4px;line-height:1.5}
-  .rsm-styles{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:6px;margin:0 2px 14px}
-  .rsm-sty{border:1px solid var(--line);border-radius:7px;overflow:hidden;cursor:pointer;background:#fff;padding:0;transition:.12s}
-  .rsm-sty:hover{border-color:var(--ink)}
-  .rsm-sty.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
-  .rsm-sty img{width:100%;height:52px;object-fit:cover;display:block}
-  .rsm-sty .snm{display:block;font-size:11px;padding:5px 4px;text-align:center}
-  .rsm-sty.proj{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:82px;gap:4px}
-  .rsm-sty.proj .pj{font-size:19px;color:var(--green);line-height:1}
+  .rsm-styles{display:flex;flex-wrap:wrap;gap:7px;margin:0 2px 14px}
+  .rsm-sty{border:1px solid var(--line);border-radius:99px;cursor:pointer;background:#fff;padding:9px 15px;transition:.12s;font-family:inherit;font-size:13px;color:var(--soft);white-space:nowrap}
+  .rsm-sty:hover{border-color:var(--ink);color:var(--ink)}
+  .rsm-sty.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink);color:var(--ink)}
+  .rsm-sty.proj{color:var(--green)}
+  .rsm-sty.proj.on{box-shadow:0 0 0 1px var(--green);border-color:var(--green)}
   .rsm-more{margin:0 2px}
   .rsm-sub{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin:14px 0 8px;display:flex;align-items:baseline;gap:8px}
   .rsm-sub .opt{text-transform:none;letter-spacing:0;font-size:11px;color:var(--faint)}
@@ -1202,8 +1200,8 @@
     document.getElementById('rsmStyleTag').textContent = u.template? 'The look you picked' : afterLabel(u);
     rsmApplyClip();
     var chosen=(u.style||'designer');
-    var chips='<button type="button" class="rsm-sty proj'+(chosen==='designer'?' on':'')+'" data-sk="designer"><span class="pj">✦</span><span class="snm">Designer’s choice</span></button>'
-      +STY.map(function(s){ return '<button type="button" class="rsm-sty'+(chosen===s.k?' on':'')+'" data-sk="'+s.k+'"><img src="'+CAT+s.im+'.jpg" alt="'+s.n+'" loading="lazy"><span class="snm">'+s.n+'</span></button>'; }).join('');
+    var chips='<button type="button" class="rsm-sty proj'+(chosen==='designer'?' on':'')+'" data-sk="designer">✦ Designer’s choice</button>'
+      +STY.map(function(s){ return '<button type="button" class="rsm-sty'+(chosen===s.k?' on':'')+'" data-sk="'+s.k+'">'+s.n+'</button>'; }).join('');
     var wrap=document.getElementById('rsmStyles'); wrap.innerHTML=chips;
     wrap.querySelectorAll('.rsm-sty').forEach(function(b){ b.onclick=function(){
       var sk=b.getAttribute('data-sk'), u2=state.uploads[rsmIdx];
