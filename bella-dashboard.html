@@ -285,7 +285,7 @@
     if(p.status==='progress'){ a.push('<a class="btn btn-sm" href="bella-project.html">Track order</a>'); }
     else {
       a.push('<a class="btn btn-sm" href="bella-project.html">Open workspace</a>');
-      if(p.status!=='approved') a.push('<a class="btn-line btn-sm" href="bella-review.html">Revisions</a>');
+      if(p.status!=='approved') a.push('<a class="btn-line btn-sm" href="bella-review.html?order='+encodeURIComponent(p.id)+'&addr='+encodeURIComponent(p.addr)+'">Revisions</a>');
     }
     return a.join('');
   }

@@ -34,8 +34,10 @@
   .backlink{align-self:center;width:26px;height:26px;border:1px solid var(--line);border-radius:6px;display:grid;place-items:center;color:var(--soft);font-size:18px;line-height:1;text-decoration:none;transition:.15s;flex:none}
   .backlink:hover{border-color:var(--ink);color:var(--ink)}
   .logo{font-size:15px;letter-spacing:.42em;font-weight:400}
-  .proj{font-size:13.5px;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .proj b{color:var(--ink);font-weight:400}
+  .proj{display:flex;align-items:center;gap:9px;min-width:0}
+  .proj-k{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);border:1px solid var(--line);border-radius:99px;padding:3px 9px;flex:none}
+  .proj b{font-size:15.5px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .proj-ord{font-size:11px;letter-spacing:.04em;color:var(--soft);background:var(--line-2);border-radius:99px;padding:3px 9px;flex:none}
   .pstat{display:inline-flex;align-items:center;gap:7px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:5px 11px;border-radius:99px;white-space:nowrap}
   .pstat i{width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block}
   .st-delivered{color:var(--soft);background:#F0EDE8}
@@ -213,7 +215,7 @@
   <div class="brandline">
     <a class="backlink" id="backLink" href="bella-dashboard.html" title="Back">‹</a>
     <span class="logo">BELLA</span>
-    <span class="proj"><b id="hProj">42 Bayview Terrace</b> · <span id="hOrder">#BV-10428</span></span>
+    <span class="proj"><span class="proj-k">Reviewing</span><b id="hProj">42 Bayview Terrace</b><span class="proj-ord" id="hOrder">#BV-10428</span></span>
   </div>
   <span class="pstat" id="hStatus"><i></i><span></span></span>
   <span class="micro" id="hRound" style="color:var(--faint)"></span>
@@ -309,7 +311,21 @@
   var LSKEY='bella-review-v1';
 
   /* ---------------- seed data ---------------- */
-  function seed(){
+  /* known sample projects (match the dashboard / CMS) — address + who's collaborating */
+  var PROJDATA={
+    'BV-10428':{addr:'42 Bayview Terrace, Toronto', demo:true},
+    'BV-10502':{addr:'120 Bayview Ave, Toronto'},
+    'BV-10517':{addr:'8 Harbourfront Dr, #2401, Toronto'},
+    'BV-10520':{addr:'55 Rosewood Lane, Toronto'},
+    'BV-10499':{addr:'1200 King St W, #705, Toronto'},
+    'BV-10102':{addr:'88 Lakeshore Rd, Oakville'},
+    'BV-10460':{addr:'240 Front St, #1810, Toronto'},
+    'BV-10471':{addr:'19 Maple Grove, Toronto'}
+  };
+  function seed(order, addr){
+    order=(order||'BV-10428').replace(/^#/,'');
+    var info=PROJDATA[order]||{};
+    var address=info.addr||addr||'Your project';
     var rooms=[
       {id:'living',label:'Living room'},
       {id:'kitchen',label:'Kitchen'},
@@ -321,16 +337,18 @@
     var photos=rooms.map(function(r){
       return {id:r.id,label:r.label,originalURL:CDN+r.id+'-before.jpg',versions:[{v:1,url:CDN+r.id+'-after.jpg'}],pins:[]};
     });
-    /* two sample requests on the living room, one on the kitchen — to show the concept */
-    photos[0].pins=[
-      {id:uid(),xPct:26,yPct:52,note:'Can we swap this artwork for something warmer? The blue feels cold against the staging.',drawing:[{type:'circle',color:'#C4553F',x1:14,y1:30,x2:38,y2:60}],author:'Beverly Bahm',role:'agent',ts:'Jul 22, 1:04 PM',status:'open',replies:[]},
-      {id:uid(),xPct:70,yPct:74,note:'Rug is a little small for the space — size up so it sits under the front sofa legs.',drawing:[],author:'Beverly Bahm',role:'agent',ts:'Jul 22, 1:06 PM',status:'open',replies:[{author:'Jordan (buyer)',role:'guest',text:'Agree, a bigger rug would help a lot.',ts:'Jul 22, 1:20 PM'}]}
-    ];
-    photos[1].pins=[
-      {id:uid(),xPct:52,yPct:40,note:'Add a couple of counter stools at the island so buyers picture eating here.',drawing:[{type:'arrow',color:'#C4553F',x1:40,y1:66,x2:52,y2:46}],author:'Beverly Bahm',role:'agent',ts:'Jul 22, 1:10 PM',status:'open',replies:[]}
-    ];
+    /* seed a couple of sample requests only on the demo project so the concept is visible */
+    if(info.demo){
+      photos[0].pins=[
+        {id:uid(),xPct:26,yPct:52,note:'Can we swap this artwork for something warmer? The blue feels cold against the staging.',drawing:[{type:'circle',color:'#C4553F',x1:14,y1:30,x2:38,y2:60}],author:'Beverly Bahm',role:'agent',ts:'Jul 22, 1:04 PM',status:'open',replies:[]},
+        {id:uid(),xPct:70,yPct:74,note:'Rug is a little small for the space — size up so it sits under the front sofa legs.',drawing:[],author:'Beverly Bahm',role:'agent',ts:'Jul 22, 1:06 PM',status:'open',replies:[{author:'Jordan (buyer)',role:'guest',text:'Agree, a bigger rug would help a lot.',ts:'Jul 22, 1:20 PM'}]}
+      ];
+      photos[1].pins=[
+        {id:uid(),xPct:52,yPct:40,note:'Add a couple of counter stools at the island so buyers picture eating here.',drawing:[{type:'arrow',color:'#C4553F',x1:40,y1:66,x2:52,y2:46}],author:'Beverly Bahm',role:'agent',ts:'Jul 22, 1:10 PM',status:'open',replies:[]}
+      ];
+    }
     return {
-      id:'BV-10428', address:'42 Bayview Terrace, Toronto', order:'#BV-10428',
+      id:order, address:address, order:'#'+order,
       status:'delivered', round:1,
       collaborators:[{name:'Jordan (buyer)',role:'guest'}],
       photos:photos
@@ -370,8 +388,13 @@
   /* ---------------- persistence ---------------- */
   function save(){ try{ localStorage.setItem(LSKEY, JSON.stringify(P)); }catch(e){} }
   function load(){
-    try{ var raw=localStorage.getItem(LSKEY); if(raw){ P=JSON.parse(raw); return; } }catch(e){}
-    P=seed();
+    var q=new URLSearchParams(location.search), order=(q.get('order')||'').replace(/^#/,''), addr=q.get('addr');
+    try{ var raw=localStorage.getItem(LSKEY); if(raw){ var saved=JSON.parse(raw);
+      // if the URL names a project and it differs from what's saved, open the one they clicked
+      if(order && saved.id!==order){ P=seed(order,addr); return; }
+      P=saved; return;
+    } }catch(e){}
+    P=seed(order,addr);
   }
 
   /* ---------------- helpers ---------------- */
@@ -837,7 +860,7 @@
   $('inviteName').addEventListener('keydown',function(e){ if(e.key==='Enter') addGuest(); });
   // reset demo (double-click the logo)
   document.querySelector('.logo').title='Double-click to reset demo';
-  document.querySelector('.logo').ondblclick=function(){ if(confirm('Reset the demo project to its starting state?')){ localStorage.removeItem(LSKEY); P=seed(); curId=P.photos[0].id; render(); toast('Demo reset'); } };
+  document.querySelector('.logo').ondblclick=function(){ if(confirm('Reset this project to its starting state?')){ localStorage.removeItem(LSKEY); P=seed(P.id,P.address); curId=P.photos[0].id; render(); toast('Reset'); } };
 
   /* ---------------- boot ---------------- */
   load();

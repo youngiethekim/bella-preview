@@ -58,6 +58,23 @@
   /* delivered files */
   .files{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
   @media(max-width:900px){.files{grid-template-columns:1fr 1fr}}
+  /* photo status sections */
+  .ph-sec{margin-bottom:22px}
+  .ph-sec-h{display:flex;align-items:center;gap:9px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:11px}
+  .ph-sec-h .dot{width:8px;height:8px;border-radius:50%;flex:none}
+  .ph-sec-h .cnt{background:var(--line-2);border-radius:99px;padding:1px 9px;letter-spacing:0}
+  .ph-sec-h.g-rev{color:var(--amber)} .ph-sec-h.g-rev .dot{background:var(--amber)} .ph-sec-h.g-rev .cnt{background:#FBF3E2;color:var(--amber)}
+  .ph-sec-h.g-app{color:var(--green)} .ph-sec-h.g-app .dot{background:var(--green)} .ph-sec-h.g-app .cnt{background:#EDF4EE;color:var(--green)}
+  .ph-sec-h.g-tor .dot{background:var(--soft)}
+  .file .ph .chg.ap{background:var(--green)}
+  .file.approved .ph{outline:2px solid #CFE0D3;outline-offset:-2px}
+  .file .stico{position:absolute;bottom:8px;left:8px;z-index:2;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:#fff}
+  .file .stico svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2.2}
+  .file .stico.rev{background:var(--amber)} .file .stico.app{background:var(--green)}
+  .pr-foot-btns{display:flex;gap:8px}
+  .pr-approve{flex:1;background:#EDF4EE;color:var(--green);border:1px solid #CFE0D3;font-family:inherit;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:12px;border-radius:8px;cursor:pointer;transition:.15s}
+  .pr-approve:hover{background:var(--green);color:#fff;border-color:var(--green)}
+  .pr-foot-btns .pr-send{flex:1;width:auto}
   .file{position:relative;border:1px solid var(--line);background:#fff;overflow:hidden}
   .file .ph{position:relative;aspect-ratio:1.4;overflow:hidden;background:#EFECE8}
   .file .ph img{width:100%;height:100%;object-fit:cover}
@@ -371,7 +388,7 @@
       <div style="font-size:13px;color:var(--soft);margin-top:2px">Click any photo below to pin the spot, draw on it, and tell us what to change — free, unlimited for two weeks.</div>
     </div>
   </div>
-  <div class="files" id="fileGrid"></div>
+  <div id="fileGrid"></div>
   <div class="files-bar">
     <button class="btn btn-sm" id="dlAll"><svg class="svgi bi"><use href="#i-download"/></svg>Download all (8)</button>
     <div class="toggle-row" id="wmToggle"><span class="tg"></span> Mark photos “Virtually staged”</div>
@@ -434,7 +451,7 @@
       <div class="pr-side">
         <div class="pr-side-h">Your change requests</div>
         <div class="pr-reqs" id="prReqs"></div>
-        <div class="pr-foot"><button class="pr-send" id="prSend" type="button">Send to Bella</button><div class="pr-hint">Free &amp; unlimited for two weeks. We relay it to the studio for you.</div></div>
+        <div class="pr-foot"><div class="pr-foot-btns"><button class="pr-approve" id="prApprove" type="button">✓ Looks great — approve</button><button class="pr-send" id="prSend" type="button">Send changes</button></div><div class="pr-hint">Free &amp; unlimited for two weeks. We relay changes to the studio for you.</div></div>
       </div>
     </div>
   </div>
@@ -2884,15 +2901,32 @@ var qrcode = function() {
   function img(src){ return '<span class="imgwm"><img src="'+src+'" alt="">'+vsTag()+'</span>'; }
 
   /* delivered files grid with download + watermark badge */
+  var approvedPhotos={};
+  function statusOf(i){ if(approvedPhotos[i]) return 'approved'; if((reviews[i]||[]).length) return 'inrevision'; return 'delivered'; }
+  var CHK='<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>';
+  var PINI='<svg viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/></svg>';
+  function tileHTML(s,i){
+    var st=statusOf(i), n=(reviews[i]||[]).length;
+    var badge = st==='approved' ? '<span class="chg ap">✓ Approved</span>'
+              : st==='inrevision' ? '<span class="chg">'+n+' change'+(n>1?'s':'')+'</span>' : '';
+    var ico = st==='approved' ? '<span class="stico app">'+CHK+'</span>'
+            : st==='inrevision' ? '<span class="stico rev">'+PINI+'</span>' : '';
+    var hint = st==='approved' ? '<span class="mkhint">View / edit</span>'
+             : st==='inrevision' ? '<span class="mkhint">✎ Edit change requests</span>'
+             : '<span class="mkhint">✎ Click to review</span>';
+    return '<div class="file'+(st==='approved'?' approved':'')+'"><div class="ph" data-review="'+i+'"><img src="'+s+'" alt="Staged photo '+(i+1)+'" loading="lazy">'
+      +badge+ico+(state.wm?'<span class="wm">Virtually staged</span>':'')+hint
+      +'<a class="dl" href="'+s+'" download="'+projSlug()+'-'+(i+1)+'.jpg" title="Download">↓</a></div></div>';
+  }
   function renderFiles(){
-    document.getElementById('fileGrid').innerHTML=PHOTOS.map(function(s,i){
-      var n=(reviews[i]||[]).length;
-      return '<div class="file"><div class="ph" data-review="'+i+'"><img src="'+s+'" alt="Staged photo '+(i+1)+'" loading="lazy">'
-        +(n?'<span class="chg">'+n+' change'+(n>1?'s':'')+'</span>':'')
-        +(state.wm?'<span class="wm">Virtually staged</span>':'')
-        +'<span class="mkhint">✎ Click to request a change</span>'
-        +'<a class="dl" href="'+s+'" download="'+projSlug()+'-'+(i+1)+'.jpg" title="Download">↓</a></div></div>';
-    }).join('');
+    var groups=[{k:'inrevision',t:'In revision',cls:'g-rev'},{k:'delivered',t:'To review',cls:'g-tor'},{k:'approved',t:'Approved by you',cls:'g-app'}];
+    var html='';
+    groups.forEach(function(g){
+      var idxs=PHOTOS.map(function(_,i){return i;}).filter(function(i){return statusOf(i)===g.k;});
+      if(!idxs.length) return;
+      html+='<div class="ph-sec"><div class="ph-sec-h '+g.cls+'"><span class="dot"></span>'+g.t+' <span class="cnt">'+idxs.length+'</span></div><div class="files">'+idxs.map(function(i){return tileHTML(PHOTOS[i],i);}).join('')+'</div></div>';
+    });
+    document.getElementById('fileGrid').innerHTML=html;
     document.querySelectorAll('#fileGrid .ph[data-review]').forEach(function(el){ el.onclick=function(e){ if(e.target.closest('.dl')) return; openReview(+el.getAttribute('data-review')); }; });
   }
 
@@ -2901,7 +2935,7 @@ var qrcode = function() {
   var prIdx=0, prTool='pin', prColor='#C4553F', prLive={down:false,shape:null};
   var PRC=['#C4553F','#B8985A','#3E6B4C','#3E6076','#232120'];
   function reqsFor(i){ reviews[i]=reviews[i]||[]; return reviews[i]; }
-  function openReview(i){ prIdx=i; prTool='pin'; prLive={down:false,shape:null}; document.getElementById('prImg').src=PHOTOS[i]; document.getElementById('prTitle').textContent='Request a change · Photo '+(i+1); renderPR(); document.getElementById('photoReview').classList.add('open'); }
+  function openReview(i){ prIdx=i; prTool='pin'; prLive={down:false,shape:null}; document.getElementById('prImg').src=PHOTOS[i]; document.getElementById('prTitle').textContent=(statusOf(i)==='approved'?'Photo '+(i+1)+' · approved ✓':'Request a change · Photo '+(i+1)); document.getElementById('prApprove').textContent=(statusOf(i)==='approved'?'✓ Approved — undo':'✓ Looks great — approve'); renderPR(); document.getElementById('photoReview').classList.add('open'); }
   function closeReview(){ document.getElementById('photoReview').classList.remove('open'); renderFiles(); }
   function prShape(sh){ var NS='http://www.w3.org/2000/svg', el; if(sh.type==='free'){ el=document.createElementNS(NS,'polyline'); el.setAttribute('points',sh.pts.map(function(p){return p[0]+','+p[1];}).join(' ')); el.setAttribute('fill','none'); } if(!el) return null; el.setAttribute('stroke',sh.color); el.setAttribute('stroke-width','1.3'); el.setAttribute('vector-effect','non-scaling-stroke'); el.setAttribute('stroke-linecap','round'); el.setAttribute('stroke-linejoin','round'); return el; }
   function renderPR(){
@@ -2931,7 +2965,8 @@ var qrcode = function() {
     sw.querySelectorAll('.pr-sw').forEach(function(b){ b.onclick=function(){ prColor=b.getAttribute('data-c'); sw.querySelectorAll('.pr-sw').forEach(function(x){x.classList.remove('on');}); b.classList.add('on'); }; });
     document.getElementById('prUndo').onclick=function(){ var list=reqsFor(prIdx); for(var i=list.length-1;i>=0;i--){ if(list[i].drawing&&list[i].drawing.length){ list[i].drawing.pop(); renderPR(); return; } } };
     document.getElementById('prClear').onclick=function(){ reviews[prIdx]=[]; renderPR(); };
-    document.getElementById('prSend').onclick=function(){ var n=reqsFor(prIdx).length; if(!n){ toast('Add a pin or a note first'); return; } toast(n+' change request'+(n>1?'s':'')+' sent to Bella'); closeReview(); };
+    document.getElementById('prSend').onclick=function(){ var n=reqsFor(prIdx).length; if(!n){ toast('Add a pin or a note first'); return; } approvedPhotos[prIdx]=false; toast(n+' change request'+(n>1?'s':'')+' sent to Bella'); closeReview(); };
+    document.getElementById('prApprove').onclick=function(){ if(approvedPhotos[prIdx]){ approvedPhotos[prIdx]=false; toast('Approval removed'); } else { approvedPhotos[prIdx]=true; reviews[prIdx]=[]; toast('Photo '+(prIdx+1)+' approved ✓'); } closeReview(); };
     stg.addEventListener('pointerdown',function(e){ if(e.target.closest('.pr-pin')) return;
       var p=prPct(e);
       if(prTool==='pin'){ reqsFor(prIdx).push({x:p.x,y:p.y,note:'',drawing:[]}); renderPR(); setTimeout(function(){ var ta=document.querySelector('#prReqs .pr-req:last-child textarea'); if(ta) ta.focus(); },20); return; }
@@ -3138,6 +3173,10 @@ var qrcode = function() {
   var rp=document.getElementById('renameProj'); if(rp) rp.onclick=editTitle;
   var rf=document.getElementById('renameFolder'); if(rf) rf.onclick=editTitle;
   updateFolderName();
+  /* demo: seed a couple of statuses so the sections are visible on load */
+  reviews[0]=[{x:26,y:50,note:'Swap the artwork for something warmer.',drawing:[]}];
+  reviews[2]=[{x:52,y:42,note:'Add a couple of counter stools at the island.',drawing:[]},{x:20,y:70,note:'Rug feels small — size it up.',drawing:[]}];
+  approvedPhotos[4]=true; approvedPhotos[5]=true; approvedPhotos[7]=true;
   renderFiles(); render();
 })();
 

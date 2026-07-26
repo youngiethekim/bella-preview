@@ -265,7 +265,7 @@
         +'<td>'+(o.studio? '<span class="studio-cell">'+esc(o.studio)+'</span>' : '<span class="studio-cell un">Unassigned</span>')+'</td>'
         +'<td>'+sla(o)+'</td>'
         +'<td><div class="rowacts">'
-          +'<a class="icobtn" href="bella-review.html" title="Open in review workspace"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg></a>'
+          +'<a class="icobtn" href="bella-review.html?order='+encodeURIComponent(o.id)+'&addr='+encodeURIComponent(o.addr)+'" title="Open in review workspace"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg></a>'
           +(o.studio?'':'<button class="icobtn" data-assign="'+o.id+'" title="Assign studio"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>')
           +(o.status!=='delivered'?'<button class="icobtn" data-adv="'+o.id+'" title="Advance status"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>':'')
         +'</div></td>'
@@ -285,7 +285,7 @@
     el.innerHTML=list.map(function(o){
       return '<div class="relay-item"><div class="top"><b>'+esc(o.addr)+'</b><span class="n">'+o.rev+' request'+(o.rev>1?'s':'')+'</span></div>'
         +'<div class="who">'+esc(o.client)+' · #'+o.id+(o.studio?' · '+esc(o.studio):' · unassigned')+'</div>'
-        +'<div class="acts"><a class="btn-line btn-sm" href="bella-review.html">Open in review</a><button class="btn btn-sm" data-relay="'+o.id+'">Send to studio</button></div></div>';
+        +'<div class="acts"><a class="btn-line btn-sm" href="bella-review.html?order='+encodeURIComponent(o.id)+'&addr='+encodeURIComponent(o.addr)+'">Open in review</a><button class="btn btn-sm" data-relay="'+o.id+'">Send to studio</button></div></div>';
     }).join('');
     el.querySelectorAll('[data-relay]').forEach(function(b){ b.onclick=function(){ var o=byId(b.getAttribute('data-relay')); if(!o.studio){ openAssign(o.id); return; } o.status='studio'; o.rev=0; toast('Relayed '+o.id+' to '+o.studio); renderAll(); }; });
   }
