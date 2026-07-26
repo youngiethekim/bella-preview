@@ -113,6 +113,23 @@
   .invite-row{padding:12px 18px 18px;display:flex;gap:7px}
   .invite-row input{flex:1;border:1px solid var(--line);padding:9px 11px;font-family:inherit;font-size:13px}
   .invite-row input:focus{outline:0;border-color:var(--ink)}
+  .prof-intro{font-size:12.5px;color:var(--soft);margin-bottom:14px;line-height:1.5}
+  .prof-row{display:flex;gap:12px;align-items:center;margin-bottom:9px}
+  .prof-photo{width:56px;height:56px;border-radius:50%;border:1px dashed var(--line);background:#F5F2EC;flex:none;position:relative;cursor:pointer;display:grid;place-items:center;overflow:hidden}
+  .prof-photo .pp-ph{position:absolute;inset:0;background:center/cover}
+  .prof-photo .pp-ed{font-size:10px;color:var(--faint);z-index:2}
+  .prof-photo:hover{border-color:var(--ink)}
+  .prof-fields{flex:1;display:flex;flex-direction:column;gap:7px;min-width:0}
+  .prof-fields input,#profBio{border:1px solid var(--line);border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13.5px;color:var(--ink)}
+  #profBio{width:100%;border-radius:8px;padding:10px 11px;font-size:13px;min-height:70px;resize:vertical;margin-top:2px}
+  #profBio:focus,.prof-fields input:focus{outline:0;border-color:var(--ink)}
+  .prof-logo{display:flex;align-items:center;gap:10px;margin-top:11px;flex-wrap:wrap}
+  .prof-logo-btn{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:7px;padding:8px 12px;font-size:12.5px;cursor:pointer;color:var(--soft)}
+  .prof-logo-btn:hover{border-color:var(--ink);color:var(--ink)}
+  .prof-logo-btn .pl-thumb{width:26px;height:20px;background:#F5F2EC center/contain no-repeat;border-radius:3px}
+  .prof-hint{font-size:11px;color:var(--faint)}
+  .prof-save{display:flex;align-items:center;gap:11px;margin-top:13px}
+  .prof-done{color:var(--green);font-size:12.5px}
   .cta-card{background:linear-gradient(180deg,#20304A,#1C1A18);color:#fff;padding:24px}
   .cta-card h3{color:#fff;padding:0;border:0;font-size:19px;letter-spacing:-.01em;text-transform:none}
   .cta-card p{font-size:13px;color:#B9C2CE;margin:8px 0 16px}
@@ -164,6 +181,22 @@
         <h3>Need a change on a delivered listing?</h3>
         <p>Pin, sketch and explain exactly what you want. Free and unlimited for two weeks after delivery.</p>
         <a class="btn" href="bella-review.html">Open review workspace →</a>
+      </div>
+      <div class="panel">
+        <h3>Your profile &amp; brand</h3>
+        <div class="pb">
+          <p class="prof-intro">Add your headshot, a short bio and your logo. We use these to brand your catalog, brochures and social templates.</p>
+          <div class="prof-row">
+            <label class="prof-photo" id="profPhoto"><input type="file" id="profPhotoIn" accept="image/*" hidden><span class="pp-ph" id="ppThumb"></span><span class="pp-ed" id="ppEd">Photo</span></label>
+            <div class="prof-fields">
+              <input id="profName" placeholder="Your name" value="Beverly Bahm">
+              <input id="profTitle" placeholder="Title · Brokerage" value="Realtor® · Bahm Group">
+            </div>
+          </div>
+          <textarea id="profBio" placeholder="A short bio — who you are, your market, what you're known for. Appears on your listing brochures and site."></textarea>
+          <div class="prof-logo"><label class="prof-logo-btn" id="profLogo"><input type="file" id="profLogoIn" accept="image/*" hidden><span class="pl-thumb" id="plThumb"></span>Upload logo</label><span class="prof-hint">Transparent PNG works best</span></div>
+          <div class="prof-save"><button class="btn btn-sm" id="profSave">Save profile</button><span class="prof-done" id="profDone"></span></div>
+        </div>
       </div>
       <div class="panel">
         <h3>Recent activity</h3>
@@ -302,6 +335,12 @@
     $('inviteEmail').value=''; renderTeam(); toast('Invite sent (demo)');
   };
   $('inviteEmail').addEventListener('keydown',function(e){if(e.key==='Enter')$('inviteBtn').click();});
+
+  /* profile & brand onboarding — photo, bio, logo (feeds catalog + marketing kit) */
+  function readImg(inp,cb){ var f=inp.files&&inp.files[0]; if(!f) return; var r=new FileReader(); r.onload=function(){ cb(r.result); }; r.readAsDataURL(f); }
+  $('profPhotoIn').onchange=function(){ readImg(this,function(u){ $('ppThumb').style.backgroundImage='url('+u+')'; $('ppEd').style.display='none'; }); };
+  $('profLogoIn').onchange=function(){ readImg(this,function(u){ $('plThumb').style.backgroundImage='url('+u+')'; }); };
+  $('profSave').onclick=function(){ $('profDone').textContent='✓ Saved'; toast('Profile saved — we’ll brand your catalog & marketing kit with it'); };
 
   renderStats(); renderFilters(); renderGrid(); renderFeed(); renderTeam();
 })();
