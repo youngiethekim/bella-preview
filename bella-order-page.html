@@ -612,6 +612,21 @@
   .fo-box::after{content:"";width:10px;height:6px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);opacity:0;transition:.15s}
   .fo-check input:checked~.fo-box::after{opacity:1}
   .fo-done{color:var(--green);font-size:13px;margin-top:11px}
+  /* free marketing kit (opt-out) */
+  .mkt-kit{margin-top:22px;display:flex;gap:20px;align-items:flex-start;background:#F1F7F2;border:1px solid #CFE0D3;border-radius:12px;padding:24px 28px}
+  @media(max-width:600px){.mkt-kit{flex-direction:column;gap:14px}}
+  .mkt-kit .mk-ic{width:54px;height:54px;border-radius:12px;background:#fff;border:1px solid #CFE0D3;display:grid;place-items:center;flex:none}
+  .mkt-kit .mk-ic svg{width:27px;height:27px;stroke:var(--green);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+  .mkt-kit .mk-t b{display:block;font-size:20px;font-weight:400;margin-top:4px;color:var(--ink);letter-spacing:-.01em}
+  .mkt-kit .mk-t p{font-size:13.5px;color:#3f5545;margin-top:8px;line-height:1.55;max-width:66ch}
+  .mkt-kit .mk-t p b{font-weight:500;color:#2f4433}
+  .mk-check{display:flex;align-items:center;gap:11px;margin-top:16px;cursor:pointer;font-size:14px;color:var(--ink)}
+  .mk-check input{position:absolute;opacity:0;pointer-events:none}
+  .mk-box{width:22px;height:22px;border:1.5px solid var(--green);border-radius:6px;flex:none;display:grid;place-items:center;transition:.15s;background:#fff}
+  .mk-check input:checked~.mk-box{background:var(--green);border-color:var(--green)}
+  .mk-box::after{content:"";width:10px;height:6px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);opacity:0;transition:.15s}
+  .mk-check input:checked~.mk-box::after{opacity:1}
+  .mk-done{color:var(--soft);font-size:13px;margin-top:10px}
 
   /* what we'll need from you */
   .reqpanel:empty{display:none}
@@ -810,6 +825,16 @@
         <div id="addonList"></div>
       </div>
     </div>
+    <div class="mkt-kit">
+      <div class="mk-ic"><svg viewBox="0 0 24 24"><path d="M6.5 3.5h7l4.5 4.5v12h-11.5z"/><path d="M13.5 3.5V8H18"/><path d="M9 13h6M9 16h4"/></svg></div>
+      <div class="mk-t">
+        <span class="micro" style="color:var(--green)">Included free</span>
+        <b>Your marketing kit — on us</b>
+        <p>From your staged photos we'll build a <b>listing brochure</b>, a <b>branded catalog</b>, and ready-to-post <b>social media templates</b> — yours to download at no extra cost. Don't need it? Just unselect and we'll skip it.</p>
+        <label class="mk-check"><input type="checkbox" id="mkCb" checked><span class="mk-box"></span><span>Yes, include my free marketing kit</span></label>
+        <div class="mk-done" id="mkDone"></div>
+      </div>
+    </div>
     <div class="expect">
       <div class="expect-h"><span class="micro">What to expect</span><b>From order to MLS-ready in four steps</b></div>
       <div class="expect-steps">
@@ -939,7 +964,7 @@
   function fp3d(){ return state.commercial?CFP3D:PR.FP3D; }
   var state={ proj:null, commercial:false, photos:8, mode:'ready', removal:false, reno:false, renoN:8, floor:false, fpn:1, floor2d:false, fp2dn:1, tour:false, dusk:false, duskN:8, sky:false, skyN:8, pano360:false, pano:3,
               rint:1, rext:1, rfp:1, useInt:true, useExt:true, useFp:true,
-              styleMode:'pro', stylePick:null, uploads:[], photog:{email:'',notes:'',sent:false}, files:{}, designerAll:true, sourceFurniture:false };
+              styleMode:'pro', stylePick:null, uploads:[], photog:{email:'',notes:'',sent:false}, files:{}, designerAll:true, sourceFurniture:false, marketingKit:true };
 
   // saved lookbook pieces
   var saved=[]; try{ saved=JSON.parse(localStorage.getItem('bellaProject')||'[]'); }catch(e){}
@@ -1590,6 +1615,8 @@
     document.getElementById('recLines').innerHTML=r.L.map(function(x){return '<li><span class="li-n">'+lineIcon(x[0])+'<span>'+x[0]+'</span></span><span>'+x[1]+'</span></li>';}).join('');
     var fo=document.getElementById('foCb');
     if(fo){ fo.checked=!!state.sourceFurniture; fo.onchange=function(){ state.sourceFurniture=fo.checked; document.getElementById('foDone').textContent = fo.checked? '✓ Noted — our design team will reach out about furniture sourcing after you place the order.' : ''; }; }
+    var mk=document.getElementById('mkCb');
+    if(mk){ mk.checked=state.marketingKit!==false; mk.onchange=function(){ state.marketingKit=mk.checked; document.getElementById('mkDone').textContent = mk.checked? '' : 'No problem — we\'ll skip the marketing kit and just deliver your staged photos.'; }; }
     document.getElementById('recTotal').textContent=money(r.total);
     document.getElementById('recSave').textContent = r.disc? 'You saved '+money(r.disc) : '';
     // add-ons aside: show the toggles they didn't pick
