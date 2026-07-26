@@ -579,6 +579,39 @@
   .aside .opt:last-child{border-bottom:0}
   .aside .opt .oname{flex:1}
   .aside .opt .op{font-size:13px;color:var(--faint);white-space:nowrap}
+  /* summary line icons + included chips */
+  .rec .lines li .li-n{display:flex;align-items:center;gap:11px;min-width:0}
+  .rec .lines li .li-ic{width:17px;height:17px;stroke:#B89877;fill:none;stroke-width:1.5;flex:none}
+  .rec .incl{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:20px}
+  .rec .incl span{font-size:12px;color:#C9C3BA;display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .rec .incl svg{width:14px;height:14px;stroke:#7FBF94;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  /* what to expect timeline */
+  .expect{margin-top:26px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:26px 30px}
+  .expect-h b{display:block;font-size:19px;font-weight:400;margin-top:5px}
+  .expect-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:20px}
+  @media(max-width:720px){.expect-steps{grid-template-columns:1fr 1fr;gap:18px}}
+  @media(max-width:440px){.expect-steps{grid-template-columns:1fr}}
+  .estep{position:relative;padding-right:14px}
+  .estep .ei{width:46px;height:46px;border-radius:50%;background:#EEF3EE;display:grid;place-items:center;position:relative;z-index:2;margin-bottom:12px}
+  .estep .ei svg{width:22px;height:22px;stroke:var(--green);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+  .estep:not(:last-child)::after{content:"";position:absolute;top:23px;left:52px;right:-3px;height:2px;background:var(--line-2);z-index:1}
+  @media(max-width:720px){.estep::after{display:none}}
+  .estep .et b{font-weight:400;font-size:15px;display:block}
+  .estep .et span{font-size:12.5px;color:var(--soft);line-height:1.45;display:block;margin-top:4px}
+  /* furniture-sourcing offer */
+  .furniture-offer{margin-top:22px;display:flex;gap:20px;align-items:flex-start;background:linear-gradient(120deg,#FBF8F0,#F6F0E2);border:1px solid #EADFC5;border-radius:12px;padding:24px 28px}
+  @media(max-width:600px){.furniture-offer{flex-direction:column;gap:14px}}
+  .furniture-offer .fo-ic{width:54px;height:54px;border-radius:12px;background:#fff;border:1px solid #EADFC5;display:grid;place-items:center;flex:none}
+  .furniture-offer .fo-ic svg{width:27px;height:27px;stroke:var(--gold);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+  .furniture-offer .fo-t b{display:block;font-size:20px;font-weight:400;margin-top:4px;color:var(--ink);letter-spacing:-.01em}
+  .furniture-offer .fo-t p{font-size:13.5px;color:#5b5140;margin-top:8px;line-height:1.55;max-width:66ch}
+  .fo-check{display:flex;align-items:center;gap:11px;margin-top:16px;cursor:pointer;font-size:14px;color:var(--ink)}
+  .fo-check input{position:absolute;opacity:0;pointer-events:none}
+  .fo-box{width:22px;height:22px;border:1.5px solid var(--gold);border-radius:6px;flex:none;display:grid;place-items:center;transition:.15s;background:#fff}
+  .fo-check input:checked~.fo-box{background:var(--gold);border-color:var(--gold)}
+  .fo-box::after{content:"";width:10px;height:6px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);opacity:0;transition:.15s}
+  .fo-check input:checked~.fo-box::after{opacity:1}
+  .fo-done{color:var(--green);font-size:13px;margin-top:11px}
 
   /* what we'll need from you */
   .reqpanel:empty{display:none}
@@ -763,12 +796,37 @@
         <h3 id="recName">Your project</h3>
         <ul class="lines" id="recLines"></ul>
         <div class="tot"><span class="micro" style="color:#9B958C">Total</span><div style="text-align:right"><b id="recTotal">$0</b><div class="save" id="recSave"></div></div></div>
+        <div class="incl">
+          <span><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>MLS-ready in 24–48h</span>
+          <span><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>Unlimited revisions</span>
+          <span><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>You approve first</span>
+          <span><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>Rework or refund</span>
+        </div>
         <button class="btn" id="startOrder">Start my order</button>
-        <p class="fine">Delivered in 24–48 hours · unlimited revisions for two weeks · rework or refund</p>
+        <p class="fine">Real interior designers · you own the final files</p>
       </div>
       <div class="aside">
         <span class="micro">Add anything else</span>
         <div id="addonList"></div>
+      </div>
+    </div>
+    <div class="expect">
+      <div class="expect-h"><span class="micro">What to expect</span><b>From order to MLS-ready in four steps</b></div>
+      <div class="expect-steps">
+        <div class="estep"><span class="ei"><svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h9"/><circle cx="19.5" cy="19" r="2.2"/></svg></span><div class="et"><b>1 · You order</b><span>Send photos now, or email your photographer a secure upload link.</span></div></div>
+        <div class="estep"><span class="ei"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-1 2-2s-.6-1.4-.6-2.2c0-.9.7-1.6 1.6-1.6H18a3 3 0 0 0 3-3c0-3.9-4-6.2-9-6.2z"/><circle cx="8" cy="11" r="1"/><circle cx="12" cy="8" r="1"/><circle cx="16" cy="11" r="1"/></svg></span><div class="et"><b>2 · We stage it</b><span>Real interior designers, matched to your buyer. Ready in 24–48 hours.</span></div></div>
+        <div class="estep"><span class="ei"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="2.5"/></svg></span><div class="et"><b>3 · You review</b><span>Approve every photo, or pin exactly what to change — free for two weeks.</span></div></div>
+        <div class="estep"><span class="ei"><svg viewBox="0 0 24 24"><path d="M12 4v11M8 11l4 4 4-4M5 20h14"/></svg></span><div class="et"><b>4 · Download &amp; sell</b><span>MLS-ready photos, plus a listing brochure and one-listing website.</span></div></div>
+      </div>
+    </div>
+    <div class="furniture-offer">
+      <div class="fo-ic"><svg viewBox="0 0 24 24"><path d="M4 11.5V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3.5"/><path d="M2 13.5a2 2 0 0 1 4 0V15h12v-1.5a2 2 0 0 1 4 0V18H2z"/><path d="M5 18v2M19 18v2"/></svg></div>
+      <div class="fo-t">
+        <span class="micro" style="color:var(--gold)">New · Furniture sourcing</span>
+        <b>Love the look? We can source the real furniture.</b>
+        <p>Our designers can build a shopping list of the exact pieces we stage with — or handle the ordering for you. Perfect for model homes, flips, or a home you're moving into yourself.</p>
+        <label class="fo-check"><input type="checkbox" id="foCb"><span class="fo-box"></span><span>Yes, I'm interested — have your team reach out about sourcing the furniture.</span></label>
+        <div class="fo-done" id="foDone"></div>
       </div>
     </div>
     <div class="reqpanel" id="reqPanel"></div>
@@ -881,7 +939,7 @@
   function fp3d(){ return state.commercial?CFP3D:PR.FP3D; }
   var state={ proj:null, commercial:false, photos:8, mode:'ready', removal:false, reno:false, renoN:8, floor:false, fpn:1, floor2d:false, fp2dn:1, tour:false, dusk:false, duskN:8, sky:false, skyN:8, pano360:false, pano:3,
               rint:1, rext:1, rfp:1, useInt:true, useExt:true, useFp:true,
-              styleMode:'pro', stylePick:null, uploads:[], photog:{email:'',notes:'',sent:false}, files:{}, designerAll:true };
+              styleMode:'pro', stylePick:null, uploads:[], photog:{email:'',notes:'',sent:false}, files:{}, designerAll:true, sourceFurniture:false };
 
   // saved lookbook pieces
   var saved=[]; try{ saved=JSON.parse(localStorage.getItem('bellaProject')||'[]'); }catch(e){}
@@ -1516,10 +1574,23 @@
   }
 
   // ---- STEP 3 ----
+  function lineIcon(name){
+    var n=(name||'').toLowerCase(), p;
+    if(/discount/.test(n)) p='<path d="M20 12l-8 8-9-9V4h7z"/><circle cx="8" cy="8" r="1.2"/>';
+    else if(/floor plan/.test(n)) p='<rect x="4" y="4" width="16" height="16" rx="1"/><path d="M4 11h8M12 4v16M12 15h8"/>';
+    else if(/tour|render/.test(n)) p='<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12v9M4 7.5l8 4.5 8-4.5"/>';
+    else if(/dusk|dawn|twilight/.test(n)) p='<path d="M17 12a5 5 0 1 1-5-5 4 4 0 0 0 5 5z"/>';
+    else if(/sky|retouch/.test(n)) p='<path d="M6 16a4 4 0 0 1 .5-8 5 5 0 0 1 9.5 1.5A3.5 3.5 0 0 1 18 16z"/>';
+    else if(/renovat/.test(n)) p='<path d="M14 6l4 4M4 20l2.5-.5 10.5-10.5-3-3L3.5 16.5z"/>';
+    else p='<path d="M4 11.5V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3.5"/><path d="M2 13.5a2 2 0 0 1 4 0V15h12v-1.5a2 2 0 0 1 4 0V18H2z"/><path d="M5 18v2M19 18v2"/>';
+    return '<svg class="li-ic" viewBox="0 0 24 24">'+p+'</svg>';
+  }
   function buildSummary(){
     var r=lines();
     document.getElementById('recName').textContent=packName();
-    document.getElementById('recLines').innerHTML=r.L.map(function(x){return '<li><span>'+x[0]+'</span><span>'+x[1]+'</span></li>';}).join('');
+    document.getElementById('recLines').innerHTML=r.L.map(function(x){return '<li><span class="li-n">'+lineIcon(x[0])+'<span>'+x[0]+'</span></span><span>'+x[1]+'</span></li>';}).join('');
+    var fo=document.getElementById('foCb');
+    if(fo){ fo.checked=!!state.sourceFurniture; fo.onchange=function(){ state.sourceFurniture=fo.checked; document.getElementById('foDone').textContent = fo.checked? '✓ Noted — our design team will reach out about furniture sourcing after you place the order.' : ''; }; }
     document.getElementById('recTotal').textContent=money(r.total);
     document.getElementById('recSave').textContent = r.disc? 'You saved '+money(r.disc) : '';
     // add-ons aside: show the toggles they didn't pick
