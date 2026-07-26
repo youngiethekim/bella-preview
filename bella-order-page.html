@@ -959,7 +959,7 @@
       if(state.reno){ var renoCost=PR.RENO*state.renoN, dReno=renoCost*volDisc(state.renoN); L.push(['Virtual renovation × '+state.renoN, money(renoCost)]); total+=renoCost-dReno; disc+=dReno; }
       if(state.floor2d){ L.push(['2D floor plan × '+state.fp2dn+(state.fp2dn>1?' floors':' floor'), money(PR.FP2D*state.fp2dn)]); total+=PR.FP2D*state.fp2dn; }
       if(state.floor){ L.push(['3D floor plan × '+state.fpn+(state.fpn>1?' floors':' floor'), money(fp3d()*state.fpn)]); total+=fp3d()*state.fpn; }
-      if(state.tour){ L.push(['Virtual house tour', money(PR.TOUR)]); total+=PR.TOUR; }
+      if(state.tour){ L.push(['360° tour — stitch & host', money(PR.TOUR)]); total+=PR.TOUR; }
       if(state.dusk){ var duskCost=PR.DUSK*state.duskN, dDusk=duskCost*volDisc(state.duskN); L.push(['Day-to-dusk edits × '+state.duskN, money(duskCost)]); total+=duskCost-dDusk; disc+=dDusk; }
       if(state.sky){ var skyCost=PR.SKY*state.skyN, dSky=skyCost*volDisc(state.skyN); L.push(['Sky replacement & retouching × '+state.skyN, money(skyCost)]); total+=skyCost-dSky; disc+=dSky; }
       if(state.pano360){ var panoCost=PR.PANO*state.pano, dPano=panoCost*volDisc(state.pano); L.push(['360° virtual tour × '+state.pano, money(panoCost)]); total+=panoCost-dPano; disc+=dPano; }
@@ -1026,7 +1026,7 @@
          +section('tour','Do you need a 3D tour?','Keep buyers on your listing longer; out-of-town buyers can walk it without a showing.',
              subQty('360° virtual staging','We stitch and stage your 360° photos into one walkable tour','pano360','pano','rooms','+$'+PR.PANO+' / photo','')
               .replace('</span></span><span class="qtywrap"','. <button type="button" class="linkbtn" id="panoExample">See a sample &amp; what we need →</button></span></span><span class="qtywrap"')
-            +subRow('Virtual house tour','A walkable tour built from your listing photos','tour','+'+money(PR.TOUR),'tour')
+            +subRow('360° tour — stitch &amp; host','We stitch your 360° room photos into one walkable, hosted virtual tour.'+tip('Save money — no pricey 3D-camera scan needed. Just ask your photographer to shoot standard 360° photos of each room, and we stitch them into a hosted tour for you.'),'tour','+'+money(PR.TOUR),'tour')
             +reqUpload('tour','Your 360° photos','Equirectangular 360° shots — one per room you want walkable'))
          +section('edit','Do you need photo editing?','Small edits, big first impression — brighter, warmer, more clicks online.',
              subQty('Day-to-dusk edits','Turn a daytime exterior into a twilight hero shot. You provide the daytime photos.','dusk','duskN','photos','+'+money(PR.DUSK)+' / photo','dusk')
@@ -1597,7 +1597,7 @@
     var opts=[], p=P[state.proj];
     if(p.path==='listing'){
       if(!state.floor) opts.push(['Add a 3D floor plan','floor','+'+money(fp3d())]);
-      if(!state.tour) opts.push(['Add a virtual tour','tour','+'+money(PR.TOUR)]);
+      if(!state.tour) opts.push(['Add a 360° tour (stitch &amp; host)','tour','+'+money(PR.TOUR)]);
       if(!state.dusk) opts.push(['Add day-to-dusk edits','dusk','+'+money(PR.DUSK)+'/photo']);
     } else {
       if(!state.useFp) opts.push(['Add furnished floor plans','useFp','+'+money(fp3d())]);
@@ -1620,7 +1620,7 @@
     floor2d:{svc:'2D floor plan', up:true, need:['Architectural blueprints or drawings (PDF or CAD), if you have them','Otherwise, dimensions / measurements for each floor','A rough sketch of the layout also works']},
     floor:  {svc:'3D floor plan', up:true, need:['Architectural blueprints or drawings (PDF or CAD), if you have them','Otherwise, dimensions / measurements for each floor']},
     pano360:{svc:'360° virtual staging', up:false, need:['360° (equirectangular) photos of each room you want walkable']},
-    tour:   {svc:'Virtual house tour', up:false, need:['Your finished listing photos, ideally in shooting order']},
+    tour:   {svc:'360° tour — stitch & host', up:false, need:['360° (equirectangular) photos of each room you want in the tour','Ask your real estate photographer — most already offer 360° capture, which saves you the cost of a full 3D scan']},
     useInt: {svc:'Interior 3D renders', up:true, need:['Architectural floor plans / blueprints (PDF or CAD)','Property dimensions','Any finish or material selections you want shown']},
     useExt: {svc:'Exterior 3D renders', up:true, need:['Elevations & site drawings (PDF or CAD)','Lot dimensions','Any material, landscaping or lighting direction']},
     useFp:  {svc:'Furnished 3D floor plans', up:true, need:['Architectural blueprints or floor plans (PDF or CAD)','Otherwise, dimensions for each floor']}
