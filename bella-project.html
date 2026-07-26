@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://www.bellavirtual.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 <style>
   :root{--bg:#FDFCFA;--ink:#232120;--soft:#6E6A66;--faint:#9C978F;--line:#E8E4DE;--line-2:#F0EDE8;--dark:#1C1A18;--green:#3E6B4C;--gold:#E7C36A;--pad:44px}
   *{box-sizing:border-box;margin:0;padding:0}
@@ -76,7 +77,22 @@
   .brand .bshop{margin-top:12px;padding-top:12px;border-top:1px solid var(--line-2);font-size:12px;letter-spacing:.03em;color:var(--ink);display:flex;align-items:center;justify-content:space-between}
   .brand .bshop svg{width:14px;height:14px;transition:transform .15s}
   .brand:hover .bshop svg{transform:translateX(3px)}
-  .brand .bsave{position:absolute;top:14px;right:14px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);background:#F1F5F1;border:1px solid #CFE0D3;padding:3px 8px;border-radius:99px}
+  .brand .bsave{position:absolute;top:14px;right:14px;z-index:3;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);background:#F1F5F1;border:1px solid #CFE0D3;padding:3px 8px;border-radius:99px}
+  .br-imgwrap{position:relative;margin:-18px -18px 12px;display:block;background:#F4F2EF}
+  .br-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+  .br-imgtag{position:absolute;bottom:7px;right:7px;font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;background:rgba(20,18,16,.58);color:#fff;padding:2px 7px;border-radius:99px}
+  .br-3d{position:absolute;top:12px;left:12px;z-index:4;font-size:10px;letter-spacing:.06em;text-transform:uppercase;background:rgba(20,18,16,.74);color:#fff;padding:5px 9px;border-radius:99px;display:inline-flex;align-items:center;gap:5px;cursor:pointer;transition:.14s}
+  .br-3d svg{width:13px;height:13px}
+  .br-3d:hover{background:var(--ink)}
+  /* 3D viewer modal */
+  #model3d{position:fixed;inset:0;z-index:130;background:rgba(16,14,12,.62);display:none;align-items:center;justify-content:center;padding:24px}
+  #model3d.open{display:flex}
+  #model3d .box{background:#fff;border-radius:12px;padding:16px;max-width:560px;width:100%;position:relative}
+  #model3d .pclose{position:absolute;top:-13px;right:-13px;width:38px;height:38px;border-radius:50%;background:#fff;border:1px solid var(--line);font-size:22px;line-height:1;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.22);z-index:2}
+  .m3d-wrap{border-radius:8px;overflow:hidden;background:#F4F2EF}
+  #mv{width:100%;height:min(58vh,440px);background:#F4F2EF;display:block;--poster-color:transparent}
+  #model3d .pcap{text-align:center;font-size:14.5px;color:var(--soft);margin-top:13px}
+  #model3d .pcap b{color:var(--ink);font-weight:400}
 
   /* shop-this modal */
   .smodal{position:fixed;inset:0;z-index:120;background:rgba(20,18,16,.62);display:none;align-items:center;justify-content:center;padding:24px}
@@ -339,6 +355,16 @@
         <a class="btn btn-line" id="smContact" href="#">Have Bella order it at my discount</a>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- 3D VIEWER MODAL -->
+<div id="model3d">
+  <div class="box">
+    <button class="pclose" id="m3dClose" type="button" aria-label="Close">×</button>
+    <div class="m3d-wrap"><model-viewer id="mv" camera-controls auto-rotate rotation-per-second="20deg" touch-action="pan-y" shadow-intensity="1" exposure="1.05" interaction-prompt="none" alt="3D furniture preview"></model-viewer></div>
+    <p class="pcap" id="m3dCap"></p>
+    <span class="flag" style="display:block;text-align:center;margin-top:6px">Placeholder 3D model — drag to rotate. Real 3D of each staged piece is coming.</span>
   </div>
 </div>
 
@@ -2770,21 +2796,38 @@ var qrcode = function() {
 
   /* shop the look — SAMPLE brands, prices + client-discount codes.
      url = the real retailer; buyers can shop it directly, or order through Bella at the client rate. */
+  var CATP='https://youngiethekim.github.io/bella-preview/bella-catalog/items/';
+  var CHAIR3D='https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Assets/Models/SheenChair/glTF-Binary/SheenChair.glb';
   var BRANDS=[
-    {n:'Sundays',p:'Boucle accent chair',c:'BELLA-SUN15',pr:'$1,095',was:'$1,290',off:'15% off',url:'https://www.sundays.company'},
-    {n:'Rove Concepts',p:'Oak &amp; brass coffee table',c:'BELLA-ROVE10',pr:'$845',was:'$940',off:'10% off',url:'https://www.roveconcepts.com'},
-    {n:'Maiden Home',p:'Low-profile linen sofa',c:'BELLA-MAIDEN',pr:'$2,720',was:'$3,400',off:'20% off',url:'https://www.maidenhome.com'},
-    {n:'Article',p:'Layered wool area rug',c:'BELLA-ART20',pr:'$396',was:'$495',off:'20% off',url:'https://www.article.com'}
+    {n:'Sundays',p:'Boucle accent chair',c:'BELLA-SUN15',pr:'$1,095',was:'$1,290',off:'15% off',url:'https://www.sundays.company',img:CATP+'LR_MDRN_L148.jpg'},
+    {n:'Rove Concepts',p:'Oak &amp; brass coffee table',c:'BELLA-ROVE10',pr:'$845',was:'$940',off:'10% off',url:'https://www.roveconcepts.com',img:CATP+'DR_MDRN_D107.jpg'},
+    {n:'Maiden Home',p:'Low-profile linen sofa',c:'BELLA-MAIDEN',pr:'$2,720',was:'$3,400',off:'20% off',url:'https://www.maidenhome.com',img:CATP+'LR_SCND_L381.jpg'},
+    {n:'Article',p:'Layered wool area rug',c:'BELLA-ART20',pr:'$396',was:'$495',off:'20% off',url:'https://www.article.com',img:CATP+'BD_MDRN_B403.jpg'}
   ];
   var arrow='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
   document.getElementById('shopGrid').innerHTML=BRANDS.map(function(b,i){
     return '<button type="button" class="brand" data-piece="'+i+'">'
       +'<span class="bsave">'+b.off+'</span>'
-      +'<svg class="svgi br-i"><use href="#i-tag"/></svg>'
+      +'<span class="br-3d" data-3d="'+i+'" role="button" tabindex="0" aria-label="View in 3D"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12v9M4 7.5l8 4.5 8-4.5"/></svg>3D</span>'
+      +'<span class="br-imgwrap"><img class="br-img" src="'+b.img+'" alt="'+b.p+'" loading="lazy"><span class="br-imgtag">Sample image</span></span>'
       +'<span class="bp">'+b.p+'</span><span class="bn">'+b.n+'</span>'
       +'<span class="bprice"><s>'+b.was+'</s>'+b.pr+'</span>'
       +'<span class="bshop">Shop this piece '+arrow+'</span></button>';
   }).join('');
+  /* 3D viewer — drag to rotate (placeholder model for now) */
+  (function(){
+    var m=document.getElementById('model3d'); if(!m) return;
+    var mv=document.getElementById('mv');
+    function open3d(i){ var b=BRANDS[i]; mv.setAttribute('src',CHAIR3D); document.getElementById('m3dCap').innerHTML='<b>'+b.p+'</b> · '+b.n; m.classList.add('open'); }
+    function close3d(){ m.classList.remove('open'); }
+    document.querySelectorAll('.br-3d[data-3d]').forEach(function(el){
+      el.addEventListener('click',function(e){ e.preventDefault(); e.stopPropagation(); open3d(+el.getAttribute('data-3d')); });
+      el.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); e.stopPropagation(); open3d(+el.getAttribute('data-3d')); } });
+    });
+    document.getElementById('m3dClose').onclick=close3d;
+    m.addEventListener('click',function(e){ if(e.target===m) close3d(); });
+    window.addEventListener('keydown',function(e){ if(e.key==='Escape'&&m.classList.contains('open')) close3d(); });
+  })();
 
   /* shop-this modal: buy direct, or order through Bella at the client discount */
   (function(){
