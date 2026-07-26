@@ -93,6 +93,56 @@
   .br-3d{position:absolute;top:12px;left:12px;z-index:4;font-size:10px;letter-spacing:.06em;text-transform:uppercase;background:rgba(20,18,16,.74);color:#fff;padding:5px 9px;border-radius:99px;display:inline-flex;align-items:center;gap:5px;cursor:pointer;transition:.14s}
   .br-3d svg{width:13px;height:13px}
   .br-3d:hover{background:var(--ink)}
+  /* inline photo mark-up modal */
+  #photoReview{position:fixed;inset:0;z-index:140;background:rgba(16,14,12,.66);display:none;align-items:center;justify-content:center;padding:3vh 3vw}
+  #photoReview.open{display:flex}
+  .pr-box{background:#fff;border-radius:12px;width:100%;max-width:1020px;max-height:94vh;display:flex;flex-direction:column;overflow:hidden}
+  .pr-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line-2)}
+  .pr-head b{font-weight:400;font-size:16px}
+  .pr-x{width:34px;height:34px;border:0;background:transparent;font-size:22px;color:var(--faint);cursor:pointer;line-height:1}
+  .pr-x:hover{color:var(--ink)}
+  .pr-body{display:grid;grid-template-columns:1fr 310px;flex:1;min-height:0}
+  @media(max-width:760px){.pr-body{grid-template-columns:1fr}}
+  .pr-main{background:#F4F2EF;display:flex;flex-direction:column;min-width:0}
+  .pr-tools{display:flex;align-items:center;gap:6px;padding:9px 12px;border-bottom:1px solid var(--line-2);background:#fff;flex-wrap:wrap}
+  .pr-tool{width:34px;height:34px;border:1px solid transparent;border-radius:7px;background:transparent;display:grid;place-items:center;color:var(--soft);cursor:pointer;font-family:inherit}
+  .pr-tool.on{background:var(--ink);color:#fff}
+  .pr-tool:hover:not(.on){background:#F4F2EF}
+  .pr-tool.wide{width:auto;padding:0 12px;gap:7px;font-size:12px;letter-spacing:.02em}
+  .pr-tool svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  #prSwatches{display:inline-flex;gap:5px;align-items:center;margin:0 4px}
+  .pr-sw{width:18px;height:18px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);cursor:pointer}
+  .pr-sw.on{box-shadow:0 0 0 2px var(--ink)}
+  .pr-tip{margin-left:auto;font-size:11.5px;color:var(--faint);max-width:40ch}
+  .pr-stage-scroll{flex:1;overflow:auto;display:grid;place-items:center;padding:18px}
+  .pr-stage{position:relative;max-width:100%;user-select:none;line-height:0}
+  .pr-stage img{max-width:100%;max-height:62vh;display:block;border-radius:4px}
+  .pr-stage.pinning{cursor:crosshair}.pr-stage.drawing{cursor:crosshair}
+  .pr-draw{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  .pr-draw.live{pointer-events:auto}
+  .pr-pins{position:absolute;inset:0}
+  .pr-pin{position:absolute;transform:translate(-50%,-100%);z-index:3}
+  .pr-pin .d{width:26px;height:26px;border-radius:50% 50% 50% 2px;background:var(--amber);color:#fff;font-size:12px;display:grid;place-items:center;border:2px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.35)}
+  .pr-side{border-left:1px solid var(--line-2);display:flex;flex-direction:column;min-height:0}
+  .pr-side-h{padding:14px 16px 6px;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint)}
+  .pr-reqs{flex:1;overflow-y:auto;padding:6px 16px}
+  .pr-empty{color:var(--faint);font-size:13px;padding:26px 6px;text-align:center;line-height:1.5}
+  .pr-req{border:1px solid var(--line);border-radius:8px;padding:10px;margin-bottom:9px}
+  .pr-req .rq-h{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--soft);margin-bottom:7px}
+  .pr-req .rq-n{width:19px;height:19px;border-radius:50%;background:var(--amber);color:#fff;font-size:10px;display:grid;place-items:center}
+  .pr-req .rq-del{margin-left:auto;background:0;border:0;color:var(--faint);cursor:pointer;font-size:11px}
+  .pr-req .rq-del:hover{color:var(--red,#C4553F)}
+  .pr-req textarea{width:100%;border:1px solid var(--line);border-radius:6px;padding:8px 9px;font-family:inherit;font-size:13px;resize:vertical;min-height:46px}
+  .pr-req textarea:focus{outline:0;border-color:var(--ink)}
+  .pr-foot{padding:12px 16px;border-top:1px solid var(--line-2)}
+  .pr-send{width:100%;background:var(--ink);color:#fff;border:0;font-family:inherit;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:12px;border-radius:8px;cursor:pointer;transition:.15s}
+  .pr-send:hover{background:var(--green)}
+  .pr-hint{font-size:11.5px;color:var(--faint);text-align:center;margin-top:9px;line-height:1.4}
+  /* photo grid: clickable + change badge */
+  .file .ph{cursor:pointer}
+  .file .ph .chg{position:absolute;top:8px;left:8px;background:var(--amber);color:#fff;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:99px;z-index:2}
+  .file .ph .mkhint{position:absolute;inset:0;background:rgba(20,18,16,.4);color:#fff;display:flex;align-items:center;justify-content:center;gap:7px;font-size:13px;opacity:0;transition:.15s;z-index:1}
+  .file .ph:hover .mkhint{opacity:1}
   /* 3D viewer modal */
   #model3d{position:fixed;inset:0;z-index:130;background:rgba(16,14,12,.62);display:none;align-items:center;justify-content:center;padding:24px}
   #model3d.open{display:flex}
@@ -314,16 +364,13 @@
     <h2><svg class="svgi hd-i"><use href="#i-image"/></svg>Your delivered photos</h2>
     <span class="micro" id="wmState">Download originals, or toggle the virtually-staged mark</span>
   </div>
-  <a href="bella-review.html" style="display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:#FAF9F7;border:1px solid var(--line);padding:16px 20px;margin-bottom:18px;text-decoration:none;transition:border-color .15s" onmouseover="this.style.borderColor='var(--ink)'" onmouseout="this.style.borderColor='var(--line)'">
-    <div style="display:flex;gap:13px;align-items:center;min-width:240px">
-      <svg viewBox="0 0 24 24" style="width:26px;height:26px;stroke:var(--green);fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;flex:none"><path d="M12 20s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="8" r="2.4"/></svg>
-      <div>
-        <div style="font-size:16px;color:var(--ink)">Need a change? Request revisions</div>
-        <div style="font-size:13px;color:var(--soft);margin-top:2px">Pin, sketch and explain exactly what you want on any photo — free, unlimited for 2 weeks.</div>
-      </div>
+  <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;background:#FAF9F7;border:1px solid var(--line);padding:16px 20px;margin-bottom:18px">
+    <svg viewBox="0 0 24 24" style="width:26px;height:26px;stroke:var(--green);fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;flex:none"><path d="M12 20s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="8" r="2.4"/></svg>
+    <div style="min-width:240px;flex:1">
+      <div style="font-size:16px;color:var(--ink)">Need a change? Just click a photo.</div>
+      <div style="font-size:13px;color:var(--soft);margin-top:2px">Click any photo below to pin the spot, draw on it, and tell us what to change — free, unlimited for two weeks.</div>
     </div>
-    <span class="btn btn-sm" style="pointer-events:none">Open review workspace →</span>
-  </a>
+  </div>
   <div class="files" id="fileGrid"></div>
   <div class="files-bar">
     <button class="btn btn-sm" id="dlAll"><svg class="svgi bi"><use href="#i-download"/></svg>Download all (8)</button>
@@ -363,6 +410,31 @@
       <div class="sm-acts">
         <a class="btn" id="smBuy" href="#" target="_blank" rel="noopener">Buy direct →</a>
         <a class="btn btn-line" id="smContact" href="#">Have Bella order it at my discount</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INLINE PHOTO MARK-UP / REQUEST-A-CHANGE MODAL -->
+<div id="photoReview">
+  <div class="pr-box">
+    <div class="pr-head"><b id="prTitle">Request a change</b><button class="pr-x" id="prClose" type="button" aria-label="Close">×</button></div>
+    <div class="pr-body">
+      <div class="pr-main">
+        <div class="pr-tools">
+          <button class="pr-tool wide on" data-prtool="pin" type="button"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>Pin a spot</button>
+          <button class="pr-tool" data-prtool="draw" type="button" title="Draw on the photo"><svg viewBox="0 0 24 24"><path d="M14 6l4 4M4 20l2.5-.5L17 9l-3-3L3.5 16.5z"/></svg></button>
+          <span id="prSwatches"></span>
+          <button class="pr-tool" id="prUndo" type="button" title="Undo"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10H9"/></svg></button>
+          <button class="pr-tool" id="prClear" type="button" title="Clear all"><svg viewBox="0 0 24 24"><path d="M6 7h12M9 7V5h6v2M8 7l1 12h6l1-12"/></svg></button>
+          <span class="pr-tip" id="prTip">Click the photo where you'd like a change, then write what you want.</span>
+        </div>
+        <div class="pr-stage-scroll"><div class="pr-stage" id="prStage"><img id="prImg" alt=""><svg class="pr-draw" id="prDraw" viewBox="0 0 100 100" preserveAspectRatio="none"></svg><div class="pr-pins" id="prPins"></div></div></div>
+      </div>
+      <div class="pr-side">
+        <div class="pr-side-h">Your change requests</div>
+        <div class="pr-reqs" id="prReqs"></div>
+        <div class="pr-foot"><button class="pr-send" id="prSend" type="button">Send to Bella</button><div class="pr-hint">Free &amp; unlimited for two weeks. We relay it to the studio for you.</div></div>
       </div>
     </div>
   </div>
@@ -2814,11 +2886,62 @@ var qrcode = function() {
   /* delivered files grid with download + watermark badge */
   function renderFiles(){
     document.getElementById('fileGrid').innerHTML=PHOTOS.map(function(s,i){
-      return '<div class="file"><div class="ph"><img src="'+s+'" alt="Staged photo '+(i+1)+'" loading="lazy">'
+      var n=(reviews[i]||[]).length;
+      return '<div class="file"><div class="ph" data-review="'+i+'"><img src="'+s+'" alt="Staged photo '+(i+1)+'" loading="lazy">'
+        +(n?'<span class="chg">'+n+' change'+(n>1?'s':'')+'</span>':'')
         +(state.wm?'<span class="wm">Virtually staged</span>':'')
+        +'<span class="mkhint">✎ Click to request a change</span>'
         +'<a class="dl" href="'+s+'" download="'+projSlug()+'-'+(i+1)+'.jpg" title="Download">↓</a></div></div>';
     }).join('');
+    document.querySelectorAll('#fileGrid .ph[data-review]').forEach(function(el){ el.onclick=function(e){ if(e.target.closest('.dl')) return; openReview(+el.getAttribute('data-review')); }; });
   }
+
+  /* ---- inline photo mark-up: click a photo to point at what you want changed ---- */
+  var reviews={};   // photoIndex -> [{x,y,note,drawing:[strokes]}]
+  var prIdx=0, prTool='pin', prColor='#C4553F', prLive={down:false,shape:null};
+  var PRC=['#C4553F','#B8985A','#3E6B4C','#3E6076','#232120'];
+  function reqsFor(i){ reviews[i]=reviews[i]||[]; return reviews[i]; }
+  function openReview(i){ prIdx=i; prTool='pin'; prLive={down:false,shape:null}; document.getElementById('prImg').src=PHOTOS[i]; document.getElementById('prTitle').textContent='Request a change · Photo '+(i+1); renderPR(); document.getElementById('photoReview').classList.add('open'); }
+  function closeReview(){ document.getElementById('photoReview').classList.remove('open'); renderFiles(); }
+  function prShape(sh){ var NS='http://www.w3.org/2000/svg', el; if(sh.type==='free'){ el=document.createElementNS(NS,'polyline'); el.setAttribute('points',sh.pts.map(function(p){return p[0]+','+p[1];}).join(' ')); el.setAttribute('fill','none'); } if(!el) return null; el.setAttribute('stroke',sh.color); el.setAttribute('stroke-width','1.3'); el.setAttribute('vector-effect','non-scaling-stroke'); el.setAttribute('stroke-linecap','round'); el.setAttribute('stroke-linejoin','round'); return el; }
+  function renderPR(){
+    var svg=document.getElementById('prDraw'); svg.innerHTML='';
+    reqsFor(prIdx).forEach(function(r){ (r.drawing||[]).forEach(function(sh){ var e=prShape(sh); if(e) svg.appendChild(e); }); });
+    if(prLive.shape){ var e=prShape(prLive.shape); if(e) svg.appendChild(e); }
+    var pl=document.getElementById('prPins'); pl.innerHTML='';
+    reqsFor(prIdx).forEach(function(r,idx){ var d=document.createElement('div'); d.className='pr-pin'; d.style.left=r.x+'%'; d.style.top=r.y+'%'; d.innerHTML='<div class="d">'+(idx+1)+'</div>'; pl.appendChild(d); });
+    var rw=document.getElementById('prReqs'), list=reqsFor(prIdx);
+    if(!list.length){ rw.innerHTML='<div class="pr-empty">No changes yet.<br>Click the photo to point at what you\'d like changed.</div>'; }
+    else rw.innerHTML=list.map(function(r,idx){ return '<div class="pr-req"><div class="rq-h"><span class="rq-n">'+(idx+1)+'</span>Pin '+(idx+1)+'<button class="rq-del" data-del="'+idx+'" type="button">Remove</button></div><textarea data-note="'+idx+'" placeholder="What would you like changed here?">'+(r.note||'')+'</textarea></div>'; }).join('');
+    rw.querySelectorAll('[data-note]').forEach(function(t){ t.oninput=function(){ list[+t.getAttribute('data-note')].note=t.value; }; });
+    rw.querySelectorAll('[data-del]').forEach(function(b){ b.onclick=function(){ list.splice(+b.getAttribute('data-del'),1); renderPR(); }; });
+    document.querySelectorAll('#photoReview [data-prtool]').forEach(function(b){ b.classList.toggle('on',b.getAttribute('data-prtool')===prTool); });
+    var st=document.getElementById('prStage'); st.classList.toggle('pinning',prTool==='pin'); st.classList.toggle('drawing',prTool==='draw');
+    document.getElementById('prDraw').classList.toggle('live',prTool==='draw');
+    document.getElementById('prTip').textContent = prTool==='pin' ? 'Click the photo where you\'d like a change, then write what you want.' : 'Draw on the photo to circle or mark exactly what to change.';
+  }
+  function prPct(e){ var r=document.getElementById('prStage').getBoundingClientRect(); return {x:Math.max(0,Math.min(100,(e.clientX-r.left)/r.width*100)), y:Math.max(0,Math.min(100,(e.clientY-r.top)/r.height*100))}; }
+  (function(){
+    var stg=document.getElementById('prStage'); if(!stg) return;
+    document.getElementById('prClose').onclick=closeReview;
+    document.getElementById('photoReview').addEventListener('click',function(e){ if(e.target===this) closeReview(); });
+    window.addEventListener('keydown',function(e){ if(e.key==='Escape'&&document.getElementById('photoReview').classList.contains('open')) closeReview(); });
+    document.querySelectorAll('#photoReview [data-prtool]').forEach(function(b){ b.onclick=function(){ prTool=b.getAttribute('data-prtool'); renderPR(); }; });
+    var sw=document.getElementById('prSwatches'); sw.innerHTML=PRC.map(function(c){ return '<button type="button" class="pr-sw'+(c===prColor?' on':'')+'" data-c="'+c+'" style="background:'+c+'"></button>'; }).join('');
+    sw.querySelectorAll('.pr-sw').forEach(function(b){ b.onclick=function(){ prColor=b.getAttribute('data-c'); sw.querySelectorAll('.pr-sw').forEach(function(x){x.classList.remove('on');}); b.classList.add('on'); }; });
+    document.getElementById('prUndo').onclick=function(){ var list=reqsFor(prIdx); for(var i=list.length-1;i>=0;i--){ if(list[i].drawing&&list[i].drawing.length){ list[i].drawing.pop(); renderPR(); return; } } };
+    document.getElementById('prClear').onclick=function(){ reviews[prIdx]=[]; renderPR(); };
+    document.getElementById('prSend').onclick=function(){ var n=reqsFor(prIdx).length; if(!n){ toast('Add a pin or a note first'); return; } toast(n+' change request'+(n>1?'s':'')+' sent to Bella'); closeReview(); };
+    stg.addEventListener('pointerdown',function(e){ if(e.target.closest('.pr-pin')) return;
+      var p=prPct(e);
+      if(prTool==='pin'){ reqsFor(prIdx).push({x:p.x,y:p.y,note:'',drawing:[]}); renderPR(); setTimeout(function(){ var ta=document.querySelector('#prReqs .pr-req:last-child textarea'); if(ta) ta.focus(); },20); return; }
+      // draw: attach a freehand stroke to the latest pin (or a general one)
+      var list=reqsFor(prIdx); if(!list.length) list.push({x:p.x,y:p.y,note:'',drawing:[]});
+      prLive.down=true; prLive.shape={type:'free',color:prColor,pts:[[p.x,p.y]]}; renderPR();
+    });
+    window.addEventListener('pointermove',function(e){ if(!prLive.down||!prLive.shape) return; var p=prPct(e); prLive.shape.pts.push([p.x,p.y]); renderPR(); });
+    window.addEventListener('pointerup',function(){ if(!prLive.down) return; prLive.down=false; if(prLive.shape){ var list=reqsFor(prIdx); list[list.length-1].drawing.push(prLive.shape); } prLive.shape=null; renderPR(); });
+  })();
 
   /* shop the look — SAMPLE brands, prices + client-discount codes.
      url = the real retailer; buyers can shop it directly, or order through Bella at the client rate. */
