@@ -531,6 +531,24 @@
   .subrow .price{font-size:13.5px;color:var(--soft);white-space:nowrap}
   .subrow .stepper{transition:opacity .15s}
   .subrow.off .stepper{opacity:.35;pointer-events:none}
+  /* per-photo service picker — appears once a per-photo service is switched on */
+  .svc-photos{display:none;width:100%;margin:2px 0 4px;padding:14px;background:var(--wash,#FAF8F5);border:1px solid var(--line);border-radius:12px;animation:spFade .22s ease}
+  .svc-photos.show{display:block}
+  @keyframes spFade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+  .svc-photos .sp-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin-bottom:11px}
+  .svc-photos .sp-head b{font-weight:500;font-size:13.5px;color:var(--ink)}
+  .svc-photos .sp-head span{font-size:12px;color:var(--faint)}
+  .svc-photos .sp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:9px}
+  .sp-th{position:relative;padding:0;border:1px solid var(--line);border-radius:9px;overflow:hidden;cursor:pointer;aspect-ratio:4/3;background:#eee;transition:box-shadow .15s,border-color .15s,transform .12s}
+  .sp-th img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .15s,filter .15s}
+  .sp-th:not(.on) img{opacity:.62;filter:saturate(.7)}
+  .sp-th:hover{transform:translateY(-1px)}
+  .sp-th.on{border-color:var(--green);box-shadow:0 0 0 2px var(--green)}
+  .sp-tick{position:absolute;top:5px;right:5px;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;background:rgba(35,33,32,.35);border:1px solid rgba(255,255,255,.7)}
+  .sp-th.on .sp-tick{background:var(--green);border-color:var(--green)}
+  .svc-photos .sp-foot{margin-top:11px;font-size:12.5px;color:var(--soft)}
+  .svc-photos .sp-foot b{color:var(--green);font-weight:600}
+  .svc-photos .sp-empty{font-size:12.5px;color:var(--faint);line-height:1.5}
   .sec-note{font-size:13px;color:var(--soft);line-height:1.5;padding:16px 0 4px}
   .sec-note b{color:var(--ink);font-weight:400}
   /* 360 example modal */
@@ -964,7 +982,8 @@
   function fp3d(){ return state.commercial?CFP3D:PR.FP3D; }
   var state={ proj:null, commercial:false, photos:8, mode:'ready', removal:false, reno:false, renoN:8, floor:false, fpn:1, floor2d:false, fp2dn:1, tour:false, dusk:false, duskN:8, sky:false, skyN:8, pano360:false, pano:3,
               rint:1, rext:1, rfp:1, useInt:true, useExt:true, useFp:true,
-              styleMode:'pro', stylePick:null, uploads:[], photog:{email:'',notes:'',sent:false}, files:{}, designerAll:true, sourceFurniture:false, marketingKit:true };
+              styleMode:'pro', stylePick:null, uploads:[], photog:{email:'',notes:'',sent:false}, files:{}, designerAll:true, sourceFurniture:false, marketingKit:true,
+              sel:{reno:[],dusk:[],sky:[]} };
 
   // saved lookbook pieces
   var saved=[]; try{ saved=JSON.parse(localStorage.getItem('bellaProject')||'[]'); }catch(e){}
@@ -1044,7 +1063,8 @@
         '<div class="rec-nudge" id="recNudge"><svg class="rn-i"><use href="#i-bolt"/></svg><div class="rn-t"><b>Most agents add these two</b><span>A 3D floor plan and a twilight exterior — the extras that most help a listing sell.</span></div><button class="btn-line" id="rnAdd" type="button">Add both</button></div>'
        +'<div class="secs">'
          +section('reno','Do you need to virtually renovate it?','See what a modern renovation would look like — updated floors, cabinets and finishes — to show buyers the home’s full potential.',
-             subQty('Virtual renovation','Modernize the dated finishes, then furnish. Pick how many photos to renovate.','reno','renoN','photos','+'+money(PR.RENO)+' / photo','reno')
+             subQty('Virtual renovation','Modernize the dated finishes, then furnish. Pick which photos to renovate.','reno','renoN','photos','+'+money(PR.RENO)+' / photo','reno')
+            +'<div class="svc-photos" id="svcph_reno"></div>'
             +'<div class="sec-note">Not every photo needs it — renovate just the dated rooms (like a tired kitchen or bath) and stage the rest as-is. You provide photos of the space.</div>'
             +reqUpload('reno','Photos of the rooms to renovate','Current photos of the dated space, in good light'))
          +section('tour','Do you need a 3D tour?','Keep buyers on your listing longer; out-of-town buyers can walk it without a showing.',
@@ -1053,8 +1073,10 @@
             +subRow('360° tour — stitch &amp; host','We stitch your 360° room photos into one walkable, hosted virtual tour.'+tip('Save money — no pricey 3D-camera scan needed. Just ask your photographer to shoot standard 360° photos of each room, and we stitch them into a hosted tour for you.'),'tour','+'+money(PR.TOUR),'tour')
             +reqUpload('tour','Your 360° photos','Equirectangular 360° shots — one per room you want walkable'))
          +section('edit','Do you need photo editing?','Small edits, big first impression — brighter, warmer, more clicks online.',
-             subQty('Day-to-dusk edits','Turn a daytime exterior into a twilight hero shot. You provide the daytime photos.','dusk','duskN','photos','+'+money(PR.DUSK)+' / photo','dusk')
-            +subQty('Sky replacement &amp; retouching','Swap grey skies, clean up blemishes. You provide the exterior photos.','sky','skyN','photos','+'+money(PR.SKY)+' / photo','')
+             subQty('Day-to-dusk edits','Turn a daytime exterior into a twilight hero shot. Pick which photos.','dusk','duskN','photos','+'+money(PR.DUSK)+' / photo','dusk')
+            +'<div class="svc-photos" id="svcph_dusk"></div>'
+            +subQty('Sky replacement &amp; retouching','Swap grey skies, clean up blemishes. Pick which photos.','sky','skyN','photos','+'+money(PR.SKY)+' / photo','')
+            +'<div class="svc-photos" id="svcph_sky"></div>'
             +reqUpload('edit','Your exterior / daytime photos','The shots you want turned to dusk or sky-swapped'))
          +section('floor','Do you need floor plans?','Buyers understand the space before they visit. Priced per floor.',
              subStep('2D floor plan','A clean, labelled layout','floor2d','fp2dn','+'+money(PR.FP2D)+' / floor','floor2d')
@@ -1562,9 +1584,41 @@
       h.onclick=function(){ h.parentNode.classList.toggle('open'); };
     });
   }
+  // per-photo service picker: choose exactly which uploaded photos get renovation / dusk / sky
+  var SVCLABEL={reno:'renovate',dusk:'turn to dusk',sky:'sky-swap'};
+  function renderSvcPhotos(){
+    ['reno','dusk','sky'].forEach(function(svc){
+      var el=document.getElementById('svcph_'+svc); if(!el) return;
+      if(!state[svc]){ el.className='svc-photos'; el.innerHTML=''; return; }
+      if(!state.uploads.length){
+        el.className='svc-photos show';
+        el.innerHTML='<div class="sp-empty">Upload your photos above, then pick exactly which ones to '+SVCLABEL[svc]+'. For now this applies to all your photos.</div>';
+        return;
+      }
+      var sel=state.sel[svc];
+      el.className='svc-photos show';
+      var grid=state.uploads.map(function(u,i){ var on=sel.indexOf(i)>-1;
+        return '<button type="button" class="sp-th'+(on?' on':'')+'" data-i="'+i+'"><img src="'+u.url+'" alt=""><span class="sp-tick">'+(on?'✓':'')+'</span></button>';
+      }).join('');
+      var n=sel.length;
+      el.innerHTML='<div class="sp-head"><b>Which photos should we '+SVCLABEL[svc]+'?</b><span>Tap to select — the price updates as you go.</span></div>'
+        +'<div class="sp-grid">'+grid+'</div>'
+        +'<div class="sp-foot">'+(n?('<b>'+n+'</b> photo'+(n>1?'s':'')+' selected'):'No photos selected yet')+'</div>';
+      el.querySelectorAll('.sp-th').forEach(function(b){ b.onclick=function(){
+        var i=+b.getAttribute('data-i'), pos=sel.indexOf(i);
+        if(pos>-1) sel.splice(pos,1); else sel.push(i);
+        sync();
+      };});
+    });
+  }
   function sync(){
-    // per-photo service counts default to all photos and never exceed the photo count
-    ['renoN','duskN','skyN'].forEach(function(k){ if(state[k]<1||state[k]>state.photos) state[k]=state.photos; });
+    // per-photo services: when photos are uploaded, the picked set drives the count; otherwise default to all
+    ['reno','dusk','sky'].forEach(function(svc){
+      var k={reno:'renoN',dusk:'duskN',sky:'skyN'}[svc];
+      state.sel[svc]=state.sel[svc].filter(function(i){ return i<state.uploads.length; }); // drop removed photos
+      if(state.uploads.length && state[svc]){ state[k]=state.sel[svc].length; }
+      else if(state[k]<1||state[k]>state.photos){ state[k]=state.photos; }
+    });
     ['photos','rint','rext','rfp','pano','fpn','fp2dn','renoN','duskN','skyN'].forEach(function(k){ var el=document.getElementById('v_'+k); if(el) el.textContent=state[k]; });
     document.querySelectorAll('.toggle').forEach(function(t){ t.classList.toggle('on', !!state[t.getAttribute('data-tog')]); });
     var ps=document.getElementById('panoSub'); if(ps) ps.classList.toggle('show', !!state.pano360);
@@ -1576,6 +1630,12 @@
     });
     // grey out a service's stepper until its own toggle is on
     document.querySelectorAll('.subrow[data-substep]').forEach(function(r){ r.classList.toggle('off', !state[r.getAttribute('data-substep')]); });
+    // when photos are uploaded, the picker replaces the numeric stepper for per-photo services
+    ['reno','dusk','sky'].forEach(function(svc){
+      var row=document.querySelector('.subrow[data-substep="'+svc+'"]'); if(!row) return;
+      var qw=row.querySelector('.qtywrap'); if(qw) qw.style.display=(state.uploads.length && state[svc])?'none':'';
+    });
+    renderSvcPhotos();
     // furniture removal only makes sense for an occupied listing
     var rr=document.getElementById('removalRow'); if(rr) rr.style.display=(state.proj==='occupied')?'flex':'none';
     syncMode();
