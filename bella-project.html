@@ -553,11 +553,6 @@
 </div>
 </div><!-- /panel-marketing -->
 
-<!-- ORDERS -->
-<section class="blk" id="orders" style="padding-bottom:60px">
-  <div class="hd"><h2>Your orders</h2><span class="micro">Account · past &amp; current projects</span></div>
-  <div class="orders" id="orderList"></div>
-</section>
 
 <footer>
   © Bella Virtual Staging · Project workspace mockup · <a href="bella-homepage-redesign.html">Back to the studio</a>
@@ -3040,21 +3035,6 @@ var qrcode = function() {
       (navigator.clipboard?navigator.clipboard.writeText(code):Promise.reject()).then(function(){ btn.textContent='Copied'; setTimeout(function(){btn.textContent='Copy';},1400); },function(){ btn.textContent='Copy'; });
     };
   })();
-
-  /* orders — current + sample past */
-  var ORDERS=[
-    {id:'#BV-10428',d:'42 Bayview Terrace · Listing Staging + floor plan',s:'Delivered',cur:true},
-    {id:'#BV-10102',d:'88 Lakeshore Rd · Furniture removal + staging (6 photos)',s:'Delivered'},
-    {id:'#BV-9840',d:'12 Maple Grove · Day-to-dusk + staging (10 photos)',s:'Delivered'},
-    {id:'#BV-10501',d:'305 Harbour St · Virtual renovation (in progress)',s:'In progress'}
-  ];
-  document.getElementById('orderList').innerHTML=ORDERS.map(function(o){
-    var done=o.s==='Delivered';
-    return '<div class="order-row'+(o.cur?' cur':'')+'"><span class="oid">'+o.id+(o.cur?' · current':'')+'</span>'
-      +'<span class="od">'+o.d+'</span>'
-      +'<span class="os '+(done?'done':'prog')+'">'+o.s+'</span>'
-      +'<span class="oa">'+(o.cur?'<span class="micro">open</span>':'<button class="btn btn-line btn-sm">Open</button>')+'</span></div>';
-  }).join('');
 
   /* address autofill (DEMO — connect Google Places API on the live site) */
   var SUGG=['42 Bayview Terrace, Toronto, ON','120 Bayview Ave, Toronto, ON','600 J Street, Sacramento, CA','289 Drake St, Vancouver, BC','88 Lakeshore Rd, Oakville, ON'];
