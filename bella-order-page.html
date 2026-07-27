@@ -1047,7 +1047,8 @@
       (function(){ var s=document.getElementById('s2sub'); s.textContent=''; s.style.display='none'; })();
       // --- 2a: three clear steps — count, upload, style ---
       box.innerHTML=
-        '<div class="stp core" id="stp1"><div class="stp-h">'+qicon('sofa')+'<div class="stp-t"><b>Virtual staging</b><span>Designer-furnished rooms · '+money(stageUnit())+' each.'+exLink('stage')+'</span></div></div>'
+        // STAT: NAR 2023 Profile of Home Staging — 82% of buyers' agents said staging made it easier to visualize a property as a future home. Confirm current figure before publishing.
+        '<div class="stp core" id="stp1"><div class="stp-h">'+qicon('sofa')+'<div class="stp-t"><b>Virtual staging '+tip('Staging helps buyers picture a home’s full potential, so your listing stands out. 82% of buyers’ agents say it makes a property easier to visualize as their future home. (NAR)')+'</b><span>Designer-furnished rooms · '+money(stageUnit())+' each.'+exLink('stage')+'</span></div></div>'
           +'<div class="core-top"><span class="stp-n">1</span>'
             +'<span class="lbl"><b>How many photos are we staging?</b><span>A box appears for each one — tap + or − to set the number.</span><span class="pop-note" id="popNote"></span></span>'
             +stepper('photos')+'</div>'
