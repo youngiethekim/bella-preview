@@ -161,7 +161,7 @@
   .pr-tool{width:34px;height:34px;border:1px solid transparent;border-radius:7px;background:transparent;display:grid;place-items:center;color:var(--soft);cursor:pointer;font-family:inherit}
   .pr-tool.on{background:var(--ink);color:#fff}
   .pr-tool:hover:not(.on){background:#F4F2EF}
-  .pr-tool.wide{width:auto;padding:0 12px;gap:7px;font-size:12px;letter-spacing:.02em}
+  .pr-tool.wide{width:auto;height:34px;padding:0 13px;gap:7px;font-size:12px;letter-spacing:.02em;display:flex;align-items:center;justify-content:center;white-space:nowrap}
   .pr-tool svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
   #prSwatches{display:inline-flex;gap:5px;align-items:center;margin:0 4px}
   .pr-sw{width:18px;height:18px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);cursor:pointer}
@@ -3220,8 +3220,15 @@ var qrcode = function() {
   var DEMOREPLIES=['Got it — counter-height stools and I’ll warm up the rug. First revision back to you within a day.','Perfect, thanks! Anything else you’d like tweaked while I’m in there?','Updated version is uploading now — you’ll see it in your review shortly.'];
   var demoReplyI=0;
   function escHtml(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-  var prIdx=0, prTool='pin', prColor='#C4553F', prLive={down:false,shape:null};
-  var PRC=['#C4553F','#B8985A','#3E6B4C','#3E6076','#232120'];
+  var prIdx=0, prTool='pin', prColor='#AC4A44', prLive={down:false,shape:null};
+  // Benjamin Moore mark-up palette — hexes are widely-used approximations of the real BM colours (BM has no official public hex)
+  var PRC=[
+    {c:'#AC4A44',n:'Caliente · AF-290'},
+    {c:'#C08E4E',n:'Marblehead Gold · HC-11'},
+    {c:'#3E5A45',n:'Hunter Green · 2041-10'},
+    {c:'#3F4B5C',n:'Hale Navy · HC-154'},
+    {c:'#3C3F42',n:'Wrought Iron · 2124-10'}
+  ];
   function reqsFor(i){ reviews[i]=reviews[i]||[]; return reviews[i]; }
   function openReview(i){ prIdx=i; prTool='pin'; prLive={down:false,shape:null}; document.getElementById('prImg').src=PHOTOS[i]; renderPR(); document.getElementById('photoReview').classList.add('open'); }
   function closeReview(){ document.getElementById('photoReview').classList.remove('open'); var m=pendingMove; pendingMove=null; animatedRender(m); }
@@ -3294,7 +3301,7 @@ var qrcode = function() {
     document.getElementById('photoReview').addEventListener('click',function(e){ if(e.target===this) closeReview(); });
     window.addEventListener('keydown',function(e){ if(e.key==='Escape'&&document.getElementById('photoReview').classList.contains('open')) closeReview(); });
     document.querySelectorAll('#photoReview [data-prtool]').forEach(function(b){ b.onclick=function(){ prTool=b.getAttribute('data-prtool'); renderPR(); }; });
-    var sw=document.getElementById('prSwatches'); sw.innerHTML=PRC.map(function(c){ return '<button type="button" class="pr-sw'+(c===prColor?' on':'')+'" data-c="'+c+'" style="background:'+c+'"></button>'; }).join('');
+    var sw=document.getElementById('prSwatches'); sw.innerHTML=PRC.map(function(p){ return '<button type="button" class="pr-sw'+(p.c===prColor?' on':'')+'" data-c="'+p.c+'" title="'+p.n+' · Benjamin Moore" aria-label="'+p.n+'" style="background:'+p.c+'"></button>'; }).join('');
     sw.querySelectorAll('.pr-sw').forEach(function(b){ b.onclick=function(){ prColor=b.getAttribute('data-c'); sw.querySelectorAll('.pr-sw').forEach(function(x){x.classList.remove('on');}); b.classList.add('on'); }; });
     document.getElementById('prUndo').onclick=function(){ var list=reqsFor(prIdx); for(var i=list.length-1;i>=0;i--){ if(list[i].drawing&&list[i].drawing.length){ list[i].drawing.pop(); renderPR(); return; } } };
     document.getElementById('prClear').onclick=function(){ reviews[prIdx]=[]; renderPR(); };
