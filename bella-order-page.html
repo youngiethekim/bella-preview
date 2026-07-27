@@ -1062,8 +1062,9 @@
           +miniUpload('floorplan','Upload a floor plan','PDF, JPG or PNG — or a quick sketch with rough dimensions.','.pdf,.jpg,.jpeg,.png,image/*')+'</div>'
         +'</div>';
       // --- 2b: optional extras (a gentle nudge + the question sections) ---
+      // STAT: NAR Profile of Home Buyers & Sellers — ~97% of buyers use the internet to search. Confirm current figure before publishing.
       ex.innerHTML=
-        '<div class="rec-nudge" id="recNudge"><svg class="rn-i"><use href="#i-bolt"/></svg><div class="rn-t"><b>Most agents add these two</b><span>A 3D floor plan and a twilight exterior — the extras that most help a listing sell.</span></div><button class="btn-line" id="rnAdd" type="button">Add both</button></div>'
+        '<div class="rec-nudge" id="recNudge"><svg class="rn-i"><use href="#i-bolt"/></svg><div class="rn-t"><b>Power up your listing</b><span><strong style="color:var(--ink)">97% of buyers start their home search online</strong> — and the listings with the most to show pull in the most clicks. A floor plan and a twilight exterior are the two power-ups that get more buyers booking a showing.</span></div><button class="btn-line" id="rnAdd" type="button">Add both power-ups</button></div>'
        +'<div class="secs">'
          +section('reno','Do you need to virtually renovate it?','See what a modern renovation would look like — updated floors, cabinets and finishes — to show buyers the home’s full potential.',
              subQty('Virtual renovation','Modernize the dated finishes, then furnish. Pick which photos to renovate.','reno','renoN','photos','+'+money(PR.RENO)+' / photo','reno')
