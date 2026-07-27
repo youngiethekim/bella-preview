@@ -319,6 +319,43 @@
   .brochure .b-foot .agent span{display:block;font-size:12px;color:var(--soft)}
   .brochure .b-logo{font-size:13px;letter-spacing:.4em;font-weight:400}
   .brochure .b-logo img{max-height:30px}
+  /* extra marketing kit pieces */
+  .tabs{flex-wrap:wrap}
+  .tabs button{padding:8px 12px}
+  .flyer .oh-band{display:flex;align-items:baseline;justify-content:space-between;gap:10px;background:var(--ink);color:#fff;padding:12px 18px;flex-wrap:wrap}
+  .flyer .oh-band b{font-size:15px;letter-spacing:.22em}
+  .flyer .oh-band span{font-size:12px;letter-spacing:.05em;color:#D8D3CC}
+  .oh-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:16px 0}
+  .oh-grid .imgwm img{aspect-ratio:1.5;object-fit:cover;width:100%;display:block}
+  .oh-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;border-top:1px solid var(--line);padding-top:16px;flex-wrap:wrap}
+  .oh-qr{display:flex;align-items:center;gap:12px;max-width:62%}
+  .oh-qr img{width:64px;height:64px;flex:none}
+  .oh-qr span{font-size:11.5px;color:var(--soft);line-height:1.4}
+  .compare{padding:22px 24px 24px}
+  .cmp-head{margin-bottom:16px}
+  .cmp-head b{display:block;font-size:22px;font-weight:400}
+  .cmp-head span{font-size:13px;color:var(--soft)}
+  .cmp-row{margin-bottom:16px}
+  .cmp-room{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:6px}
+  .cmp-pair{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px}
+  .cmp-cell{margin:0}
+  .cmp-cell img{width:100%;aspect-ratio:1.4;object-fit:cover;display:block;border-radius:4px}
+  .cmp-cell.before img{filter:grayscale(1) brightness(1.07) contrast(.9) opacity(.72)}
+  .cmp-cell figcaption{font-size:10.5px;color:var(--soft);margin-top:5px;text-align:center}
+  .cmp-cell .flag{margin-left:3px}
+  .cmp-arrow{color:var(--green);display:grid;place-items:center}
+  .cmp-arrow svg{width:22px;height:22px}
+  .cmp-note{font-size:12.5px;color:var(--soft);line-height:1.55;background:var(--wash);border-left:2px solid var(--green);padding:11px 14px;margin-top:6px}
+  .fg-head{margin-bottom:14px}
+  .fg-head b{display:block;font-size:20px;font-weight:400}
+  .fg-head span{font-size:12.5px;color:var(--soft)}
+  .fg-list{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+  .fg-item{display:flex;align-items:center;gap:12px}
+  .fg-item img{width:56px;height:56px;object-fit:cover;border-radius:6px;flex:none}
+  .fg-t{flex:1;min-width:0}
+  .fg-t b{font-size:13.5px;font-weight:400;display:block}
+  .fg-t span{font-size:12px;color:var(--soft)}
+  .fg-pr{font-size:13px;color:var(--ink);white-space:nowrap}
 
   /* website */
   .browser{width:100%;max-width:900px;background:#fff;border:1px solid var(--line);box-shadow:0 20px 60px -30px rgba(0,0,0,.4)}
@@ -513,7 +550,7 @@
   <section class="blk" style="padding-bottom:0">
     <div class="hd">
       <h2><svg class="svgi hd-i"><use href="#i-doc"/></svg>Marketing materials</h2>
-      <span class="micro">Turn your photos into a listing brochure and website</span>
+      <span class="micro">A full marketing kit — brochure, website, open-house flyer, before/after &amp; shop-the-look, all from your photos</span>
     </div>
   </section>
   <div class="grid" style="padding-top:22px">
@@ -585,6 +622,9 @@
       <div class="tabs">
         <button data-view="bro" class="on" id="tabBro">Brochure</button>
         <button data-view="web" id="tabWeb">Website</button>
+        <button data-view="oh" id="tabOh">Open house</button>
+        <button data-view="cmp" id="tabCmp">Before / after</button>
+        <button data-view="fur" id="tabFur">Furniture</button>
       </div>
       <button class="btn btn-sm" id="pvAction">Download PDF</button>
     </div>
@@ -3261,17 +3301,53 @@ var qrcode = function() {
       +'</div></div>';
   }
 
+  function vsTop(){ return state.wm?'<span class="vs vtop">Virtually staged</span>':''; }
+  // Open-house flyer — a print-ready handout for the table by the door
+  function openhouseFlyer(){
+    return '<div class="brochure flyer">'
+      +'<div class="oh-band"><b>OPEN HOUSE</b><span>Sat &amp; Sun · 1–4 PM <em class="flag">Demo — editable</em></span></div>'
+      +'<div class="b-hero"><img src="'+PHOTOS[0]+'" alt="">'+vsTop()+'<span class="b-price">'+esc(val('fPrice'))+'</span></div>'
+      +'<div class="b-body">'
+        +'<h3>'+esc(val('fHead'))+'</h3><p class="b-addr">'+esc(val('fAddr'))+'</p>'
+        +'<div class="b-facts"><div><svg class="svgi"><use href="#i-bed"/></svg><b>'+esc(val('fBeds'))+'</b><span>Beds</span></div><div><svg class="svgi"><use href="#i-bath"/></svg><b>'+esc(val('fBaths'))+'</b><span>Baths</span></div><div><svg class="svgi"><use href="#i-ruler"/></svg><b>'+esc(val('fSqft'))+'</b><span>Sq ft</span></div></div>'
+        +'<div class="oh-grid">'+PHOTOS.slice(1,5).map(img).join('')+'</div>'
+        +'<div class="oh-foot"><div class="oh-qr">'+qrImgTag()+'<span>Scan for every photo, the floor plan &amp; a private-showing request</span></div>'
+          +'<div class="agent"><span class="hs" '+hsStyle()+'></span><div><b>'+esc(val('fAgent'))+'</b><span>'+esc(val('fPhone'))+'</span></div></div></div>'
+      +'</div></div>';
+  }
+  // "See the potential" — before/after leave-behind for empty rooms
+  function comparePiece(){
+    var rooms=[{i:0,r:'Living room'},{i:2,r:'Kitchen'},{i:3,r:'Bedroom'}];
+    return '<div class="brochure compare">'
+      +'<div class="cmp-head"><b>See the potential</b><span>Empty rooms are hard to picture. Here’s the same space, staged by Bella.</span></div>'
+      +rooms.map(function(o){ return '<div class="cmp-row"><span class="cmp-room">'+o.r+'</span><div class="cmp-pair">'
+          +'<figure class="cmp-cell before"><img src="'+PHOTOS[o.i]+'" alt=""><figcaption>As it is now <em class="flag">Your photo</em></figcaption></figure>'
+          +'<span class="cmp-arrow">'+arrow+'</span>'
+          +'<figure class="cmp-cell after"><img src="'+PHOTOS[o.i]+'" alt=""><figcaption>Staged by Bella</figcaption></figure>'
+        +'</div></div>'; }).join('')
+      +'<p class="cmp-note">Print it and place one in each empty room at your open house — buyers who can picture themselves living there make stronger offers.</p>'
+    +'</div>';
+  }
+  // Shop-the-look — the furniture used, as a memorable leave-behind
+  function furnitureGuide(){
+    return '<div class="brochure furn">'
+      +'<div class="b-hero"><img src="'+PHOTOS[0]+'" alt="">'+vsTop()+'</div>'
+      +'<div class="b-body">'
+        +'<div class="fg-head"><b>Shop the look</b><span>The pieces our designers used to stage '+esc(val('fAddr'))+'.</span></div>'
+        +'<div class="fg-list">'+BRANDS.map(function(b){ return '<div class="fg-item"><img src="'+b.img+'" alt=""><div class="fg-t"><b>'+b.p+'</b><span>'+b.n+'</span></div><div class="fg-pr">'+b.pr+'</div></div>'; }).join('')+'</div>'
+        +'<p class="cmp-note">A leave-behind buyers actually keep — and every scan brings them back to your listing.</p>'
+      +'</div></div>';
+  }
+  var VIEWS={bro:{f:brochure,l:'Brochure'},web:{f:website,l:'Website'},oh:{f:openhouseFlyer,l:'Open-house flyer'},cmp:{f:comparePiece,l:'Before / after'},fur:{f:furnitureGuide,l:'Shop-the-look guide'}};
   function render(){
     updateQR();
-    document.getElementById('stage').innerHTML = state.view==='bro'? brochure() : website();
-    var bro=state.view==='bro';
-    document.getElementById('tabBro').classList.toggle('on',bro);
-    document.getElementById('tabWeb').classList.toggle('on',!bro);
-    document.getElementById('pvLabel').textContent=(bro?'Brochure':'Website')+' preview · updates live as you edit';
-    document.getElementById('pvAction').textContent=bro?'Download PDF':'Publish site';
+    var v=VIEWS[state.view]||VIEWS.bro;
+    document.getElementById('stage').innerHTML = v.f();
+    ['bro','web','oh','cmp','fur'].forEach(function(k){ var el=document.getElementById('tab'+k.charAt(0).toUpperCase()+k.slice(1)); if(el) el.classList.toggle('on',state.view===k); });
+    document.getElementById('pvLabel').textContent=v.l+' preview · updates live as you edit';
+    document.getElementById('pvAction').textContent=state.view==='web'?'Publish site':'Download PDF';
   }
-  document.getElementById('tabBro').onclick=function(){ state.view='bro'; render(); };
-  document.getElementById('tabWeb').onclick=function(){ state.view='web'; render(); };
+  ['bro','web','oh','cmp','fur'].forEach(function(k){ var el=document.getElementById('tab'+k.charAt(0).toUpperCase()+k.slice(1)); if(el) el.onclick=function(){ state.view=k; render(); }; });
   ['fAddr','fPrice','fBeds','fBaths','fSqft','fHead','fDesc','fAgent','fPhone'].forEach(function(id){ document.getElementById(id).addEventListener('input',render); });
 
   /* watermark toggle */
@@ -3281,7 +3357,7 @@ var qrcode = function() {
 
   /* downloads */
   document.getElementById('dlAll').onclick=function(){ var appr=PHOTOS.filter(function(_,i){return statusOf(i)==='approved';}).length; alert('Mockup: downloads all '+PHOTOS.length+' photos — '+appr+' approved as clean originals, the other '+(PHOTOS.length-appr)+' as lightly watermarked previews you can share for feedback.'); };
-  document.getElementById('pvAction').onclick=function(){ alert(state.view==='bro'?'Mockup: exports a print-ready PDF brochure for '+val('fAddr')+'.':'Mockup: publishes a one-listing website for '+val('fAddr')+'.'); };
+  document.getElementById('pvAction').onclick=function(){ var v=VIEWS[state.view]||VIEWS.bro; alert(state.view==='web'?'Mockup: publishes a one-listing website for '+val('fAddr')+'.':'Mockup: exports a print-ready PDF — '+v.l+' — for '+val('fAddr')+'.'); };
 
   /* QR download + copy link */
   document.getElementById('qrDl').onclick=function(){
