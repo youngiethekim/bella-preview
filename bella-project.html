@@ -2914,7 +2914,7 @@ var qrcode = function() {
   var photoStatus={};         // i -> 'inrevision' | 'delivered' | 'approved' (board is source of truth once set)
   function statusOf(i){ if(photoStatus[i]) return photoStatus[i]; if(approvedPhotos[i]) return 'approved'; if((reviews[i]||[]).length) return 'inrevision'; return 'delivered'; }
   function setStatus(i,s){ photoStatus[i]=s; approvedPhotos[i]=(s==='approved'); if(s==='approved') reviews[i]=[]; }
-  var COLS=[{k:'inrevision',t:'In revision',cls:'col-rev'},{k:'delivered',t:'To review',cls:'col-tor'},{k:'approved',t:'Approved',cls:'col-app'}];
+  var COLS=[{k:'delivered',t:'To review',cls:'col-tor'},{k:'inrevision',t:'In revision',cls:'col-rev'},{k:'approved',t:'Approved',cls:'col-app'}];
   function cardMeta(i,k){ var n=(reviews[i]||[]).length;
     return k==='inrevision' ? (n? n+' change'+(n>1?'s':'') : 'Flagged for changes')
          : k==='approved'   ? 'Approved ✓'
