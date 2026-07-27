@@ -377,7 +377,8 @@
   .dc-t b{display:block;font-weight:400;font-size:14.5px}
   .dc-t span{display:block;font-size:12.5px;color:var(--faint);margin-top:2px;line-height:1.4}
   .up-refs{margin-top:16px;border-top:1px solid #DDE7DD;padding-top:14px}
-  .up-thumbs{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+  .up-thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;padding:4px;border-radius:10px;transition:box-shadow .15s,background .15s}
+  .up-thumbs.drag{background:#E7F1E9;box-shadow:0 0 0 2px var(--green)}
   .up-th{position:relative;width:92px;height:92px;border:1px solid var(--line);overflow:hidden;border-radius:7px;cursor:pointer}
   .up-th img{width:100%;height:100%;object-fit:cover;display:block}
   .up-set{position:absolute;inset:0;background:rgba(20,18,16,.48);color:#fff;display:flex;align-items:center;justify-content:center;gap:6px;font-size:11.5px;opacity:0;transition:.15s}
@@ -1042,19 +1043,19 @@
       (function(){ var s=document.getElementById('s2sub'); s.textContent=''; s.style.display='none'; })();
       // --- 2a: three clear steps — count, upload, style ---
       box.innerHTML=
-        '<div class="stp" id="stp1"><div class="stp-h">'+qicon('sofa')+'<div class="stp-t"><b>Virtual staging</b><span>Designer-furnished rooms · '+money(stageUnit())+' each.'+exLink('stage')+'</span></div></div>'
+        '<div class="stp core" id="stp1"><div class="stp-h">'+qicon('sofa')+'<div class="stp-t"><b>Virtual staging</b><span>Designer-furnished rooms · '+money(stageUnit())+' each.'+exLink('stage')+'</span></div></div>'
           +'<div class="core-top"><span class="stp-n">1</span>'
-            +'<span class="lbl"><b>How many photos do you want to virtually stage?</b><span>Or upload below — we’ll count them.</span></span>'
+            +'<span class="lbl"><b>How many photos are we staging?</b><span>A box appears for each one — tap + or − to set the number.</span></span>'
             +stepper('photos')+'</div>'
           +volMeter()
-        +'</div>'
-        +'<div class="stp" id="stp2"><div class="stp-h"><span class="stp-n">2</span><div class="stp-t"><b>Upload &amp; style your photos</b><span>Optional — add now, or send later. We’ll style each one for your buyer.</span></div></div>'
+          +'<input type="file" id="upInput" accept="image/*" multiple hidden>'
+          +'<div class="up-thumbs" id="upThumbs"></div>'
+          +'<div class="up-hint" id="upHint"></div>'
           +photographerBlock()
-          +uploadBlock()
           +'<label class="dc-row" id="dcRow"><input type="checkbox" id="dcAll" checked><span class="dc-box"></span><span class="dc-t"><b>Let our designers choose the style for every photo</b><span>Recommended — we match the look to your buyer. Or tap a photo above to set its own style.</span></span></label>'
           +'<div class="removal-row" id="removalRow"><span class="lbl"><b>Furniture removal</b><span>Occupied or cluttered? We clear the room first, then stage it clean.</span></span><span class="freeprice">Included free</span><button class="toggle" data-tog="removal"></button></div>'
         +'</div>'
-        +'<div class="stp" id="stp3"><div class="stp-h"><span class="stp-n">3</span><div class="stp-t"><b>Help us nail the look '+tip('The more we know, the better. References and a floor plan help our designers understand the space, scale the furniture correctly, and match the exact look you’re after — so we represent your home the way you want it.')+'</b><span>References, inspiration &amp; a floor plan — optional, but they really help.</span></div></div>'
+        +'<div class="stp" id="stp3"><div class="stp-h"><span class="stp-n">2</span><div class="stp-t"><b>Help us nail the look'+tip('The more we know, the better. References and a floor plan help our designers understand the space, scale the furniture correctly, and match the exact look you’re after — so we represent your home the way you want it.')+'</b><span>References, inspiration &amp; a floor plan — optional, but they really help.</span></div></div>'
           +'<div class="up-refs"><div class="req-lab" style="color:var(--faint)">References &amp; inspiration — optional</div>'
           +'<p class="up-refs-note"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1 1 2.5h6c0-1.5.3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg><span><b>The more we know about your project, the better we stage it.</b> Share a look you love, a Pinterest board, or notes on the vibe.</span></p>'
           +miniUpload('refs','Share a look you love','A Pinterest screenshot, a room you admire, notes on the vibe — anything that helps our designers.')
@@ -1187,14 +1188,6 @@
   function openPhoto(url){ if(!url) return; document.getElementById('pvImg').src=url; document.getElementById('photoView').classList.add('open'); }
   function closePhoto(){ document.getElementById('photoView').classList.remove('open'); }
   // ---- optional inline photo upload (tied to the staging count; never required) ----
-  function uploadBlock(){
-    return '<div class="up-block"><label class="up-zone" id="upZone"><input type="file" id="upInput" accept="image/*" multiple hidden>'
-      +'<span class="up-ic"><svg class="up-i"><use href="#i-upload"/></svg></span>'
-      +'<span class="up-t"><b id="upTitle">Drag &amp; drop your photos here</b><span id="upSub">or click to browse · JPG or PNG. No photos yet? Pick a number and send them later.</span></span>'
-      +'<span class="up-btn">Choose files</span>'
-      +'</label><div class="up-prog" id="upProg"></div><div class="up-thumbs" id="upThumbs"></div><div class="up-hint" id="upHint"></div>'
-      +'</div>';
-  }
   function photographerBlock(){
     return '<label class="dc-row" id="upLaterRow"><input type="checkbox" id="upLaterCb"><span class="dc-box"></span><span class="dc-t"><b>My photos aren’t ready yet</b><span>Send your photographer a secure link to upload them straight to this order.</span></span></label>'
       +'<div class="up-later-panel" id="upLaterPanel">'
@@ -1274,15 +1267,14 @@
     var panel=document.getElementById('upLaterPanel'), notes=document.getElementById('photogNotes'), email=document.getElementById('photogEmail'), send=document.getElementById('photogSend'), sent=document.getElementById('photogSent');
     if(state.photog.email) email.value=state.photog.email;
     notes.value=state.photog.notes||photogDefaultNotes();
-    function toggleUploader(hide){ var ub=document.querySelector('#stp2 .up-block'); if(ub) ub.style.display=hide?'none':''; }
-    if(state.photog.sent){ cb.checked=true; panel.classList.add('show'); toggleUploader(true); sent.textContent='✓ Upload link sent to '+state.photog.email+' (demo). They can upload straight to this order.'; }
-    cb.onchange=function(){ panel.classList.toggle('show',cb.checked); toggleUploader(cb.checked); if(cb.checked&&!notes.value) notes.value=photogDefaultNotes(); };
+    if(state.photog.sent){ cb.checked=true; panel.classList.add('show'); sent.textContent='✓ Upload link sent to '+state.photog.email+' (demo). They can upload straight to this order.'; }
+    cb.onchange=function(){ panel.classList.toggle('show',cb.checked); if(cb.checked&&!notes.value) notes.value=photogDefaultNotes(); };
     send.onclick=function(){
       var em=(email.value||'').trim();
       if(!em||em.indexOf('@')<1){ sent.style.color='var(--amber)'; sent.textContent='Enter the photographer’s email first.'; return; }
       state.photog={email:em,notes:notes.value,sent:true};
       sent.style.color='var(--green)'; sent.textContent='✓ Upload link + instructions sent to '+em+' (demo). They can upload straight to this order.';
-      var s2=document.getElementById('stp2'); if(s2) s2.classList.add('done');
+      var s1=document.getElementById('stp1'); if(s1) s1.classList.add('done');
     };
   }
   // ---- per-photo style + before/after compare ----
@@ -1348,11 +1340,11 @@
   function closeRoomStyle(){ document.getElementById('roomStyleModal').classList.remove('open'); }
 
   function bindUpload(){
-    var zone=document.getElementById('upZone'), input=document.getElementById('upInput'); if(!zone||!input) return;
+    var wrap=document.getElementById('upThumbs'), input=document.getElementById('upInput'); if(!wrap||!input) return;
     input.onchange=function(){ addFiles(input.files); input.value=''; };
-    ['dragenter','dragover'].forEach(function(ev){ zone.addEventListener(ev,function(e){ e.preventDefault(); zone.classList.add('drag'); }); });
-    ['dragleave','drop'].forEach(function(ev){ zone.addEventListener(ev,function(e){ e.preventDefault(); zone.classList.remove('drag'); }); });
-    zone.addEventListener('drop',function(e){ if(e.dataTransfer&&e.dataTransfer.files) addFiles(e.dataTransfer.files); });
+    ['dragenter','dragover'].forEach(function(ev){ wrap.addEventListener(ev,function(e){ e.preventDefault(); wrap.classList.add('drag'); }); });
+    ['dragleave','drop'].forEach(function(ev){ wrap.addEventListener(ev,function(e){ e.preventDefault(); wrap.classList.remove('drag'); }); });
+    wrap.addEventListener('drop',function(e){ if(e.dataTransfer&&e.dataTransfer.files) addFiles(e.dataTransfer.files); });
     renderUploads(); bindPhotographer(); bindMiniUploads(); bindDesigner();
   }
   function bindDesigner(){
@@ -1367,36 +1359,19 @@
     renderUploads(); sync();
   }
   function renderUploads(){
-    var wrap=document.getElementById('upThumbs'), zone=document.getElementById('upZone'); if(!wrap||!zone) return;
-    var n=state.uploads.length, target=state.photos, remaining=Math.max(0, target-n);
-    if(!n){
-      document.getElementById('upTitle').textContent='Drag & drop your photos here';
-      document.getElementById('upSub').textContent='or click to browse · JPG or PNG. No photos yet? Pick a number and send them later.';
-    } else if(remaining>0){
-      document.getElementById('upTitle').textContent=n+' of '+target+' photos in';
-      document.getElementById('upSub').textContent='Drop in '+remaining+' more, or send the rest to us later.';
-    } else {
-      document.getElementById('upTitle').textContent='All '+target+' photo'+(target>1?'s':'')+' ready ✓';
-      document.getElementById('upSub').textContent='Add more, or remove any below.';
-    }
-    zone.classList.toggle('has', n>0);
-    var s2=document.getElementById('stp2'); if(s2) s2.classList.toggle('done', (n>0 && remaining===0) || state.photog.sent);
-    // progress bar toward the chosen count
-    var prog=document.getElementById('upProg');
-    if(prog){
-      if(n>0 && target>0){
-        prog.classList.add('show');
-        var pct=Math.min(100, Math.round(n/target*100));
-        prog.innerHTML='<div class="up-prog-lab"><span><b>'+n+'</b> of '+target+' uploaded</span>'
-          +'<span class="togo'+(remaining===0?' done':'')+'">'+(remaining>0? remaining+' more photo'+(remaining>1?'s':'')+' to go' : 'All uploaded ✓')+'</span></div>'
-          +'<div class="up-bar"><span style="width:'+pct+'%"></span></div>';
-      } else { prog.classList.remove('show'); prog.innerHTML=''; }
-    }
+    var wrap=document.getElementById('upThumbs'); if(!wrap) return;
+    var n=state.uploads.length, target=Math.max(state.photos, n), remaining=Math.max(0, target-n);
+    var s1=document.getElementById('stp1'); if(s1) s1.classList.toggle('done', (n>0 && remaining===0) || state.photog.sent);
+    // one box per photo we're staging — filled thumbnails, then numbered empty boxes for the rest
     var filled=state.uploads.map(function(u,i){ return '<div class="up-th" data-i="'+i+'"><img src="'+u.url+'" alt=""><span class="up-set"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-1 2-2s-.6-1.4-.6-2.2c0-.9.7-1.6 1.6-1.6H18a3 3 0 0 0 3-3c0-3.9-4-6.2-9-6.2z"/></svg>Set style</span><span class="up-style">'+escF(thumbStyleTag(u))+' ▾</span><button type="button" class="up-x" data-i="'+i+'" aria-label="Remove">×</button></div>'; }).join('');
-    // show empty slots for the photos still to come, so the missing spots are visible
-    var empties=''; if(n>0){ for(var e=0;e<remaining;e++){ empties+='<button type="button" class="up-th empty" aria-label="Add a photo"><span class="es-n">'+(n+e+1)+'</span><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>'; } }
+    var empties=''; for(var e=0;e<remaining;e++){ empties+='<button type="button" class="up-th empty" aria-label="Upload photo '+(n+e+1)+'"><span class="es-n">'+(n+e+1)+'</span><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>'; }
     wrap.innerHTML=filled+empties;
-    var hint=document.getElementById('upHint'); if(hint) hint.innerHTML = n? 'Each photo gets its own style — <b>click a photo to change its look</b>, or leave them all to our designers below.' : '';
+    var hint=document.getElementById('upHint');
+    if(hint){
+      if(!n) hint.innerHTML='<b>'+target+' box'+(target>1?'es':'')+' to fill.</b> Tap a box to upload, or drag your photos straight in. Not ready? Just pick the number now and send them later.';
+      else if(remaining>0) hint.innerHTML='<b>'+n+' of '+target+' uploaded — '+remaining+' to go.</b> Tap a photo to set its style, or leave it to our designers.';
+      else hint.innerHTML='<b>All '+target+' uploaded ✓</b> — tap a photo to set its own style, or leave them to our designers.';
+    }
     wrap.querySelectorAll('.up-th[data-i]').forEach(function(el){ el.onclick=function(e){ if(e.target.closest('.up-x')) return; openRoomStyle(+el.getAttribute('data-i')); }; });
     wrap.querySelectorAll('.up-th.empty').forEach(function(el){ el.onclick=function(){ document.getElementById('upInput').click(); }; });
     wrap.querySelectorAll('.up-x').forEach(function(b){ b.onclick=function(e){ e.preventDefault(); e.stopPropagation(); var i=+b.getAttribute('data-i'); state.uploads.splice(i,1); renderUploads(); sync(); }; });
@@ -1569,6 +1544,7 @@
       s.querySelectorAll('button').forEach(function(b){ b.onclick=function(e){ e.stopPropagation();
         var d=+b.getAttribute('data-d'), perPhoto=(key==='renoN'||key==='duskN'||key==='skyN');
         var min=(key==='photos'||key==='pano'||key==='fpn'||key==='fp2dn'||perPhoto)?1:0;
+        if(key==='photos') min=Math.max(1, state.uploads.length);   // can’t remove a box that already holds a photo
         var nv=(state[key]||0)+d;
         if(perPhoto) nv=Math.min(nv,state.photos);   // can’t edit more photos than you’re staging
         state[key]=Math.max(min,nv); sync();
@@ -1646,7 +1622,7 @@
     var tot=money(lines().total);
     var r2=document.getElementById('run2'); if(r2) r2.textContent=tot;
     var r2b=document.getElementById('run2b'); if(r2b) r2b.textContent=tot;
-    syncVol(); syncReqUploads(); if(document.getElementById('upProg')) renderUploads(); renderCart();
+    syncVol(); syncReqUploads(); if(document.getElementById('upThumbs')) renderUploads(); renderCart();
   }
   // line-item breakdown shown from the footer total
   function renderCart(){
