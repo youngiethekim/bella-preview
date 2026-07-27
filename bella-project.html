@@ -88,6 +88,7 @@
   .pr-foot-btns{display:flex;gap:8px}
   .pr-approve{flex:1;background:#EDF4EE;color:var(--green);border:1px solid #CFE0D3;font-family:inherit;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:12px;border-radius:8px;cursor:pointer;transition:.15s}
   .pr-approve:hover{background:var(--green);color:#fff;border-color:var(--green)}
+  .pr-approve:disabled{opacity:.42;cursor:default;background:#EDF4EE;color:var(--green);border-color:#CFE0D3}
   .pr-foot-btns .pr-send{flex:1;width:auto}
   .file{position:relative;border:1px solid var(--line);background:#fff;overflow:hidden}
   .file .ph{position:relative;aspect-ratio:1.4;overflow:hidden;background:#EFECE8}
@@ -165,6 +166,35 @@
   .pr-req .rq-del:hover{color:var(--red,#C4553F)}
   .pr-req textarea{width:100%;border:1px solid var(--line);border-radius:6px;padding:8px 9px;font-family:inherit;font-size:13px;resize:vertical;min-height:46px}
   .pr-req textarea:focus{outline:0;border-color:var(--ink)}
+  /* revision round-trip: sent indication + per-request verification */
+  .pr-banner{margin:0 16px 10px;font-size:12.5px;line-height:1.5}
+  .pr-banner:empty{display:none}
+  .pr-banner b{font-weight:600}
+  .pr-banner.sent{background:#EEF2F5;border:1px solid #D9E2E8;border-radius:8px;padding:10px 12px;color:#3E6076}
+  .pr-banner.back{background:#FBF3E2;border:1px solid #EBDDBE;border-radius:8px;padding:10px 12px;color:#8A6A1F}
+  .pr-prog{display:inline-block;margin-top:5px;font-weight:600}
+  .pr-demo{display:block;margin-top:8px;background:0;border:0;color:#3E6076;text-decoration:underline;font-family:inherit;font-size:11px;cursor:pointer;padding:0;opacity:.85}
+  .rq-chip{margin-left:auto;font-size:10px;letter-spacing:.03em;padding:2px 8px;border-radius:99px;white-space:nowrap}
+  .rq-chip.sent{background:#EEF2F5;color:#3E6076}
+  .rq-chip.wait{background:var(--line-2);color:var(--soft)}
+  .rq-chip.ok{background:#EDF4EE;color:var(--green)}
+  .rq-chip.bad{background:#F7E7E2;color:var(--red)}
+  .rq-note-ro{font-size:13px;color:var(--ink);line-height:1.45;background:var(--wash);border:1px solid var(--line-2);border-radius:6px;padding:8px 9px}
+  .rq-note-ro i{color:var(--faint)}
+  .pr-req.verify.fixed{border-color:#CFE0D3;background:#F5F9F6}
+  .pr-req.verify.unfixed{border-color:#E8CFC8;background:#FBF1EE}
+  .rq-verify{display:flex;gap:7px;margin-top:8px}
+  .rq-verify button{flex:1;font-family:inherit;font-size:12px;padding:8px;border-radius:7px;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--soft);transition:.13s}
+  .rq-yes:hover,.rq-yes.on{background:var(--green);border-color:var(--green);color:#fff}
+  .rq-no:hover,.rq-no.on{background:var(--red);border-color:var(--red);color:#fff}
+  .rq-reason{display:none;margin-top:8px}
+  .rq-reason.show{display:block}
+  .rq-reason textarea{width:100%;border:1px solid var(--red);border-radius:6px;padding:8px 9px;font-family:inherit;font-size:12.5px;resize:vertical;min-height:44px}
+  .rq-reason textarea:focus{outline:0}
+  .ph-card-meta{display:block}
+  .ph-flag{display:inline-block;margin-top:6px;font-size:10px;letter-spacing:.02em;padding:2px 8px;border-radius:99px}
+  .ph-flag.sent{background:#EEF2F5;color:#3E6076}
+  .ph-flag.back{background:#FBF3E2;color:#8A6A1F}
   .pr-foot{padding:12px 16px;border-top:1px solid var(--line-2)}
   .pr-send{width:100%;background:var(--ink);color:#fff;border:0;font-family:inherit;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:12px;border-radius:8px;cursor:pointer;transition:.15s}
   .pr-send:hover{background:var(--green)}
@@ -464,6 +494,7 @@
       </div>
       <div class="pr-side">
         <div class="pr-side-h">Your change requests</div>
+        <div class="pr-banner" id="prBanner"></div>
         <div class="pr-reqs" id="prReqs"></div>
         <div class="pr-foot"><div class="pr-foot-btns"><button class="pr-approve" id="prApprove" type="button">✓ Looks great — approve</button><button class="pr-send" id="prSend" type="button">Send changes</button></div><div class="pr-hint">Free &amp; unlimited for two weeks. We relay changes to the studio for you.</div></div>
       </div>
@@ -2913,16 +2944,23 @@ var qrcode = function() {
   var approvedPhotos={};      // kept for the review modal + seeds
   var photoStatus={};         // i -> 'inrevision' | 'delivered' | 'approved' (board is source of truth once set)
   function statusOf(i){ if(photoStatus[i]) return photoStatus[i]; if(approvedPhotos[i]) return 'approved'; if((reviews[i]||[]).length) return 'inrevision'; return 'delivered'; }
-  function setStatus(i,s){ photoStatus[i]=s; approvedPhotos[i]=(s==='approved'); if(s==='approved') reviews[i]=[]; }
+  function setStatus(i,s){ photoStatus[i]=s; approvedPhotos[i]=(s==='approved'); if(s==='approved'){ reviews[i]=[]; delete rev[i]; } if(s==='delivered') delete rev[i]; }
   var COLS=[{k:'delivered',t:'To review',cls:'col-tor'},{k:'inrevision',t:'In revision',cls:'col-rev'},{k:'approved',t:'Approved',cls:'col-app'}];
   function cardMeta(i,k){ var n=(reviews[i]||[]).length;
-    return k==='inrevision' ? (n? n+' change'+(n>1?'s':'') : 'Flagged for changes')
-         : k==='approved'   ? 'Approved ✓'
-         : 'Ready for your review'; }
+    if(k==='approved') return 'Approved ✓';
+    if(k==='delivered') return 'Ready for your review';
+    var rs=rev[i];
+    if(rs==='sent') return 'With the design team';
+    if(rs==='back'){ var p=verifyProgress(i); return 'Check the revision · '+p.done+'/'+p.total+' confirmed'; }
+    return n? n+' change'+(n>1?'s':'') : 'Flagged for changes'; }
+  function cardFlag(i,k){ if(k!=='inrevision') return ''; var rs=rev[i];
+    if(rs==='sent') return '<span class="ph-flag sent">Sent to studio ↗</span>';
+    if(rs==='back') return '<span class="ph-flag back">Revision ready — check</span>';
+    return ''; }
   function cardHTML(i,k){
     return '<div class="ph-card '+k+'" draggable="true" data-i="'+i+'" title="Drag to a column, or click to review">'
       +'<img class="ph-thumb" src="'+PHOTOS[i]+'" alt="" loading="lazy">'
-      +'<span class="ph-card-txt"><span class="ph-card-t">Staged photo '+(i+1)+'</span><span class="ph-card-meta">'+cardMeta(i,k)+'</span></span>'
+      +'<span class="ph-card-txt"><span class="ph-card-t">Staged photo '+(i+1)+'</span><span class="ph-card-meta">'+cardMeta(i,k)+'</span>'+cardFlag(i,k)+'</span>'
       +'<a class="ph-card-dl dl" href="'+PHOTOS[i]+'" download="'+projSlug()+'-'+(i+1)+'.jpg" title="Download">↓</a></div>';
   }
   function renderFiles(){
@@ -2956,7 +2994,10 @@ var qrcode = function() {
   }
 
   /* ---- inline photo mark-up: click a photo to point at what you want changed ---- */
-  var reviews={};   // photoIndex -> [{x,y,note,drawing:[strokes]}]
+  var reviews={};   // photoIndex -> [{x,y,note,drawing:[strokes],sent,verdict:'fixed'|'unfixed',unmet}]
+  var rev={};       // photoIndex -> 'sent' (with designers) | 'back' (redelivered, awaiting your check)
+  function escHtml(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function verifyProgress(i){ var l=reviews[i]||[]; return {done:l.filter(function(r){return r.verdict==='fixed';}).length, total:l.length}; }
   var prIdx=0, prTool='pin', prColor='#C4553F', prLive={down:false,shape:null};
   var PRC=['#C4553F','#B8985A','#3E6B4C','#3E6076','#232120'];
   function reqsFor(i){ reviews[i]=reviews[i]||[]; return reviews[i]; }
@@ -2970,14 +3011,56 @@ var qrcode = function() {
     var pl=document.getElementById('prPins'); pl.innerHTML='';
     reqsFor(prIdx).forEach(function(r,idx){ var d=document.createElement('div'); d.className='pr-pin'; d.style.left=r.x+'%'; d.style.top=r.y+'%'; d.innerHTML='<div class="d">'+(idx+1)+'</div>'; pl.appendChild(d); });
     var rw=document.getElementById('prReqs'), list=reqsFor(prIdx);
+    var rs=rev[prIdx]||null, mode = rs==='back'?'verify' : rs==='sent'?'sent' : 'draft';
+    var bn=document.getElementById('prBanner');
+    if(mode==='sent'){ bn.className='pr-banner sent'; bn.innerHTML='<b>Your changes are with the Bella design team.</b> We’ll let you know the moment your revision is ready.<button type="button" class="pr-demo" id="prDemo">▸ Preview: mark revision delivered</button>'; }
+    else if(mode==='verify'){ var pp=verifyProgress(prIdx); bn.className='pr-banner back'; bn.innerHTML='<b>Bella delivered your revision.</b> Tick each change if it’s fixed — or tell us what’s still off. <span class="pr-prog">'+pp.done+'/'+pp.total+' confirmed</span>'; }
+    else { bn.className='pr-banner'; bn.innerHTML=''; }
     if(!list.length){ rw.innerHTML='<div class="pr-empty">No changes yet.<br>Click the photo to point at what you\'d like changed.</div>'; }
-    else rw.innerHTML=list.map(function(r,idx){ return '<div class="pr-req"><div class="rq-h"><span class="rq-n">'+(idx+1)+'</span>Pin '+(idx+1)+'<button class="rq-del" data-del="'+idx+'" type="button">Remove</button></div><textarea data-note="'+idx+'" placeholder="What would you like changed here?">'+(r.note||'')+'</textarea></div>'; }).join('');
-    rw.querySelectorAll('[data-note]').forEach(function(t){ t.oninput=function(){ list[+t.getAttribute('data-note')].note=t.value; }; });
-    rw.querySelectorAll('[data-del]').forEach(function(b){ b.onclick=function(){ list.splice(+b.getAttribute('data-del'),1); renderPR(); }; });
+    else rw.innerHTML=list.map(function(r,idx){ return reqCard(r,idx,mode); }).join('');
+    if(mode==='draft'){
+      rw.querySelectorAll('[data-note]').forEach(function(t){ t.oninput=function(){ list[+t.getAttribute('data-note')].note=t.value; }; });
+      rw.querySelectorAll('[data-del]').forEach(function(b){ b.onclick=function(){ list.splice(+b.getAttribute('data-del'),1); renderPR(); }; });
+    } else if(mode==='verify'){
+      rw.querySelectorAll('[data-fix]').forEach(function(b){ b.onclick=function(){ var r=list[+b.getAttribute('data-fix')]; r.verdict='fixed'; r.unmet=''; renderPR(); }; });
+      rw.querySelectorAll('[data-nope]').forEach(function(b){ b.onclick=function(){ var idx=+b.getAttribute('data-nope'); list[idx].verdict='unfixed'; renderPR(); setTimeout(function(){ var ta=rw.querySelector('[data-reason="'+idx+'"]'); if(ta) ta.focus(); },20); }; });
+      rw.querySelectorAll('[data-reason]').forEach(function(t){ t.oninput=function(){ list[+t.getAttribute('data-reason')].unmet=t.value; }; });
+    }
+    var demo=document.getElementById('prDemo'); if(demo) demo.onclick=function(){ rev[prIdx]='back'; renderPR(); };
+    syncPRFoot(mode);
     document.querySelectorAll('#photoReview [data-prtool]').forEach(function(b){ b.classList.toggle('on',b.getAttribute('data-prtool')===prTool); });
     var st=document.getElementById('prStage'); st.classList.toggle('pinning',prTool==='pin'); st.classList.toggle('drawing',prTool==='draw');
     document.getElementById('prDraw').classList.toggle('live',prTool==='draw');
     document.getElementById('prTip').textContent = prTool==='pin' ? 'Click the photo where you\'d like a change, then write what you want.' : 'Draw on the photo to circle or mark exactly what to change.';
+  }
+  function reqCard(r,idx,mode){
+    var head='<div class="rq-h"><span class="rq-n">'+(idx+1)+'</span>Pin '+(idx+1);
+    if(mode==='draft') head+='<button class="rq-del" data-del="'+idx+'" type="button">Remove</button>';
+    else if(mode==='sent') head+='<span class="rq-chip sent">Sent ↗</span>';
+    else if(mode==='verify') head+='<span class="rq-chip '+(r.verdict==='fixed'?'ok':r.verdict==='unfixed'?'bad':'wait')+'">'+(r.verdict==='fixed'?'✓ Fixed':r.verdict==='unfixed'?'⚠ Not yet':'To check')+'</span>';
+    head+='</div>';
+    var body = mode==='draft'
+      ? '<textarea data-note="'+idx+'" placeholder="What would you like changed here?">'+escHtml(r.note)+'</textarea>'
+      : '<div class="rq-note-ro">'+(r.note?escHtml(r.note):'<i>(no note)</i>')+'</div>';
+    var extra='';
+    if(mode==='verify'){
+      extra='<div class="rq-verify"><button type="button" class="rq-yes'+(r.verdict==='fixed'?' on':'')+'" data-fix="'+idx+'">✓ Fixed</button><button type="button" class="rq-no'+(r.verdict==='unfixed'?' on':'')+'" data-nope="'+idx+'">⚠ Not yet</button></div>'
+        +'<div class="rq-reason'+(r.verdict==='unfixed'?' show':'')+'"><textarea data-reason="'+idx+'" placeholder="What’s still off? We’ll pass it straight back to the designer.">'+escHtml(r.unmet)+'</textarea></div>';
+    }
+    return '<div class="pr-req '+mode+(mode==='verify'&&r.verdict?(' '+r.verdict):'')+'">'+head+body+extra+'</div>';
+  }
+  function syncPRFoot(mode){
+    var send=document.getElementById('prSend'), appr=document.getElementById('prApprove');
+    if(mode==='sent'){ send.style.display='none'; appr.style.display='none'; }
+    else if(mode==='verify'){
+      var un=(reviews[prIdx]||[]).filter(function(r){return r.verdict==='unfixed';}).length;
+      var p=verifyProgress(prIdx), allFixed=p.total>0 && p.done===p.total;
+      send.style.display= un?'':'none'; send.textContent= un? ('↩ Send '+un+' back to designer') : '';
+      appr.style.display=''; appr.disabled=!allFixed; appr.textContent= allFixed?'✓ All fixed — approve':'✓ Approve';
+    } else {
+      send.style.display=''; send.textContent='Send changes';
+      appr.style.display=''; appr.disabled=false; appr.textContent=(statusOf(prIdx)==='approved'?'✓ Approved — undo':'✓ Looks great — approve');
+    }
   }
   function prPct(e){ var r=document.getElementById('prStage').getBoundingClientRect(); return {x:Math.max(0,Math.min(100,(e.clientX-r.left)/r.width*100)), y:Math.max(0,Math.min(100,(e.clientY-r.top)/r.height*100))}; }
   (function(){
@@ -2990,7 +3073,17 @@ var qrcode = function() {
     sw.querySelectorAll('.pr-sw').forEach(function(b){ b.onclick=function(){ prColor=b.getAttribute('data-c'); sw.querySelectorAll('.pr-sw').forEach(function(x){x.classList.remove('on');}); b.classList.add('on'); }; });
     document.getElementById('prUndo').onclick=function(){ var list=reqsFor(prIdx); for(var i=list.length-1;i>=0;i--){ if(list[i].drawing&&list[i].drawing.length){ list[i].drawing.pop(); renderPR(); return; } } };
     document.getElementById('prClear').onclick=function(){ reviews[prIdx]=[]; renderPR(); };
-    document.getElementById('prSend').onclick=function(){ var n=reqsFor(prIdx).length; if(!n){ toast('Add a pin or a note first'); return; } setStatus(prIdx,'inrevision'); toast(n+' change request'+(n>1?'s':'')+' sent to Bella'); closeReview(); };
+    document.getElementById('prSend').onclick=function(){
+      if((rev[prIdx]||null)==='back'){   // follow-up: re-send the ones still not right
+        var list=reqsFor(prIdx), un=list.filter(function(r){return r.verdict==='unfixed';});
+        if(!un.length){ toast('Mark what still needs work first'); return; }
+        list.forEach(function(r){ if(r.verdict==='unfixed'){ r.sent=true; r.verdict=null; } });
+        rev[prIdx]='sent'; toast(un.length+' change'+(un.length>1?'s':'')+' sent back to the studio'); closeReview(); return;
+      }
+      var n=reqsFor(prIdx).length; if(!n){ toast('Add a pin or a note first'); return; }
+      reqsFor(prIdx).forEach(function(r){ r.sent=true; }); rev[prIdx]='sent'; setStatus(prIdx,'inrevision');
+      toast(n+' change request'+(n>1?'s':'')+' sent to Bella'); closeReview();
+    };
     document.getElementById('prApprove').onclick=function(){ if(statusOf(prIdx)==='approved'){ setStatus(prIdx, reqsFor(prIdx).length?'inrevision':'delivered'); toast('Approval removed'); } else { setStatus(prIdx,'approved'); toast('Photo '+(prIdx+1)+' approved ✓'); } closeReview(); };
     stg.addEventListener('pointerdown',function(e){ if(e.target.closest('.pr-pin')) return;
       var p=prPct(e);
@@ -3184,8 +3277,8 @@ var qrcode = function() {
   var rf=document.getElementById('renameFolder'); if(rf) rf.onclick=editTitle;
   updateFolderName();
   /* demo: seed a couple of statuses so the sections are visible on load */
-  reviews[0]=[{x:26,y:50,note:'Swap the artwork for something warmer.',drawing:[]}];
-  reviews[2]=[{x:52,y:42,note:'Add a couple of counter stools at the island.',drawing:[]},{x:20,y:70,note:'Rug feels small — size it up.',drawing:[]}];
+  reviews[0]=[{x:26,y:50,note:'Swap the artwork for something warmer.',drawing:[],sent:true}]; rev[0]='sent';
+  reviews[2]=[{x:52,y:42,note:'Add a couple of counter stools at the island.',drawing:[],sent:true},{x:20,y:70,note:'Rug feels small — size it up.',drawing:[],sent:true}]; rev[2]='back';
   approvedPhotos[4]=true; approvedPhotos[5]=true; approvedPhotos[7]=true;
   renderFiles(); render();
 })();
