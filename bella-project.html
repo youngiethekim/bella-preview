@@ -364,6 +364,49 @@
   .fg-t b{font-size:13.5px;font-weight:400;display:block}
   .fg-t span{font-size:12px;color:var(--soft)}
   .fg-pr{font-size:13px;color:var(--ink);white-space:nowrap}
+  /* open-house lead capture */
+  .lead-wrap{display:grid;grid-template-columns:auto 1fr;gap:30px;align-items:start}
+  @media(max-width:760px){.lead-wrap{grid-template-columns:1fr;justify-items:center}}
+  .phone-col{display:flex;flex-direction:column;align-items:center;gap:12px}
+  .phone-cap{font-size:11.5px;color:var(--faint);text-align:center;max-width:240px;line-height:1.45}
+  .phone{width:272px;background:#141210;border-radius:36px;padding:9px;box-shadow:0 28px 60px -22px rgba(0,0,0,.55)}
+  .phone-notch{width:118px;height:19px;background:#141210;border-radius:0 0 13px 13px;margin:0 auto;position:relative;z-index:2}
+  .phone-screen{background:#fff;border-radius:28px;overflow:hidden;margin-top:-19px}
+  .lc-hero{position:relative;aspect-ratio:1.3;overflow:hidden;background:#eee}
+  .lc-hero img{width:100%;height:100%;object-fit:cover}
+  .lc-hero-c{position:absolute;left:15px;bottom:13px;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.55)}
+  .lc-price{font-size:21px}
+  .lc-addr{font-size:11px;letter-spacing:.05em}
+  .lc-body{padding:16px 16px 18px}
+  .lc-body h4{font-size:17px;font-weight:400;margin-bottom:5px}
+  .lc-sub{font-size:12px;color:var(--soft);line-height:1.45;margin-bottom:13px}
+  .lc-in{width:100%;border:1px solid var(--line);border-radius:8px;padding:10px 11px;font-family:inherit;font-size:13px;margin-bottom:8px}
+  .lc-in:focus{outline:0;border-color:var(--ink)}
+  .lc-go{width:100%;background:var(--green);color:#fff;border:0;font-family:inherit;font-size:13px;padding:12px;border-radius:8px;cursor:pointer;margin-top:2px}
+  .lc-go:hover{background:var(--ink)}
+  .lc-consent{display:flex;gap:7px;align-items:flex-start;margin-top:11px;font-size:10.5px;color:var(--faint);line-height:1.35}
+  .lc-consent input{margin-top:1px;flex:none}
+  .lc-done{padding:10px 4px 8px;text-align:center}
+  .lc-done h4{font-size:18px;font-weight:400}
+  .lc-check{width:48px;height:48px;border-radius:50%;background:#EDF4EE;display:grid;place-items:center;margin:4px auto 13px}
+  .lc-check svg{width:24px;height:24px}
+  .lc-view{display:inline-block;margin-top:12px;color:var(--green);font-size:13px;text-decoration:underline;cursor:pointer}
+  .lc-agent{margin-top:15px;font-size:11px;color:var(--faint)}
+  .lead-side{padding-top:6px}
+  .lead-h{font-size:23px;font-weight:400;margin-bottom:9px}
+  .lead-p{font-size:13.5px;color:var(--soft);line-height:1.6;margin-bottom:18px;max-width:52ch}
+  .lead-benefits{list-style:none;margin:0 0 22px;padding:0;display:grid;gap:11px}
+  .lead-benefits li{display:grid;grid-template-columns:18px 1fr;gap:11px;align-items:start;font-size:13.5px;color:var(--ink);line-height:1.4}
+  .lead-benefits svg{width:16px;height:16px;margin-top:2px}
+  .lead-leads{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--wash);max-width:380px}
+  .lead-leads-h{font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--faint);margin-bottom:10px}
+  .lead-item{display:flex;align-items:center;gap:11px;padding:9px 0;border-top:1px solid var(--line-2)}
+  .lead-item:first-child{border-top:0}
+  .lead-av{width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:13px;flex:none}
+  .lead-meta{flex:1;min-width:0}
+  .lead-meta b{font-size:13px;font-weight:400;display:block}
+  .lead-meta span{font-size:11.5px;color:var(--soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+  .lead-t{font-size:11px;color:var(--faint);white-space:nowrap}
 
   /* website */
   .browser{width:100%;max-width:900px;background:#fff;border:1px solid var(--line);box-shadow:0 20px 60px -30px rgba(0,0,0,.4)}
@@ -606,18 +649,19 @@
     </div>
 
     <div class="panel" style="margin-top:22px">
-      <h2>Listing QR code</h2>
+      <h2>Open-house QR &amp; NFC</h2>
       <div class="qr-body">
         <div class="qr-stage">
-          <span class="qr-img"><img id="qrImg" alt="QR code for your listing page"></span>
+          <span class="qr-img"><img id="qrImg" alt="QR code for your open-house lead-capture page"></span>
           <div class="qr-meta">
-            <div class="qr-lab">Scans open</div>
+            <div class="qr-lab">Scan or tap to open</div>
             <div class="qr-url" id="qrUrl">—</div>
-            <div class="qr-sub">Your live listing page, with <b id="qrName">your name</b> and <b id="qrPhone">number</b> on it. Put it on yard signs, flyers, and window cards. <span class="flag" style="margin-left:2px">Sample link</span></div>
+            <div class="qr-sub">Opens a paperless lead-capture page — visitors get the brochure emailed to them, you get the lead. Put it on the open-house sign, or load it onto an NFC “tap” card. Carries <b id="qrName">your name</b> &amp; <b id="qrPhone">number</b>. <span class="flag" style="margin-left:2px">Sample link</span></div>
+            <button class="linkbtn" id="qrPreview" type="button" style="margin-top:9px">See what visitors get when they scan →</button>
           </div>
         </div>
         <div class="qr-dl">
-          <button class="btn btn-sm" id="qrDl" type="button">Download QR (PNG)</button>
+          <button class="btn btn-sm" id="qrDl" type="button">Download QR poster</button>
           <button class="btn btn-line btn-sm" id="qrCopy" type="button">Copy link</button>
         </div>
       </div>
@@ -633,6 +677,7 @@
         <button data-view="oh" id="tabOh">Open house</button>
         <button data-view="cmp" id="tabCmp">Before / after</button>
         <button data-view="fur" id="tabFur">Furniture</button>
+        <button data-view="lead" id="tabLead">Lead capture</button>
       </div>
       <button class="btn btn-sm" id="pvAction">Download PDF</button>
     </div>
@@ -3390,16 +3435,69 @@ var qrcode = function() {
         +'<p class="cmp-note">A leave-behind buyers actually keep — and every scan brings them back to your listing.</p>'
       +'</div></div>';
   }
-  var VIEWS={bro:{f:brochure,l:'Brochure'},web:{f:website,l:'Website'},oh:{f:openhouseFlyer,l:'Open-house flyer'},cmp:{f:comparePiece,l:'Before / after'},fur:{f:furnitureGuide,l:'Shop-the-look guide'}};
+  // Open-house lead capture — the page a visitor lands on when they scan the QR / tap the NFC card
+  var leadChk='<svg viewBox="0 0 24 24" fill="none" stroke="#3E6B4C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>';
+  var leads=[{n:'Jordan M.',e:'jordan.m@gmail.com',t:'2 min ago'},{n:'Priya S.',e:'priya.sriram@outlook.com',t:'18 min ago'}];
+  function renderLeadList(){ var el=document.getElementById('leadList'); if(!el) return;
+    el.innerHTML=leads.map(function(L){ return '<div class="lead-item"><span class="lead-av">'+esc(L.n).charAt(0)+'</span><div class="lead-meta"><b>'+esc(L.n)+'</b><span>'+esc(L.e)+'</span></div><span class="lead-t">'+esc(L.t)+'</span></div>'; }).join('');
+  }
+  function leadCapture(){
+    return '<div class="lead-wrap">'
+      +'<div class="phone-col"><div class="phone-cap">What a visitor sees the moment they scan the QR — or tap the NFC card</div>'
+        +'<div class="phone"><div class="phone-notch"></div><div class="phone-screen">'
+          +'<div class="lc-hero"><img src="'+PHOTOS[0]+'" alt="">'+vsTop()+'<div class="lc-hero-c"><div class="lc-price">'+esc(val('fPrice'))+'</div><div class="lc-addr">'+esc(val('fAddr'))+'</div></div></div>'
+          +'<div class="lc-body" id="lcBody">'
+            +'<h4>Get the full brochure</h4>'
+            +'<p class="lc-sub">Skip the sign-in sheet — we’ll email you every photo, the floor plan and a digital brochure.</p>'
+            +'<input class="lc-in" id="lcName" placeholder="Your name">'
+            +'<input class="lc-in" id="lcEmail" type="email" placeholder="Email">'
+            +'<input class="lc-in" id="lcPhone" placeholder="Mobile (optional)">'
+            +'<button class="lc-go" id="lcSubmit" type="button">Send me the brochure →</button>'
+            +'<label class="lc-consent"><input type="checkbox" id="lcOk" checked><span>OK for '+esc(val('fAgent'))+' to follow up about this home</span></label>'
+          +'</div>'
+        +'</div></div>'
+      +'</div>'
+      +'<div class="lead-side">'
+        +'<h3 class="lead-h">Paperless open house</h3>'
+        +'<p class="lead-p">Your QR — or a tap-to-open NFC card on the counter — opens this page. Visitors get the brochure instantly, and every one becomes a captured lead. No clipboard, no lost sign-in sheets.</p>'
+        +'<ul class="lead-benefits">'
+          +'<li>'+leadChk+'Replaces the paper sign-in sheet</li>'
+          +'<li>'+leadChk+'Emails a PDF brochure <b>+</b> a link to the live web listing</li>'
+          +'<li>'+leadChk+'Every scan is a lead in your dashboard, with instant auto-follow-up</li>'
+          +'<li>'+leadChk+'Works by QR scan <b>or</b> NFC tap — whichever the visitor prefers</li>'
+        +'</ul>'
+        +'<div class="lead-leads"><div class="lead-leads-h">Leads captured today <span class="flag">Demo — try the form</span></div><div id="leadList"></div></div>'
+      +'</div>'
+    +'</div>';
+  }
+  function wireLeadForm(){
+    renderLeadList();
+    var btn=document.getElementById('lcSubmit'); if(!btn) return;
+    btn.onclick=function(){
+      var name=(document.getElementById('lcName').value||'').trim(), email=(document.getElementById('lcEmail').value||'').trim();
+      var ef=document.getElementById('lcEmail');
+      if(!email||email.indexOf('@')<1){ ef.focus(); ef.style.borderColor='var(--red)'; return; }
+      leads.unshift({n:name||'New visitor', e:email, t:'just now'});
+      document.getElementById('lcBody').innerHTML='<div class="lc-done"><div class="lc-check">'+leadChk+'</div><h4>Check your inbox</h4>'
+        +'<p class="lc-sub">Your brochure for '+esc(val('fAddr'))+' is on its way'+(email?(' to <b>'+esc(email)+'</b>'):'')+'.</p>'
+        +'<a class="lc-view" href="#" id="lcView">Or view it now on the web →</a>'
+        +'<div class="lc-agent">Details shared with '+esc(val('fAgent'))+' · '+esc(val('fPhone'))+'</div></div>';
+      renderLeadList();
+      var v=document.getElementById('lcView'); if(v) v.onclick=function(e){ e.preventDefault(); state.view='web'; render(); };
+    };
+  }
+  var VIEWS={bro:{f:brochure,l:'Brochure'},web:{f:website,l:'Website'},oh:{f:openhouseFlyer,l:'Open-house flyer'},cmp:{f:comparePiece,l:'Before / after'},fur:{f:furnitureGuide,l:'Shop-the-look guide'},lead:{f:leadCapture,l:'Open-house lead capture'}};
+  var VKEYS=['bro','web','oh','cmp','fur','lead'];
   function render(){
     updateQR();
     var v=VIEWS[state.view]||VIEWS.bro;
     document.getElementById('stage').innerHTML = v.f();
-    ['bro','web','oh','cmp','fur'].forEach(function(k){ var el=document.getElementById('tab'+k.charAt(0).toUpperCase()+k.slice(1)); if(el) el.classList.toggle('on',state.view===k); });
+    if(state.view==='lead') wireLeadForm();
+    VKEYS.forEach(function(k){ var el=document.getElementById('tab'+k.charAt(0).toUpperCase()+k.slice(1)); if(el) el.classList.toggle('on',state.view===k); });
     document.getElementById('pvLabel').textContent=v.l+' preview · updates live as you edit';
-    document.getElementById('pvAction').textContent=state.view==='web'?'Publish site':'Download PDF';
+    document.getElementById('pvAction').textContent=state.view==='web'?'Publish site':state.view==='lead'?'Get the QR poster':'Download PDF';
   }
-  ['bro','web','oh','cmp','fur'].forEach(function(k){ var el=document.getElementById('tab'+k.charAt(0).toUpperCase()+k.slice(1)); if(el) el.onclick=function(){ state.view=k; render(); }; });
+  VKEYS.forEach(function(k){ var el=document.getElementById('tab'+k.charAt(0).toUpperCase()+k.slice(1)); if(el) el.onclick=function(){ state.view=k; render(); }; });
   ['fAddr','fPrice','fBeds','fBaths','fSqft','fHead','fDesc','fAgent','fPhone'].forEach(function(id){ document.getElementById(id).addEventListener('input',render); });
 
   /* watermark toggle */
@@ -3409,7 +3507,7 @@ var qrcode = function() {
 
   /* downloads */
   document.getElementById('dlAll').onclick=function(){ var appr=PHOTOS.filter(function(_,i){return statusOf(i)==='approved';}).length; alert('Mockup: downloads all '+PHOTOS.length+' photos — '+appr+' approved as clean originals, the other '+(PHOTOS.length-appr)+' as lightly watermarked previews you can share for feedback.'); };
-  document.getElementById('pvAction').onclick=function(){ var v=VIEWS[state.view]||VIEWS.bro; alert(state.view==='web'?'Mockup: publishes a one-listing website for '+val('fAddr')+'.':'Mockup: exports a print-ready PDF — '+v.l+' — for '+val('fAddr')+'.'); };
+  document.getElementById('pvAction').onclick=function(){ var v=VIEWS[state.view]||VIEWS.bro; alert(state.view==='web'?'Mockup: publishes a one-listing website for '+val('fAddr')+'.':state.view==='lead'?'Mockup: generates a print-ready QR poster for the open house — and a matching NFC “tap for the brochure” card — both pointing at the lead-capture page for '+val('fAddr')+'.':'Mockup: exports a print-ready PDF — '+v.l+' — for '+val('fAddr')+'.'); };
 
   /* QR download + copy link */
   document.getElementById('qrDl').onclick=function(){
@@ -3421,6 +3519,7 @@ var qrcode = function() {
     var btn=this, u=listingURL();
     (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(function(){ btn.textContent='Copied'; setTimeout(function(){btn.textContent='Copy link';},1400); },function(){ btn.textContent='Copy link'; });
   };
+  var qrPv=document.getElementById('qrPreview'); if(qrPv) qrPv.onclick=function(){ state.view='lead'; render(); document.getElementById('stage').scrollIntoView({block:'center'}); };
 
   var rp=document.getElementById('renameProj'); if(rp) rp.onclick=editTitle;
   var rf=document.getElementById('renameFolder'); if(rf) rf.onclick=editTitle;
