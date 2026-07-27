@@ -68,7 +68,21 @@
   .ph-col-h{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--cc);font-weight:500;margin-bottom:11px;padding:2px}
   .ph-col-h .dot{width:8px;height:8px;border-radius:50%;background:var(--cc);flex:none}
   .ph-col-h .cnt{margin-left:auto;background:var(--ccbg);color:var(--cc);border-radius:99px;padding:1px 9px;letter-spacing:0;font-size:11px}
-  .ph-col-body{display:flex;flex-direction:column;gap:9px;min-height:64px}
+  .ph-col-body{display:flex;flex-direction:column;gap:8px;min-height:64px;max-height:min(58vh,560px);overflow-y:auto;overscroll-behavior:contain;padding-right:3px}
+  .ph-col-body::-webkit-scrollbar{width:7px}
+  .ph-col-body::-webkit-scrollbar-track{background:transparent}
+  .ph-col-body::-webkit-scrollbar-thumb{background:rgba(20,18,16,.16);border-radius:99px}
+  .ph-col-toggle{margin-left:8px;background:0;border:0;padding:2px;cursor:pointer;display:grid;place-items:center;line-height:0}
+  .ph-col-toggle svg{width:15px;height:15px;stroke:var(--cc);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}
+  .ph-col.collapsed .ph-col-toggle svg{transform:rotate(-90deg)}
+  .ph-col.collapsed .ph-col-body{display:none}
+  .ph-summary{display:flex;align-items:center;gap:14px;margin:0 0 13px;flex-wrap:wrap}
+  .ph-summary .bar{flex:1;min-width:150px;max-width:340px;height:8px;border-radius:99px;background:var(--line-2);overflow:hidden}
+  .ph-summary .bar i{display:block;height:100%;background:var(--green);border-radius:99px;transition:width .35s ease}
+  .ph-summary .lab{font-size:12.5px;color:var(--soft)}
+  .ph-summary .lab b{color:var(--ink);font-weight:600}
+  .ph-dlnote{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--faint);margin:0 0 14px;line-height:1.4}
+  .ph-dlnote svg{width:14px;height:14px;flex:none;stroke:var(--faint);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
   .ph-col.col-rev{--cc:var(--amber);--ccbg:#FBF3E2}
   .ph-col.col-tor{--cc:var(--red);--ccbg:#F7E7E2}
   .ph-col.col-app{--cc:var(--green);--ccbg:#EDF4EE}
@@ -79,11 +93,11 @@
   .ph-card.inrevision{--cc:var(--amber);background:#FDF8EC}
   .ph-card.delivered{--cc:var(--red);background:#FBEEEA}
   .ph-card.approved{--cc:var(--green);background:#EEF5F0}
-  .ph-card .ph-thumb{width:54px;height:40px;border-radius:6px;object-fit:cover;flex:none;background:#EFECE8;pointer-events:none}
+  .ph-card .ph-thumb{width:48px;height:36px;border-radius:6px;object-fit:cover;flex:none;background:#EFECE8;pointer-events:none}
   .ph-card .ph-card-txt{min-width:0;flex:1}
   .ph-card .ph-card-t{display:block;font-size:13.5px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .ph-card .ph-card-meta{font-size:11px;color:var(--cc);margin-top:2px}
-  .ph-card .ph-card-dl{flex:none;color:var(--soft);text-decoration:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:14px}
+  .ph-card .ph-card-dl{flex:none;color:var(--soft);text-decoration:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:14px;border:0;background:none;cursor:pointer;font-family:inherit}
   .ph-card .ph-card-dl:hover{background:var(--line);color:var(--ink)}
   .pr-foot-btns{display:flex;gap:8px}
   .pr-approve{flex:1;background:#EDF4EE;color:var(--green);border:1px solid #CFE0D3;font-family:inherit;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:12px;border-radius:8px;cursor:pointer;transition:.15s}
@@ -2936,14 +2950,64 @@ var qrcode = function() {
     return '<div class="ph-card '+k+'" draggable="true" data-i="'+i+'" title="Drag to a column, or click to open">'
       +'<img class="ph-thumb" src="'+PHOTOS[i]+'" alt="" loading="lazy">'
       +'<span class="ph-card-txt"><span class="ph-card-t">Staged photo '+(i+1)+'</span><span class="ph-card-meta">'+cardMeta(i,k)+'</span></span>'
-      +'<a class="ph-card-dl dl" href="'+PHOTOS[i]+'" download="'+projSlug()+'-'+(i+1)+'.jpg" title="Download">↓</a></div>';
+      +'<button type="button" class="ph-card-dl dl" data-dl="'+i+'" title="'+(k==='approved'?'Download clean original':'Download watermarked preview')+'">↓</button></div>';
   }
+  // draft protection: un-approved photos download with a light tiled watermark; approved download clean
+  function drawWatermark(ctx,w,h){
+    ctx.save();
+    var fs=Math.max(15, Math.round(Math.min(w,h)/24));
+    ctx.font='700 '+fs+'px Jost, Helvetica, Arial, sans-serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.translate(w/2,h/2); ctx.rotate(-28*Math.PI/180); ctx.translate(-w/2,-h/2);
+    var text='BELLA VIRTUAL   ·   PREVIEW', tw=ctx.measureText(text).width, stepX=tw+fs*2.6, stepY=fs*5.2, row=0;
+    for(var yy=-h*0.5; yy<h*1.5; yy+=stepY, row++){
+      var off=(row%2)?stepX/2:0;
+      for(var xx=-w*0.5; xx<w*1.5; xx+=stepX){
+        ctx.fillStyle='rgba(0,0,0,0.055)'; ctx.fillText(text,xx+off+1,yy+1);
+        ctx.fillStyle='rgba(255,255,255,0.17)'; ctx.fillText(text,xx+off,yy);
+      }
+    }
+    ctx.restore();
+  }
+  function triggerDL(href,name){ var a=document.createElement('a'); a.href=href; a.download=name; document.body.appendChild(a); a.click(); a.remove(); }
+  function downloadPhoto(i){
+    var base=projSlug()+'-'+(i+1);
+    if(statusOf(i)==='approved'){   // fetch to a blob so the download actually saves (cross-origin <a download> is ignored)
+      fetch(PHOTOS[i]).then(function(r){return r.blob();}).then(function(blob){
+        var u=URL.createObjectURL(blob); triggerDL(u, base+'.jpg'); setTimeout(function(){URL.revokeObjectURL(u);},2000); toast('Downloading clean original');
+      }).catch(function(){ triggerDL(PHOTOS[i], base+'.jpg'); });
+      return;
+    }
+    var img=new Image(); img.crossOrigin='anonymous';
+    img.onload=function(){
+      try{
+        var c=document.createElement('canvas'); c.width=img.naturalWidth; c.height=img.naturalHeight;
+        var x=c.getContext('2d'); x.drawImage(img,0,0); drawWatermark(x,c.width,c.height);
+        c.toBlob(function(b){ if(!b){ triggerDL(PHOTOS[i],base+'-preview.jpg'); return; }
+          var u=URL.createObjectURL(b); triggerDL(u,base+'-preview.jpg'); setTimeout(function(){URL.revokeObjectURL(u);},2000);
+          toast('Downloading watermarked preview — approve it to get the clean file');
+        },'image/jpeg',0.9);
+      }catch(err){ triggerDL(PHOTOS[i],base+'-preview.jpg'); }
+    };
+    img.onerror=function(){ triggerDL(PHOTOS[i],base+'-preview.jpg'); };
+    img.src=PHOTOS[i];
+  }
+  var colCollapsed={};
   function renderFiles(){
-    var html='<div class="ph-board-hint"><svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Drag a photo between columns to change its status — or click one to mark up a change.</div><div class="ph-board">';
+    var counts={delivered:0,inrevision:0,approved:0};
+    PHOTOS.forEach(function(_,i){ counts[statusOf(i)]=(counts[statusOf(i)]||0)+1; });
+    var total=PHOTOS.length, pct=total?Math.round(counts.approved/total*100):0;
+    var summary='<div class="ph-summary"><div class="bar"><i style="width:'+pct+'%"></i></div>'
+      +'<div class="lab"><b>'+counts.approved+'</b>/'+total+' complete · <b>'+counts.delivered+'</b> to review · <b>'+counts.inrevision+'</b> with studio</div></div>'
+      +'<div class="ph-dlnote"><svg viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zM8 11V7a4 4 0 0 1 8 0v4"/></svg>Share previews freely — un-approved photos download with a light watermark. Approve a photo and it downloads clean.</div>';
+    var html=summary+'<div class="ph-board-hint"><svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Drag a photo between columns to change its status — or click one to mark up a change.</div><div class="ph-board">';
     COLS.forEach(function(c){
       var idxs=PHOTOS.map(function(_,i){return i;}).filter(function(i){return statusOf(i)===c.k;});
       var body=idxs.length? idxs.map(function(i){return cardHTML(i,c.k);}).join('') : '<div class="ph-col-empty">Nothing here yet</div>';
-      html+='<div class="ph-col '+c.cls+'" data-col="'+c.k+'"><div class="ph-col-h"><span class="dot"></span>'+c.t+'<span class="cnt">'+idxs.length+'</span></div><div class="ph-col-body">'+body+'</div></div>';
+      html+='<div class="ph-col '+c.cls+(colCollapsed[c.k]?' collapsed':'')+'" data-col="'+c.k+'">'
+        +'<div class="ph-col-h"><span class="dot"></span>'+c.t+'<span class="cnt">'+idxs.length+'</span>'
+        +'<button type="button" class="ph-col-toggle" data-collapse="'+c.k+'" title="Collapse / expand"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button></div>'
+        +'<div class="ph-col-body">'+body+'</div></div>';
     });
     html+='</div>';
     document.getElementById('fileGrid').innerHTML=html;
@@ -2951,6 +3015,8 @@ var qrcode = function() {
   }
   var dragI=null;
   function wireBoard(){
+    document.querySelectorAll('#fileGrid .ph-col-toggle').forEach(function(b){ b.onclick=function(e){ e.stopPropagation(); var k=b.getAttribute('data-collapse'); colCollapsed[k]=!colCollapsed[k]; renderFiles(); }; });
+    document.querySelectorAll('#fileGrid [data-dl]').forEach(function(b){ b.onclick=function(e){ e.preventDefault(); e.stopPropagation(); downloadPhoto(+b.getAttribute('data-dl')); }; });
     document.querySelectorAll('#fileGrid .ph-card').forEach(function(c){
       c.addEventListener('dragstart',function(e){ dragI=+c.getAttribute('data-i'); c.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; try{e.dataTransfer.setData('text/plain',String(dragI));}catch(_){} });
       c.addEventListener('dragend',function(){ c.classList.remove('dragging'); dragI=null; });
@@ -3214,7 +3280,7 @@ var qrcode = function() {
     document.getElementById('wmState').textContent=state.wm?'“Virtually staged” label applied to every photo':'Download originals, or toggle the virtually-staged mark'; };
 
   /* downloads */
-  document.getElementById('dlAll').onclick=function(){ alert('Mockup: this downloads all 8 delivered photos'+(state.wm?' with the “Virtually staged” label baked in':' as high-res originals')+'.'); };
+  document.getElementById('dlAll').onclick=function(){ var appr=PHOTOS.filter(function(_,i){return statusOf(i)==='approved';}).length; alert('Mockup: downloads all '+PHOTOS.length+' photos — '+appr+' approved as clean originals, the other '+(PHOTOS.length-appr)+' as lightly watermarked previews you can share for feedback.'); };
   document.getElementById('pvAction').onclick=function(){ alert(state.view==='bro'?'Mockup: exports a print-ready PDF brochure for '+val('fAddr')+'.':'Mockup: publishes a one-listing website for '+val('fAddr')+'.'); };
 
   /* QR download + copy link */
