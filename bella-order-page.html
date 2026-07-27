@@ -250,11 +250,12 @@
   /* per-photo style tag on thumbnails */
   .up-th .up-style{position:absolute;left:0;right:0;bottom:0;font-size:9.5px;letter-spacing:.01em;background:rgba(20,18,16,.78);color:#fff;padding:4px 6px;display:flex;align-items:center;justify-content:center;gap:3px;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   /* room style modal */
-  .rsm-box{max-width:640px}
+  .rsm-box{max-width:640px;max-height:92vh;display:flex;flex-direction:column;padding:0;overflow:hidden}
+  .rsm-scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 6px;overscroll-behavior:contain}
   .rsm-head{display:flex;align-items:baseline;gap:10px;margin:0 4px 12px}
   .rsm-head b{font-size:18px;font-weight:400}
   .rsm-head span{font-size:12.5px;color:var(--faint)}
-  .rsm-compare{position:relative;border-radius:8px;overflow:hidden;background:#eee;aspect-ratio:3/2;user-select:none}
+  .rsm-compare{position:relative;border-radius:8px;overflow:hidden;background:#eee;aspect-ratio:3/2;max-height:min(34vh,300px);user-select:none}
   .rsm-compare img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .rsm-before{z-index:2}
   .rsm-compare .cmp-tag{position:absolute;top:10px;z-index:4;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:rgba(20,18,16,.6);padding:4px 9px;border-radius:99px;pointer-events:none}
@@ -283,7 +284,7 @@
   .rsm-empty{font-size:12.5px;color:var(--faint);grid-column:1/-1;padding:6px 0}
   .rsm-notes{width:100%;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-family:inherit;font-size:13.5px;resize:vertical;min-height:64px}
   .rsm-notes:focus{outline:0;border-color:var(--ink)}
-  .rsm-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:14px 2px 0}
+  .rsm-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0;padding:10px 14px;border-top:1px solid var(--line);background:#fff;flex:none}
   .rsm-nav .navb{background:transparent;border:0;color:var(--soft);font-size:13px;cursor:pointer;padding:6px 4px;font-family:inherit}
   .rsm-nav .navb:disabled{color:var(--line);cursor:default}
   .secs{display:flex;flex-direction:column;gap:6px}
@@ -950,17 +951,19 @@
 <div class="pmodal" id="roomStyleModal">
   <div class="box rsm-box">
     <button class="pclose" id="rsmClose" type="button" aria-label="Close">×</button>
-    <div class="rsm-head"><b>Style this room</b><span id="rsmCount"></span></div>
-    <div class="rsm-compare" id="rsmCompare">
-      <img class="rsm-after" id="rsmAfter" alt="Style example">
-      <img class="rsm-before" id="rsmBefore" alt="Your photo">
-      <span class="cmp-tag l">Your photo</span>
-      <span class="cmp-tag r" id="rsmStyleTag">Style</span>
-      <div class="rsm-handle" id="rsmHandle"></div>
+    <div class="rsm-scroll">
+      <div class="rsm-head"><b>Style this room</b><span id="rsmCount"></span></div>
+      <div class="rsm-compare" id="rsmCompare">
+        <img class="rsm-after" id="rsmAfter" alt="Style example">
+        <img class="rsm-before" id="rsmBefore" alt="Your photo">
+        <span class="cmp-tag l">Your photo</span>
+        <span class="cmp-tag r" id="rsmStyleTag">Style</span>
+        <div class="rsm-handle" id="rsmHandle"></div>
+      </div>
+      <p class="rsm-note">Slide to compare your room with the look. This is a style <b>example</b> — your actual photo will be staged in this style by our designers, and you approve it before it goes live.</p>
+      <div class="rsm-styles" id="rsmStyles"></div>
+      <div class="rsm-more" id="rsmMore"></div>
     </div>
-    <p class="rsm-note">Slide to compare your room with the look. This is a style <b>example</b> — your actual photo will be staged in this style by our designers, and you approve it before it goes live.</p>
-    <div class="rsm-styles" id="rsmStyles"></div>
-    <div class="rsm-more" id="rsmMore"></div>
     <div class="rsm-nav"><button class="navb" id="rsmPrev" type="button">← Previous</button><button class="navb" id="rsmDone" type="button" style="color:var(--green)">Done</button><button class="navb" id="rsmNext" type="button">Next →</button></div>
   </div>
 </div>
