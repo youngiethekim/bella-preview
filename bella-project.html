@@ -178,7 +178,39 @@
   .pr-pin .d{width:26px;height:26px;border-radius:50% 50% 50% 2px;background:var(--amber);color:#fff;font-size:12px;display:grid;place-items:center;border:2px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.35)}
   .pr-side{border-left:1px solid var(--line-2);display:flex;flex-direction:column;min-height:0}
   .pr-side-h{padding:14px 16px 6px;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint)}
-  .pr-reqs{flex:1;overflow-y:auto;padding:6px 16px}
+  .pr-scroll{flex:1;overflow-y:auto;min-height:0}
+  .pr-reqs{padding:6px 16px}
+  /* revision conversation thread */
+  .pr-thread{display:none;padding:4px 16px 16px;border-top:1px solid var(--line-2);margin-top:8px}
+  .pr-thread.show{display:block}
+  .thr-h{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint);margin:12px 0 6px}
+  .thr-note{font-size:11.5px;color:var(--soft);line-height:1.45;background:#EEF2F5;border:1px solid #D9E2E8;border-radius:8px;padding:9px 11px;margin-bottom:12px}
+  .thr-msgs{display:flex;flex-direction:column;gap:12px;margin-bottom:12px}
+  .thr-sys{font-size:11px;color:var(--faint);text-align:center;line-height:1.4;padding:2px 8px}
+  .thr-msg{max-width:88%}
+  .thr-msg.me{align-self:flex-end}
+  .thr-who{display:flex;align-items:center;gap:6px;margin-bottom:3px;font-size:11px}
+  .thr-msg.me .thr-who{flex-direction:row-reverse}
+  .thr-av{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:10px;flex:none}
+  .thr-av.them{background:var(--gold);color:#2a2118}
+  .thr-av.me{background:var(--ink)}
+  .thr-who b{font-weight:600;color:var(--ink)}
+  .thr-role{font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  .thr-t{color:var(--faint);font-size:10.5px}
+  .thr-msg.me .thr-t,.thr-msg.me .thr-role{margin-right:auto}
+  .thr-bubble{font-size:13px;line-height:1.45;color:var(--ink);background:var(--wash);border:1px solid var(--line-2);border-radius:10px;padding:9px 11px}
+  .thr-msg.them .thr-bubble{border-top-left-radius:2px}
+  .thr-msg.me .thr-bubble{background:#EDF4EE;border-color:#CFE0D3;border-top-right-radius:2px}
+  .thr-reply{display:flex;gap:7px;align-items:flex-end}
+  .thr-reply textarea{flex:1;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-family:inherit;font-size:13px;resize:vertical;min-height:40px}
+  .thr-reply textarea:focus{outline:0;border-color:var(--ink)}
+  .thr-reply button{background:var(--ink);color:#fff;border:0;font-family:inherit;font-size:12px;padding:10px 14px;border-radius:8px;cursor:pointer;flex:none}
+  .thr-reply button:hover{background:var(--green)}
+  .thr-demo{display:block;margin-top:9px;background:0;border:0;color:var(--gold);text-decoration:underline;font-family:inherit;font-size:11px;cursor:pointer;padding:0}
+  .ph-msg{display:inline-flex;align-items:center;gap:4px;margin-top:6px;font-size:10.5px;color:var(--soft);background:var(--line-2);padding:2px 8px;border-radius:99px}
+  .ph-msg svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:1.8}
+  .ph-msg.new{background:#FBF3E2;color:#8A6A1F;font-weight:500}
+  .ph-msg.new::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold)}
   .pr-empty{color:var(--faint);font-size:13px;padding:26px 6px;text-align:center;line-height:1.5}
   .pr-req{border:1px solid var(--line);border-radius:8px;padding:10px;margin-bottom:9px}
   .pr-req .rq-h{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--soft);margin-bottom:7px}
@@ -579,7 +611,10 @@
       <div class="pr-side">
         <div class="pr-side-h">Your change requests</div>
         <div class="pr-banner" id="prBanner"></div>
-        <div class="pr-reqs" id="prReqs"></div>
+        <div class="pr-scroll" id="prScroll">
+          <div class="pr-reqs" id="prReqs"></div>
+          <div class="pr-thread" id="prThread"></div>
+        </div>
         <div class="pr-foot"><div class="pr-foot-btns"><button class="pr-approve" id="prApprove" type="button">✓ Looks great — approve</button><button class="pr-send" id="prSend" type="button">Send changes</button></div><div class="pr-hint">Free &amp; unlimited for two weeks. We relay changes to the studio for you.</div></div>
       </div>
     </div>
@@ -3039,10 +3074,15 @@ var qrcode = function() {
     if(k==='approved') return 'Complete ✓';
     if(k==='inrevision') return 'With the studio'+(n?(' · '+n+' change'+(n>1?'s':'')):'');
     return 'Your turn — review it'; }
+  function cardMsgChip(i){
+    var m=threadMsgs(i); if(!m.length) return '';
+    var lastStudio=m[m.length-1].who==='studio';
+    return '<span class="ph-msg'+(lastStudio?' new':'')+'" title="'+(lastStudio?DESIGNER+' replied':'Conversation with the studio')+'"><svg viewBox="0 0 24 24"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/></svg>'+m.length+(lastStudio?' · new reply':'')+'</span>';
+  }
   function cardHTML(i,k){
     return '<div class="ph-card '+k+'" draggable="true" data-i="'+i+'" title="Drag to a column, or click to open">'
       +'<img class="ph-thumb" src="'+PHOTOS[i]+'" alt="" loading="lazy">'
-      +'<span class="ph-card-txt"><span class="ph-card-t">Staged photo '+(i+1)+'</span><span class="ph-card-meta">'+cardMeta(i,k)+'</span></span>'
+      +'<span class="ph-card-txt"><span class="ph-card-t">Staged photo '+(i+1)+'</span><span class="ph-card-meta">'+cardMeta(i,k)+'</span>'+cardMsgChip(i)+'</span>'
       +'<button type="button" class="ph-card-dl dl" data-dl="'+i+'" title="'+(k==='approved'?'Download clean original':'Download watermarked preview')+'">↓</button></div>';
   }
   // draft protection: un-approved photos download with a light tiled watermark; approved download clean
@@ -3173,6 +3213,12 @@ var qrcode = function() {
 
   /* ---- inline photo mark-up: click a photo to point at what you want changed ---- */
   var reviews={};   // photoIndex -> [{x,y,note,drawing:[strokes],sent}]
+  var threads={};   // photoIndex -> [{who:'client'|'studio'|'system', name, text, t}]
+  var DESIGNER='Dani R.';
+  function threadOf(i){ return threads[i]||(threads[i]=[]); }
+  function threadMsgs(i){ return (threads[i]||[]).filter(function(m){return m.who!=='system';}); }
+  var DEMOREPLIES=['Got it — counter-height stools and I’ll warm up the rug. First revision back to you within a day.','Perfect, thanks! Anything else you’d like tweaked while I’m in there?','Updated version is uploading now — you’ll see it in your review shortly.'];
+  var demoReplyI=0;
   function escHtml(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   var prIdx=0, prTool='pin', prColor='#C4553F', prLive={down:false,shape:null};
   var PRC=['#C4553F','#B8985A','#3E6B4C','#3E6076','#232120'];
@@ -3200,11 +3246,30 @@ var qrcode = function() {
       rw.querySelectorAll('[data-del]').forEach(function(b){ b.onclick=function(){ list.splice(+b.getAttribute('data-del'),1); renderPR(); }; });
     }
     var demo=document.getElementById('prDemo'); if(demo) demo.onclick=function(){ setStatus(prIdx,'delivered'); renderPR(); renderFiles(); };
-    syncPRFoot(mode);
+    syncPRFoot(mode); renderThread();
     document.querySelectorAll('#photoReview [data-prtool]').forEach(function(b){ b.classList.toggle('on',b.getAttribute('data-prtool')===prTool); });
     var st=document.getElementById('prStage'); st.classList.toggle('pinning',prTool==='pin'); st.classList.toggle('drawing',prTool==='draw');
     document.getElementById('prDraw').classList.toggle('live',prTool==='draw');
     document.getElementById('prTip').textContent = prTool==='pin' ? 'Click the photo where you\'d like a change, then write what you want.' : 'Draw on the photo to circle or mark exactly what to change.';
+  }
+  function threadMsgHTML(m){
+    if(m.who==='system') return '<div class="thr-sys">✉ '+esc(m.text)+' · '+esc(m.t)+'</div>';
+    var mine=m.who==='client', nm=m.name||(mine?'You':'Bella studio');
+    return '<div class="thr-msg '+(mine?'me':'them')+'"><div class="thr-who"><span class="thr-av '+(mine?'me':'them')+'">'+esc(nm).charAt(0)+'</span><b>'+esc(nm)+'</b><span class="thr-role">'+(mine?'You':'Bella studio')+'</span><span class="thr-t">'+esc(m.t)+'</span></div><div class="thr-bubble">'+esc(m.text)+'</div></div>';
+  }
+  function renderThread(){
+    var el=document.getElementById('prThread'); if(!el) return;
+    var msgs=threads[prIdx]||[], s=statusOf(prIdx);
+    if(!msgs.length && s!=='inrevision'){ el.className='pr-thread'; el.innerHTML=''; return; }
+    el.className='pr-thread show';
+    el.innerHTML='<div class="thr-h">Conversation with the studio</div>'
+      +'<div class="thr-note">'+esc(DESIGNER)+' and the studio reply by <b>email</b> — their replies land here, and your messages go straight to their inbox. No new logins for anyone.</div>'
+      +'<div class="thr-msgs">'+(msgs.length?msgs.map(threadMsgHTML).join(''):'<div class="thr-sys">No messages yet — say hi or ask a question.</div>')+'</div>'
+      +'<div class="thr-reply"><textarea id="thrIn" placeholder="Reply to '+esc(DESIGNER)+'…"></textarea><button type="button" id="thrSend">Send</button></div>'
+      +'<button type="button" class="thr-demo" id="thrDemo">▸ Preview: '+esc(DESIGNER)+' replies by email</button>';
+    document.getElementById('thrSend').onclick=function(){ var ta=document.getElementById('thrIn'), t=(ta.value||'').trim(); if(!t) return; threadOf(prIdx).push({who:'client',name:'You',text:t,t:'just now'}); renderThread(); renderFiles(); };
+    document.getElementById('thrDemo').onclick=function(){ threadOf(prIdx).push({who:'studio',name:DESIGNER,text:DEMOREPLIES[demoReplyI++%DEMOREPLIES.length],t:'just now'}); renderThread(); renderFiles(); };
+    var box=el.querySelector('.thr-msgs'); if(box) box.scrollTop=box.scrollHeight;
   }
   function reqCard(r,idx,mode){
     var head='<div class="rq-h"><span class="rq-n">'+(idx+1)+'</span>Pin '+(idx+1);
@@ -3236,6 +3301,7 @@ var qrcode = function() {
     document.getElementById('prSend').onclick=function(){
       var n=reqsFor(prIdx).length; if(!n){ toast('Pin or note what you’d like changed first'); return; }
       reqsFor(prIdx).forEach(function(r){ r.sent=true; }); setStatus(prIdx,'inrevision');
+      threadOf(prIdx).push({who:'system',text:n+' change request'+(n>1?'s':'')+' sent to the Bella studio — '+DESIGNER+' notified by email',t:'just now'});
       toast(n+' revision request'+(n>1?'s':'')+' sent to the studio'); pendingMove=prIdx; closeReview();
     };
     document.getElementById('prApprove').onclick=function(){
@@ -3526,6 +3592,8 @@ var qrcode = function() {
   updateFolderName();
   /* demo: seed a couple of statuses so the sections are visible on load */
   reviews[2]=[{x:52,y:42,note:'Add a couple of counter stools at the island.',drawing:[],sent:true},{x:20,y:70,note:'Rug feels small — size it up.',drawing:[],sent:true}];
+  threads[2]=[{who:'system',text:'2 change requests sent to the Bella studio — '+DESIGNER+' notified by email',t:'9:14 AM'},
+              {who:'studio',name:DESIGNER,text:'Hi Beverly! For the island — counter-height or bar-height stools? And should I keep the rug tone warm, or go a cooler grey?',t:'9:41 AM'}];
   approvedPhotos[4]=true; approvedPhotos[5]=true; approvedPhotos[7]=true;
   renderFiles(); render();
 })();
