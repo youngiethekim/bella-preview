@@ -188,6 +188,10 @@
   .core-top .lbl{flex:1;min-width:200px}
   .core-top .lbl b{font-weight:400;font-size:16.5px;display:block}
   .core-top .lbl span{font-size:13px;color:var(--faint)}
+  .pop-note{display:block;margin-top:8px}
+  .pop-pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;letter-spacing:.03em;background:#EDF4EE;color:var(--green);padding:3px 10px;border-radius:99px;font-weight:500}
+  .pop-link{background:0;border:0;padding:0;font-family:inherit;font-size:12.5px;color:var(--green);text-decoration:underline;cursor:pointer}
+  .pop-link:hover{color:var(--ink)}
   .core .removal-row{display:flex;align-items:center;gap:16px;margin-top:16px;padding-top:16px;border-top:1px solid #DDE7DD}
   .core .removal-row .lbl{flex:1}
   .core .removal-row .lbl b{font-weight:400;font-size:15px;display:block}
@@ -1045,7 +1049,7 @@
       box.innerHTML=
         '<div class="stp core" id="stp1"><div class="stp-h">'+qicon('sofa')+'<div class="stp-t"><b>Virtual staging</b><span>Designer-furnished rooms · '+money(stageUnit())+' each.'+exLink('stage')+'</span></div></div>'
           +'<div class="core-top"><span class="stp-n">1</span>'
-            +'<span class="lbl"><b>How many photos are we staging?</b><span>A box appears for each one — tap + or − to set the number.</span></span>'
+            +'<span class="lbl"><b>How many photos are we staging?</b><span>A box appears for each one — tap + or − to set the number.</span><span class="pop-note" id="popNote"></span></span>'
             +stepper('photos')+'</div>'
           +volMeter()
           +'<input type="file" id="upInput" accept="image/*" multiple hidden>'
@@ -1164,6 +1168,11 @@
       el.classList.toggle('next', !!next && m===next.m);
       el.onclick=function(){ setPhotos(m); };
     });
+    var POP=8, pn=document.getElementById('popNote');
+    if(pn){
+      if(p===POP){ pn.innerHTML='<span class="pop-pill">★ Most popular</span>'; }
+      else { pn.innerHTML='<button type="button" class="pop-link" id="popLink">Most agents stage '+POP+' — use that</button>'; var pl=document.getElementById('popLink'); if(pl) pl.onclick=function(){ setPhotos(POP); }; }
+    }
     var econ=document.getElementById('volEcon');
     if(econ){
       econ.innerHTML='<div class="ve-main"><span class="ve-pp">'+money2(per)+'<i>/photo</i></span>'
