@@ -391,6 +391,10 @@
   .dc-row input:checked ~ .dc-box::after{opacity:1}
   .dc-t b{display:block;font-weight:400;font-size:14.5px}
   .dc-t span{display:block;font-size:12.5px;color:var(--faint);margin-top:2px;line-height:1.4}
+  .preset-note{display:none}
+  .preset-note.show{display:flex;align-items:flex-start;gap:10px;background:#F4F7F4;border:1px solid #DDE7DD;border-radius:9px;padding:12px 14px;margin:14px 0 4px;font-size:13px;color:var(--soft);line-height:1.45}
+  .preset-note svg{width:17px;height:17px;flex:none;margin-top:1px;fill:var(--green)}
+  .preset-note b{color:var(--ink);font-weight:500}
   .up-refs{margin-top:16px;border-top:1px solid #DDE7DD;padding-top:14px}
   .up-thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;padding:4px;border-radius:10px;transition:box-shadow .15s,background .15s}
   .up-thumbs.drag{background:#E7F1E9;box-shadow:0 0 0 2px var(--green)}
@@ -992,8 +996,12 @@
   function fp3d(){ return state.commercial?CFP3D:PR.FP3D; }
   var state={ proj:null, commercial:false, photos:8, mode:'ready', removal:false, reno:false, renoN:8, floor:false, fpn:1, floor2d:false, fp2dn:1, tour:false, dusk:false, duskN:8, sky:false, skyN:8, pano360:false, pano:3,
               rint:1, rext:1, rfp:1, useInt:true, useExt:true, useFp:true,
-              styleMode:'pro', stylePick:null, uploads:[], photog:{email:'',notes:'',sent:false}, files:{}, designerAll:true, sourceFurniture:false, marketingKit:true,
+              styleMode:'pro', stylePick:null, presetStyle:null, uploads:[], photog:{email:'',notes:'',sent:false}, files:{}, designerAll:true, sourceFurniture:false, marketingKit:true,
               sel:{reno:[],dusk:[],sky:[]} };
+  // pre-select a style when arriving from the style quiz (?style=modern) — we'll stage every photo that way
+  (function(){ try{ var q=(new URLSearchParams(location.search)).get('style');
+    if(q && ['modern','scandi','coastal','midcentury','farmhouse','contemporary'].indexOf(q)>-1){ state.presetStyle=q; state.designerAll=false; }
+  }catch(e){} })();
 
   // saved lookbook pieces
   var saved=[]; try{ saved=JSON.parse(localStorage.getItem('bellaProject')||'[]'); }catch(e){}
@@ -1060,7 +1068,8 @@
           +'<div class="up-thumbs" id="upThumbs"></div>'
           +'<div class="up-hint" id="upHint"></div>'
           +photographerBlock()
-          +'<label class="dc-row" id="dcRow"><input type="checkbox" id="dcAll" checked><span class="dc-box"></span><span class="dc-t"><b>Let our designers choose the style</b><span>Recommended — we match the look to your buyer. Prefer something specific? Tap a photo to set its own.</span></span></label>'
+          +'<div class="preset-note" id="presetNote"></div>'
+          +'<label class="dc-row" id="dcRow"><input type="checkbox" id="dcAll" checked><span class="dc-box"></span><span class="dc-t"><b>Let our designers choose the style</b><span>Recommended — we match the look to your buyer. Prefer something specific? Tap a photo to set its own. <a class="linkbtn" href="bella-style-quiz.html">Not sure? Take the 2-min style quiz →</a></span></span></label>'
           +'<div class="removal-row" id="removalRow"><span class="lbl"><b>Furniture removal</b><span>Occupied or cluttered? We clear the room first, then stage it clean.</span></span><span class="freeprice">Included free</span><button class="toggle" data-tog="removal"></button></div>'
         +'</div>'
         +'<div class="stp" id="stp3"><div class="stp-h"><span class="stp-n">2</span><div class="stp-t"><b>Help us nail the look'+tip('The more we know, the better. References and a floor plan help our designers understand the space, scale the furniture correctly, and match the exact look you’re after — so we represent your home the way you want it.')+'</b><span>References, inspiration &amp; a floor plan — optional, but they really help.</span></div></div>'
@@ -1403,7 +1412,7 @@
     cb.onchange=function(){ state.designerAll=cb.checked; if(cb.checked) state.uploads.forEach(function(u){ u.style='designer'; }); renderUploads(); };
   }
   function addFiles(files){
-    [].slice.call(files).forEach(function(f){ if(f.type&&f.type.indexOf('image')===0){ state.uploads.push({name:f.name, url:URL.createObjectURL(f)}); } });
+    [].slice.call(files).forEach(function(f){ if(f.type&&f.type.indexOf('image')===0){ state.uploads.push({name:f.name, url:URL.createObjectURL(f), style:(!state.designerAll&&state.presetStyle)?state.presetStyle:undefined}); } });
     // uploads count toward the number they chose; only grow the order if they upload more
     if(state.uploads.length > state.photos) state.photos=state.uploads.length;
     renderUploads(); sync();
@@ -1641,6 +1650,14 @@
       };});
     });
   }
+  function syncPreset(){
+    var el=document.getElementById('presetNote'); if(!el) return;
+    if(state.presetStyle && !state.designerAll){
+      el.className='preset-note show';
+      el.innerHTML='<svg viewBox="0 0 24 24"><path d="M12 2l2.6 6.9L22 9.2l-5.3 4.9L18.2 21 12 17.3 5.8 21l1.5-6.9L2 9.2l7.4-.3z"/></svg>'
+        +'<span>From your style quiz — we’ll stage every photo <b>'+STYNAME[state.presetStyle]+'</b>. Tap any photo to change it, or tick the box below to let our designers choose instead.</span>';
+    } else { el.className='preset-note'; el.innerHTML=''; }
+  }
   function sync(){
     // per-photo services: when photos are uploaded, the picked set drives the count; otherwise default to all
     ['reno','dusk','sky'].forEach(function(svc){
@@ -1672,7 +1689,7 @@
     var tot=money(lines().total);
     var r2=document.getElementById('run2'); if(r2) r2.textContent=tot;
     var r2b=document.getElementById('run2b'); if(r2b) r2b.textContent=tot;
-    syncVol(); syncRenderVol(); syncReqUploads(); if(document.getElementById('upThumbs')) renderUploads(); renderCart();
+    syncVol(); syncRenderVol(); syncPreset(); syncReqUploads(); if(document.getElementById('upThumbs')) renderUploads(); renderCart();
   }
   // line-item breakdown shown from the footer total
   function renderCart(){
