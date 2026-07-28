@@ -226,6 +226,17 @@
   .mu-th .mu-x{position:absolute;top:2px;right:2px;width:16px;height:16px;border:0;border-radius:50%;background:rgba(20,18,16,.7);color:#fff;font-size:11px;line-height:1;cursor:pointer}
   .req-up{margin-top:12px;display:none;padding-top:12px;border-top:1px dashed var(--line)}
   .req-up.show{display:block}
+  .render-req{margin-top:18px;border-top:1px solid var(--line)}
+  /* render bundle volume panel */
+  .rvol{margin-top:16px;background:#F7FAF7;border:1px solid #DDE7DD;border-radius:8px;padding:14px 16px}
+  .rvol-econ{font-size:14.5px}.rvol-econ b{font-weight:500}
+  .rvol-off{color:var(--green)}
+  .rvol-muted{color:var(--faint);font-size:13px}
+  .rvol-nudge{margin-top:8px;font-size:13px;color:var(--soft);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .rvol-nudge b{color:var(--ink);font-weight:500}
+  .rvol-nudge .vol-add{background:var(--ink);color:#fff;border:0;font-family:inherit;font-size:12px;padding:6px 12px;border-radius:99px;cursor:pointer}
+  .rvol-nudge .vol-add:hover{background:var(--green)}
+  .rvol-top{color:var(--green)}
   .req-up .req-lab{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:2px}
   .req-alt{margin-top:10px}
   .req-alt-toggle{background:transparent;border:0;color:var(--green);font-family:inherit;font-size:12.5px;cursor:pointer;padding:2px 0}
@@ -998,6 +1009,7 @@
 
   function money(n){ return '$'+Math.round(n).toLocaleString('en-US'); }
   function volDisc(q){ return q>=21?.20:q>=11?.15:q>=6?.10:q>=3?.05:0; }
+  function renderQty(){ return (state.useInt?state.rint:0)+(state.useExt?state.rext:0)+(state.useFp?state.rfp:0); } // renders discount as one bundle
 
   // ---- line items + total for current state ----
   function lines(){
@@ -1018,11 +1030,11 @@
       if(disc) L.push(['Volume discount', '−'+money(disc)]);
       return {L:L,total:total,disc:disc};
     } else {
-      var t=0, bdisc=0;
-      if(state.useInt){ var ci=rInt()*state.rint, di=ci*volDisc(state.rint); L.push([(state.commercial?'Commercial interior render × ':'Interior 3D render × ')+state.rint, money(ci)]); t+=ci-di; bdisc+=di; }
-      if(state.useExt){ var ce=rExt()*state.rext, de=ce*volDisc(state.rext); L.push([(state.commercial?'Commercial exterior render × ':'Exterior 3D render × ')+state.rext, money(ce)]); t+=ce-de; bdisc+=de; }
-      if(state.useFp){ var cf=fp3d()*state.rfp, df=cf*volDisc(state.rfp); L.push(['3D floor plan × '+state.rfp, money(cf)]); t+=cf-df; bdisc+=df; }
-      if(bdisc) L.push(['Volume discount', '−'+money(bdisc)]);
+      var t=0, bdisc=0, rq=renderQty(), rd=volDisc(rq);   // discount scales on the TOTAL render count (a bundle)
+      if(state.useInt){ var ci=rInt()*state.rint, di=ci*rd; L.push([(state.commercial?'Commercial interior render × ':'Interior 3D render × ')+state.rint, money(ci)]); t+=ci-di; bdisc+=di; }
+      if(state.useExt){ var ce=rExt()*state.rext, de=ce*rd; L.push([(state.commercial?'Commercial exterior render × ':'Exterior 3D render × ')+state.rext, money(ce)]); t+=ce-de; bdisc+=de; }
+      if(state.useFp){ var cf=fp3d()*state.rfp, df=cf*rd; L.push(['3D floor plan × '+state.rfp, money(cf)]); t+=cf-df; bdisc+=df; }
+      if(bdisc) L.push(['Volume discount · '+Math.round(rd*100)+'% off '+rq+' renders', '−'+money(bdisc)]);
       return {L:L,total:t,disc:bdisc};
     }
   }
@@ -1107,11 +1119,12 @@
       document.getElementById('s2title').textContent='What do you need to show?';
       (function(){ var s=document.getElementById('s2sub'); s.style.display=''; s.textContent='Pick the visuals your sales office needs. We build them from your drawings, no finished home required.'; })();
       box.innerHTML=
-        catHead('Built from your drawings','We need: architectural blueprints or plans (PDF/CAD) and property dimensions','Renders are built from your plans, so the drawings and dimensions are what make them accurate. You can upload them at checkout, or send them right after.')
+        catHead('Built from your drawings','Accurate plans in, photoreal renders out — here’s exactly what we need.','Renders are only as accurate as your drawings. Send dimensioned floor plans (PDF, DWG or DXF); for exterior renders, add elevations and a site plan. Include a finishes schedule and reference images if you have them — if not, our designers pick a look that sells. No files yet? Email your architect a secure upload link below.')
        +toggleStep((state.commercial?'Commercial interior renders':'Interior 3D renders'),'Photoreal rooms from your plans','useInt','rint','+'+money(rInt())+' each',state.commercial?'crint':'rint')
        +toggleStep((state.commercial?'Commercial exterior renders':'Exterior 3D renders'),'Elevations, streetscapes, aerials','useExt','rext','+'+money(rExt())+' each',state.commercial?'crext':'rext')
        +toggleStep('Furnished 3D floor plans','Walk the layout','useFp','rfp','+'+money(fp3d())+' each','floor')
-       +'<p class="tiers">Volume pricing, applied automatically — <b>3+</b> save 5% · <b>6+</b> save 10% · <b>11+</b> save 15% · <b>21+</b> save 20%.</p>';
+       +'<div class="rvol" id="renderVol"></div>'
+       +renderReqBlock();
     }
     bind(); bindStyle(); bindUpload(); sync();
   }
@@ -1225,6 +1238,39 @@
           +'<span class="req-note">Or just continue — you can upload from your project dashboard any time before we start.</span>'
           +'<div class="req-sent" data-reqsent="'+key+'"></div>'
         +'</div></div></div>';
+  }
+  // blueprint / requirements upload for the 3D-render (build) path — always shown, with the send-later email option
+  function renderReqBlock(){
+    return '<div class="req-up show render-req">'
+      +'<div class="req-lab">What we need to build your renders</div>'
+      +'<ul class="reqlist">'
+        +'<li><b>Floor plans, dimensioned</b> — every level, as PDF, DWG or DXF. The one must-have.</li>'
+        +'<li><b>Exterior elevations</b> — front, rear and sides, for exterior renders, streetscapes or aerials.</li>'
+        +'<li><b>Ceiling heights &amp; key dimensions</b> — anything not already marked on the plans.</li>'
+        +'<li><b>Finishes &amp; materials</b> — flooring, cabinetry, counters, paint, cladding. No selections yet? Our designers choose a look that sells.</li>'
+        +'<li><b>Reference images</b> — a mood board, a model home, a style you love. Optional, but it helps us nail it.</li>'
+        +'<li><b>Site or plot plan</b> — for orientation, landscaping and context (exterior renders only).</li>'
+      +'</ul>'
+      +miniUpload('render','Upload blueprints &amp; plans','PDF, DWG, DXF, JPG or PNG — drag them in, or click to browse','.pdf,.dwg,.dxf,.jpg,.jpeg,.png,image/*')
+      +'<div class="req-alt"><button type="button" class="req-alt-toggle" data-reqtoggle="render">Don’t have the drawings yet? Email your architect or builder a secure upload link →</button>'
+        +'<div class="req-email" data-reqemail="render">'
+          +'<span class="req-email-lab">We’ll email a secure upload link straight to whoever has the files.</span>'
+          +'<div class="req-email-row"><input type="email" placeholder="architect@firm.com" data-reqmail="render"><button type="button" class="req-send" data-reqsend="render">Send link</button></div>'
+          +'<span class="req-note">Or continue — you can upload from your project dashboard any time before we start.</span>'
+          +'<div class="req-sent" data-reqsent="render"></div>'
+        +'</div></div></div>';
+  }
+  function syncRenderVol(){
+    var el=document.getElementById('renderVol'); if(!el) return;
+    var rq=renderQty(), d=volDisc(rq), tiers=[3,6,11,21], pct=[5,10,15,20];
+    var next=null,i; for(i=0;i<tiers.length;i++){ if(tiers[i]>rq){ next=tiers[i]; break; } }
+    var saved=lines().disc||0;
+    if(rq===0){ el.innerHTML='<span class="rvol-muted">Order interior, exterior or floor-plan renders and volume pricing kicks in automatically — 3+ save 5%, up to 20% at 21+.</span>'; return; }
+    var h='<div class="rvol-econ"><b>'+rq+' render'+(rq>1?'s':'')+'</b>'+(d>0?' · <span class="rvol-off">'+Math.round(d*100)+'% off — you save '+money(saved)+'</span>':' · <span class="rvol-muted">no discount yet</span>')+'</div>';
+    if(next){ var add=next-rq, np=pct[tiers.indexOf(next)]; h+='<div class="rvol-nudge"><button type="button" class="vol-add" id="rvolAdd">+ Add '+add+' more</button><span>to unlock <b>'+np+'% off</b> every render.</span></div>'; }
+    else { h+='<div class="rvol-nudge rvol-top">✓ Top tier unlocked — 20% off, your best price.</div>'; }
+    el.innerHTML=h;
+    var a=document.getElementById('rvolAdd'); if(a&&next) a.onclick=function(){ if(state.useInt) state.rint+=(next-rq); else if(state.useExt) state.rext+=(next-rq); else if(state.useFp) state.rfp+=(next-rq); sync(); };
   }
   function bindMiniUploads(){
     document.querySelectorAll('.mini-up[data-upkey]').forEach(function(zone){
@@ -1350,12 +1396,15 @@
   function closeRoomStyle(){ document.getElementById('roomStyleModal').classList.remove('open'); }
 
   function bindUpload(){
-    var wrap=document.getElementById('upThumbs'), input=document.getElementById('upInput'); if(!wrap||!input) return;
-    input.onchange=function(){ addFiles(input.files); input.value=''; };
-    ['dragenter','dragover'].forEach(function(ev){ wrap.addEventListener(ev,function(e){ e.preventDefault(); wrap.classList.add('drag'); }); });
-    ['dragleave','drop'].forEach(function(ev){ wrap.addEventListener(ev,function(e){ e.preventDefault(); wrap.classList.remove('drag'); }); });
-    wrap.addEventListener('drop',function(e){ if(e.dataTransfer&&e.dataTransfer.files) addFiles(e.dataTransfer.files); });
-    renderUploads(); bindPhotographer(); bindMiniUploads(); bindDesigner();
+    var wrap=document.getElementById('upThumbs'), input=document.getElementById('upInput');
+    if(wrap&&input){
+      input.onchange=function(){ addFiles(input.files); input.value=''; };
+      ['dragenter','dragover'].forEach(function(ev){ wrap.addEventListener(ev,function(e){ e.preventDefault(); wrap.classList.add('drag'); }); });
+      ['dragleave','drop'].forEach(function(ev){ wrap.addEventListener(ev,function(e){ e.preventDefault(); wrap.classList.remove('drag'); }); });
+      wrap.addEventListener('drop',function(e){ if(e.dataTransfer&&e.dataTransfer.files) addFiles(e.dataTransfer.files); });
+      renderUploads();
+    }
+    bindPhotographer(); bindMiniUploads(); bindDesigner();   // mini/req uploads also live in the render (build) path
   }
   function bindDesigner(){
     var cb=document.getElementById('dcAll'); if(!cb) return;
@@ -1632,7 +1681,7 @@
     var tot=money(lines().total);
     var r2=document.getElementById('run2'); if(r2) r2.textContent=tot;
     var r2b=document.getElementById('run2b'); if(r2b) r2b.textContent=tot;
-    syncVol(); syncReqUploads(); if(document.getElementById('upThumbs')) renderUploads(); renderCart();
+    syncVol(); syncRenderVol(); syncReqUploads(); if(document.getElementById('upThumbs')) renderUploads(); renderCart();
   }
   // line-item breakdown shown from the footer total
   function renderCart(){
