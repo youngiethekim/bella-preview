@@ -1337,8 +1337,8 @@
   function styExemplar(k){ var s=STY.filter(function(x){return x.k===k;})[0]; return s?CAT+s.im+'.jpg':''; }
   function styName(k){ var s=STY.filter(function(x){return x.k===k;})[0]; return s?s.n:null; }
   function resolveStyleKey(u){ var c=(u&&u.style)||'designer'; return c!=='designer'? c : 'modern'; }
-  function afterLabel(u){ var c=(u&&u.style)||'designer'; return c!=='designer'? styName(c)+' example' : 'Designer’s choice'; }
-  function thumbStyleTag(u){ var c=(u&&u.style)||'designer'; if(c!=='designer') return styName(c); return state.designerAll? 'Designer’s choice' : 'Tap to style'; }
+  function afterLabel(u){ var c=(u&&u.style)||'designer'; return c!=='designer'? styName(c)+' example' : 'Recommended'; }
+  function thumbStyleTag(u){ var c=(u&&u.style)||'designer'; if(c!=='designer') return styName(c); return state.designerAll? 'Recommended' : 'Tap to style'; }
   function syncDesignerBox(){ var cb=document.getElementById('dcAll'); if(cb) cb.checked=state.designerAll; }
   var rsmIdx=0, rsmClip=50;
   // map the styler's style keys to the catalog's style names, + the room types
@@ -1356,7 +1356,7 @@
     document.getElementById('rsmStyleTag').textContent = u.template? 'The look you picked' : afterLabel(u);
     rsmApplyClip();
     var chosen=(u.style||'designer');
-    var chips='<button type="button" class="rsm-sty proj'+(chosen==='designer'?' on':'')+'" data-sk="designer">✦ Designer’s choice</button>'
+    var chips='<button type="button" class="rsm-sty proj'+(chosen==='designer'?' on':'')+'" data-sk="designer">✦ Recommended</button>'
       +STY.map(function(s){ return '<button type="button" class="rsm-sty'+(chosen===s.k?' on':'')+'" data-sk="'+s.k+'">'+s.n+'</button>'; }).join('');
     var wrap=document.getElementById('rsmStyles'); wrap.innerHTML=chips;
     wrap.querySelectorAll('.rsm-sty').forEach(function(b){ b.onclick=function(){
