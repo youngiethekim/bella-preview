@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Which Staging Style Sells Your Home? | Bella Virtual</title>
+<meta name="description" content="Take the 2-minute quiz. Answer a few questions about your listing and your buyer, and our designers will tell you the virtual staging style most likely to sell it.">
+<link rel="canonical" href="https://www.bellavirtual.com/style-quiz">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://youngiethekim.github.io" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<!-- Style-recommendation quiz. The style→sells mapping is our designers' expert heuristic, not a guaranteed formula — framed as a recommendation, not a promise. -->
+<style>
+  :root{--bg:#FDFCFA;--ink:#232120;--soft:#6E6A66;--faint:#9C978F;--line:#E8E4DE;--line-2:#F0EDE8;--dark:#1C1A18;--green:#3E6B4C;--gold:#E7C36A;--pad:44px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:"Jost",system-ui,sans-serif;font-weight:300;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  img{display:block;max-width:100%}a{text-decoration:none;color:inherit}
+  h1,h2,h3{font-weight:300;letter-spacing:-.012em;line-height:1.12}
+  .micro{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .btn{display:inline-block;background:var(--ink);color:#fff;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;padding:14px 24px;cursor:pointer;border:0;font-family:inherit;transition:background .2s,color .2s}
+  .btn:hover{background:var(--green);color:#fff}
+  .btn-ghost{background:transparent;border:1px solid var(--ink);color:var(--ink)}.btn-ghost:hover{background:var(--ink);color:#fff}
+  header{border-bottom:1px solid var(--line-2)}
+  .nav{display:flex;align-items:center;height:64px;padding:0 var(--pad);max-width:1080px;margin:0 auto}
+  .mark{font-size:15px;letter-spacing:.5em}.nav .sp{margin-left:auto}
+  .nav a.lnk{font-size:12.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--soft)}
+  .stage{max-width:760px;margin:0 auto;padding:52px var(--pad) 80px;min-height:70vh}
+  /* progress */
+  .prog{display:flex;align-items:center;gap:12px;margin-bottom:30px}
+  .prog .bar{flex:1;height:6px;background:var(--line-2);border-radius:99px;overflow:hidden}
+  .prog .bar i{display:block;height:100%;background:var(--green);border-radius:99px;transition:width .35s cubic-bezier(.2,.8,.2,1);width:0}
+  .prog .lab{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
+  /* intro */
+  .intro h1{font-size:clamp(32px,5vw,50px);max-width:16ch;margin:14px 0 16px}
+  .intro h1 em{font-style:normal;color:var(--green)}
+  .intro p{color:var(--soft);font-size:17px;max-width:48ch}
+  .intro .go{margin-top:30px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+  .intro .note{font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+  /* question */
+  .q h2{font-size:clamp(24px,3.4vw,34px);max-width:20ch;margin:6px 0 4px}
+  .q .qsub{color:var(--soft);font-size:15px;margin-bottom:26px}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:620px){.opts{grid-template-columns:1fr}}
+  .opt{display:flex;align-items:center;gap:14px;text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px;cursor:pointer;font-family:inherit;font-size:16px;color:var(--ink);transition:border-color .15s,box-shadow .15s,transform .12s}
+  .opt:hover{border-color:var(--green);box-shadow:0 4px 16px -8px rgba(20,18,16,.22);transform:translateY(-1px)}
+  .opt .oi{width:40px;height:40px;border-radius:10px;background:#EEF3EE;display:grid;place-items:center;flex:none}
+  .opt .oi svg{width:21px;height:21px;stroke:var(--green);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+  .opt b{font-weight:400;display:block}
+  .opt span{display:block;font-size:12.5px;color:var(--faint);margin-top:1px}
+  .back{margin-top:22px;background:0;border:0;color:var(--soft);font-family:inherit;font-size:13px;cursor:pointer;padding:6px 0}
+  .back:hover{color:var(--ink)}
+  /* result */
+  .res .kicker{color:var(--green)}
+  .res h2{font-size:clamp(30px,4.4vw,46px);margin:8px 0 6px}
+  .res h2 em{font-style:normal;color:var(--green)}
+  .res-card{display:grid;grid-template-columns:1fr 1.1fr;gap:0;margin-top:26px;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  @media(max-width:640px){.res-card{grid-template-columns:1fr}}
+  .res-card .im{position:relative;background:#EFECE8;min-height:230px}
+  .res-card .im img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .res-card .rb{padding:28px 30px}
+  .res-card .rb .tag{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--green)}
+  .res-card .rb h3{font-size:26px;margin:6px 0 12px}
+  .res-card .rb p{font-size:14.5px;color:var(--soft);line-height:1.6}
+  .res-card .rb .why{margin-top:14px;padding-top:14px;border-top:1px solid var(--line-2);font-size:14px;color:var(--ink)}
+  .res-card .rb .why b{font-weight:500}
+  .res .runners{margin-top:20px;font-size:13.5px;color:var(--soft)}
+  .res .runners b{color:var(--ink);font-weight:400}
+  .res .cta{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap}
+  .res .redo{margin-top:16px;background:0;border:0;color:var(--soft);font-family:inherit;font-size:13px;cursor:pointer;text-decoration:underline}
+  .res .redo:hover{color:var(--ink)}
+  .res .designer-note{margin-top:26px;background:#F4F7F4;border:1px solid #DDE7DD;border-radius:10px;padding:16px 18px;font-size:13.5px;color:var(--soft)}
+  .res .designer-note b{color:var(--ink);font-weight:400}
+  .fade{animation:fade .32s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  footer{background:var(--dark);color:#8a857d;padding:30px var(--pad);font-size:12.5px;text-align:center;margin-top:30px}
+  footer a{color:#A8A29A;text-decoration:underline}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a class="mark" href="bella-homepage-redesign.html">BELLA</a>
+    <span class="sp"></span>
+    <a class="lnk" href="bella-lookbook.html">Lookbook</a>
+  </div>
+</header>
+
+<div class="stage" id="stage"></div>
+
+<footer>© Bella Virtual Staging · Style quiz mockup · <a href="bella-homepage-redesign.html">Back to the studio</a></footer>
+
+<script>
+(function(){
+  var CAT='https://youngiethekim.github.io/bella-preview/bella-catalog/items/';
+  // the six looks, with why-it-sells framing and an example image from the real lookbook
+  var STYLES={
+    modern:{name:'Modern',tag:'Sleek · minimal · elevated',img:'LR_MDRN_L148',
+      why:'Clean lines and a restrained palette read as high-end. For premium and urban listings, Modern makes a space feel current, considered, and worth the price.'},
+    scandi:{name:'Scandinavian',tag:'Bright · airy · calm',img:'LR_SCND_L381',
+      why:'Light woods, soft neutrals and uncluttered rooms make smaller or newer spaces feel bigger and serene — exactly what first-home and young-professional buyers are scrolling for.'},
+    coastal:{name:'Hamptons Coastal',tag:'Relaxed · breezy · light',img:'LR_COAST_L521',
+      why:'Airy blues, natural textures and easy light sell a feeling of escape. It’s a natural fit for waterfront, vacation and downsizer listings.'},
+    midcentury:{name:'Mid-century Modern',tag:'Warm woods · iconic · curated',img:'LR_MCM_L446',
+      why:'Walnut tones and timeless silhouettes give a home character without dating it. Design-savvy and creative buyers respond to a space that feels curated, not generic.'},
+    farmhouse:{name:'Modern Farmhouse',tag:'Warm · cozy · homey',img:'LR_FARM_L382',
+      why:'Soft textures and lived-in warmth make a house feel like home the second a buyer walks in. It wins with families and in suburban and rural markets.'},
+    contemporary:{name:'Contemporary',tag:'Fresh · current · broadly loved',img:'LR_CONT_L387',
+      why:'The crowd-pleaser. Current, neutral and universally appealing, it helps the widest range of buyers picture themselves living there — the safe pick when your buyer is mixed.'}
+  };
+  var order=['contemporary','scandi','modern','farmhouse','coastal','midcentury']; // tiebreak priority
+  var ic={
+    condo:'M4 21V9l8-5 8 5v12M9 21v-6h6v6',fam:'M3 11l9-7 9 7M5 10v10h14V10',lux:'M4 20V8l8-5 8 5v12M12 3v17M8 20v-5M16 20v-5',
+    coast:'M2 18c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2M6 12l3-6 3 6M9 6V3',rural:'M4 21V10l8-6 8 6v11M9 21v-7h6v7',build:'M6 21V4h12v17M9 8h2M13 8h2M9 12h2M13 12h2',
+    young:'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21c0-4 4-6 8-6s8 2 8 6',families:'M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM17 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM2 20c0-3 3-5 7-5M14 20c0-2.5 2-4 5-4',
+    downsize:'M12 3v10M8 9l4 4 4-4M5 21h14',luxbuy:'M6 9l6-5 6 5-2 11H8zM9 13h6',creative:'M12 3l2.5 6H21l-5 4 2 7-6-4-6 4 2-7-5-4h6.5z',
+    urban:'M4 21V7h6v14M14 21V3h6v18M4 21h16M7 10h0M7 14h0M17 7h0M17 11h0M17 15h0',suburb:'M3 11l6-5 6 5M5 10v10h8V10M15 13l4-3 4 3M17 12v8h4v-8',
+    lake:'M3 16c2 0 2 2 4.5 2s2.5-2 5-2 2.5 2 5 2 2.5-2 4.5-2M12 3v9M8 7l4-4 4 4',mtn:'M3 20l6-12 4 7 3-4 5 9z',arts:'M12 3v18M5 8l7-5 7 5M5 8v9M19 8v9M5 17h14',
+    bright:'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM12 2v2M12 20v2M4 12H2M22 12h-2M6 6L4.5 4.5M19.5 19.5L18 18M6 18l-1.5 1.5M19.5 4.5L18 6',
+    cozy:'M12 21s7-5 7-11a7 7 0 0 0-14 0c0 6 7 11 7 11z',luxe:'M6 9l6-5 6 5-2 11H8zM10 20v-6h4v6',airy:'M3 10c3 0 3-2 6-2M3 15c4 0 4 2 8 2M13 8c3 0 3-2 6-2M13 15c2 0 2 1 4 1',
+    timeless:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2',fresh:'M12 3c4 4 4 10 0 14-4-4-4-10 0-14zM12 17v4'
+  };
+  function svg(k){ return '<svg viewBox="0 0 24 24"><path d="'+(ic[k]||'')+'"/></svg>'; }
+  // each option adds weight to styles
+  var QUESTIONS=[
+    {q:'What kind of home is it?', sub:'The property sets the tone.',
+      opts:[
+        {t:'City condo or loft', s:'Compact, modern building', ic:'condo', w:{modern:2,scandi:1,contemporary:1}},
+        {t:'Family home in the suburbs', s:'House with a yard', ic:'fam', w:{contemporary:2,farmhouse:1,scandi:1}},
+        {t:'Luxury or high-end', s:'Premium price point', ic:'lux', w:{modern:2,midcentury:1,contemporary:1}},
+        {t:'Coastal or vacation', s:'Near water, a getaway', ic:'coast', w:{coastal:3}},
+        {t:'Country or acreage', s:'Rural, lots of character', ic:'rural', w:{farmhouse:3}},
+        {t:'New build or minimalist', s:'Clean, brand-new', ic:'build', w:{scandi:2,modern:1,contemporary:1}}
+      ]},
+    {q:'Who’s most likely to buy it?', sub:'Stage for the buyer, not yourself.',
+      opts:[
+        {t:'Young professionals', s:'First or second home', ic:'young', w:{scandi:2,modern:1}},
+        {t:'Growing families', s:'Need space and warmth', ic:'families', w:{contemporary:2,farmhouse:2}},
+        {t:'Downsizers & retirees', s:'Simplifying, comfort-first', ic:'downsize', w:{contemporary:1,coastal:2}},
+        {t:'Luxury buyers', s:'Expect the best', ic:'luxbuy', w:{modern:2,midcentury:1}},
+        {t:'Design-savvy & creatives', s:'Notice the details', ic:'creative', w:{midcentury:3}}
+      ]},
+    {q:'What’s the vibe of the area?', sub:'Local buyers want a local feel.',
+      opts:[
+        {t:'Urban / downtown', s:'Dense, walkable', ic:'urban', w:{modern:2,contemporary:1}},
+        {t:'Suburban', s:'Neighbourhoods, schools', ic:'suburb', w:{contemporary:2,farmhouse:1,scandi:1}},
+        {t:'Coastal / lakeside', s:'Water nearby', ic:'lake', w:{coastal:3}},
+        {t:'Rural / mountain', s:'Nature, space', ic:'mtn', w:{farmhouse:2,midcentury:1}},
+        {t:'Trendy / arts district', s:'Character, culture', ic:'arts', w:{midcentury:2,modern:1}}
+      ]},
+    {q:'What should buyers feel walking in?', sub:'Emotion is what sells a home.',
+      opts:[
+        {t:'Bright, clean, calm', s:'Space to breathe', ic:'bright', w:{scandi:3}},
+        {t:'Warm, cozy, homey', s:'Feels like home', ic:'cozy', w:{farmhouse:3}},
+        {t:'Sleek, luxe, aspirational', s:'A step up', ic:'luxe', w:{modern:3}},
+        {t:'Relaxed, airy, breezy', s:'On vacation', ic:'airy', w:{coastal:3}},
+        {t:'Characterful & timeless', s:'Curated, not generic', ic:'timeless', w:{midcentury:3}},
+        {t:'Fresh & current', s:'Appeals to everyone', ic:'fresh', w:{contemporary:3}}
+      ]}
+  ];
+
+  var stage=document.getElementById('stage');
+  var step=-1, scores={};
+  Object.keys(STYLES).forEach(function(k){ scores[k]=0; });
+
+  function render(){
+    if(step===-1){ renderIntro(); return; }
+    if(step<QUESTIONS.length){ renderQ(step); return; }
+    renderResult();
+  }
+  function renderIntro(){
+    stage.className='stage';
+    stage.innerHTML='<div class="intro fade"><span class="micro">Style finder</span>'
+      +'<h1>Which style will <em>sell your home</em> best?</h1>'
+      +'<p>Answer four quick questions about your listing and your buyer. Our designers will tell you the virtual staging look most likely to win them over.</p>'
+      +'<div class="go"><button class="btn" id="start">Start the quiz →</button><span class="note">4 questions · about 2 minutes</span></div></div>';
+    document.getElementById('start').onclick=function(){ step=0; render(); };
+  }
+  function renderQ(i){
+    var Q=QUESTIONS[i];
+    var pct=Math.round(i/QUESTIONS.length*100);
+    stage.innerHTML='<div class="prog"><div class="bar"><i style="width:'+pct+'%"></i></div><span class="lab">'+(i+1)+' of '+QUESTIONS.length+'</span></div>'
+      +'<div class="q fade"><span class="micro">Question '+(i+1)+'</span><h2>'+Q.q+'</h2><p class="qsub">'+Q.sub+'</p>'
+      +'<div class="opts">'+Q.opts.map(function(o,oi){ return '<button class="opt" data-oi="'+oi+'"><span class="oi">'+svg(o.ic)+'</span><span><b>'+o.t+'</b><span>'+o.s+'</span></span></button>'; }).join('')+'</div>'
+      +(i>0?'<button class="back" id="back">← Back</button>':'')+'</div>';
+    stage.querySelectorAll('.opt').forEach(function(btn){
+      btn.onclick=function(){
+        var o=Q.opts[+btn.getAttribute('data-oi')];
+        Q.picked=o; Object.keys(o.w).forEach(function(k){ scores[k]+=o.w[k]; });
+        step++; render();
+      };
+    });
+    var back=document.getElementById('back'); if(back) back.onclick=function(){
+      // undo previous question's score
+      var prev=QUESTIONS[i-1]; if(prev&&prev.picked){ Object.keys(prev.picked.w).forEach(function(k){ scores[k]-=prev.picked.w[k]; }); prev.picked=null; }
+      step--; render();
+    };
+  }
+  function ranked(){
+    return Object.keys(STYLES).slice().sort(function(a,b){
+      if(scores[b]!==scores[a]) return scores[b]-scores[a];
+      return order.indexOf(a)-order.indexOf(b);
+    });
+  }
+  function renderResult(){
+    var r=ranked(), win=r[0], S=STYLES[win];
+    var runners=[STYLES[r[1]].name, STYLES[r[2]].name];
+    stage.innerHTML='<div class="res fade"><span class="micro kicker">Your best-selling style</span>'
+      +'<h2>Stage it <em>'+S.name+'</em>.</h2>'
+      +'<div class="res-card"><div class="im"><img src="'+CAT+S.img+'.jpg" alt="'+S.name+' staged room"></div>'
+        +'<div class="rb"><span class="tag">'+S.tag+'</span><h3>'+S.name+'</h3>'
+          +'<p>'+S.why+'</p>'
+          +'<div class="why"><b>Why it fits your listing:</b> based on your answers, this is the look most likely to help your buyer picture themselves living there — and make a stronger offer.</div>'
+        +'</div></div>'
+      +'<div class="runners">Also strong for your listing: <b>'+runners[0]+'</b> and <b>'+runners[1]+'</b>.</div>'
+      +'<div class="cta"><a class="btn" href="bella-order-page.html">Stage my listing in '+S.name+' →</a><a class="btn btn-ghost" href="bella-lookbook.html">See '+S.name+' in the lookbook</a></div>'
+      +'<button class="redo" id="redo">↺ Retake the quiz</button>'
+      +'<div class="designer-note"><b>Not sure, or your buyer is mixed?</b> Leave it to us — our designers pick the style that sells for your market, free with every order.</div>'
+      +'</div>';
+    document.getElementById('redo').onclick=function(){ step=-1; Object.keys(scores).forEach(function(k){scores[k]=0;}); QUESTIONS.forEach(function(q){q.picked=null;}); render(); };
+  }
+  render();
+})();
+</script>
+</body>
+</html>
