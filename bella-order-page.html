@@ -1212,7 +1212,7 @@
   function closePhoto(){ document.getElementById('photoView').classList.remove('open'); }
   // ---- optional inline photo upload (tied to the staging count; never required) ----
   function photographerBlock(){
-    return '<label class="dc-row" id="upLaterRow"><input type="checkbox" id="upLaterCb"><span class="dc-box"></span><span class="dc-t"><b>My photos aren’t ready yet</b><span>Send your photographer a secure link to upload them straight to this order.</span></span></label>'
+    return '<label class="dc-row" id="upLaterRow"><input type="checkbox" id="upLaterCb"><span class="dc-box"></span><span class="dc-t"><b>My photos aren’t ready yet</b><span>Send your photographer or marketing manager a secure link to upload them straight to this order.</span></span></label>'
       +'<div class="up-later-panel" id="upLaterPanel">'
         +'<label>Photographer’s email</label><input type="email" id="photogEmail" placeholder="photographer@studio.com" autocomplete="off">'
         +'<label style="margin-top:12px">Instructions for this shoot <span style="text-transform:none;letter-spacing:0;color:var(--faint)">— edit as needed</span></label><textarea id="photogNotes"></textarea>'
