@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bella Virtual — Prototype &amp; Build Package</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#FDFCFA;--ink:#232120;--soft:#6E6A66;--faint:#9C978F;--line:#E8E4DE;--line-2:#F0EDE8;--dark:#1C1A18;--green:#3E6B4C;--gold:#B8985A;--pad:44px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:"Jost",system-ui,sans-serif;font-weight:300;line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .micro{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 var(--pad)}
+  header{background:var(--dark);color:#F2EFEA;padding:60px 0 54px}
+  header .mark{font-size:15px;letter-spacing:.5em}
+  header h1{font-size:clamp(30px,4vw,46px);font-weight:300;letter-spacing:-.015em;margin:20px 0 14px;max-width:20ch;color:#fff}
+  header p{color:#B9B3AB;font-size:16.5px;max-width:64ch}
+  header .meta{display:flex;gap:10px 26px;flex-wrap:wrap;margin-top:22px;font-size:12px;letter-spacing:.06em;color:#8b857c}
+  header .meta b{color:#D8D3CC;font-weight:400}
+  .startbar{background:#EDF4EE;border-bottom:1px solid #DCE7DD}
+  .startbar .in{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:18px var(--pad);max-width:1160px;margin:0 auto}
+  .startbar b{color:var(--green);font-weight:500;font-size:14px}
+  .startbar span{color:var(--soft);font-size:13.5px;flex:1;min-width:200px}
+  .btn{display:inline-block;background:var(--ink);color:#fff;font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:12px 20px;border-radius:2px;white-space:nowrap;transition:background .2s}
+  .btn:hover{background:var(--green)}
+  section{padding:52px 0 8px}
+  .sec-h{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:26px}
+  .sec-h h2{font-size:22px;font-weight:400}
+  .sec-h .n{font-size:12px;color:var(--faint);margin-left:auto}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media(max-width:860px){.grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+  .card{display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:10px;padding:20px 20px 18px;transition:border-color .15s,transform .12s,box-shadow .15s;min-height:132px}
+  .card:hover{border-color:var(--ink);transform:translateY(-2px);box-shadow:0 10px 28px -14px rgba(20,18,16,.22)}
+  .card .tag{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+  .card.app .tag{color:var(--gold)}
+  .card h3{font-size:16.5px;font-weight:400;letter-spacing:-.01em}
+  .card p{font-size:13px;color:var(--soft);margin-top:6px;flex:1;line-height:1.5}
+  .card .go{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);margin-top:14px;display:inline-flex;align-items:center;gap:7px}
+  .card .go svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.6;transition:transform .15s}
+  .card:hover .go svg{transform:translateX(3px)}
+  .doc{background:var(--dark);border-color:var(--dark);color:#EDEAE5}
+  .doc:hover{border-color:var(--gold)}
+  .doc h3,.doc .go{color:#fff}.doc p{color:#B9B3AB}.doc .tag{color:var(--gold)}
+  footer{margin-top:44px;border-top:1px solid var(--line);padding:26px 0 60px}
+  footer p{font-size:12.5px;color:var(--faint);max-width:80ch}
+  footer b{color:var(--soft);font-weight:400}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <span class="mark">B E L L A &nbsp;·&nbsp; V I R T U A L</span>
+    <h1>Prototype &amp; build package</h1>
+    <p>Clickable, working prototypes of the full Bella Virtual platform — the public marketing site, the client &amp; studio app, and the developer build spec. Everything here is a design/UX prototype (static, front-end only); the build spec explains how it becomes the real product.</p>
+    <div class="meta"><span><b>25+</b> screens</span><span><b>3</b> products: site · app · AI concierge</span><span>Prepared for the Bella dev team</span></div>
+  </div>
+</header>
+
+<div class="startbar">
+  <div class="in">
+    <b>Start here →</b>
+    <span>The build spec is the single source of truth: stack, data model, screen-by-screen behavior, payments, storage, SEO/migration, and a phased plan.</span>
+    <a class="btn" href="docs/BUILD-SPEC.md" target="_blank" rel="noopener">Open the build spec</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section>
+    <div class="sec-h"><h2>Marketing site</h2><span class="n">Public · SEO · content</span></div>
+    <div class="grid">
+      <a class="card" href="bella-homepage-redesign.html" target="_blank" rel="noopener"><span class="tag">Homepage</span><h3>Homepage</h3><p>Before→after hero video, services, pricing teaser, proof, FAQ, and the non-intrusive AI concierge (bottom-right).</p><span class="go">Open <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+      <a class="card" href="bella-services.html" target="_blank" rel="noopener"><span class="tag">Services</span><h3>Services hub</h3><p>Overview of every service, hub-and-spoke for SEO.</p><span class="go">Open <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+      <a class="card" href="bella-service-virtual-staging.html" target="_blank" rel="noopener"><span class="tag">Service page</span><h3>Virtual staging</h3><p>Dedicated service page template (ranks for the money keyword).</p><span class="go">Open <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+      <a class="card" href="bella-service-3d-tour.html" target="_blank" rel="noopener"><span class="tag">Service page</span><h3>Virtually staged 3D tours</h3><p>Matterport / Kuula / iGuide tours staged to match the photos.</p><span class="go">Open <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+      <a class="card" href="bella-pricing.html" target="_blank" rel="noopener"><span class="tag">Pricing</span><h3>Pricing</h3><p>Physical vs virtual vs AI comparison + per-service rates.</p><span class="go">Open <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+      <a class="card" href="bella-lookbook.html" target="_blank" rel="noopener"><span class="tag">Catalog</span><h3>Lookbook</h3><p>219-item furniture catalog, filterable, save-to-project.</p><span class="go">Open <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+      <a class="card" href="bella-resources.html" target="_blank" rel="noopener"><span class="tag">Content · SEO</span><h3>Resources hub</h3><p>Free guides + a keyword-targeted "real estate marketing" section.</p><span class="go">Open <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+      <a class="card" href="bella-style-quiz.html" target="_blank" rel="noopener"><span class="tag">Interactive</span><h3>Style quiz</h3><p>"Which staging style sells your home?" → pre-selects the look in the order.</p><span class="go">Open <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+      <a class="card" href="bella-virtual-staging-los-angeles.html" target="_blank" rel="noopener"><span class="tag">Local SEO</span><h3>Location page (LA)</h3><p>Template for ~18 city landing pages.</p><span class="go">Open <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+      <a class="card" href="bella-for-agents.html" target="_blank" rel="noopener"><span class="tag">Segment</span><h3>For agents</h3><p>Audience page (also builders / brokerages / photographers).</p><span class="go">Open <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+      <a class="card" href="bella-guide-photos.html" target="_blank" rel="noopener"><span class="tag">Lead magnet</span><h3>Phone photo guide</h3><p>Print-to-PDF listing-photo guide.</p><span class="go">Open <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-h"><h2>The app</h2><span class="n">Authenticated · order → delivery → revision</span></div>
+    <div class="grid">
+      <a class="card app" href="bella-order-page.html" target="_blank" rel="noopener"><span class="tag">Core</span><h3>Order flow</h3><p>3-step wizard: project type → photos &amp; style → package. Volume pricing, per-photo styling, add-ons, requirements upload, checkout.</p><span class="go">Open <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+      <a class="card app" href="bella-dashboard.html" target="_blank" rel="noopener"><span class="tag">Client</span><h3>Client dashboard</h3><p>Projects, statuses, revision loop, brand onboarding.</p><span class="go">Open <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+      <a class="card app" href="bella-project.html" target="_blank" rel="noopener"><span class="tag">Client</span><h3>Project workspace</h3><p>Photo kanban board, inline mark-up + revision thread, watermarked downloads, furniture-used 3D, and the full marketing kit (brochure/site/flyer/QR) with templates.</p><span class="go">Open <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+      <a class="card app" href="bella-review.html" target="_blank" rel="noopener"><span class="tag">Team</span><h3>Revision workspace</h3><p>Pin/draw/note annotation, versions, compare slider, roles, studio brief.</p><span class="go">Open <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+      <a class="card app" href="bella-cms.html" target="_blank" rel="noopener"><span class="tag">Internal ops</span><h3>Control center (CMS)</h3><p>Cross-client order queue, assign studio, SLA, relay revisions.</p><span class="go">Open <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+      <a class="card app" href="bella-studio.html" target="_blank" rel="noopener"><span class="tag">Fulfillment</span><h3>Studio portal</h3><p>Scoped contractor portal: production brief, job workflow, version board.</p><span class="go">Open <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+      <a class="card app" href="bella-billing.html" target="_blank" rel="noopener"><span class="tag">Billing</span><h3>Billing / credits</h3><p>Prepaid credit wallet + top-up packs (prototype).</p><span class="go">Open <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+      <a class="card app" href="bella-login.html" target="_blank" rel="noopener"><span class="tag">Auth</span><h3>Login</h3><p>Branded sign-in (to be wired to real auth).</p><span class="go">Open <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-h"><h2>Developer docs</h2><span class="n">Build spec · migration</span></div>
+    <div class="grid">
+      <a class="card doc" href="docs/BUILD-SPEC.md" target="_blank" rel="noopener"><span class="tag">Read first</span><h3>Build specification</h3><p>Stack, roles, data model, screen-by-screen, payments, storage, AI concierge, SEO, non-functional reqs, phased plan.</p><span class="go">Open <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+      <a class="card doc" href="migration/bella-redirect-map.csv" target="_blank" rel="noopener"><span class="tag">Migration</span><h3>301 redirect map</h3><p>198 Shopify→new URL redirects (import-ready CSV).</p><span class="go">Open <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+      <a class="card doc" href="migration/README-redirects.md" target="_blank" rel="noopener"><span class="tag">Migration</span><h3>Redirect guide</h3><p>How to import the redirects + the decisions to confirm.</p><span class="go">Open <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+    </div>
+  </section>
+
+  <footer>
+    <p><b>Note for the dev team:</b> these are static front-end prototypes (HTML/CSS/vanilla JS) — the design, UX, flows, and copy are resolved; the backend is not built. The app screens use demo/localStorage data. Some stats, prices, testimonials, and images are flagged placeholders to replace before launch (see §10 of the build spec). Repo: <b>github.com/youngiethekim/bella-preview</b>.</p>
+  </footer>
+
+</div>
+</body>
+</html>
