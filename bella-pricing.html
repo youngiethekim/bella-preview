@@ -196,6 +196,34 @@
   <cite>Beverly Bahm · Agent, Chicago IL</cite>
 </div>
 
+<style>
+  .pfaq{max-width:820px;margin:0 auto;padding:0 var(--pad)}
+  .pfaq details{border-bottom:1px solid var(--line)}
+  .pfaq summary{padding:22px 0;cursor:pointer;font-size:17px;font-weight:400;list-style:none;display:flex;justify-content:space-between;gap:20px;align-items:center}
+  .pfaq summary::-webkit-details-marker{display:none}
+  .pfaq summary::after{content:"+";font-size:20px;color:var(--green);transition:transform .2s}
+  .pfaq details[open] summary::after{transform:rotate(45deg)}
+  .pfaq details p{padding:0 0 22px;color:var(--soft);font-size:15px;max-width:70ch}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"How much does virtual staging cost?","acceptedAnswer":{"@type":"Answer","text":"Bella's virtual staging costs $45 per photo, paid once, with volume discounts up to 20%. A typical eight-photo listing runs about $324 to $360. There is no subscription and no minimum. Physical staging, by comparison, commonly costs $2,000 to $5,000 or more."}},
+  {"@type":"Question","name":"Is virtual staging cheaper than physical staging?","acceptedAnswer":{"@type":"Answer","text":"Yes, by a wide margin. Virtual staging is a one-time $45-per-photo cost with no rental fees or moving logistics, while physical staging typically runs thousands of dollars over a month or two."}},
+  {"@type":"Question","name":"Are there volume discounts?","acceptedAnswer":{"@type":"Answer","text":"Yes. Per-photo pricing drops automatically as you add photos, up to 20% off on larger listings. You see the total before you order."}},
+  {"@type":"Question","name":"How much do the other services cost?","acceptedAnswer":{"@type":"Answer","text":"Floor plans start at $24 per floor, photo editing from about $6 per photo, day-to-dusk edits from about $7 per photo, and 3D rendering and 3D tours are quoted per project."}}
+]}
+</script>
+<section>
+  <div class="pfaq">
+    <p class="micro">Cost FAQ</p>
+    <h2 style="font-size:clamp(24px,2.7vw,34px);margin:10px 0 20px">How much does virtual staging cost?</h2>
+    <details open><summary>How much does virtual staging cost?</summary><p>Bella's virtual staging costs $45 per photo, paid once, with volume discounts up to 20%. A typical eight-photo listing runs about $324 to $360, with no subscription and no minimum. Physical staging, by comparison, commonly costs $2,000 to $5,000 or more.</p></details>
+    <details><summary>Is virtual staging cheaper than physical staging?</summary><p>Yes, by a wide margin. Virtual staging is a one-time cost with no rental fees or moving logistics, while physical staging typically runs thousands of dollars over a month or two.</p></details>
+    <details><summary>Are there volume discounts?</summary><p>Yes. Per-photo pricing drops automatically as you add photos, up to 20% off on larger listings. You'll see the total before you order.</p></details>
+    <details><summary>How much do the other services cost?</summary><p>Floor plans start at $24 per floor, photo editing from about $6 per photo, day-to-dusk edits from about $7 per photo, and 3D rendering and 3D tours are quoted per project.</p></details>
+  </div>
+</section>
+
 <section class="cta">
   <h2>Price your listing in two minutes.</h2>
   <p>Pick a package or build it yourself — you'll see the total before you order.</p>
@@ -208,6 +236,9 @@
       <span class="micro">Bella Virtual</span>
       <a href="bella-services.html">Services</a>
       <a href="bella-service-virtual-staging.html">Virtual staging</a>
+      <a href="bella-service-3d-rendering.html">3D rendering</a>
+      <a href="bella-service-floor-plans.html">Floor plans</a>
+      <a href="bella-service-photo-editing.html">Photo editing</a>
       <a href="bella-service-3d-tour.html">3D tours</a>
       <a href="bella-pricing.html">Pricing</a>
       <a href="bella-lookbook.html">Lookbook</a>
