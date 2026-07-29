@@ -470,6 +470,30 @@
   .site .w-cta .btn{margin-top:16px;background:#fff;color:var(--ink)}
 
   .note{font-size:12px;color:var(--faint);margin-top:14px;text-align:center}
+  /* ---- marketing template picker + brochure/website variants ---- */
+  .tpl-picker{display:flex;align-items:center;gap:8px;margin:0 0 12px;flex-wrap:wrap}
+  .tpl-picker .tpl-lab{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-right:2px}
+  .tpl-chip{font-family:inherit;font-size:12px;padding:7px 14px;border:1px solid var(--line);background:#fff;color:var(--soft);border-radius:99px;cursor:pointer;transition:border-color .14s,color .14s,background .14s}
+  .tpl-chip:hover{border-color:var(--ink);color:var(--ink)}
+  .tpl-chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  /* Editorial — centered, refined, gold accent */
+  .brochure.tpl-editorial .b-body{text-align:center}
+  .brochure.tpl-editorial .b-facts{justify-content:center}
+  .brochure.tpl-editorial .b-body h3{font-size:27px;letter-spacing:.004em}
+  .brochure.tpl-editorial .b-addr{letter-spacing:.22em}
+  .brochure.tpl-editorial .b-hero .b-price{background:var(--gold);color:#231f18}
+  .brochure.tpl-editorial .b-foot{justify-content:center;gap:30px}
+  .site.tpl-editorial .w-hero .w-copy{left:0;right:0;text-align:center;padding:0 20px}
+  .site.tpl-editorial .w-cta{background:#F4F2EF;color:var(--ink)}
+  .site.tpl-editorial .w-cta h3{color:var(--ink)}
+  .site.tpl-editorial .w-cta .btn{background:var(--gold);color:#fff}
+  /* Bold — uppercase, high-contrast, green accent */
+  .brochure.tpl-bold .b-body h3{text-transform:uppercase;letter-spacing:.03em;font-size:20px}
+  .brochure.tpl-bold .b-hero .b-price{background:var(--green);font-size:26px;padding:14px 24px}
+  .brochure.tpl-bold .b-addr{color:var(--green)}
+  .site.tpl-bold .w-hero .w-copy .p{font-size:32px;font-weight:400}
+  .site.tpl-bold .w-about h3{text-transform:uppercase;letter-spacing:.02em}
+  .site.tpl-bold .w-cta .btn{background:var(--green);color:#fff}
   footer{background:var(--dark);color:#8a857d;padding:26px var(--pad);font-size:12.5px;text-align:center;margin-top:52px}
   footer a{color:#b8b2a9;text-decoration:underline}
 
@@ -716,6 +740,7 @@
       </div>
       <button class="btn btn-sm" id="pvAction">Download PDF</button>
     </div>
+    <div class="tpl-picker" id="tplPicker"></div>
     <div class="stage" id="stage"></div>
     <p class="note">Mockup preview — on the live tool this exports a print-ready PDF and publishes a shareable listing site under your brand.</p>
   </div>
@@ -3042,7 +3067,8 @@ var qrcode = function() {
     C+'Elizabeth_Ramos_-_Webster_from_Dining_nhi_tb-transformed.jpg'+W,
     C+'3D_Illustration_Photo_Frame_Lounge_Jan_16_2025.jpg'+W
   ];
-  var state={ view:'bro', wm:false, logo:'', hs:'', projTitle:'42 Bayview Terrace' };
+  var state={ view:'bro', wm:false, logo:'', hs:'', projTitle:'42 Bayview Terrace', broTpl:'modern', webTpl:'modern' };
+  var TPLS=[{k:'modern',n:'Modern'},{k:'editorial',n:'Editorial'},{k:'bold',n:'Bold'}];
   function slugify(s){ return (s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
   function projSlug(){ return slugify(state.projTitle)+'-bella-virtual'; }
   function updateFolderName(){ var f=document.getElementById('folderName'); if(f) f.textContent=projSlug(); }
@@ -3448,7 +3474,7 @@ var qrcode = function() {
   function qrImgTag(){ return qrDataCache? '<img src="'+qrDataCache+'" alt="Scan for the listing">' : ''; }
 
   function brochure(){
-    return '<div class="brochure">'
+    return '<div class="brochure tpl-'+state.broTpl+'">'
       +'<div class="b-hero"><img src="'+PHOTOS[0]+'" alt="">'+(state.wm?'<span class="vs vtop">Virtually staged</span>':'')+'<span class="b-price">'+esc(val('fPrice'))+'</span></div>'
       +'<div class="b-body">'
         +'<h3>'+esc(val('fHead'))+'</h3><p class="b-addr">'+esc(val('fAddr'))+'</p>'
@@ -3461,7 +3487,7 @@ var qrcode = function() {
   function website(){
     var slug=esc(val('fAddr')).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
     return '<div class="browser"><div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">listings.bellavirtual.com/'+projSlug()+'</span></div>'
-      +'<div class="site">'
+      +'<div class="site tpl-'+state.webTpl+'">'
         +'<div class="w-top"><span class="wl">'+logoEl()+'</span><span class="micro">'+esc(val('fPhone'))+'</span></div>'
         +'<div class="w-hero"><img src="'+PHOTOS[0]+'" alt="">'+(state.wm?'<span class="vs vtop">Virtually staged</span>':'')+'<div class="veil"></div><div class="w-copy"><div class="p">'+esc(val('fPrice'))+'</div><div class="a">'+esc(val('fAddr'))+'</div></div></div>'
         +'<div class="w-facts"><div><svg class="svgi"><use href="#i-bed"/></svg><b>'+esc(val('fBeds'))+'</b><span>Beds</span></div><div><svg class="svgi"><use href="#i-bath"/></svg><b>'+esc(val('fBaths'))+'</b><span>Baths</span></div><div><svg class="svgi"><use href="#i-ruler"/></svg><b>'+esc(val('fSqft'))+'</b><span>Sq ft</span></div></div>'
@@ -3569,6 +3595,14 @@ var qrcode = function() {
     VKEYS.forEach(function(k){ var el=document.getElementById('tab'+k.charAt(0).toUpperCase()+k.slice(1)); if(el) el.classList.toggle('on',state.view===k); });
     document.getElementById('pvLabel').textContent=v.l+' preview · updates live as you edit';
     document.getElementById('pvAction').textContent=state.view==='web'?'Publish site':state.view==='lead'?'Get the QR poster':'Download PDF';
+    // template picker — only for the brochure and website (each keeps its own template choice)
+    var pk=document.getElementById('tplPicker');
+    if(state.view==='bro'||state.view==='web'){
+      var cur=state.view==='bro'?state.broTpl:state.webTpl;
+      pk.style.display='';
+      pk.innerHTML='<span class="tpl-lab">Template</span>'+TPLS.map(function(t){ return '<button type="button" class="tpl-chip'+(t.k===cur?' on':'')+'" data-tpl="'+t.k+'">'+t.n+'</button>'; }).join('');
+      pk.querySelectorAll('.tpl-chip').forEach(function(b){ b.onclick=function(){ var k=b.getAttribute('data-tpl'); if(state.view==='bro') state.broTpl=k; else state.webTpl=k; render(); }; });
+    } else { pk.style.display='none'; pk.innerHTML=''; }
   }
   VKEYS.forEach(function(k){ var el=document.getElementById('tab'+k.charAt(0).toUpperCase()+k.slice(1)); if(el) el.onclick=function(){ state.view=k; render(); }; });
   ['fAddr','fPrice','fBeds','fBaths','fSqft','fHead','fDesc','fAgent','fPhone'].forEach(function(id){ document.getElementById(id).addEventListener('input',render); });
