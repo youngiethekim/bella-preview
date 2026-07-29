@@ -74,8 +74,14 @@
   .res .designer-note b{color:var(--ink);font-weight:400}
   .fade{animation:fade .32s ease}
   @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-  footer{background:var(--dark);color:#8a857d;padding:30px var(--pad);font-size:12.5px;text-align:center;margin-top:30px}
+  footer{background:var(--dark);color:#8a857d;padding:40px var(--pad);font-size:12.5px;margin-top:30px}
   footer a{color:#A8A29A;text-decoration:underline}
+  .foot{max-width:1080px;margin:0 auto}
+  .foot .seg{display:flex;flex-wrap:wrap;gap:8px 22px;padding-bottom:22px;border-bottom:1px solid #2E2B28;margin-bottom:20px}
+  .foot .seg .micro{width:100%;color:#6F6A63;margin-bottom:10px}
+  .foot .seg a{font-size:13px;color:#A8A29A}.foot .seg a:hover{color:#fff}
+  .foot .base{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .foot .base a{color:#A8A29A;text-decoration:underline}
 </style>
 </head>
 <body>
@@ -84,13 +90,34 @@
   <div class="nav">
     <a class="mark" href="bella-homepage-redesign.html">BELLA</a>
     <span class="sp"></span>
+    <a class="lnk" href="bella-services.html">Services</a>
+    <a class="lnk" href="bella-pricing.html">Pricing</a>
     <a class="lnk" href="bella-lookbook.html">Lookbook</a>
+    <a class="lnk" href="bella-resources.html">Resources</a>
+    <a class="btn" href="bella-order-page.html">Get started</a>
   </div>
 </header>
 
 <div class="stage" id="stage"></div>
 
-<footer>© Bella Virtual Staging · Style quiz mockup · <a href="bella-homepage-redesign.html">Back to the studio</a></footer>
+<footer>
+  <div class="foot">
+    <div class="seg">
+      <span class="micro">Bella Virtual</span>
+      <a href="bella-services.html">Services</a>
+      <a href="bella-service-virtual-staging.html">Virtual staging</a>
+      <a href="bella-service-3d-tour.html">3D tours</a>
+      <a href="bella-pricing.html">Pricing</a>
+      <a href="bella-lookbook.html">Lookbook</a>
+      <a href="bella-resources.html">Resources</a>
+      <a href="bella-order-page.html">Get started</a>
+    </div>
+    <div class="base">
+      <span>&copy; Bella Virtual Staging &middot; <a href="bella-homepage-redesign.html">Back to the studio</a></span>
+      <span>Real estate virtual staging &amp; visualization &middot; Redesign mockup, not the live site</span>
+    </div>
+  </div>
+</footer>
 
 <script>
 (function(){
