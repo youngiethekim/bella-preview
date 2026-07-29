@@ -226,7 +226,6 @@
   .mu-th .mu-x{position:absolute;top:2px;right:2px;width:16px;height:16px;border:0;border-radius:50%;background:rgba(20,18,16,.7);color:#fff;font-size:11px;line-height:1;cursor:pointer}
   .req-up{margin-top:12px;display:none;padding-top:12px;border-top:1px dashed var(--line)}
   .req-up.show{display:block}
-  .render-req{margin-top:18px;border-top:1px solid var(--line)}
   /* render bundle volume panel */
   .rvol{margin-top:16px;background:#F7FAF7;border:1px solid #DDE7DD;border-radius:8px;padding:14px 16px}
   .rvol-econ{font-size:14.5px}.rvol-econ b{font-weight:500}
@@ -305,7 +304,8 @@
   .secs{display:flex;flex-direction:column;gap:6px}
   .sec{background:#fff;border:1px solid var(--line);transition:border-color .15s}
   .sec.open{border-color:#CFC9C0}
-  .sec-head{display:flex;align-items:center;gap:16px;padding:22px 24px;cursor:pointer;user-select:none}
+  .sec-head{display:flex;align-items:center;gap:16px;padding:22px 24px;cursor:default;user-select:none}
+  .sec-chev{display:none}
   .sec-q{flex:1;min-width:180px}
   .sec-q b{font-size:16.5px;font-weight:400;display:block}
   .sec-q span{font-size:13px;color:var(--faint);display:block;margin-top:3px}
@@ -540,8 +540,7 @@
   .sectog::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
   .sectog.on{background:var(--green)}
   .sectog.on::after{transform:translateX(22px)}
-  .sec-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease}
-  .sec.open .sec-body{grid-template-rows:1fr}
+  .sec-body{display:grid;grid-template-rows:1fr}   /* services always shown — no accordion collapse */
   .sec-body>.inner{overflow:hidden}
   .sec-opts{padding:4px 24px 20px;border-top:1px solid var(--line-2)}
   .subrow{display:flex;align-items:center;gap:16px;padding:16px 0;border-bottom:1px solid var(--line-2);flex-wrap:wrap}
@@ -1123,8 +1122,7 @@
        +toggleStep((state.commercial?'Commercial interior renders':'Interior 3D renders'),'Photoreal rooms from your plans','useInt','rint','+'+money(rInt())+' each',state.commercial?'crint':'rint')
        +toggleStep((state.commercial?'Commercial exterior renders':'Exterior 3D renders'),'Elevations, streetscapes, aerials','useExt','rext','+'+money(rExt())+' each',state.commercial?'crext':'rext')
        +toggleStep('Furnished 3D floor plans','Walk the layout','useFp','rfp','+'+money(fp3d())+' each','floor')
-       +'<div class="rvol" id="renderVol"></div>'
-       +renderReqBlock();
+       +'<div class="rvol" id="renderVol"></div>';   // requirements/uploads are collected on the final "start your order" step (#reqPanel), not duplicated here
     }
     bind(); bindStyle(); bindUpload(); sync();
   }
@@ -1240,26 +1238,6 @@
         +'</div></div></div>';
   }
   // blueprint / requirements upload for the 3D-render (build) path — always shown, with the send-later email option
-  function renderReqBlock(){
-    return '<div class="req-up show render-req">'
-      +'<div class="req-lab">What we need to build your renders</div>'
-      +'<ul class="reqlist">'
-        +'<li><b>Floor plans, dimensioned</b> — every level, as PDF, DWG or DXF. The one must-have.</li>'
-        +'<li><b>Exterior elevations</b> — front, rear and sides, for exterior renders, streetscapes or aerials.</li>'
-        +'<li><b>Ceiling heights &amp; key dimensions</b> — anything not already marked on the plans.</li>'
-        +'<li><b>Finishes &amp; materials</b> — flooring, cabinetry, counters, paint, cladding. No selections yet? Our designers choose a look that sells.</li>'
-        +'<li><b>Reference images</b> — a mood board, a model home, a style you love. Optional, but it helps us nail it.</li>'
-        +'<li><b>Site or plot plan</b> — for orientation, landscaping and context (exterior renders only).</li>'
-      +'</ul>'
-      +miniUpload('render','Upload blueprints &amp; plans','PDF, DWG, DXF, JPG or PNG — drag them in, or click to browse','.pdf,.dwg,.dxf,.jpg,.jpeg,.png,image/*')
-      +'<div class="req-alt"><button type="button" class="req-alt-toggle" data-reqtoggle="render">Don’t have the drawings yet? Email your architect or builder a secure upload link →</button>'
-        +'<div class="req-email" data-reqemail="render">'
-          +'<span class="req-email-lab">We’ll email a secure upload link straight to whoever has the files.</span>'
-          +'<div class="req-email-row"><input type="email" placeholder="architect@firm.com" data-reqmail="render"><button type="button" class="req-send" data-reqsend="render">Send link</button></div>'
-          +'<span class="req-note">Or continue — you can upload from your project dashboard any time before we start.</span>'
-          +'<div class="req-sent" data-reqsent="render"></div>'
-        +'</div></div></div>';
-  }
   function syncRenderVol(){
     var el=document.getElementById('renderVol'); if(!el) return;
     var rq=renderQty(), d=volDisc(rq), tiers=[3,6,11,21], pct=[5,10,15,20];
@@ -1618,10 +1596,6 @@
       };
     });
     document.querySelectorAll('.modechip[data-mode]').forEach(function(el){ el.onclick=function(){ applyMode(el.getAttribute('data-mode')); }; });
-    // accordion: click the header to open it, then choose the service inside
-    document.querySelectorAll('.sec-head').forEach(function(h){
-      h.onclick=function(){ h.parentNode.classList.toggle('open'); };
-    });
   }
   // per-photo service picker: choose exactly which uploaded photos get renovation / dusk / sky
   var SVCLABEL={reno:'renovate',dusk:'turn to dusk',sky:'sky-swap'};
