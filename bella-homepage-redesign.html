@@ -150,6 +150,7 @@
   /* ---------- hero ---------- */
   .hero{position:relative;height:84vh;min-height:560px;max-height:860px;overflow:hidden}
   .hero .compare{position:absolute;inset:0}
+  .hero-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;background:#EFECE8}
   /* asymmetric panel: dark bed on the LEFT where the copy lives, fading to reveal the room on the right */
   .hero .scrim{position:absolute;inset:0;z-index:4;pointer-events:none;
     background:linear-gradient(105deg,rgba(15,13,11,.95) 0%,rgba(15,13,11,.9) 24%,rgba(15,13,11,.66) 44%,rgba(15,13,11,.24) 64%,rgba(15,13,11,.02) 80%,transparent 90%)}
@@ -864,15 +865,10 @@
 
 <!-- ================= HERO ================= -->
 <div class="hero">
-  <div class="compare" id="h1">
-    <img src="https://youngiethekim.github.io/bella-preview/assets/hero/hero-after.jpg" alt="A mountain-view great room staged by a Bella interior designer" fetchpriority="high">
-    <div class="clip">
-      <img src="https://youngiethekim.github.io/bella-preview/assets/hero/hero-before.jpg" alt="The same great room empty, before staging">
-    </div>
-    <div class="h"></div>
-  </div>
+  <video class="hero-vid" autoplay muted loop playsinline poster="https://youngiethekim.github.io/bella-preview/assets/hero/hero-after.jpg">
+    <source src="assets/video/hero.mp4" type="video/mp4">
+  </video>
   <div class="scrim"></div>
-  <span class="credit">Drag to reveal</span>
   <div class="hero-copy">
     <span class="hero-badge">Human-designed · Listing-ready</span>
     <h1>Turn empty rooms into listings buyers <em>remember.</em></h1>
