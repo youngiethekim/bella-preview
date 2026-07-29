@@ -1430,5 +1430,108 @@ document.querySelectorAll('.compare').forEach(function(el){
   el.addEventListener('click',function(e){ var c=e.target.closest('.job-card'); if(c) c.classList.toggle('peek'); });   // tap-to-peek on touch
 })();
 </script>
+<!-- ===== Bella AI assistant (non-intrusive) — MOCKUP: canned replies. Real version = RAG over your content + live pricing from your backend, embeddable on every page ===== -->
+<style>
+  #baLaunch,.ba-panel,.ba-panel *{box-sizing:border-box}
+  .ba-launch{position:fixed;right:22px;bottom:22px;z-index:200;display:flex;align-items:center;gap:9px;background:var(--ink,#232120);color:#fff;border:0;font-family:inherit;font-size:13px;letter-spacing:.02em;padding:12px 18px 12px 15px;border-radius:99px;cursor:pointer;box-shadow:0 12px 32px -12px rgba(20,18,16,.55);transition:transform .18s,box-shadow .18s}
+  .ba-launch:hover{transform:translateY(-2px);box-shadow:0 18px 40px -14px rgba(20,18,16,.6)}
+  .ba-launch svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .ba-launch .ba-dot{position:absolute;top:10px;left:31px;width:7px;height:7px;border-radius:50%;background:#7FBF94;box-shadow:0 0 0 2px var(--ink,#232120)}
+  .ba-panel{position:fixed;right:22px;bottom:22px;z-index:201;width:372px;max-width:calc(100vw - 28px);height:562px;max-height:calc(100vh - 44px);background:#fff;border-radius:16px;box-shadow:0 32px 80px -24px rgba(20,18,16,.5);display:none;flex-direction:column;overflow:hidden;font-family:inherit;animation:baIn .22s cubic-bezier(.2,.8,.2,1)}
+  .ba-panel.open{display:flex}
+  @keyframes baIn{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+  .ba-head{display:flex;align-items:center;gap:11px;padding:15px 16px;border-bottom:1px solid #EDE9E3;background:#FBFAF8}
+  .ba-av{width:34px;height:34px;border-radius:50%;background:var(--green,#3E6B4C);color:#fff;display:grid;place-items:center;font-size:14px;letter-spacing:.05em;flex:none}
+  .ba-ht b{font-size:14px;font-weight:500;color:var(--ink,#232120);display:block;line-height:1.2}
+  .ba-ht span{font-size:11.5px;color:#3E6B4C;display:flex;align-items:center;gap:5px}
+  .ba-ht span::before{content:"";width:6px;height:6px;border-radius:50%;background:#3E6B4C}
+  .ba-x{margin-left:auto;background:0;border:0;color:#9C978F;font-size:23px;line-height:1;cursor:pointer;padding:2px 6px}
+  .ba-x:hover{color:var(--ink,#232120)}
+  .ba-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+  .ba-msg{max-width:85%;font-size:13.5px;line-height:1.5;padding:10px 13px;border-radius:13px}
+  .ba-msg.them{background:#F2F0EC;color:var(--ink,#232120);border-bottom-left-radius:4px;align-self:flex-start}
+  .ba-msg.me{background:var(--ink,#232120);color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+  .ba-msg b{font-weight:600}
+  .ba-acts{display:flex;flex-wrap:wrap;gap:7px;align-self:flex-start;max-width:94%}
+  .ba-act{font-family:inherit;font-size:12px;color:var(--green,#3E6B4C);background:#EDF4EE;border:1px solid #CFE0D3;padding:7px 12px;border-radius:99px;cursor:pointer;text-decoration:none;transition:.14s}
+  .ba-act:hover{background:var(--green,#3E6B4C);color:#fff;border-color:var(--green,#3E6B4C)}
+  .ba-act.primary{background:var(--ink,#232120);color:#fff;border-color:var(--ink,#232120)}
+  .ba-typing{align-self:flex-start;display:flex;gap:4px;padding:12px 14px;background:#F2F0EC;border-radius:13px;border-bottom-left-radius:4px}
+  .ba-typing i{width:6px;height:6px;border-radius:50%;background:#B7B1A8;animation:baBlink 1.2s infinite}
+  .ba-typing i:nth-child(2){animation-delay:.2s}.ba-typing i:nth-child(3){animation-delay:.4s}
+  @keyframes baBlink{0%,60%,100%{opacity:.3}30%{opacity:1}}
+  .ba-chips{display:flex;gap:7px;flex-wrap:wrap;padding:0 16px 10px}
+  .ba-chip{font-family:inherit;font-size:12px;color:var(--soft,#6E6A66);background:#fff;border:1px solid #E8E4DE;padding:8px 12px;border-radius:99px;cursor:pointer;transition:.14s}
+  .ba-chip:hover{border-color:var(--ink,#232120);color:var(--ink,#232120)}
+  .ba-foot{display:flex;gap:8px;padding:12px 14px;border-top:1px solid #EDE9E3}
+  .ba-foot input{flex:1;border:1px solid #E8E4DE;border-radius:99px;padding:10px 14px;font-family:inherit;font-size:13.5px;color:var(--ink,#232120)}
+  .ba-foot input:focus{outline:0;border-color:var(--green,#3E6B4C)}
+  .ba-send{background:var(--green,#3E6B4C);border:0;color:#fff;width:38px;height:38px;border-radius:50%;cursor:pointer;flex:none;display:grid;place-items:center}
+  .ba-send svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .ba-note{font-size:10px;color:#B7B1A8;text-align:center;padding:0 16px 9px}
+</style>
+<button class="ba-launch" id="baLaunch" aria-label="Ask Bella">
+  <svg viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20l1.1-5.4A8.5 8.5 0 1 1 21 11.5z"/></svg>
+  <span>Ask Bella</span><span class="ba-dot"></span>
+</button>
+<div class="ba-panel" id="baPanel" role="dialog" aria-label="Bella assistant">
+  <div class="ba-head">
+    <span class="ba-av">B</span>
+    <div class="ba-ht"><b>Bella assistant</b><span>Replies instantly</span></div>
+    <button class="ba-x" id="baClose" aria-label="Close">&times;</button>
+  </div>
+  <div class="ba-body" id="baBody"></div>
+  <div class="ba-chips" id="baChips"></div>
+  <form class="ba-foot" id="baForm"><input id="baInput" placeholder="Ask about pricing, services, anything…" autocomplete="off"><button class="ba-send" type="submit" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg></button></form>
+  <div class="ba-note">Demo assistant · the live version uses your current pricing &amp; knowledge base</div>
+</div>
+<script>
+(function(){
+  var launch=document.getElementById('baLaunch'), panel=document.getElementById('baPanel'),
+      body=document.getElementById('baBody'), chipsEl=document.getElementById('baChips'),
+      form=document.getElementById('baForm'), input=document.getElementById('baInput'), started=false;
+  var ORDER='bella-order-page.html', PRICING='bella-pricing.html', QUIZ='bella-style-quiz.html', SERVICES='bella-services.html';
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+  function add(cls,html){var d=document.createElement('div');d.className='ba-msg '+cls;d.innerHTML=html;body.appendChild(d);body.scrollTop=body.scrollHeight;}
+  function acts(list){if(!list||!list.length)return;var w=document.createElement('div');w.className='ba-acts';
+    w.innerHTML=list.map(function(a){return a.href?'<a class="ba-act'+(a.primary?' primary':'')+'" href="'+a.href+'">'+a.label+'</a>':'<button type="button" class="ba-act'+(a.primary?' primary':'')+'" data-q="'+esc(a.q||a.label)+'">'+a.label+'</button>';}).join('');
+    body.appendChild(w);body.scrollTop=body.scrollHeight;
+    w.querySelectorAll('button[data-q]').forEach(function(b){b.onclick=function(){ask(b.getAttribute('data-q'));};});}
+  function typing(){var t=document.createElement('div');t.className='ba-typing';t.innerHTML='<i></i><i></i><i></i>';body.appendChild(t);body.scrollTop=body.scrollHeight;return t;}
+  function answer(q){
+    q=q.toLowerCase();
+    if(/price|cost|how much|pricing|\$|expensive|rate|cheap/.test(q))
+      return {t:"Virtual staging is <b>$45 a photo</b>, paid once, with volume discounts up to 20% — a typical 8-photo listing is about <b>$324</b>. Floor plans from $24/floor, day-to-dusk edits $7/photo, and 3D renders are quoted per project. Want the full breakdown, or shall I start your order?",
+        a:[{label:'See full pricing',href:PRICING},{label:'Start my order →',href:ORDER,primary:true}]};
+    if(/which|what.*(service|need)|not sure|recommend|choose|help me decide/.test(q))
+      return {t:"Happy to help. Quick version — <b>Virtual staging</b> for empty or dated rooms, <b>3D renders</b> if it isn't built yet, plus <b>floor plans</b> and <b>3D tours</b> to round out the listing. Tell me the property and buyer and our 2-minute quiz picks the best staging style for you.",
+        a:[{label:'Take the style quiz',href:QUIZ},{label:'See all services',href:SERVICES}]};
+    if(/how.*work|turnaround|how long|fast|time|revision|process|deliver/.test(q))
+      return {t:"Simple: upload your photos → real interior designers stage them → back in <b>24–48 hours</b>, MLS-ready. You approve every photo, and revisions are free and unlimited for two weeks.",
+        a:[{label:'Start my order →',href:ORDER,primary:true}]};
+    if(/what is|virtual staging|explain|how.*stage/.test(q))
+      return {t:"Virtual staging digitally furnishes your listing photos so buyers can picture the home — at a fraction of the cost of physical staging. Real interior designers do it (never one-click AI), matched to your buyer and market.",
+        a:[{label:'See before & afters',href:'bella-homepage-redesign.html#work'},{label:'Start my order →',href:ORDER,primary:true}]};
+    if(/start|order|buy|get started|place|checkout/.test(q))
+      return {t:"Perfect — three quick steps: how many photos, upload (or send them later), and your package. I'll take you there.",
+        a:[{label:'Start my order →',href:ORDER,primary:true},{label:'See pricing first',href:PRICING}]};
+    if(/mls|legal|disclosure|allowed|license/.test(q))
+      return {t:"Yes — every image is built to MLS specs and disclosure standards (like AB 723), and we tell you exactly what to note. Check your local board for any extra requirements.",
+        a:[{label:'Start my order →',href:ORDER,primary:true}]};
+    return {t:"Good question. Quickest path to a precise answer is our pricing page, or just start an order and I'll guide you the whole way. What are you working on?",
+      a:[{label:'See pricing',href:PRICING},{label:'Which service do I need?',q:'which service do I need'},{label:'Start my order →',href:ORDER,primary:true}]};
+  }
+  function ask(q){ add('me',esc(q)); var r=answer(q), t=typing(); setTimeout(function(){t.remove();add('them',r.t);acts(r.a);},650+Math.min(600,q.length*8)); }
+  var CHIPS=['How much is it?','Which service do I need?','How does it work?','Start my order'];
+  function boot(){ if(started)return; started=true;
+    add('them',"Hi 👋 I'm Bella's assistant. Ask me anything — pricing, which service fits your listing, or I can walk you through placing an order.");
+    chipsEl.innerHTML=CHIPS.map(function(c){return '<button type="button" class="ba-chip" data-q="'+c+'">'+c+'</button>';}).join('');
+    chipsEl.querySelectorAll('.ba-chip').forEach(function(b){b.onclick=function(){ask(b.getAttribute('data-q'));};});
+  }
+  launch.onclick=function(){ panel.classList.add('open'); launch.style.display='none'; boot(); setTimeout(function(){input.focus();},80); };
+  document.getElementById('baClose').onclick=function(){ panel.classList.remove('open'); launch.style.display=''; };
+  form.onsubmit=function(e){ e.preventDefault(); var v=input.value.trim(); if(!v)return; input.value=''; ask(v); };
+})();
+</script>
 </body>
 </html>
