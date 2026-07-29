@@ -150,7 +150,23 @@
   /* ---------- hero ---------- */
   .hero{position:relative;height:84vh;min-height:560px;max-height:860px;overflow:hidden}
   .hero .compare{position:absolute;inset:0}
-  .hero-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;background:#EFECE8}
+  /* hero before/after auto-reveal: empty room wipes into a staged room */
+  .hero-ba{position:absolute;inset:0;z-index:1;overflow:hidden;background:#EFECE8}
+  .hero-ba img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:baZoom 18s ease-in-out infinite alternate}
+  .hero-ba .ba-after{clip-path:inset(0 100% 0 0);animation:baReveal 8.5s cubic-bezier(.5,0,.15,1) infinite, baZoom 18s ease-in-out infinite alternate}
+  .hero-ba .ba-edge{position:absolute;top:0;bottom:0;left:0;width:3px;z-index:3;opacity:0;pointer-events:none;
+    background:linear-gradient(transparent,rgba(255,255,255,.95),transparent);box-shadow:0 0 26px 6px rgba(255,255,255,.55);
+    animation:baEdge 8.5s cubic-bezier(.5,0,.15,1) infinite}
+  .hero-ba .ba-tag{position:absolute;z-index:3;top:20px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#fff;
+    background:rgba(20,18,16,.5);padding:5px 11px;border-radius:99px;backdrop-filter:blur(3px)}
+  .hero-ba .ba-tag-b{right:20px;animation:baTagB 8.5s cubic-bezier(.5,0,.15,1) infinite}
+  .hero-ba .ba-tag-a{right:20px;opacity:0;animation:baTagA 8.5s cubic-bezier(.5,0,.15,1) infinite}
+  @keyframes baReveal{0%{clip-path:inset(0 100% 0 0)}30%{clip-path:inset(0 0 0 0)}86%{clip-path:inset(0 0 0 0)}97%{clip-path:inset(0 0 0 0);opacity:1}97.5%{clip-path:inset(0 0 0 0);opacity:0}98%{clip-path:inset(0 100% 0 0);opacity:0}100%{clip-path:inset(0 100% 0 0);opacity:1}}
+  @keyframes baEdge{0%{left:0;opacity:0}3%{opacity:.9}30%{left:100%;opacity:.9}34%{left:100%;opacity:0}100%{opacity:0}}
+  @keyframes baZoom{from{transform:scale(1.005)}to{transform:scale(1.06)}}
+  @keyframes baTagB{0%,26%{opacity:1}32%,100%{opacity:0}}
+  @keyframes baTagA{0%,30%{opacity:0}36%,90%{opacity:1}97%,100%{opacity:0}}
+  @media(prefers-reduced-motion:reduce){.hero-ba .ba-after{clip-path:none;animation:none}.hero-ba img{animation:none}.hero-ba .ba-edge,.hero-ba .ba-tag-b{display:none}.hero-ba .ba-tag-a{opacity:1;animation:none}}
   /* asymmetric panel: dark bed on the LEFT where the copy lives, fading to reveal the room on the right */
   .hero .scrim{position:absolute;inset:0;z-index:4;pointer-events:none;
     background:linear-gradient(105deg,rgba(15,13,11,.95) 0%,rgba(15,13,11,.9) 24%,rgba(15,13,11,.66) 44%,rgba(15,13,11,.24) 64%,rgba(15,13,11,.02) 80%,transparent 90%)}
@@ -865,9 +881,13 @@
 
 <!-- ================= HERO ================= -->
 <div class="hero">
-  <video class="hero-vid" autoplay muted loop playsinline poster="https://youngiethekim.github.io/bella-preview/assets/hero/hero-after.jpg">
-    <source src="assets/video/hero.mp4" type="video/mp4">
-  </video>
+  <div class="hero-ba" aria-label="An empty room transforming into a staged room">
+    <img class="ba-before" src="https://youngiethekim.github.io/bella-preview/assets/hero/hero-before.jpg" alt="A mountain-view great room empty, before staging" fetchpriority="high">
+    <img class="ba-after" src="https://youngiethekim.github.io/bella-preview/assets/hero/hero-after.jpg" alt="The same great room staged by a Bella interior designer">
+    <span class="ba-edge"></span>
+    <span class="ba-tag ba-tag-b">Empty</span>
+    <span class="ba-tag ba-tag-a">Staged by Bella</span>
+  </div>
   <div class="scrim"></div>
   <div class="hero-copy">
     <span class="hero-badge">Real estate virtual staging studio</span>
