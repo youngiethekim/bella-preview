@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stage one room free — Bella Virtual</title>
+<meta name="description" content="Send one listing photo and our designers will virtually stage it free in 24 hours: watermark-free and MLS-ready. See the quality before you spend a dollar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#FDFCFA;--ink:#232120;--soft:#6E6A66;--faint:#9C978F;--line:#E8E4DE;--line-2:#F0EDE8;--dark:#1C1A18;--green:#3E6B4C;--gold:#B8985A;--wash:#FAF8F5}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:"Jost",system-ui,sans-serif;font-weight:300;line-height:1.62;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+  /* minimal header — no nav, single exit, keeps the lead on-page */
+  .top{padding:20px 0;border-bottom:1px solid var(--line)}
+  .top .in{max-width:1080px;margin:0 auto;padding:0 28px;display:flex;align-items:center;justify-content:space-between}
+  .logo{font-size:15px;letter-spacing:.42em;font-weight:400}
+  .top .ph{font-size:12.5px;color:var(--soft);letter-spacing:.02em}
+  /* hero */
+  .hero{padding:56px 0 40px}
+  .hero .in{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;max-width:1080px;margin:0 auto;padding:0 28px}
+  .eyebrow{display:inline-block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--green);font-weight:600;background:#EDF4EE;padding:6px 12px;border-radius:99px;margin-bottom:18px}
+  h1{font-size:clamp(30px,4.2vw,44px);font-weight:300;letter-spacing:-.02em;line-height:1.1}
+  h1 em{font-style:normal;color:var(--green)}
+  .lede{font-size:16.5px;color:var(--soft);margin:18px 0 6px;max-width:46ch}
+  .visual{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/3;background:#111;box-shadow:0 30px 70px -30px rgba(20,18,16,.5)}
+  .visual img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .visual .after{clip-path:inset(0 0 0 50%);border-left:2px solid rgba(255,255,255,.9)}
+  .visual .lab{position:absolute;bottom:14px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:rgba(20,18,16,.66);padding:5px 10px;border-radius:99px;backdrop-filter:blur(4px)}
+  .visual .lab.b{left:14px}.visual .lab.a{right:14px}
+  /* form card */
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px 24px;box-shadow:0 20px 50px -30px rgba(20,18,16,.4)}
+  .card h2{font-size:19px;font-weight:400;margin-bottom:4px}
+  .card .cs{font-size:13px;color:var(--soft);margin-bottom:16px}
+  .fld{display:block;width:100%;font-family:inherit;font-size:14.5px;padding:13px 14px;border:1px solid var(--line);border-radius:9px;margin-bottom:10px;color:var(--ink)}
+  .fld:focus{outline:none;border-color:var(--green)}
+  .file{font-size:12.5px;color:var(--soft);border:1px dashed var(--line);border-radius:9px;padding:12px 14px;margin-bottom:14px;cursor:pointer;display:flex;gap:8px;align-items:center}
+  .file:hover{border-color:var(--green);color:var(--ink)}.file input{display:none}
+  .sub{width:100%;background:var(--ink);color:#fff;border:0;font-family:inherit;font-size:13px;letter-spacing:.1em;text-transform:uppercase;padding:15px;border-radius:9px;cursor:pointer;transition:background .2s}
+  .sub:hover{background:var(--green)}
+  .fine{font-size:11.5px;color:var(--faint);text-align:center;margin-top:11px;line-height:1.5}
+  .ok{text-align:center;padding:14px 0}
+  .ok .chk{width:54px;height:54px;border-radius:99px;background:#EDF4EE;color:var(--green);display:flex;align-items:center;justify-content:center;font-size:27px;margin:0 auto 16px}
+  .ok h2{font-size:22px}.ok p{font-size:14px;color:var(--soft);margin:10px 0 20px}
+  .ok .go{display:inline-block;background:var(--ink);color:#fff;font-size:13px;letter-spacing:.1em;text-transform:uppercase;padding:14px 26px;border-radius:9px;text-decoration:none}
+  .ok .go:hover{background:var(--green)}
+  /* trust strip */
+  .trust{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--wash);padding:22px 0}
+  .trust .in{display:flex;flex-wrap:wrap;gap:14px 40px;justify-content:center;align-items:center;max-width:1080px;margin:0 auto;padding:0 28px}
+  .trust span{font-size:13px;color:var(--soft);display:flex;gap:8px;align-items:center}
+  .trust b{color:var(--ink);font-weight:500}
+  /* steps */
+  .steps{padding:56px 0}
+  .steps h2{text-align:center;font-size:26px;font-weight:300;letter-spacing:-.01em;margin-bottom:8px}
+  .steps .sc{text-align:center;color:var(--soft);font-size:15px;margin-bottom:38px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .step{background:#fff;border:1px solid var(--line);border-radius:12px;padding:26px 22px}
+  .step .n{width:34px;height:34px;border-radius:99px;background:var(--ink);color:#fff;font-size:15px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+  .step h3{font-size:17px;font-weight:400;margin-bottom:6px}
+  .step p{font-size:13.5px;color:var(--soft)}
+  /* faq */
+  .faq{padding:10px 0 64px;max-width:760px;margin:0 auto}
+  .faq h2{text-align:center;font-size:24px;font-weight:300;margin-bottom:26px}
+  .qa{border-top:1px solid var(--line);padding:18px 0}
+  .qa h3{font-size:15.5px;font-weight:500;margin-bottom:5px}
+  .qa p{font-size:14px;color:var(--soft)}
+  /* footer */
+  footer{background:var(--dark);color:#B9B3AB;padding:32px 0;text-align:center;font-size:12.5px}
+  footer b{color:#E4DFD8;font-weight:400}
+  @media(max-width:820px){.hero .in{grid-template-columns:1fr;gap:30px}.grid3{grid-template-columns:1fr}}
+  @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<div class="top"><div class="in"><span class="logo">B E L L A</span><span class="ph">Real estate virtual staging studio</span></div></div>
+
+<section class="hero"><div class="in">
+  <div>
+    <span class="eyebrow">Free · No card · 24 hours</span>
+    <h1>See one room <em>staged free</em>, before you spend a dollar.</h1>
+    <p class="lede">Send us one listing photo of an empty or dated room. Our interior designers stage it and email it back within 24 hours, watermark-free and MLS-ready. If you love it, the whole listing is just <b>$45 a photo</b>.</p>
+  </div>
+  <div>
+    <div class="visual" style="margin-bottom:20px">
+      <img class="before" src="assets/hero/hero-before.jpg" alt="Empty listing room">
+      <img class="after" src="assets/hero/hero-after.jpg" alt="The same room virtually staged">
+      <span class="lab b">Before</span><span class="lab a">After · staged</span>
+    </div>
+    <div class="card">
+      <div id="form">
+        <h2>Claim your free room</h2>
+        <div class="cs">One free staged room per agent. Takes 30 seconds.</div>
+        <form id="fm">
+          <input class="fld" type="text" id="name" placeholder="Your name">
+          <input class="fld" type="email" id="email" placeholder="Work email" required>
+          <label class="file"><input type="file" id="photo" accept="image/*"><span id="lbl">📷 Attach one room photo (optional; send it after)</span></label>
+          <button class="sub" type="submit">Stage my room free →</button>
+        </form>
+        <p class="fine">We'll never share your email. Unsubscribe anytime.</p>
+      </div>
+      <div class="ok" id="ok" style="display:none">
+        <div class="chk">✓</div>
+        <h2>You're in.</h2>
+        <p>Check your inbox. We'll confirm and send your free staged room within 24 hours.</p>
+        <a class="go" href="bella-order-page.html">Stage my whole listing →</a>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<div class="trust"><div class="in">
+  <span>⭐ <b>4.9/5</b> from agents</span>
+  <span>🏠 <b>3.5M+</b> photos staged</span>
+  <span>⏱ <b>24–48h</b> turnaround</span>
+  <span>♻️ <b>Free</b> unlimited revisions</span>
+  <span>📐 <b>MLS-ready</b> &amp; disclosure-safe</span>
+</div></div>
+
+<section class="steps"><div class="wrap">
+  <h2>How the free room works</h2>
+  <div class="sc">No commitment. Just proof.</div>
+  <div class="grid3">
+    <div class="step"><div class="n">1</div><h3>Send one photo</h3><p>Pick your emptiest or most dated room and email it, or drop it in above. A phone photo is fine.</p></div>
+    <div class="step"><div class="n">2</div><h3>We stage it</h3><p>A real interior designer furnishes it to match your buyer and market. Never one-click AI.</p></div>
+    <div class="step"><div class="n">3</div><h3>Get it back free</h3><p>Within 24 hours, watermark-free and MLS-ready. Love it? Do the whole listing at $45/photo.</p></div>
+  </div>
+</div></section>
+
+<section class="faq"><div>
+  <h2>Quick questions</h2>
+  <div class="qa"><h3>Is it really free?</h3><p>Yes. One fully finished, watermark-free room per agent, no card required. It's how we prove our quality. There's no obligation to order after.</p></div>
+  <div class="qa"><h3>Can I use the free image in my MLS listing?</h3><p>Absolutely. It's built to MLS specs and disclosure standards. We'll tell you exactly what to note (e.g. "virtually staged").</p></div>
+  <div class="qa"><h3>What does the full listing cost?</h3><p>$45 per photo, paid once, with volume discounts up to 20%, so a typical 8-photo listing is about $324. Floor plans, 3D renders, and virtual tours are available too.</p></div>
+  <div class="qa"><h3>How fast is the full order?</h3><p>24–48 hours, with free unlimited revisions for two weeks. You approve every photo before it's final.</p></div>
+</div></section>
+
+<footer><div class="wrap"><b>Bella Virtual</b> · virtual staging that sells listings for a fraction of the cost. &nbsp;·&nbsp; See more at the <a href="bella-homepage-redesign.html" style="color:#E4DFD8">homepage</a>.</div></footer>
+
+<script>
+(function(){
+  var lbl=document.getElementById('lbl');
+  document.getElementById('photo').onchange=function(){ if(this.files[0]) lbl.textContent='📷 '+this.files[0].name; };
+  document.getElementById('fm').onsubmit=function(e){ e.preventDefault();
+    var email=document.getElementById('email').value.trim(); if(!email)return;
+    // BACKEND: POST {name, email, photo} to your lead endpoint / email tool, then trigger the nurture sequence.
+    document.getElementById('form').style.display='none';
+    document.getElementById('ok').style.display='block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+})();
+</script>
+</body>
+</html>
