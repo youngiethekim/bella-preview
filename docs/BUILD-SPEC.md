@@ -219,6 +219,38 @@ The mockups intentionally flag invented data — **replace before launch**:
 1. `/zh/` Chinese locale — keep or drop?
 2. Staged 3D tours — do we **host** the finished tour, or hand back files? (copy currently says hosted/embeddable)
 3. Billing — pay-per-order, prepaid credits, or subscription plans? (mockup has a credit wallet)
-4. WordPress for the blog, or headless/static?
+4. WordPress for the blog, or headless/static? → **Recommendation: headless CMS (Payload or Sanity), not WordPress.** See §13.
 5. Which studio contractors are in the network, and how do they receive/return work?
 6. Real pricing + stats + testimonials (see §10).
+
+---
+
+## 13. Content & pricing management (CMS)
+
+**Editors are non-technical** (founder / marketing team). They must be able to change prices, service copy, testimonials, FAQs, and blog posts without a developer, and without anything falling out of sync.
+
+### 13.1 Single source of truth for pricing (do this first)
+Prices are currently **hardcoded across ~12 static pages** (staging $45/photo, floor plans $24/floor, photo editing $6/photo, day-to-dusk $7/photo, plus volume-discount tiers) and duplicated in the order calculator and FAQs. In production:
+
+- Store every price in **one `pricing` table / CMS collection** (service, unit, base price, volume-discount tiers, active flag).
+- **Everything reads from it:** the order calculator, every marketing page that prints a price, the pricing page, and FAQ answers. Marketing pages read at build/ISR time; the app reads live.
+- **Map each price to a Stripe Price object** (store the Stripe price ID on the row) so a change updates the site *and* checkout together. Prefer editing in the CMS and syncing to Stripe (webhook or a small admin action), so there's one place to change a number.
+- Keep the FAQ "how much does virtual staging cost?" answer and the JSON-LD `Offer`/price driven from the same source so structured data never drifts from displayed price.
+
+Net effect: change $45 → $49 in one field → homepage, service pages, pricing page, order calculator, Stripe, and schema all update.
+
+### 13.2 CMS recommendation
+- **Recommended: Payload CMS** (self-hosted inside the Next.js app, same Postgres/Supabase DB). One codebase, one admin login, one database. Editors get a polished dashboard for prices, copy, testimonials, FAQs, blog, and images; the app and marketing pages read the same data. No second system to secure or keep in sync.
+- **Alternative: Sanity** (hosted, excellent editor UX, generous free tier) if the dev prefers a managed CMS over self-hosting.
+- **Not recommended: WordPress** as the primary site — it's a separate system from the app, doubles the maintenance/security surface, and can't share the app's pricing/data. Only choose it to launch a content-only marketing site and defer the app indefinitely.
+- **Ultra-simple launch fallback:** a single typed config (prices + key copy) edited via one internal settings screen or a shared sheet. Fine to launch Phase 1 fast; outgrows quickly for blog/testimonials, so treat as temporary.
+
+### 13.3 What belongs in the CMS vs the app DB
+- **CMS-managed (editors touch):** prices & discount tiers, service page copy, testimonials, FAQs, blog posts, homepage hero/section copy, images, city-page content.
+- **App DB (system-managed):** orders, projects, photos, revisions, messages, users, studio jobs, credits/invoices. Not editor-facing content.
+
+### 13.4 Launch sequencing with live revenue
+The current Shopify store is generating revenue; **do not risk a big-bang cutover.** Reconciles with §11:
+
+- **Phase 1 — marketing site + CMS live, checkout untouched.** Ship the Next.js marketing pages + Payload CMS + single pricing source, import the 301 redirects (`migration/bella-redirect-map.csv`). Keep taking orders through the **existing Shopify checkout or a Stripe Payment Link + intake form**. SEO/brand/new pages go live in weeks; editors start managing prices/content immediately; revenue never stops.
+- **Phase 2 — the app.** Build and prove the authenticated order → dashboard → studio → billing flow (§11 Phases 1–4). When ready, repoint the "Get started" CTAs from the interim checkout to the new order flow and retire Shopify. Pricing already lives in the CMS, so the order calculator reads the same numbers with no rework.
