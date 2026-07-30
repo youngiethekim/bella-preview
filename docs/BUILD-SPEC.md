@@ -4,6 +4,8 @@
 design mockups in this repo as the visual + UX spec. This doc tells a developer exactly what to
 build, in what order, with which stack.
 
+**Building it?** Follow [DEV-RUNBOOK.md](DEV-RUNBOOK.md) — the ordered, step-by-step build & launch playbook (Phase 0 scaffold → Phase 1 marketing site + Payload CMS → Phase 2 app). This spec is the reference it points into.
+
 **How to use this:** the mockups are static, self-contained HTML/CSS/vanilla-JS files — they are the
 **design + interaction spec**, not the production code. Treat every screen below as "build this, wired
 to a real backend." The design, copy, flows, and edge cases are already resolved, which is where these
