@@ -219,7 +219,7 @@ The mockups intentionally flag invented data — **replace before launch**:
 1. `/zh/` Chinese locale — keep or drop?
 2. Staged 3D tours — do we **host** the finished tour, or hand back files? (copy currently says hosted/embeddable)
 3. Billing — pay-per-order, prepaid credits, or subscription plans? (mockup has a credit wallet)
-4. WordPress for the blog, or headless/static? → **Recommendation: headless CMS (Payload or Sanity), not WordPress.** See §13.
+4. ~~WordPress for the blog, or headless/static?~~ **DECIDED: Payload CMS (headless, inside the Next.js app). See §13.**
 5. Which studio contractors are in the network, and how do they receive/return work?
 6. Real pricing + stats + testimonials (see §10).
 
@@ -239,11 +239,12 @@ Prices are currently **hardcoded across ~12 static pages** (staging $45/photo, f
 
 Net effect: change $45 → $49 in one field → homepage, service pages, pricing page, order calculator, Stripe, and schema all update.
 
-### 13.2 CMS recommendation
-- **Recommended: Payload CMS** (self-hosted inside the Next.js app, same Postgres/Supabase DB). One codebase, one admin login, one database. Editors get a polished dashboard for prices, copy, testimonials, FAQs, blog, and images; the app and marketing pages read the same data. No second system to secure or keep in sync.
-- **Alternative: Sanity** (hosted, excellent editor UX, generous free tier) if the dev prefers a managed CMS over self-hosting.
-- **Not recommended: WordPress** as the primary site — it's a separate system from the app, doubles the maintenance/security surface, and can't share the app's pricing/data. Only choose it to launch a content-only marketing site and defer the app indefinitely.
-- **Ultra-simple launch fallback:** a single typed config (prices + key copy) edited via one internal settings screen or a shared sheet. Fine to launch Phase 1 fast; outgrows quickly for blog/testimonials, so treat as temporary.
+### 13.2 CMS — DECIDED: Payload CMS
+**Client has chosen Payload CMS.** Self-host it inside the Next.js app on the same Postgres/Supabase DB — one codebase, one admin login, one database. Editors get a polished dashboard for prices, copy, testimonials, FAQs, blog, and images; the app and marketing pages read the same data. No second system to secure or keep in sync.
+
+Editing model the client expects (set expectations with them): Payload is **structured content editing**, not a visual drag-and-drop builder like Elementor. Editors change text, prices, images, blog posts, and add/reorder testimonials/FAQs via forms — not free-form layout. To get a page-builder *feel* within brand guardrails, implement a **Payload Blocks** library of on-brand sections (hero, feature grid, testimonial band, CTA, image+text) that editors can add/remove/reorder to compose pages, and enable **Live Preview** so they see changes rendered. Layout/style changes beyond the block library stay with the developer (by design — keeps the site on-brand and unbreakable).
+
+Rejected: WordPress/Elementor and Webflow — both are separate systems from the app, so pricing would live in two places and drift; Payload keeps one source of truth.
 
 ### 13.3 What belongs in the CMS vs the app DB
 - **CMS-managed (editors touch):** prices & discount tiers, service page copy, testimonials, FAQs, blog posts, homepage hero/section copy, images, city-page content.
