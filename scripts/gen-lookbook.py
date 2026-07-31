@@ -141,10 +141,32 @@ HTML = r'''<!DOCTYPE html>
   .card .meta{display:flex;flex-direction:column;gap:1px;min-width:0}
   .card .brand{font-size:14px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .card .room{font-size:11.5px;color:var(--faint)}
-  .copy{flex:0 0 auto;width:33px;height:33px;display:flex;align-items:center;justify-content:center;background:var(--wash);border:1px solid var(--line);border-radius:8px;cursor:pointer;transition:all .15s;padding:0}
-  .copy:hover{background:var(--ink);border-color:var(--ink)}
-  .copy svg{width:15px;height:15px;stroke:var(--soft);fill:none;stroke-width:1.6}
-  .copy:hover svg{stroke:#fff}
+  .card .acts{flex:0 0 auto;display:flex;gap:6px}
+  .copy,.info{width:33px;height:33px;display:flex;align-items:center;justify-content:center;background:var(--wash);border:1px solid var(--line);border-radius:8px;cursor:pointer;transition:all .15s;padding:0}
+  .copy:hover,.info:hover{background:var(--ink);border-color:var(--ink)}
+  .copy svg,.info svg{width:16px;height:16px;stroke:var(--soft);fill:none;stroke-width:1.6}
+  .copy:hover svg,.info:hover svg{stroke:#fff}
+  /* info modal */
+  .imodal{position:fixed;inset:0;z-index:250;background:rgba(20,18,16,.55);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:24px}
+  .imodal.on{display:flex}
+  .icard{background:#fff;border-radius:14px;max-width:440px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:0 30px 70px -25px rgba(20,18,16,.6);position:relative}
+  .icard>img{width:100%;height:auto;display:block}
+  .icard .ix{position:absolute;top:12px;right:12px;width:32px;height:32px;border:0;border-radius:99px;background:rgba(255,255,255,.9);color:var(--ink);font-size:20px;line-height:1;cursor:pointer;z-index:2}
+  .icard .ic{padding:20px 22px 22px}
+  .icard .ib{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);font-weight:600}
+  .icard h3{font-size:21px;font-weight:400;margin:6px 0 14px;letter-spacing:-.01em}
+  .icard .irow{display:flex;justify-content:space-between;gap:12px;font-size:13.5px;padding:9px 0;border-bottom:1px solid var(--line-2)}
+  .icard .irow span:first-child{color:var(--faint)}.icard .irow span:last-child{color:var(--ink)}
+  .icard .pieces{margin-top:16px}
+  .icard .pieces h4{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:6px}
+  .icard .piece{display:flex;justify-content:space-between;gap:12px;font-size:14px;padding:7px 0;border-bottom:1px solid var(--line-2)}
+  .icard .piece span:last-child{color:var(--soft)}
+  .icard .shop{margin-top:16px;font-size:13px;color:var(--soft);line-height:1.5;background:var(--wash);border:1px solid var(--line);border-radius:9px;padding:12px 14px}
+  .icard .shop b{color:var(--ink);font-weight:500}
+  .icard .ifoot{display:flex;gap:8px;margin-top:16px}
+  .icard .ifoot button,.icard .ifoot a{flex:1;text-align:center;font-family:inherit;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;padding:11px;border-radius:8px;text-decoration:none;cursor:pointer;border:0}
+  .icard .ifoot .cp{background:var(--wash);border:1px solid var(--line);color:var(--ink)}.icard .ifoot .cp:hover{border-color:var(--ink)}
+  .icard .ifoot .od{background:var(--ink);color:#fff}.icard .ifoot .od:hover{background:var(--green)}
   .empty{text-align:center;padding:80px 20px;color:var(--soft)}
   .empty h3{font-size:22px;color:var(--ink);margin-bottom:8px}
   /* lightbox */
@@ -233,6 +255,12 @@ HTML = r'''<!DOCTYPE html>
   </figure>
 </div>
 
+<div class="imodal" id="imodal"><div class="icard">
+  <button class="ix" id="iClose" aria-label="Close">&times;</button>
+  <img id="iImg" src="" alt="">
+  <div class="ic" id="iBody"></div>
+</div></div>
+
 <div class="toast" id="toast"></div>
 
 <footer><div class="foot">
@@ -289,7 +317,7 @@ function render(){
     const c=document.createElement('div'); c.className='card'; c.style.animationDelay=Math.min(i*12,240)+'ms';
     c.innerHTML=`<div class="ph" data-i="${i}"><button class="save${saved.has(d.sku)?' on':''}" data-sku="${d.sku}" aria-label="Save this set"><svg viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-10a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 11c0 5.5-8 10-8 10z"/></svg></button><img loading="lazy" src="${d.img}" alt="${d.room} styled ${d.style} (${d.sku})"></div>
       <div class="body"><div class="meta"><span class="brand">${d.label}</span><span class="room">${d.room}${d.brand? ' · '+d.style : ''}</span></div>
-      <button class="copy" data-sku="${d.sku}" title="Copy ${d.sku}" aria-label="Copy ${d.sku}"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button></div>`;
+      <div class="acts"><button class="info" data-sku="${d.sku}" title="Set details" aria-label="Set details"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="7.6" r="0.6" fill="currentColor" stroke="none"/></svg></button><button class="copy" data-sku="${d.sku}" title="Copy ${d.sku}" aria-label="Copy ${d.sku}"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button></div></div>`;
     grid.appendChild(c);
   });
 }
@@ -325,9 +353,37 @@ savedBtn.onclick=()=>{ if(!state.savedView && !saved.size){toast('Tap the ♥ on
 document.getElementById('copyAll').onclick=()=>{if(!saved.size){toast('No saved sets yet');return;}copy([...saved].join(', '));};
 grid.addEventListener('click',e=>{
   const sv=e.target.closest('.save'); if(sv){e.stopPropagation();toggleSave(sv.dataset.sku);return;}
+  const inf=e.target.closest('.info'); if(inf){openInfo(DATA.find(x=>x.sku===inf.dataset.sku));return;}
   const cp=e.target.closest('.copy'); if(cp){copy(cp.dataset.sku);return;}
   const ph=e.target.closest('.ph'); if(ph){openLB(parseInt(ph.dataset.i));}
 });
+// per-set furniture details — populate PIECES[sku]=[{name,type,price}] when piece data exists
+const PIECES={};
+function openInfo(d){
+  if(!d)return;
+  const im=document.getElementById('iImg'); im.src=d.img; im.alt=d.sku;
+  const pcs=PIECES[d.sku];
+  let h='<div class="ib">'+(d.brand||'Bella studio')+'</div><h3>'+d.room+' · '+d.style+'</h3>';
+  h+='<div class="irow"><span>Room</span><span>'+d.room+'</span></div>';
+  h+='<div class="irow"><span>Style</span><span>'+d.style+'</span></div>';
+  h+='<div class="irow"><span>'+(d.brand?'Brand':'Collection')+'</span><span>'+(d.brand||'Bella studio pick')+'</span></div>';
+  h+='<div class="irow"><span>SKU</span><span>'+d.sku+'</span></div>';
+  if(pcs&&pcs.length){
+    h+='<div class="pieces"><h4>Furniture in this set</h4>'+pcs.map(p=>'<div class="piece"><span>'+p.name+(p.type?' · '+p.type:'')+'</span><span>'+(p.price||'')+'</span></div>').join('')+'</div>';
+  }else if(d.brand){
+    h+='<div class="shop"><b>Shop this look.</b> This room is staged with real '+d.brand+' furniture — Bella partners get <b>15–65% off</b> the actual pieces through the Bella Catalog. Individual piece names available on request.</div>';
+  }else{
+    h+='<div class="shop"><b>Curated by a Bella designer.</b> Send us this SKU and we\'ll stage your photos in this exact look.</div>';
+  }
+  h+='<div class="ifoot"><button class="cp" id="iCopy">Copy SKU</button><a class="od" href="bella-order-page.html?skus='+d.sku+'">Order this look →</a></div>';
+  document.getElementById('iBody').innerHTML=h;
+  document.getElementById('iCopy').onclick=()=>copy(d.sku);
+  imodal.classList.add('on');
+}
+const imodal=document.getElementById('imodal');
+document.getElementById('iClose').onclick=()=>imodal.classList.remove('on');
+imodal.addEventListener('click',e=>{if(e.target===imodal)imodal.classList.remove('on');});
+document.addEventListener('keydown',e=>{if(e.key==="Escape")imodal.classList.remove('on');});
 // lightbox
 let lbi=0;
 const lb=document.getElementById('lb');
