@@ -126,8 +126,8 @@ HTML = r'''<!DOCTYPE html>
   .card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .2s,transform .2s;animation:fade .3s ease both}
   @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   .card:hover{box-shadow:0 18px 40px -22px rgba(20,18,16,.32);transform:translateY(-2px)}
-  .card .ph{position:relative;aspect-ratio:15/8;background:#EFECE8;overflow:hidden;cursor:zoom-in}
-  .card .ph img{width:100%;height:100%;object-fit:cover;object-position:left center;transition:transform .5s ease}
+  .card .ph{position:relative;background:#EFECE8;overflow:hidden;cursor:zoom-in;line-height:0}
+  .card .ph img{width:100%;height:auto;display:block;transition:transform .5s ease}
   .card:hover .ph img{transform:scale(1.03)}
   .save{position:absolute;right:10px;bottom:10px;width:34px;height:34px;border-radius:99px;border:0;background:rgba(255,255,255,.85);backdrop-filter:blur(4px);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s,background .15s;z-index:2}
   .save:hover{transform:scale(1.09)}
@@ -135,15 +135,14 @@ HTML = r'''<!DOCTYPE html>
   .save.on svg{fill:var(--red);stroke:var(--red)}
   .save.pop{animation:pop .3s ease}
   @keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.3)}100%{transform:scale(1)}}
-  .card .body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:9px;flex:1}
-  .card .meta{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
-  .card .brand{font-size:15.5px;color:var(--ink)}
-  .card .room{font-size:12.5px;color:var(--faint)}
-  .card .tags{display:flex;gap:6px;flex-wrap:wrap}
-  .pill{font-size:11px;letter-spacing:.04em;color:var(--green);background:#EDF4EE;padding:4px 9px;border-radius:99px}
-  .copy{margin-top:auto;display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);background:var(--wash);border:1px solid var(--line);border-radius:8px;padding:10px;cursor:pointer;transition:all .15s}
-  .copy:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
-  .copy svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.6}
+  .card .body{padding:9px 12px 10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .card .meta{display:flex;flex-direction:column;gap:1px;min-width:0}
+  .card .brand{font-size:14px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .card .room{font-size:11.5px;color:var(--faint)}
+  .copy{flex:0 0 auto;width:33px;height:33px;display:flex;align-items:center;justify-content:center;background:var(--wash);border:1px solid var(--line);border-radius:8px;cursor:pointer;transition:all .15s;padding:0}
+  .copy:hover{background:var(--ink);border-color:var(--ink)}
+  .copy svg{width:15px;height:15px;stroke:var(--soft);fill:none;stroke-width:1.6}
+  .copy:hover svg{stroke:#fff}
   .empty{text-align:center;padding:80px 20px;color:var(--soft)}
   .empty h3{font-size:22px;color:var(--ink);margin-bottom:8px}
   /* lightbox */
@@ -287,9 +286,8 @@ function render(){
   view.forEach((d,i)=>{
     const c=document.createElement('div'); c.className='card'; c.style.animationDelay=Math.min(i*12,240)+'ms';
     c.innerHTML=`<div class="ph" data-i="${i}"><button class="save${saved.has(d.sku)?' on':''}" data-sku="${d.sku}" aria-label="Save this set"><svg viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-10a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 11c0 5.5-8 10-8 10z"/></svg></button><img loading="lazy" src="${d.img}" alt="${d.room} styled ${d.style} (${d.sku})"></div>
-      <div class="body"><div class="meta"><span class="brand">${d.label}</span><span class="room">${d.room}</span></div>
-      <div class="tags"><span class="pill">${d.brand? d.style : 'Studio pick'}</span></div>
-      <button class="copy" data-sku="${d.sku}"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Copy SKU · ${d.sku}</button></div>`;
+      <div class="body"><div class="meta"><span class="brand">${d.label}</span><span class="room">${d.room}${d.brand? ' · '+d.style : ''}</span></div>
+      <button class="copy" data-sku="${d.sku}" title="Copy ${d.sku}" aria-label="Copy ${d.sku}"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button></div>`;
     grid.appendChild(c);
   });
 }
