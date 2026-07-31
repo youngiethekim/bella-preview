@@ -6,40 +6,50 @@ import os, re, json, pathlib
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 LB = ROOT/"assets"/"lookbook"
 
-ROOM = {"LR":"Living Room","DR":"Dining Room","BDR":"Bedroom","BR":"Bedroom",
+ROOM = {"LR":"Living Room","DR":"Dining Room","BDR":"Bedroom","BR":"Bedroom","BD":"Bedroom",
         "KI":"Kitchen","OF":"Office","EX":"Exterior"}
+ROOM_ORDER = ["Living Room","Dining Room","Bedroom","Kitchen","Office","Exterior"]
+# branded SKUs: {ROOM}-{BRAND}-###
 BRAND = {"ROVE":"Rove Concepts","SUNDAYS":"Sundays","MOB":"Mobital","GUS":"Gus*",
          "EM":"Eternity Modern","ROC":"Roche Bobois"}
-# each brand carries a signature style (used for the Style filter; becomes richer
-# once the style catalogue is ingested)
-STYLE = {"ROVE":"Warm Modern","SUNDAYS":"Coastal","MOB":"Modern Minimal",
-         "GUS":"Mid-Century","EM":"Contemporary","ROC":"Bold Luxe"}
-BRAND_ORDER = ["ROVE","SUNDAYS","MOB","GUS","EM","ROC"]
-ROOM_ORDER = ["LR","DR","BDR"]
+BRAND_ORDER = ["Rove Concepts","Sundays","Mobital","Gus*","Eternity Modern","Roche Bobois"]
+# each brand's signature style, mapped onto the canonical style vocabulary below
+SIG_STYLE = {"ROVE":"Modern","SUNDAYS":"Coastal","MOB":"Modern","GUS":"Mid-Century",
+             "EM":"Contemporary","ROC":"Bold Luxe"}
+# catalogue SKUs: {ROOM}-{STYLE}-### (style codes)
+STYLE_CODES = {"MDRN":"Modern","CONT":"Contemporary","COAS":"Coastal","HAMP":"Hamptons Coastal",
+               "MCM":"Mid-Century","SCND":"Scandinavian","TRNS":"Transitional","FARM":"Farmhouse",
+               "MFRM":"Modern Farmhouse","NDBH":"Nordic Boho","TRAD":"Traditional"}
+STYLE_ORDER = ["Modern","Contemporary","Coastal","Hamptons Coastal","Mid-Century","Scandinavian",
+               "Transitional","Farmhouse","Modern Farmhouse","Nordic Boho","Bold Luxe","Traditional"]
 
 items=[]
 for f in sorted(os.listdir(LB)):
     if not f.lower().endswith(".jpg"): continue
     sku=f[:-4]
-    m=re.match(r'^(LR|DR|BDR|BR|KI|OF|EX)-([A-Z]+)-(\d+)$', sku)
-    if not m:
-        print("SKIP (unparsed):",sku); continue
-    room,brand,num=m.group(1),m.group(2),int(m.group(3))
-    items.append({"sku":sku,"img":f"assets/lookbook/{f}",
-                  "room":ROOM.get(room,room),"roomCode":room,
-                  "brand":BRAND.get(brand,brand),"brandCode":brand,
-                  "style":STYLE.get(brand,"Modern"),"num":num})
+    m=re.match(r'^(LR|DR|BDR|BD|BR|KI|OF|EX)-([A-Z]+)-([A-Z]?)(\d{2,4})$', sku)
+    if not m: print("SKIP (unparsed):",sku); continue
+    room,mid,_pfx,num=m.group(1),m.group(2),m.group(3),int(m.group(4))
+    it={"sku":sku,"img":f"assets/lookbook/{f}","room":ROOM.get(room,room),"num":num}
+    if mid in BRAND:                       # branded set
+        it.update(type="brand",brand=BRAND[mid],label=BRAND[mid],style=SIG_STYLE[mid])
+    elif mid in STYLE_CODES:               # style-catalogue set
+        it.update(type="style",brand=None,label=STYLE_CODES[mid],style=STYLE_CODES[mid])
+    else: print("SKIP (unknown collection):",sku); continue
+    items.append(it)
 
 def sortkey(it):
-    return (BRAND_ORDER.index(it["brandCode"]) if it["brandCode"] in BRAND_ORDER else 99,
-            ROOM_ORDER.index(it["roomCode"]) if it["roomCode"] in ROOM_ORDER else 99, it["num"])
+    tr=0 if it["type"]=="brand" else 1
+    cr=(BRAND_ORDER.index(it["label"]) if it["type"]=="brand" and it["label"] in BRAND_ORDER
+        else (STYLE_ORDER.index(it["style"]) if it["style"] in STYLE_ORDER else 99))
+    rr=ROOM_ORDER.index(it["room"]) if it["room"] in ROOM_ORDER else 99
+    return (tr,cr,rr,it["num"])
 items.sort(key=sortkey)
 
-# filter option lists (preserve intended order)
-brands=[BRAND[b] for b in BRAND_ORDER if any(i["brandCode"]==b for i in items)]
-rooms=[ROOM[r] for r in ROOM_ORDER if any(i["roomCode"]==r for i in items)]
-styles_order=["Warm Modern","Coastal","Modern Minimal","Mid-Century","Contemporary","Bold Luxe"]
-styles=[s for s in styles_order if any(i["style"]==s for i in items)]
+# filter option lists (only those present, in intended order)
+rooms=[r for r in ROOM_ORDER if any(i["room"]==r for i in items)]
+brands=[b for b in BRAND_ORDER if any(i.get("brand")==b for i in items)]
+styles=[s for s in STYLE_ORDER if any(i["style"]==s for i in items)]
 
 DATA=json.dumps(items, separators=(",",":"))
 
@@ -256,7 +266,7 @@ function match(d){
   if(state.room!=="All"&&d.room!==state.room)return false;
   if(state.brand!=="All"&&d.brand!==state.brand)return false;
   if(state.style!=="All"&&d.style!==state.style)return false;
-  if(state.q){const s=(d.sku+" "+d.brand+" "+d.room+" "+d.style).toLowerCase();if(!s.includes(state.q.toLowerCase()))return false;}
+  if(state.q){const s=(d.sku+" "+d.label+" "+d.room+" "+d.style).toLowerCase();if(!s.includes(state.q.toLowerCase()))return false;}
   return true;
 }
 let view=[];
@@ -267,9 +277,9 @@ function render(){
   document.getElementById('count').innerHTML="<b>"+view.length+"</b> "+(view.length===1?"set":"sets");
   view.forEach((d,i)=>{
     const c=document.createElement('div'); c.className='card'; c.style.animationDelay=Math.min(i*12,240)+'ms';
-    c.innerHTML=`<div class="ph" data-i="${i}"><button class="save${saved.has(d.sku)?' on':''}" data-sku="${d.sku}" aria-label="Save this set"><svg viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-10a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 11c0 5.5-8 10-8 10z"/></svg></button><img loading="lazy" src="${d.img}" alt="${d.room} staged with ${d.brand} furniture (${d.sku})"></div>
-      <div class="body"><div class="meta"><span class="brand">${d.brand}</span><span class="room">${d.room}</span></div>
-      <div class="tags"><span class="pill">${d.style}</span></div>
+    c.innerHTML=`<div class="ph" data-i="${i}"><button class="save${saved.has(d.sku)?' on':''}" data-sku="${d.sku}" aria-label="Save this set"><svg viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-10a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 11c0 5.5-8 10-8 10z"/></svg></button><img loading="lazy" src="${d.img}" alt="${d.room} styled ${d.style} (${d.sku})"></div>
+      <div class="body"><div class="meta"><span class="brand">${d.label}</span><span class="room">${d.room}</span></div>
+      <div class="tags"><span class="pill">${d.brand? d.style : 'Studio pick'}</span></div>
       <button class="copy" data-sku="${d.sku}"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Copy SKU · ${d.sku}</button></div>`;
     grid.appendChild(c);
   });
@@ -310,7 +320,7 @@ grid.addEventListener('click',e=>{
 let lbi=0;
 const lb=document.getElementById('lb');
 function openLB(i){lbi=i;const d=view[i];document.getElementById('lbImg').src=d.img;document.getElementById('lbImg').alt=d.sku;
-  document.getElementById('lbBrand').textContent=d.brand;document.getElementById('lbMeta').textContent=d.room+" · "+d.style+" · "+d.sku;
+  document.getElementById('lbBrand').textContent=d.label;document.getElementById('lbMeta').textContent=d.room+" · "+d.style+" · "+d.sku;
   document.getElementById('lbCopy').onclick=()=>copy(d.sku);
   const lbs=document.getElementById('lbSave');lbs.dataset.sku=d.sku;lbs.classList.toggle('on',saved.has(d.sku));lbs.textContent=(saved.has(d.sku)?'♥ Saved':'♥ Save');lbs.onclick=()=>toggleSave(d.sku);
   lb.classList.add('on');}
