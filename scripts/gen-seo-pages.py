@@ -133,6 +133,7 @@ FOOTER = """
       <span class="micro">Bella Virtual</span>
       <a href="bella-services.html">Services</a>
       <a href="bella-service-virtual-staging.html">Virtual staging</a>
+      <a href="bella-service-virtual-land-staging.html">Virtual land staging</a>
       <a href="bella-service-3d-rendering.html">3D rendering</a>
       <a href="bella-service-floor-plans.html">Floor plans</a>
       <a href="bella-service-photo-editing.html">Photo editing</a>
@@ -309,6 +310,7 @@ def service_page(*, slug, fname, title, desc, service_type, price, micro, h1, su
 
 
 SIBLINGS=[("Virtual staging","bella-service-virtual-staging.html"),
+          ("Virtual land staging","bella-service-virtual-land-staging.html"),
           ("3D rendering","bella-service-3d-rendering.html"),
           ("Floor plans","bella-service-floor-plans.html"),
           ("Photo editing","bella-service-photo-editing.html"),
@@ -584,5 +586,206 @@ def ai_vs_pro():
     (ROOT/fname).write_text(doc(title,desc,slug,schema,body)); print("wrote",fname)
 
 ai_vs_pro()
+
+# ===== 6. VIRTUAL LAND STAGING (new service — vacant-lot overlay) =====
+def land_staging_page():
+    slug="virtual-land-staging"; fname="bella-service-virtual-land-staging.html"
+    title="Virtual Land Staging | See the Home Your Lot Could Hold | Bella Virtual"
+    desc="Virtual land staging overlays a finished home onto your vacant lot photo so buyers see the potential. Choose from a library of home designs, no blueprints needed, MLS-ready fast."
+    service_type="Virtual land staging"
+    faq=[("What is virtual land staging?","Virtual land staging digitally places a finished home onto a photo of a vacant lot, so buyers can picture what the land could become instead of looking at empty grass. You choose a home from a library of designs and a Bella designer composites it realistically into your listing photo."),
+         ("How is it different from 3D rendering?","3D rendering builds a custom, photorealistic model of a specific home from architectural blueprints, quoted per project. Virtual land staging needs no blueprints and no custom modeling: you pick a home from our library and we overlay it onto your lot photo. It is faster and far more affordable, priced per photo like virtual staging."),
+         ("Do I need blueprints or plans?","No. That is the whole point. Send a clear photo of the vacant lot, pick a home style from the library, and we handle the rest. If you do have a specific design in mind, that is a job for 3D rendering instead."),
+         ("How much does virtual land staging cost?","It is priced per lot photo, like virtual staging (from $45 per photo), with volume discounts. There is no subscription and no per-project quote."),
+         ("Can I use virtual land staging on the MLS?","Yes, with disclosure. The image shows a <em>possible</em> home, not an existing or approved structure, so it must be clearly labeled as a conceptual illustration of the lot's potential. We build every image to that standard and tell you exactly what to note; confirm wording with your local board.")]
+    schema={"@context":"https://schema.org","@graph":[
+        {"@type":"Service","@id":f"https://www.bellavirtual.com/{slug}#service","serviceType":service_type,
+         "name":"Virtual Land Staging","description":desc,
+         "provider":{"@type":"Organization","name":"Bella Virtual Staging","url":"https://www.bellavirtual.com/"},
+         "areaServed":["US","CA"],"offers":{"@type":"Offer","priceCurrency":"USD","price":"45","availability":"https://schema.org/InStock"}},
+        crumb_schema([("Bella Virtual","https://www.bellavirtual.com/"),
+                      ("Services","https://www.bellavirtual.com/services"),
+                      (service_type,f"https://www.bellavirtual.com/{slug}")]),
+        faq_schema(faq)]}
+    rel="".join(f'<a href="{u}">{n}</a>' for n,u in SIBLINGS if u!=fname)
+    # HOUSE LIBRARY uses the exterior renders as stand-ins. PLACEHOLDER: swap for a real
+    # vacant-lot before/after + a proper home library once those assets exist.
+    homes=[("assets/render/ext-villa-2.jpg","Modern two-storey"),
+           ("assets/render/ext-villa-1.jpg","Contemporary"),
+           ("assets/render/ext-villa-3.jpg","Farmhouse")]
+    homes_html="".join(f'<figure><img src="{i}" alt="{n} home design from the Bella library, shown on a lot"><figcaption>{n}</figcaption></figure>' for i,n in homes)
+    body=f"""
+<nav class="crumb"><a href="bella-homepage-redesign.html">Home</a> · <a href="bella-services.html">Services</a> · {service_type}</nav>
+
+<section class="hero">
+  <div class="hero-in">
+    <div class="copy">
+      <p class="micro">Virtual land staging</p>
+      <h1>See the home your <em>lot could hold.</em></h1>
+      <p>Vacant land is hard to sell because buyers can't picture the potential. Virtual land staging overlays a finished home onto your lot photo — pick a design from our library, no blueprints needed — so buyers see a future, not just grass.</p>
+      <div class="row">
+        <a class="btn" href="bella-order-page.html">Get started</a>
+        <a class="btn btn-ghost" href="bella-service-3d-rendering.html">Need a custom design?</a>
+      </div>
+      <div class="cred">
+        <svg viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg>
+        <span><b>4.9</b> on Google · composited by real designers, never one-click AI</span>
+      </div>
+    </div>
+    <div class="shot">
+      <img src="assets/render/ext-villa-2.jpg" alt="A home shown on a vacant lot with virtual land staging" fetchpriority="high">
+      <span class="lbl">A home shown on a client's lot</span>
+    </div>
+  </div>
+</section>
+
+<div class="strip"><div>Pick from a <b>home library</b></div><div><b>No blueprints</b> needed</div><div>From <b>$45</b> / lot photo</div><div>Back in <b>24–48 hrs</b></div></div>
+
+<section class="wrap">
+  <div class="def">
+    <p class="micro">What it is</p>
+    <h2 style="font-size:clamp(25px,2.9vw,38px);margin:10px 0 18px">What is virtual land staging?</h2>
+    <p>Virtual land staging digitally places a finished home onto a photo of a vacant lot, so buyers can picture what the land could become instead of staring at empty grass and trees. Land is one of the hardest things to sell precisely because buyers can't visualize the potential — this shows them.</p>
+    <p>It's different from 3D rendering: there are no blueprints and no custom modelling. You choose a home from our library of designs and a designer composites it realistically into your listing photo — faster and far more affordable, priced per photo like virtual staging.</p>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div class="head"><p class="micro">How it works</p><h2>Grass to dream home in three steps.</h2></div>
+  <div class="steps">
+    <div class="step"><div class="n">Step 1</div><h3>Send your lot photo</h3><p>A clear, straight-on photo of the vacant lot — a phone photo is fine. Tell us the buyer and budget if you know them.</p></div>
+    <div class="step"><div class="n">Step 2</div><h3>Pick a home from the library</h3><p>Choose the style and size that fits the lot and the buyer — modern, farmhouse, craftsman and more.</p></div>
+    <div class="step"><div class="n">Step 3</div><h3>We composite it</h3><p>A designer places the home into your photo with realistic scale, light and landscaping. MLS-ready in 24–48 hours.</p></div>
+  </div>
+</section>
+
+<section class="proof">
+  <div class="wrap">
+    <div class="head"><p class="micro">The home library</p><h2>Choose a home that fits the lot.</h2><p>Dozens of styles and sizes — matched to your buyer and price point. No two lots are sold the same way.</p></div>
+    <div class="ba" style="grid-template-columns:repeat(3,1fr)">{homes_html}</div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="head"><p class="micro">Pricing</p><h2>Priced per lot photo. No project quote.</h2></div>
+  <div class="price-wrap">
+    <div class="price-card feat">
+      <h3>Virtual land staging</h3>
+      <div class="amt">$45<small> / lot photo</small></div>
+      <span style="font-size:13px;color:#A9A49A">Volume discounts up to 20% off</span>
+      <ul><li>Pick a home from our design library</li><li>Composited by a real designer</li><li>Realistic scale, light &amp; landscaping</li><li>MLS-ready in 24–48 hours, free revisions</li></ul>
+      <a class="btn btn-wht" href="bella-order-page.html">Get started</a>
+    </div>
+    <div class="price-card">
+      <h3>Have a specific design?</h3>
+      <div class="amt" style="font-size:30px">3D rendering</div>
+      <span style="font-size:13px;color:var(--faint)">Custom, from blueprints</span>
+      <ul><li>Photoreal model of your exact home</li><li>Built from architectural drawings</li><li>Quoted per project</li><li>For pre-construction &amp; developments</li></ul>
+      <a class="btn btn-ghost" href="bella-service-3d-rendering.html">See 3D rendering</a>
+    </div>
+  </div>
+</section>
+
+<section class="related">
+  <div class="wrap"><p class="micro">More visualization services</p>
+    <h2 style="font-size:clamp(24px,2.7vw,34px);margin-top:10px;max-width:24ch">One studio for the whole listing.</h2>
+    <div class="related-row">{rel}</div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="head"><p class="micro">Questions</p><h2>Virtual land staging FAQ</h2></div>
+  {faq_html(faq)}
+</section>
+
+<section class="cta">
+  <div class="cta-in">
+    <h2>Show buyers what your lot could become.</h2>
+    <p>Send a photo of the vacant land, pick a home, and get an MLS-ready image that sells the potential — back in 24 to 48 hours.</p>
+    <div class="row">
+      <a class="btn btn-wht" href="bella-order-page.html">Get started</a>
+      <a class="btn btn-ghost" style="border-color:#4a4640;color:#fff" href="bella-how-to-sell-vacant-land.html">How to sell vacant land</a>
+    </div>
+    <p class="fine">From $45 a lot photo · pick from a home library · no blueprints needed</p>
+  </div>
+</section>
+"""
+    (ROOT/fname).write_text(doc(title,desc,slug,schema,body)); print("wrote",fname)
+
+land_staging_page()
+
+# ===== 7. HOW TO SELL VACANT LAND (guide — captures the real demand) =====
+def guide_sell_land():
+    slug="how-to-sell-vacant-land"; fname="bella-how-to-sell-vacant-land.html"
+    title="How to Sell Vacant Land Faster | Guide for Agents & Owners | Bella Virtual"
+    desc="How to sell vacant land faster: price it right, give buyers the facts they need, and — the part most sellers miss — help them picture the home the lot could hold."
+    faq=[("How do I sell vacant land faster?","Price it against real comparable land sales, give buyers the facts they can't see (zoning, utilities, access, soil/survey), use clear wide photos, and help them visualize the potential — vacant land staging that overlays a possible home on the lot consistently makes a bare parcel feel like a future address."),
+         ("Why is vacant land so hard to sell?","Because there's nothing to picture. Buyers walk a home and imagine living there; on raw land they see grass and uncertainty. Removing that uncertainty — with facts and a visual of what could be built — is what moves land."),
+         ("Do I need a realtor to sell land?","Not necessarily, but land has quirks (zoning, utilities, financing, disclosures) that an agent experienced in land handles well. Whether you list with an agent or by owner, strong marketing and visualization matter more for land than for houses."),
+         ("How do I make vacant land more appealing to buyers?","Clean sightlines and mark the boundaries, share a survey and utility/zoning info up front, add a simple site or floor plan if you can, and use virtual land staging to show a finished home on the lot so buyers see the potential instead of a blank field.")]
+    schema={"@context":"https://schema.org","@graph":[
+        {"@type":"Article","headline":"How to Sell Vacant Land Faster","description":desc,
+         "author":{"@type":"Organization","name":"Bella Virtual Staging"},
+         "publisher":{"@type":"Organization","name":"Bella Virtual Staging","url":"https://www.bellavirtual.com/"},
+         "mainEntityOfPage":f"https://www.bellavirtual.com/{slug}"},
+        crumb_schema([("Bella Virtual","https://www.bellavirtual.com/"),
+                      ("Resources","https://www.bellavirtual.com/resources"),
+                      ("How to sell vacant land",f"https://www.bellavirtual.com/{slug}")]),
+        faq_schema(faq)]}
+    body=f"""
+<nav class="crumb"><a href="bella-homepage-redesign.html">Home</a> · <a href="bella-resources.html">Resources</a> · How to sell vacant land</nav>
+
+<section class="wrap" style="padding-bottom:0">
+  <div class="prose">
+    <p class="micro">Guide</p>
+    <h1 style="font-size:clamp(30px,4vw,48px);margin-top:12px">How to sell vacant land faster</h1>
+    <p class="lead">Vacant land is one of the hardest things to sell — not because it's undesirable, but because buyers can't picture it. A house sells the feeling of living there; a bare lot sells grass and uncertainty. Close that gap and land moves. Here's how.</p>
+  </div>
+</section>
+
+<section class="wrap" style="padding-top:28px">
+  <div class="prose">
+    <h2>1. Price it against real land comps</h2>
+    <p>Land is priced on comparable <em>land</em> sales — lot size, zoning, location, and what's actually buildable — not on nearby house prices. Overpricing is the number-one reason a parcel sits. Pull recent sold lots in the area and price to the market, not to hope.</p>
+
+    <h2>2. Give buyers the facts they can't see</h2>
+    <p>On a house, buyers can see what they're getting. On land, they're buying questions. Answer them up front and you remove the friction that stalls a sale:</p>
+    <ul>
+      <li>Zoning and permitted uses</li>
+      <li>Utilities — power, water, sewer/septic, gas, internet</li>
+      <li>Road access and easements</li>
+      <li>A survey, plat, or boundary markers</li>
+      <li>Soil / perc test if it's for building</li>
+    </ul>
+
+    <h2>3. Show the boundaries and the sightlines</h2>
+    <p>Mark the corners, mow a path, and shoot wide, level photos (drone shots help). A buyer who can see exactly what they'd own is far closer to an offer than one squinting at an ambiguous field.</p>
+
+    <h2>4. Help them picture what could be built</h2>
+    <p>This is the step most land listings skip, and it's the one that changes everything. Buyers commit to a <em>vision</em>, and on raw land you have to give them one. <strong>Virtual land staging</strong> overlays a finished home onto your lot photo — you pick a design from a library, and a designer composites it in realistically — so the listing shows a future address instead of an empty lot. It's the same reason virtually staged rooms sell homes: people buy what they can imagine living in.</p>
+    <p>It's fast and inexpensive (priced per photo, no blueprints required), and every image is disclosed as a conceptual illustration of the lot's potential.</p>
+
+    <h2>5. Market it where land buyers actually look</h2>
+    <p>Beyond the MLS, land sells on land-specific portals and to a local audience of builders and developers. Lead with the visual — a lot photo with a home on it stops the scroll where a photo of grass never will.</p>
+  </div>
+</section>
+
+<section class="wrap"><div class="prose"><div class="head"><p class="micro">Questions</p><h2 style="margin-top:8px">Selling vacant land — FAQ</h2></div>{faq_html(faq)}</div></section>
+
+<section class="cta">
+  <div class="cta-in">
+    <h2>Sell the potential, not the grass.</h2>
+    <p>Show buyers the home your lot could hold. Virtual land staging, from $45 a photo, MLS-ready in 24–48 hours.</p>
+    <div class="row">
+      <a class="btn btn-wht" href="bella-service-virtual-land-staging.html">Virtual land staging</a>
+      <a class="btn btn-ghost" style="border-color:#4a4640;color:#fff" href="bella-order-page.html">Get started</a>
+    </div>
+    <p class="fine">Pick from a home library · no blueprints · disclosed as a conceptual illustration</p>
+  </div>
+</section>
+"""
+    (ROOT/fname).write_text(doc(title,desc,slug,schema,body)); print("wrote",fname)
+
+guide_sell_land()
 print("ALL DONE")
 

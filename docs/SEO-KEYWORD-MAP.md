@@ -93,3 +93,23 @@ Bella is a **done-for-you service**, so the money is in **commercial-intent** te
 - **Star rating**: pages say "4.9 on Google." We did **not** add `AggregateRating` schema — Google requires it to reflect real, on-site reviews. Add the schema only once real reviews exist, or Google may issue a manual action.
 - **NAR stats** (82% / 97%): confirm against the latest NAR Profile of Home Staging / Home Buyers & Sellers before publishing.
 - **Prices**: floor plans $24/floor, photo editing from $6/photo, staging $45/photo — confirm these match live backend pricing.
+
+---
+
+## Virtual Land Staging (new service, added 2026-07) — a naming/positioning note, not a keyword play
+
+Overlays a home (chosen from a library) onto a vacant-lot photo. **The service term has no search demand:** "virtual land staging", "land staging", "vacant land staging", "lot staging", "land visualization" and ~a dozen variants all return **0 indexed volume** — the category isn't named in buyers' heads. So we named it for **clarity + brand halo** (it's *virtual staging* for land), not for a keyword.
+
+Traffic comes from the **demand that does exist**, on the seller side — captured by the `bella-how-to-sell-vacant-land.html` guide, which presents land staging as the solution:
+
+| Keyword | Vol | KD | CPC | Intent | Target |
+|---|---|---|---|---|---|
+| sell my land | 480 | **6** | $53.80 | transactional | Sell-vacant-land guide |
+| how to sell land | 260 | — | $18.18 | info | Guide |
+| vacant lot for sale | 880 | 13 | $1.30 | transactional | Guide (context) |
+| selling vacant land | 90 | — | $32.81 | transactional | Guide |
+| how to sell vacant land | 40 | — | $12.55 | info | Guide |
+
+**Pages:** `bella-service-virtual-land-staging.html` (service, conversion) ← `bella-how-to-sell-vacant-land.html` (guide, ranks) → order flow.
+**Distinct from 3D rendering:** library overlay + no blueprints + per-lot-photo pricing, vs custom model from blueprints + per-project quote. Cross-linked both ways.
+**Build/asset needs:** a curated **home library** (exterior designs to pick from — like the furniture lookbook), a **house-picker step** in the order flow, and **disclosure** on every image as a conceptual illustration of the lot's potential (not an existing/approved structure). Price to confirm (currently mirrors staging, $45/lot photo).

@@ -84,6 +84,8 @@ Environments: `production`, `staging`, `preview` (per-PR). Secrets in env vars, 
 | Homepage | `bella-homepage-redesign.html` (=`index.html`) | `/` |
 | Services hub | `bella-services.html` | `/services` |
 | Virtual staging | `bella-service-virtual-staging.html` | `/virtual-staging` |
+| Virtual land staging (vacant-lot overlay) | `bella-service-virtual-land-staging.html` | `/virtual-land-staging` |
+| How to sell vacant land (guide) | `bella-how-to-sell-vacant-land.html` | `/how-to-sell-vacant-land` |
 | Virtually staged 3D tours | `bella-service-3d-tour.html` | `/3d-tour` |
 | 3D rendering, Floor plans, Photo editing | **TO BUILD** (clone the service template) | `/3d-rendering`, `/floor-plans`, `/photo-editing` |
 | Pricing | `bella-pricing.html` | `/pricing` |
