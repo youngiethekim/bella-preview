@@ -91,20 +91,36 @@ HTML = r'''<!DOCTYPE html>
   /* toolbar */
   .bar{position:sticky;top:64px;z-index:60;background:rgba(253,252,250,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
   .bar-in{max-width:1400px;margin:0 auto;padding:14px var(--pad)}
-  .search{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:#fff;max-width:420px}
+  .bar-top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .search{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:#fff;flex:1 1 240px;min-width:200px}
   .search svg{width:16px;height:16px;stroke:var(--faint);fill:none;stroke-width:1.6}
   .search input{border:0;outline:0;font-family:inherit;font-size:14.5px;width:100%;color:var(--ink);background:transparent}
-  .frow{display:flex;gap:8px;align-items:center;flex-wrap:nowrap;overflow-x:auto;margin-top:12px;padding-bottom:2px;scrollbar-width:thin}
-  .frow::-webkit-scrollbar{height:5px}.frow::-webkit-scrollbar-thumb{background:var(--line);border-radius:9px}
-  .flabel{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);flex:0 0 auto;margin-right:2px}
-  .chip{flex:0 0 auto;font-family:inherit;font-size:13px;border:1px solid var(--line);background:#fff;color:var(--soft);padding:7px 14px;border-radius:99px;cursor:pointer;white-space:nowrap;transition:all .15s}
+  .sel{flex:0 0 auto;font-family:inherit;font-size:13.5px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;cursor:pointer;min-width:132px;transition:border-color .15s}
+  .sel:hover{border-color:var(--ink)}.sel:focus{outline:0;border-color:var(--ink)}
+  .savedbtn{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:13.5px;border:1px solid var(--line);background:#fff;color:var(--soft);padding:10px 15px;border-radius:10px;cursor:pointer;transition:all .15s}
+  .savedbtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.7}
+  .savedbtn:hover{border-color:var(--ink);color:var(--ink)}
+  .savedbtn .n{background:var(--line-2);color:var(--soft);border-radius:99px;padding:0 8px;font-size:12px;font-weight:500;min-width:20px;text-align:center}
+  .savedbtn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .savedbtn.on svg{fill:var(--red);stroke:var(--red)}
+  .savedbtn.on .n{background:rgba(255,255,255,.2);color:#fff}
+  .bar-bot{display:flex;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap}
+  .rooms{display:flex;gap:8px;flex-wrap:wrap}
+  .bar-bot .right{margin-left:auto;display:flex;align-items:center;gap:16px}
+  .chip{flex:0 0 auto;font-family:inherit;font-size:13px;border:1px solid var(--line);background:#fff;color:var(--soft);padding:7px 15px;border-radius:99px;cursor:pointer;white-space:nowrap;transition:all .15s}
   .chip:hover{border-color:var(--ink);color:var(--ink)}
   .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-  .chip .c{opacity:.55;font-size:11.5px;margin-left:5px}
-  .barfoot{display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:16px;flex-wrap:wrap}
+  .chip .c{opacity:.5;font-size:11.5px;margin-left:5px}
   .count{font-size:13px;color:var(--soft)}.count b{color:var(--ink);font-weight:500}
   .clear{font-size:12.5px;letter-spacing:.06em;color:var(--green);background:0;border:0;cursor:pointer;font-family:inherit}
   .clear:hover{color:var(--ink)}
+  /* saved action bar */
+  .savedbar{display:flex;align-items:center;justify-content:space-between;gap:14px;background:var(--wash);border:1px solid var(--line);border-radius:12px;padding:13px 18px;margin:28px 0 -8px;flex-wrap:wrap}
+  .savedbar span{font-size:14px;color:var(--soft)}.savedbar b{color:var(--ink);font-weight:500}
+  .savedbar .a{display:flex;gap:8px}
+  .savedbar .a button,.savedbar .a a{font-family:inherit;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;padding:9px 15px;border-radius:8px;cursor:pointer;text-decoration:none;border:0}
+  .savedbar .copyall{background:#fff;border:1px solid var(--line);color:var(--ink)}.savedbar .copyall:hover{border-color:var(--ink)}
+  .savedbar .order{background:var(--ink);color:#fff}.savedbar .order:hover{background:var(--green)}
   /* grid */
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px;padding:34px 0 70px}
   .card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .2s,transform .2s;animation:fade .3s ease both}
@@ -145,29 +161,6 @@ HTML = r'''<!DOCTYPE html>
   .lb .arrow{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:99px;border:0;background:rgba(255,255,255,.12);color:#fff;font-size:22px;cursor:pointer}
   .lb .arrow.prev{left:20px}.lb .arrow.next{right:20px}
   .lb .arrow:hover,.lb .x:hover{background:rgba(255,255,255,.24)}
-  /* saved tray */
-  .tray{position:fixed;right:20px;bottom:20px;z-index:120;background:var(--ink);color:#fff;border-radius:14px;box-shadow:0 22px 55px -18px rgba(20,18,16,.62);width:min(360px,calc(100vw - 40px));transform:translateY(150%);transition:transform .32s ease;overflow:hidden}
-  .tray.show{transform:none}
-  .tray .th{display:flex;align-items:center;gap:9px;padding:14px 16px;cursor:pointer;user-select:none}
-  .tray .th svg{width:17px;height:17px;fill:var(--red);stroke:var(--red)}
-  .tray .th b{font-weight:500;font-size:14.5px}
-  .tray .th .n{background:#fff;color:var(--ink);font-size:12px;font-weight:500;border-radius:99px;padding:1px 9px}
-  .tray .th .chev{margin-left:auto;transition:transform .2s;color:#9B958C;font-size:12px}
-  .tray.open .th .chev{transform:rotate(180deg)}
-  .tray .body{max-height:0;overflow:hidden;transition:max-height .3s ease}
-  .tray.open .body{max-height:min(46vh,360px);overflow-y:auto}
-  .tray .item{display:flex;align-items:center;gap:10px;padding:9px 16px;border-top:1px solid rgba(255,255,255,.08);font-size:12.5px}
-  .tray .item img{width:46px;height:30px;object-fit:cover;border-radius:4px;flex:0 0 auto}
-  .tray .item .s{flex:1;color:#E4DFD8;line-height:1.3}
-  .tray .item .s small{display:block;color:#9B958C;font-size:11px}
-  .tray .item .rm{background:0;border:0;color:#9B958C;cursor:pointer;font-size:17px;line-height:1}
-  .tray .item .rm:hover{color:#fff}
-  .tray .acts{display:flex;gap:8px;padding:12px 16px;border-top:1px solid rgba(255,255,255,.12)}
-  .tray .acts button,.tray .acts a{flex:1;text-align:center;font-family:inherit;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:11px 8px;border-radius:8px;cursor:pointer;text-decoration:none;border:0}
-  .tray .acts .copyall{background:rgba(255,255,255,.13);color:#fff}
-  .tray .acts .copyall:hover{background:rgba(255,255,255,.22)}
-  .tray .acts .order{background:#fff;color:var(--ink)}
-  .tray .acts .order:hover{background:var(--green);color:#fff}
   .lb .cap button.saveb{border-color:#4a4640}
   .lb .cap button.saveb.on{background:var(--red);border-color:var(--red);color:#fff}
   /* toast */
@@ -204,17 +197,29 @@ HTML = r'''<!DOCTYPE html>
 </div></section>
 
 <div class="bar"><div class="bar-in">
-  <div class="search">
-    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-    <input id="q" type="text" placeholder="Search a SKU or keyword (e.g. LR-ROVE, bedroom, coastal)" autocomplete="off">
+  <div class="bar-top">
+    <div class="search">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="q" type="text" placeholder="Search a SKU, room or style" autocomplete="off">
+    </div>
+    <select id="fStyle" class="sel" aria-label="Filter by style"></select>
+    <select id="fBrand" class="sel" aria-label="Filter by brand"></select>
+    <button class="savedbtn" id="savedBtn" aria-label="Show saved sets"><svg viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-10a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 11c0 5.5-8 10-8 10z"/></svg><span>Saved</span><span class="n" id="savedN">0</span></button>
   </div>
-  <div class="frow" id="fRoom"><span class="flabel">Room</span></div>
-  <div class="frow" id="fBrand"><span class="flabel">Brand</span></div>
-  <div class="frow" id="fStyle"><span class="flabel">Style</span></div>
-  <div class="barfoot"><span class="count" id="count"></span><button class="clear" id="clear">Clear filters</button></div>
+  <div class="bar-bot">
+    <div class="rooms" id="fRoom"></div>
+    <div class="right"><span class="count" id="count"></span><button class="clear" id="clear">Clear</button></div>
+  </div>
 </div></div>
 
-<main class="wrap"><div class="grid" id="grid"></div><div class="empty" id="empty" style="display:none"><h3>No sets match those filters.</h3><p>Try clearing a filter or searching a different room or brand.</p></div></main>
+<main class="wrap">
+  <div class="savedbar" id="savedBar" style="display:none">
+    <span id="savedInfo"></span>
+    <div class="a"><button class="copyall" id="copyAll">Copy all SKUs</button><a class="order" id="orderSaved" href="bella-order-page.html">Add to order →</a></div>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" style="display:none"><h3>No sets match those filters.</h3><p>Try clearing a filter or searching a different room or style.</p></div>
+</main>
 
 <div class="lb" id="lb">
   <button class="x" id="lbX" aria-label="Close">&times;</button>
@@ -225,13 +230,6 @@ HTML = r'''<!DOCTYPE html>
     <div class="cap"><div class="l"><b id="lbBrand"></b> &nbsp;<span id="lbMeta"></span></div>
       <div class="r"><button class="saveb" id="lbSave">♥ Save</button><button class="pri" id="lbCopy">Copy SKU</button><a class="pri" style="text-decoration:none" href="bella-order-page.html">Order this look</a></div></div>
   </figure>
-</div>
-
-<div class="tray" id="tray">
-  <div class="th" id="trayHead"><svg viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-10a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 11c0 5.5-8 10-8 10z"/></svg>
-    <b>Saved sets</b><span class="n" id="trayN">0</span><span class="chev">▲</span></div>
-  <div class="body" id="trayBody"></div>
-  <div class="acts"><button class="copyall" id="copyAll">Copy all SKUs</button><a class="order" id="orderSaved" href="bella-order-page.html">Add to order →</a></div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -250,10 +248,9 @@ HTML = r'''<!DOCTYPE html>
 <script>
 const DATA=__DATA__;
 const ROOMS=__ROOMS__, BRANDS=__BRANDS__, STYLES=__STYLES__;
-const state={room:"All",brand:"All",style:"All",q:""};
+const state={room:"All",brand:"All",style:"All",q:"",savedView:false};
 const grid=document.getElementById('grid'), empty=document.getElementById('empty');
-function count(field,val){return DATA.filter(d=>val==="All"||d[field]===val).length;}
-function buildChips(id,field,vals){
+function buildChips(id,field,vals){          // Room pills
   const row=document.getElementById(id);
   ["All",...vals].forEach(v=>{
     const b=document.createElement('button'); b.className='chip'+(state[field]===v?' on':'');
@@ -262,7 +259,14 @@ function buildChips(id,field,vals){
     row.appendChild(b);
   });
 }
+function buildSelect(id,field,vals){         // Style / Brand dropdowns
+  const sel=document.getElementById(id);
+  sel.innerHTML=['<option value="All">All '+(field==='style'?'styles':'brands')+'</option>']
+    .concat(vals.map(v=>'<option value="'+v+'">'+v+' ('+DATA.filter(d=>d[field]===v).length+')</option>')).join('');
+  sel.onchange=()=>{state[field]=sel.value;render();};
+}
 function match(d){
+  if(state.savedView&&!saved.has(d.sku))return false;
   if(state.room!=="All"&&d.room!==state.room)return false;
   if(state.brand!=="All"&&d.brand!==state.brand)return false;
   if(state.style!=="All"&&d.style!==state.style)return false;
@@ -274,7 +278,12 @@ function render(){
   view=DATA.filter(match);
   grid.innerHTML="";
   empty.style.display=view.length?"none":"block";
-  document.getElementById('count').innerHTML="<b>"+view.length+"</b> "+(view.length===1?"set":"sets");
+  if(!view.length){
+    empty.querySelector('h3').textContent=state.savedView?"No saved sets yet.":"No sets match those filters.";
+    empty.querySelector('p').textContent=state.savedView?"Tap the ♥ on any set to save it here for your order.":"Try clearing a filter or searching a different room or style.";
+  }
+  document.getElementById('count').innerHTML="<b>"+view.length+"</b> "+(view.length===1?"set":"sets")+(state.savedView?" saved":"");
+  updateBars();
   view.forEach((d,i)=>{
     const c=document.createElement('div'); c.className='card'; c.style.animationDelay=Math.min(i*12,240)+'ms';
     c.innerHTML=`<div class="ph" data-i="${i}"><button class="save${saved.has(d.sku)?' on':''}" data-sku="${d.sku}" aria-label="Save this set"><svg viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-10a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 11c0 5.5-8 10-8 10z"/></svg></button><img loading="lazy" src="${d.img}" alt="${d.room} styled ${d.style} (${d.sku})"></div>
@@ -286,30 +295,33 @@ function render(){
 }
 // events
 document.getElementById('q').addEventListener('input',e=>{state.q=e.target.value;render();});
-document.getElementById('clear').onclick=()=>{state.room="All";state.brand="All";state.style="All";state.q="";document.getElementById('q').value="";
-  document.querySelectorAll('.frow').forEach(r=>r.querySelectorAll('.chip').forEach((c,idx)=>c.classList.toggle('on',idx===0)));render();};
+document.getElementById('clear').onclick=()=>{state.room="All";state.brand="All";state.style="All";state.q="";state.savedView=false;
+  document.getElementById('q').value="";document.getElementById('fStyle').value="All";document.getElementById('fBrand').value="All";
+  document.querySelectorAll('#fRoom .chip').forEach((c,idx)=>c.classList.toggle('on',idx===0));render();};
 let toastT;
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),1600);}
 function copy(sku){navigator.clipboard&&navigator.clipboard.writeText(sku).then(()=>toast("Copied "+sku)).catch(()=>toast(sku));}
-// saved-for-order
+// saved-for-order (heart on cards → "Saved" view in the toolbar, no floating box)
 let saved=new Set(JSON.parse(localStorage.getItem('bella_saved')||'[]').filter(s=>DATA.some(d=>d.sku===s)));
-const tray=document.getElementById('tray');
+const savedBtn=document.getElementById('savedBtn'), savedBar=document.getElementById('savedBar');
 function persist(){localStorage.setItem('bella_saved',JSON.stringify([...saved]));}
+function updateBars(){
+  document.getElementById('savedN').textContent=saved.size;
+  savedBtn.classList.toggle('on',state.savedView);
+  if(state.savedView && saved.size){
+    savedBar.style.display='flex';
+    document.getElementById('savedInfo').innerHTML='<b>'+saved.size+'</b> saved '+(saved.size===1?'set':'sets')+' — copy the SKUs or send them straight to your order.';
+    document.getElementById('orderSaved').href='bella-order-page.html?skus='+encodeURIComponent([...saved].join(','));
+  } else savedBar.style.display='none';
+}
 function toggleSave(sku){
   const add=!saved.has(sku); add?saved.add(sku):saved.delete(sku); persist();
   document.querySelectorAll('.save[data-sku="'+sku+'"]').forEach(b=>{b.classList.toggle('on',add);if(add){b.classList.add('pop');setTimeout(()=>b.classList.remove('pop'),300);}});
   const lbs=document.getElementById('lbSave'); if(lbs&&lbs.dataset.sku===sku){lbs.classList.toggle('on',add);lbs.textContent=(add?'♥ Saved':'♥ Save');}
-  toast(add?'Saved '+sku:'Removed '+sku); renderTray();
+  toast(add?'Saved '+sku:'Removed '+sku);
+  if(state.savedView) render(); else updateBars();
 }
-function renderTray(){
-  document.getElementById('trayN').textContent=saved.size;
-  tray.classList.toggle('show',saved.size>0); if(!saved.size)tray.classList.remove('open');
-  const list=DATA.filter(d=>saved.has(d.sku));
-  document.getElementById('trayBody').innerHTML=list.map(d=>'<div class="item"><img src="'+d.img+'" alt=""><div class="s">'+d.sku+'<small>'+d.brand+' · '+d.room+'</small></div><button class="rm" data-sku="'+d.sku+'" aria-label="Remove">&times;</button></div>').join('');
-  document.getElementById('orderSaved').href='bella-order-page.html?skus='+encodeURIComponent([...saved].join(','));
-}
-document.getElementById('trayHead').onclick=()=>{if(saved.size)tray.classList.toggle('open');};
-document.getElementById('trayBody').addEventListener('click',e=>{const rm=e.target.closest('.rm');if(rm)toggleSave(rm.dataset.sku);});
+savedBtn.onclick=()=>{ if(!state.savedView && !saved.size){toast('Tap the ♥ on a set to save it');return;} state.savedView=!state.savedView; render(); };
 document.getElementById('copyAll').onclick=()=>{if(!saved.size){toast('No saved sets yet');return;}copy([...saved].join(', '));};
 grid.addEventListener('click',e=>{
   const sv=e.target.closest('.save'); if(sv){e.stopPropagation();toggleSave(sv.dataset.sku);return;}
@@ -331,7 +343,7 @@ document.getElementById('lbNext').onclick=()=>step(1);
 lb.addEventListener('click',e=>{if(e.target===lb)lb.classList.remove('on');});
 document.addEventListener('keydown',e=>{if(!lb.classList.contains('on'))return;if(e.key==="Escape")lb.classList.remove('on');if(e.key==="ArrowLeft")step(-1);if(e.key==="ArrowRight")step(1);});
 // init
-buildChips('fRoom','room',ROOMS);buildChips('fBrand','brand',BRANDS);buildChips('fStyle','style',STYLES);render();renderTray();
+buildChips('fRoom','room',ROOMS);buildSelect('fStyle','style',STYLES);buildSelect('fBrand','brand',BRANDS);render();
 </script>
 </body>
 </html>

@@ -36,20 +36,36 @@
   /* toolbar */
   .bar{position:sticky;top:64px;z-index:60;background:rgba(253,252,250,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
   .bar-in{max-width:1400px;margin:0 auto;padding:14px var(--pad)}
-  .search{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:#fff;max-width:420px}
+  .bar-top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .search{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:#fff;flex:1 1 240px;min-width:200px}
   .search svg{width:16px;height:16px;stroke:var(--faint);fill:none;stroke-width:1.6}
   .search input{border:0;outline:0;font-family:inherit;font-size:14.5px;width:100%;color:var(--ink);background:transparent}
-  .frow{display:flex;gap:8px;align-items:center;flex-wrap:nowrap;overflow-x:auto;margin-top:12px;padding-bottom:2px;scrollbar-width:thin}
-  .frow::-webkit-scrollbar{height:5px}.frow::-webkit-scrollbar-thumb{background:var(--line);border-radius:9px}
-  .flabel{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);flex:0 0 auto;margin-right:2px}
-  .chip{flex:0 0 auto;font-family:inherit;font-size:13px;border:1px solid var(--line);background:#fff;color:var(--soft);padding:7px 14px;border-radius:99px;cursor:pointer;white-space:nowrap;transition:all .15s}
+  .sel{flex:0 0 auto;font-family:inherit;font-size:13.5px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;cursor:pointer;min-width:132px;transition:border-color .15s}
+  .sel:hover{border-color:var(--ink)}.sel:focus{outline:0;border-color:var(--ink)}
+  .savedbtn{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:13.5px;border:1px solid var(--line);background:#fff;color:var(--soft);padding:10px 15px;border-radius:10px;cursor:pointer;transition:all .15s}
+  .savedbtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.7}
+  .savedbtn:hover{border-color:var(--ink);color:var(--ink)}
+  .savedbtn .n{background:var(--line-2);color:var(--soft);border-radius:99px;padding:0 8px;font-size:12px;font-weight:500;min-width:20px;text-align:center}
+  .savedbtn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .savedbtn.on svg{fill:var(--red);stroke:var(--red)}
+  .savedbtn.on .n{background:rgba(255,255,255,.2);color:#fff}
+  .bar-bot{display:flex;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap}
+  .rooms{display:flex;gap:8px;flex-wrap:wrap}
+  .bar-bot .right{margin-left:auto;display:flex;align-items:center;gap:16px}
+  .chip{flex:0 0 auto;font-family:inherit;font-size:13px;border:1px solid var(--line);background:#fff;color:var(--soft);padding:7px 15px;border-radius:99px;cursor:pointer;white-space:nowrap;transition:all .15s}
   .chip:hover{border-color:var(--ink);color:var(--ink)}
   .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-  .chip .c{opacity:.55;font-size:11.5px;margin-left:5px}
-  .barfoot{display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:16px;flex-wrap:wrap}
+  .chip .c{opacity:.5;font-size:11.5px;margin-left:5px}
   .count{font-size:13px;color:var(--soft)}.count b{color:var(--ink);font-weight:500}
   .clear{font-size:12.5px;letter-spacing:.06em;color:var(--green);background:0;border:0;cursor:pointer;font-family:inherit}
   .clear:hover{color:var(--ink)}
+  /* saved action bar */
+  .savedbar{display:flex;align-items:center;justify-content:space-between;gap:14px;background:var(--wash);border:1px solid var(--line);border-radius:12px;padding:13px 18px;margin:28px 0 -8px;flex-wrap:wrap}
+  .savedbar span{font-size:14px;color:var(--soft)}.savedbar b{color:var(--ink);font-weight:500}
+  .savedbar .a{display:flex;gap:8px}
+  .savedbar .a button,.savedbar .a a{font-family:inherit;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;padding:9px 15px;border-radius:8px;cursor:pointer;text-decoration:none;border:0}
+  .savedbar .copyall{background:#fff;border:1px solid var(--line);color:var(--ink)}.savedbar .copyall:hover{border-color:var(--ink)}
+  .savedbar .order{background:var(--ink);color:#fff}.savedbar .order:hover{background:var(--green)}
   /* grid */
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px;padding:34px 0 70px}
   .card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .2s,transform .2s;animation:fade .3s ease both}
@@ -90,29 +106,6 @@
   .lb .arrow{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:99px;border:0;background:rgba(255,255,255,.12);color:#fff;font-size:22px;cursor:pointer}
   .lb .arrow.prev{left:20px}.lb .arrow.next{right:20px}
   .lb .arrow:hover,.lb .x:hover{background:rgba(255,255,255,.24)}
-  /* saved tray */
-  .tray{position:fixed;right:20px;bottom:20px;z-index:120;background:var(--ink);color:#fff;border-radius:14px;box-shadow:0 22px 55px -18px rgba(20,18,16,.62);width:min(360px,calc(100vw - 40px));transform:translateY(150%);transition:transform .32s ease;overflow:hidden}
-  .tray.show{transform:none}
-  .tray .th{display:flex;align-items:center;gap:9px;padding:14px 16px;cursor:pointer;user-select:none}
-  .tray .th svg{width:17px;height:17px;fill:var(--red);stroke:var(--red)}
-  .tray .th b{font-weight:500;font-size:14.5px}
-  .tray .th .n{background:#fff;color:var(--ink);font-size:12px;font-weight:500;border-radius:99px;padding:1px 9px}
-  .tray .th .chev{margin-left:auto;transition:transform .2s;color:#9B958C;font-size:12px}
-  .tray.open .th .chev{transform:rotate(180deg)}
-  .tray .body{max-height:0;overflow:hidden;transition:max-height .3s ease}
-  .tray.open .body{max-height:min(46vh,360px);overflow-y:auto}
-  .tray .item{display:flex;align-items:center;gap:10px;padding:9px 16px;border-top:1px solid rgba(255,255,255,.08);font-size:12.5px}
-  .tray .item img{width:46px;height:30px;object-fit:cover;border-radius:4px;flex:0 0 auto}
-  .tray .item .s{flex:1;color:#E4DFD8;line-height:1.3}
-  .tray .item .s small{display:block;color:#9B958C;font-size:11px}
-  .tray .item .rm{background:0;border:0;color:#9B958C;cursor:pointer;font-size:17px;line-height:1}
-  .tray .item .rm:hover{color:#fff}
-  .tray .acts{display:flex;gap:8px;padding:12px 16px;border-top:1px solid rgba(255,255,255,.12)}
-  .tray .acts button,.tray .acts a{flex:1;text-align:center;font-family:inherit;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:11px 8px;border-radius:8px;cursor:pointer;text-decoration:none;border:0}
-  .tray .acts .copyall{background:rgba(255,255,255,.13);color:#fff}
-  .tray .acts .copyall:hover{background:rgba(255,255,255,.22)}
-  .tray .acts .order{background:#fff;color:var(--ink)}
-  .tray .acts .order:hover{background:var(--green);color:#fff}
   .lb .cap button.saveb{border-color:#4a4640}
   .lb .cap button.saveb.on{background:var(--red);border-color:var(--red);color:#fff}
   /* toast */
@@ -149,17 +142,29 @@
 </div></section>
 
 <div class="bar"><div class="bar-in">
-  <div class="search">
-    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-    <input id="q" type="text" placeholder="Search a SKU or keyword (e.g. LR-ROVE, bedroom, coastal)" autocomplete="off">
+  <div class="bar-top">
+    <div class="search">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="q" type="text" placeholder="Search a SKU, room or style" autocomplete="off">
+    </div>
+    <select id="fStyle" class="sel" aria-label="Filter by style"></select>
+    <select id="fBrand" class="sel" aria-label="Filter by brand"></select>
+    <button class="savedbtn" id="savedBtn" aria-label="Show saved sets"><svg viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-10a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 11c0 5.5-8 10-8 10z"/></svg><span>Saved</span><span class="n" id="savedN">0</span></button>
   </div>
-  <div class="frow" id="fRoom"><span class="flabel">Room</span></div>
-  <div class="frow" id="fBrand"><span class="flabel">Brand</span></div>
-  <div class="frow" id="fStyle"><span class="flabel">Style</span></div>
-  <div class="barfoot"><span class="count" id="count"></span><button class="clear" id="clear">Clear filters</button></div>
+  <div class="bar-bot">
+    <div class="rooms" id="fRoom"></div>
+    <div class="right"><span class="count" id="count"></span><button class="clear" id="clear">Clear</button></div>
+  </div>
 </div></div>
 
-<main class="wrap"><div class="grid" id="grid"></div><div class="empty" id="empty" style="display:none"><h3>No sets match those filters.</h3><p>Try clearing a filter or searching a different room or brand.</p></div></main>
+<main class="wrap">
+  <div class="savedbar" id="savedBar" style="display:none">
+    <span id="savedInfo"></span>
+    <div class="a"><button class="copyall" id="copyAll">Copy all SKUs</button><a class="order" id="orderSaved" href="bella-order-page.html">Add to order →</a></div>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" style="display:none"><h3>No sets match those filters.</h3><p>Try clearing a filter or searching a different room or style.</p></div>
+</main>
 
 <div class="lb" id="lb">
   <button class="x" id="lbX" aria-label="Close">&times;</button>
@@ -170,13 +175,6 @@
     <div class="cap"><div class="l"><b id="lbBrand"></b> &nbsp;<span id="lbMeta"></span></div>
       <div class="r"><button class="saveb" id="lbSave">♥ Save</button><button class="pri" id="lbCopy">Copy SKU</button><a class="pri" style="text-decoration:none" href="bella-order-page.html">Order this look</a></div></div>
   </figure>
-</div>
-
-<div class="tray" id="tray">
-  <div class="th" id="trayHead"><svg viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-10a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 11c0 5.5-8 10-8 10z"/></svg>
-    <b>Saved sets</b><span class="n" id="trayN">0</span><span class="chev">▲</span></div>
-  <div class="body" id="trayBody"></div>
-  <div class="acts"><button class="copyall" id="copyAll">Copy all SKUs</button><a class="order" id="orderSaved" href="bella-order-page.html">Add to order →</a></div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -195,10 +193,9 @@
 <script>
 const DATA=[{"sku":"LR-ROVE-100","img":"assets/lookbook/LR-ROVE-100.jpg","room":"Living Room","num":100,"type":"brand","brand":"Rove Concepts","label":"Rove Concepts","style":"Modern"},{"sku":"LR-ROVE-110","img":"assets/lookbook/LR-ROVE-110.jpg","room":"Living Room","num":110,"type":"brand","brand":"Rove Concepts","label":"Rove Concepts","style":"Modern"},{"sku":"LR-ROVE-120","img":"assets/lookbook/LR-ROVE-120.jpg","room":"Living Room","num":120,"type":"brand","brand":"Rove Concepts","label":"Rove Concepts","style":"Modern"},{"sku":"LR-ROVE-130","img":"assets/lookbook/LR-ROVE-130.jpg","room":"Living Room","num":130,"type":"brand","brand":"Rove Concepts","label":"Rove Concepts","style":"Modern"},{"sku":"LR-ROVE-140","img":"assets/lookbook/LR-ROVE-140.jpg","room":"Living Room","num":140,"type":"brand","brand":"Rove Concepts","label":"Rove Concepts","style":"Modern"},{"sku":"LR-ROVE-150","img":"assets/lookbook/LR-ROVE-150.jpg","room":"Living Room","num":150,"type":"brand","brand":"Rove Concepts","label":"Rove Concepts","style":"Modern"},{"sku":"DR-ROVE-100","img":"assets/lookbook/DR-ROVE-100.jpg","room":"Dining Room","num":100,"type":"brand","brand":"Rove Concepts","label":"Rove Concepts","style":"Modern"},{"sku":"DR-ROVE-110","img":"assets/lookbook/DR-ROVE-110.jpg","room":"Dining Room","num":110,"type":"brand","brand":"Rove Concepts","label":"Rove Concepts","style":"Modern"},{"sku":"DR-ROVE-120","img":"assets/lookbook/DR-ROVE-120.jpg","room":"Dining Room","num":120,"type":"brand","brand":"Rove Concepts","label":"Rove Concepts","style":"Modern"},{"sku":"DR-ROVE-130","img":"assets/lookbook/DR-ROVE-130.jpg","room":"Dining Room","num":130,"type":"brand","brand":"Rove Concepts","label":"Rove Concepts","style":"Modern"},{"sku":"DR-ROVE-140","img":"assets/lookbook/DR-ROVE-140.jpg","room":"Dining Room","num":140,"type":"brand","brand":"Rove Concepts","label":"Rove Concepts","style":"Modern"},{"sku":"DR-ROVE-150","img":"assets/lookbook/DR-ROVE-150.jpg","room":"Dining Room","num":150,"type":"brand","brand":"Rove Concepts","label":"Rove Concepts","style":"Modern"},{"sku":"DR-ROVE-160","img":"assets/lookbook/DR-ROVE-160.jpg","room":"Dining Room","num":160,"type":"brand","brand":"Rove Concepts","label":"Rove Concepts","style":"Modern"},{"sku":"DR-ROVE-170","img":"assets/lookbook/DR-ROVE-170.jpg","room":"Dining Room","num":170,"type":"brand","brand":"Rove Concepts","label":"Rove Concepts","style":"Modern"},{"sku":"DR-ROVE-180","img":"assets/lookbook/DR-ROVE-180.jpg","room":"Dining Room","num":180,"type":"brand","brand":"Rove Concepts","label":"Rove Concepts","style":"Modern"},{"sku":"BDR-ROVE-100","img":"assets/lookbook/BDR-ROVE-100.jpg","room":"Bedroom","num":100,"type":"brand","brand":"Rove Concepts","label":"Rove Concepts","style":"Modern"},{"sku":"BDR-ROVE-110","img":"assets/lookbook/BDR-ROVE-110.jpg","room":"Bedroom","num":110,"type":"brand","brand":"Rove Concepts","label":"Rove Concepts","style":"Modern"},{"sku":"BDR-ROVE-120","img":"assets/lookbook/BDR-ROVE-120.jpg","room":"Bedroom","num":120,"type":"brand","brand":"Rove Concepts","label":"Rove Concepts","style":"Modern"},{"sku":"BDR-ROVE-130","img":"assets/lookbook/BDR-ROVE-130.jpg","room":"Bedroom","num":130,"type":"brand","brand":"Rove Concepts","label":"Rove Concepts","style":"Modern"},{"sku":"BDR-ROVE-140","img":"assets/lookbook/BDR-ROVE-140.jpg","room":"Bedroom","num":140,"type":"brand","brand":"Rove Concepts","label":"Rove Concepts","style":"Modern"},{"sku":"BDR-ROVE-150","img":"assets/lookbook/BDR-ROVE-150.jpg","room":"Bedroom","num":150,"type":"brand","brand":"Rove Concepts","label":"Rove Concepts","style":"Modern"},{"sku":"LR-SUNDAYS-100","img":"assets/lookbook/LR-SUNDAYS-100.jpg","room":"Living Room","num":100,"type":"brand","brand":"Sundays","label":"Sundays","style":"Coastal"},{"sku":"LR-SUNDAYS-110","img":"assets/lookbook/LR-SUNDAYS-110.jpg","room":"Living Room","num":110,"type":"brand","brand":"Sundays","label":"Sundays","style":"Coastal"},{"sku":"LR-SUNDAYS-120","img":"assets/lookbook/LR-SUNDAYS-120.jpg","room":"Living Room","num":120,"type":"brand","brand":"Sundays","label":"Sundays","style":"Coastal"},{"sku":"LR-SUNDAYS-130","img":"assets/lookbook/LR-SUNDAYS-130.jpg","room":"Living Room","num":130,"type":"brand","brand":"Sundays","label":"Sundays","style":"Coastal"},{"sku":"LR-SUNDAYS-140","img":"assets/lookbook/LR-SUNDAYS-140.jpg","room":"Living Room","num":140,"type":"brand","brand":"Sundays","label":"Sundays","style":"Coastal"},{"sku":"LR-SUNDAYS-150","img":"assets/lookbook/LR-SUNDAYS-150.jpg","room":"Living Room","num":150,"type":"brand","brand":"Sundays","label":"Sundays","style":"Coastal"},{"sku":"DR-SUNDAYS-100","img":"assets/lookbook/DR-SUNDAYS-100.jpg","room":"Dining Room","num":100,"type":"brand","brand":"Sundays","label":"Sundays","style":"Coastal"},{"sku":"DR-SUNDAYS-110","img":"assets/lookbook/DR-SUNDAYS-110.jpg","room":"Dining Room","num":110,"type":"brand","brand":"Sundays","label":"Sundays","style":"Coastal"},{"sku":"DR-SUNDAYS-120","img":"assets/lookbook/DR-SUNDAYS-120.jpg","room":"Dining Room","num":120,"type":"brand","brand":"Sundays","label":"Sundays","style":"Coastal"},{"sku":"DR-SUNDAYS-130","img":"assets/lookbook/DR-SUNDAYS-130.jpg","room":"Dining Room","num":130,"type":"brand","brand":"Sundays","label":"Sundays","style":"Coastal"},{"sku":"DR-SUNDAYS-140","img":"assets/lookbook/DR-SUNDAYS-140.jpg","room":"Dining Room","num":140,"type":"brand","brand":"Sundays","label":"Sundays","style":"Coastal"},{"sku":"DR-SUNDAYS-150","img":"assets/lookbook/DR-SUNDAYS-150.jpg","room":"Dining Room","num":150,"type":"brand","brand":"Sundays","label":"Sundays","style":"Coastal"},{"sku":"DR-SUNDAYS-160","img":"assets/lookbook/DR-SUNDAYS-160.jpg","room":"Dining Room","num":160,"type":"brand","brand":"Sundays","label":"Sundays","style":"Coastal"},{"sku":"BDR-SUNDAYS-100","img":"assets/lookbook/BDR-SUNDAYS-100.jpg","room":"Bedroom","num":100,"type":"brand","brand":"Sundays","label":"Sundays","style":"Coastal"},{"sku":"BDR-SUNDAYS-120","img":"assets/lookbook/BDR-SUNDAYS-120.jpg","room":"Bedroom","num":120,"type":"brand","brand":"Sundays","label":"Sundays","style":"Coastal"},{"sku":"BDR-SUNDAYS-130","img":"assets/lookbook/BDR-SUNDAYS-130.jpg","room":"Bedroom","num":130,"type":"brand","brand":"Sundays","label":"Sundays","style":"Coastal"},{"sku":"BDR-SUNDAYS-140","img":"assets/lookbook/BDR-SUNDAYS-140.jpg","room":"Bedroom","num":140,"type":"brand","brand":"Sundays","label":"Sundays","style":"Coastal"},{"sku":"BDR-SUNDAYS-150","img":"assets/lookbook/BDR-SUNDAYS-150.jpg","room":"Bedroom","num":150,"type":"brand","brand":"Sundays","label":"Sundays","style":"Coastal"},{"sku":"BDR-SUNDAYS-160","img":"assets/lookbook/BDR-SUNDAYS-160.jpg","room":"Bedroom","num":160,"type":"brand","brand":"Sundays","label":"Sundays","style":"Coastal"},{"sku":"BDR-SUNDAYS-170","img":"assets/lookbook/BDR-SUNDAYS-170.jpg","room":"Bedroom","num":170,"type":"brand","brand":"Sundays","label":"Sundays","style":"Coastal"},{"sku":"LR-MOB-100","img":"assets/lookbook/LR-MOB-100.jpg","room":"Living Room","num":100,"type":"brand","brand":"Mobital","label":"Mobital","style":"Modern"},{"sku":"LR-MOB-110","img":"assets/lookbook/LR-MOB-110.jpg","room":"Living Room","num":110,"type":"brand","brand":"Mobital","label":"Mobital","style":"Modern"},{"sku":"LR-MOB-120","img":"assets/lookbook/LR-MOB-120.jpg","room":"Living Room","num":120,"type":"brand","brand":"Mobital","label":"Mobital","style":"Modern"},{"sku":"LR-MOB-130","img":"assets/lookbook/LR-MOB-130.jpg","room":"Living Room","num":130,"type":"brand","brand":"Mobital","label":"Mobital","style":"Modern"},{"sku":"LR-MOB-140","img":"assets/lookbook/LR-MOB-140.jpg","room":"Living Room","num":140,"type":"brand","brand":"Mobital","label":"Mobital","style":"Modern"},{"sku":"LR-MOB-150","img":"assets/lookbook/LR-MOB-150.jpg","room":"Living Room","num":150,"type":"brand","brand":"Mobital","label":"Mobital","style":"Modern"},{"sku":"DR-MOB-100","img":"assets/lookbook/DR-MOB-100.jpg","room":"Dining Room","num":100,"type":"brand","brand":"Mobital","label":"Mobital","style":"Modern"},{"sku":"DR-MOB-110","img":"assets/lookbook/DR-MOB-110.jpg","room":"Dining Room","num":110,"type":"brand","brand":"Mobital","label":"Mobital","style":"Modern"},{"sku":"DR-MOB-120","img":"assets/lookbook/DR-MOB-120.jpg","room":"Dining Room","num":120,"type":"brand","brand":"Mobital","label":"Mobital","style":"Modern"},{"sku":"BDR-MOB-100","img":"assets/lookbook/BDR-MOB-100.jpg","room":"Bedroom","num":100,"type":"brand","brand":"Mobital","label":"Mobital","style":"Modern"},{"sku":"BDR-MOB-110","img":"assets/lookbook/BDR-MOB-110.jpg","room":"Bedroom","num":110,"type":"brand","brand":"Mobital","label":"Mobital","style":"Modern"},{"sku":"BDR-MOB-120","img":"assets/lookbook/BDR-MOB-120.jpg","room":"Bedroom","num":120,"type":"brand","brand":"Mobital","label":"Mobital","style":"Modern"},{"sku":"BDR-MOB-130","img":"assets/lookbook/BDR-MOB-130.jpg","room":"Bedroom","num":130,"type":"brand","brand":"Mobital","label":"Mobital","style":"Modern"},{"sku":"BDR-MOB-140","img":"assets/lookbook/BDR-MOB-140.jpg","room":"Bedroom","num":140,"type":"brand","brand":"Mobital","label":"Mobital","style":"Modern"},{"sku":"BDR-MOB-150","img":"assets/lookbook/BDR-MOB-150.jpg","room":"Bedroom","num":150,"type":"brand","brand":"Mobital","label":"Mobital","style":"Modern"},{"sku":"LR-GUS-100","img":"assets/lookbook/LR-GUS-100.jpg","room":"Living Room","num":100,"type":"brand","brand":"Gus*","label":"Gus*","style":"Mid-Century"},{"sku":"LR-GUS-110","img":"assets/lookbook/LR-GUS-110.jpg","room":"Living Room","num":110,"type":"brand","brand":"Gus*","label":"Gus*","style":"Mid-Century"},{"sku":"LR-GUS-120","img":"assets/lookbook/LR-GUS-120.jpg","room":"Living Room","num":120,"type":"brand","brand":"Gus*","label":"Gus*","style":"Mid-Century"},{"sku":"LR-GUS-130","img":"assets/lookbook/LR-GUS-130.jpg","room":"Living Room","num":130,"type":"brand","brand":"Gus*","label":"Gus*","style":"Mid-Century"},{"sku":"LR-GUS-140","img":"assets/lookbook/LR-GUS-140.jpg","room":"Living Room","num":140,"type":"brand","brand":"Gus*","label":"Gus*","style":"Mid-Century"},{"sku":"DR-GUS-100","img":"assets/lookbook/DR-GUS-100.jpg","room":"Dining Room","num":100,"type":"brand","brand":"Gus*","label":"Gus*","style":"Mid-Century"},{"sku":"DR-GUS-110","img":"assets/lookbook/DR-GUS-110.jpg","room":"Dining Room","num":110,"type":"brand","brand":"Gus*","label":"Gus*","style":"Mid-Century"},{"sku":"DR-GUS-120","img":"assets/lookbook/DR-GUS-120.jpg","room":"Dining Room","num":120,"type":"brand","brand":"Gus*","label":"Gus*","style":"Mid-Century"},{"sku":"DR-GUS-130","img":"assets/lookbook/DR-GUS-130.jpg","room":"Dining Room","num":130,"type":"brand","brand":"Gus*","label":"Gus*","style":"Mid-Century"},{"sku":"DR-GUS-140","img":"assets/lookbook/DR-GUS-140.jpg","room":"Dining Room","num":140,"type":"brand","brand":"Gus*","label":"Gus*","style":"Mid-Century"},{"sku":"BDR-GUS-100","img":"assets/lookbook/BDR-GUS-100.jpg","room":"Bedroom","num":100,"type":"brand","brand":"Gus*","label":"Gus*","style":"Mid-Century"},{"sku":"BDR-GUS-110","img":"assets/lookbook/BDR-GUS-110.jpg","room":"Bedroom","num":110,"type":"brand","brand":"Gus*","label":"Gus*","style":"Mid-Century"},{"sku":"BDR-GUS-120","img":"assets/lookbook/BDR-GUS-120.jpg","room":"Bedroom","num":120,"type":"brand","brand":"Gus*","label":"Gus*","style":"Mid-Century"},{"sku":"BDR-GUS-130","img":"assets/lookbook/BDR-GUS-130.jpg","room":"Bedroom","num":130,"type":"brand","brand":"Gus*","label":"Gus*","style":"Mid-Century"},{"sku":"BDR-GUS-140","img":"assets/lookbook/BDR-GUS-140.jpg","room":"Bedroom","num":140,"type":"brand","brand":"Gus*","label":"Gus*","style":"Mid-Century"},{"sku":"LR-EM-100","img":"assets/lookbook/LR-EM-100.jpg","room":"Living Room","num":100,"type":"brand","brand":"Eternity Modern","label":"Eternity Modern","style":"Contemporary"},{"sku":"LR-EM-110","img":"assets/lookbook/LR-EM-110.jpg","room":"Living Room","num":110,"type":"brand","brand":"Eternity Modern","label":"Eternity Modern","style":"Contemporary"},{"sku":"LR-ROC-100","img":"assets/lookbook/LR-ROC-100.jpg","room":"Living Room","num":100,"type":"brand","brand":"Roche Bobois","label":"Roche Bobois","style":"Bold Luxe"},{"sku":"LR-ROC-110","img":"assets/lookbook/LR-ROC-110.jpg","room":"Living Room","num":110,"type":"brand","brand":"Roche Bobois","label":"Roche Bobois","style":"Bold Luxe"},{"sku":"BD-MDRN-B403","img":"assets/lookbook/BD-MDRN-B403.jpg","room":"Bedroom","num":403,"type":"style","brand":null,"label":"Modern","style":"Modern"},{"sku":"BD-MDRN-B421","img":"assets/lookbook/BD-MDRN-B421.jpg","room":"Bedroom","num":421,"type":"style","brand":null,"label":"Modern","style":"Modern"},{"sku":"BD-MDRN-B423","img":"assets/lookbook/BD-MDRN-B423.jpg","room":"Bedroom","num":423,"type":"style","brand":null,"label":"Modern","style":"Modern"},{"sku":"BD-MDRN-B425","img":"assets/lookbook/BD-MDRN-B425.jpg","room":"Bedroom","num":425,"type":"style","brand":null,"label":"Modern","style":"Modern"},{"sku":"BD-MDRN-B427","img":"assets/lookbook/BD-MDRN-B427.jpg","room":"Bedroom","num":427,"type":"style","brand":null,"label":"Modern","style":"Modern"},{"sku":"BD-MDRN-B430","img":"assets/lookbook/BD-MDRN-B430.jpg","room":"Bedroom","num":430,"type":"style","brand":null,"label":"Modern","style":"Modern"},{"sku":"BD-MDRN-B434","img":"assets/lookbook/BD-MDRN-B434.jpg","room":"Bedroom","num":434,"type":"style","brand":null,"label":"Modern","style":"Modern"},{"sku":"BD-MDRN-B448","img":"assets/lookbook/BD-MDRN-B448.jpg","room":"Bedroom","num":448,"type":"style","brand":null,"label":"Modern","style":"Modern"},{"sku":"BD-MDRN-B451","img":"assets/lookbook/BD-MDRN-B451.jpg","room":"Bedroom","num":451,"type":"style","brand":null,"label":"Modern","style":"Modern"},{"sku":"BD-CONT-B335","img":"assets/lookbook/BD-CONT-B335.jpg","room":"Bedroom","num":335,"type":"style","brand":null,"label":"Contemporary","style":"Contemporary"},{"sku":"BD-CONT-B360","img":"assets/lookbook/BD-CONT-B360.jpg","room":"Bedroom","num":360,"type":"style","brand":null,"label":"Contemporary","style":"Contemporary"},{"sku":"BD-CONT-B362","img":"assets/lookbook/BD-CONT-B362.jpg","room":"Bedroom","num":362,"type":"style","brand":null,"label":"Contemporary","style":"Contemporary"},{"sku":"BD-CONT-B400","img":"assets/lookbook/BD-CONT-B400.jpg","room":"Bedroom","num":400,"type":"style","brand":null,"label":"Contemporary","style":"Contemporary"},{"sku":"BD-CONT-B414","img":"assets/lookbook/BD-CONT-B414.jpg","room":"Bedroom","num":414,"type":"style","brand":null,"label":"Contemporary","style":"Contemporary"},{"sku":"BD-CONT-B417","img":"assets/lookbook/BD-CONT-B417.jpg","room":"Bedroom","num":417,"type":"style","brand":null,"label":"Contemporary","style":"Contemporary"},{"sku":"BD-CONT-B420","img":"assets/lookbook/BD-CONT-B420.jpg","room":"Bedroom","num":420,"type":"style","brand":null,"label":"Contemporary","style":"Contemporary"},{"sku":"BD-CONT-428","img":"assets/lookbook/BD-CONT-428.jpg","room":"Bedroom","num":428,"type":"style","brand":null,"label":"Contemporary","style":"Contemporary"},{"sku":"BD-CONT-431","img":"assets/lookbook/BD-CONT-431.jpg","room":"Bedroom","num":431,"type":"style","brand":null,"label":"Contemporary","style":"Contemporary"},{"sku":"BD-CONT-B432","img":"assets/lookbook/BD-CONT-B432.jpg","room":"Bedroom","num":432,"type":"style","brand":null,"label":"Contemporary","style":"Contemporary"},{"sku":"BD-CONT-B438","img":"assets/lookbook/BD-CONT-B438.jpg","room":"Bedroom","num":438,"type":"style","brand":null,"label":"Contemporary","style":"Contemporary"},{"sku":"BD-CONT-B440","img":"assets/lookbook/BD-CONT-B440.jpg","room":"Bedroom","num":440,"type":"style","brand":null,"label":"Contemporary","style":"Contemporary"},{"sku":"BD-CONT-B445","img":"assets/lookbook/BD-CONT-B445.jpg","room":"Bedroom","num":445,"type":"style","brand":null,"label":"Contemporary","style":"Contemporary"},{"sku":"BD-CONT-B461","img":"assets/lookbook/BD-CONT-B461.jpg","room":"Bedroom","num":461,"type":"style","brand":null,"label":"Contemporary","style":"Contemporary"},{"sku":"BD-CONT-B465","img":"assets/lookbook/BD-CONT-B465.jpg","room":"Bedroom","num":465,"type":"style","brand":null,"label":"Contemporary","style":"Contemporary"},{"sku":"BD-COAS-B390","img":"assets/lookbook/BD-COAS-B390.jpg","room":"Bedroom","num":390,"type":"style","brand":null,"label":"Coastal","style":"Coastal"},{"sku":"BD-COAS-B391","img":"assets/lookbook/BD-COAS-B391.jpg","room":"Bedroom","num":391,"type":"style","brand":null,"label":"Coastal","style":"Coastal"},{"sku":"BD-COAS-B449","img":"assets/lookbook/BD-COAS-B449.jpg","room":"Bedroom","num":449,"type":"style","brand":null,"label":"Coastal","style":"Coastal"},{"sku":"BD-MCM-B444","img":"assets/lookbook/BD-MCM-B444.jpg","room":"Bedroom","num":444,"type":"style","brand":null,"label":"Mid-Century","style":"Mid-Century"},{"sku":"BD-MCM-B457","img":"assets/lookbook/BD-MCM-B457.jpg","room":"Bedroom","num":457,"type":"style","brand":null,"label":"Mid-Century","style":"Mid-Century"},{"sku":"BD-SCND-B355","img":"assets/lookbook/BD-SCND-B355.jpg","room":"Bedroom","num":355,"type":"style","brand":null,"label":"Scandinavian","style":"Scandinavian"},{"sku":"BD-SCND-B407","img":"assets/lookbook/BD-SCND-B407.jpg","room":"Bedroom","num":407,"type":"style","brand":null,"label":"Scandinavian","style":"Scandinavian"},{"sku":"BD-SCND-B412","img":"assets/lookbook/BD-SCND-B412.jpg","room":"Bedroom","num":412,"type":"style","brand":null,"label":"Scandinavian","style":"Scandinavian"},{"sku":"BD-SCND-B419","img":"assets/lookbook/BD-SCND-B419.jpg","room":"Bedroom","num":419,"type":"style","brand":null,"label":"Scandinavian","style":"Scandinavian"},{"sku":"BD-SCND-B421","img":"assets/lookbook/BD-SCND-B421.jpg","room":"Bedroom","num":421,"type":"style","brand":null,"label":"Scandinavian","style":"Scandinavian"},{"sku":"BD-TRNS-B363","img":"assets/lookbook/BD-TRNS-B363.jpg","room":"Bedroom","num":363,"type":"style","brand":null,"label":"Transitional","style":"Transitional"},{"sku":"BD-TRNS-B422","img":"assets/lookbook/BD-TRNS-B422.jpg","room":"Bedroom","num":422,"type":"style","brand":null,"label":"Transitional","style":"Transitional"},{"sku":"BD-TRNS-B452","img":"assets/lookbook/BD-TRNS-B452.jpg","room":"Bedroom","num":452,"type":"style","brand":null,"label":"Transitional","style":"Transitional"},{"sku":"BD-TRNS-B453","img":"assets/lookbook/BD-TRNS-B453.jpg","room":"Bedroom","num":453,"type":"style","brand":null,"label":"Transitional","style":"Transitional"},{"sku":"BD-TRNS-B459","img":"assets/lookbook/BD-TRNS-B459.jpg","room":"Bedroom","num":459,"type":"style","brand":null,"label":"Transitional","style":"Transitional"},{"sku":"BD-TRNS-B460","img":"assets/lookbook/BD-TRNS-B460.jpg","room":"Bedroom","num":460,"type":"style","brand":null,"label":"Transitional","style":"Transitional"},{"sku":"BD-FARM-B394","img":"assets/lookbook/BD-FARM-B394.jpg","room":"Bedroom","num":394,"type":"style","brand":null,"label":"Farmhouse","style":"Farmhouse"},{"sku":"BD-FARM-B398","img":"assets/lookbook/BD-FARM-B398.jpg","room":"Bedroom","num":398,"type":"style","brand":null,"label":"Farmhouse","style":"Farmhouse"},{"sku":"BD-FARM-B422","img":"assets/lookbook/BD-FARM-B422.jpg","room":"Bedroom","num":422,"type":"style","brand":null,"label":"Farmhouse","style":"Farmhouse"},{"sku":"BD-FARM-B441","img":"assets/lookbook/BD-FARM-B441.jpg","room":"Bedroom","num":441,"type":"style","brand":null,"label":"Farmhouse","style":"Farmhouse"},{"sku":"BD-FARM-B443","img":"assets/lookbook/BD-FARM-B443.jpg","room":"Bedroom","num":443,"type":"style","brand":null,"label":"Farmhouse","style":"Farmhouse"},{"sku":"BD-FARM-B450","img":"assets/lookbook/BD-FARM-B450.jpg","room":"Bedroom","num":450,"type":"style","brand":null,"label":"Farmhouse","style":"Farmhouse"},{"sku":"BD-MFRM-B443","img":"assets/lookbook/BD-MFRM-B443.jpg","room":"Bedroom","num":443,"type":"style","brand":null,"label":"Modern Farmhouse","style":"Modern Farmhouse"},{"sku":"BD-NDBH-B395","img":"assets/lookbook/BD-NDBH-B395.jpg","room":"Bedroom","num":395,"type":"style","brand":null,"label":"Nordic Boho","style":"Nordic Boho"},{"sku":"BD-NDBH-B396","img":"assets/lookbook/BD-NDBH-B396.jpg","room":"Bedroom","num":396,"type":"style","brand":null,"label":"Nordic Boho","style":"Nordic Boho"},{"sku":"BD-NDBH-B397","img":"assets/lookbook/BD-NDBH-B397.jpg","room":"Bedroom","num":397,"type":"style","brand":null,"label":"Nordic Boho","style":"Nordic Boho"},{"sku":"BD-NDBH-B406","img":"assets/lookbook/BD-NDBH-B406.jpg","room":"Bedroom","num":406,"type":"style","brand":null,"label":"Nordic Boho","style":"Nordic Boho"},{"sku":"BD-NDBH-B413","img":"assets/lookbook/BD-NDBH-B413.jpg","room":"Bedroom","num":413,"type":"style","brand":null,"label":"Nordic Boho","style":"Nordic Boho"},{"sku":"BD-NDBH-B426","img":"assets/lookbook/BD-NDBH-B426.jpg","room":"Bedroom","num":426,"type":"style","brand":null,"label":"Nordic Boho","style":"Nordic Boho"},{"sku":"BD-NDBH-B454","img":"assets/lookbook/BD-NDBH-B454.jpg","room":"Bedroom","num":454,"type":"style","brand":null,"label":"Nordic Boho","style":"Nordic Boho"}];
 const ROOMS=["Living Room", "Dining Room", "Bedroom"], BRANDS=["Rove Concepts", "Sundays", "Mobital", "Gus*", "Eternity Modern", "Roche Bobois"], STYLES=["Modern", "Contemporary", "Coastal", "Mid-Century", "Scandinavian", "Transitional", "Farmhouse", "Modern Farmhouse", "Nordic Boho", "Bold Luxe"];
-const state={room:"All",brand:"All",style:"All",q:""};
+const state={room:"All",brand:"All",style:"All",q:"",savedView:false};
 const grid=document.getElementById('grid'), empty=document.getElementById('empty');
-function count(field,val){return DATA.filter(d=>val==="All"||d[field]===val).length;}
-function buildChips(id,field,vals){
+function buildChips(id,field,vals){          // Room pills
   const row=document.getElementById(id);
   ["All",...vals].forEach(v=>{
     const b=document.createElement('button'); b.className='chip'+(state[field]===v?' on':'');
@@ -207,7 +204,14 @@ function buildChips(id,field,vals){
     row.appendChild(b);
   });
 }
+function buildSelect(id,field,vals){         // Style / Brand dropdowns
+  const sel=document.getElementById(id);
+  sel.innerHTML=['<option value="All">All '+(field==='style'?'styles':'brands')+'</option>']
+    .concat(vals.map(v=>'<option value="'+v+'">'+v+' ('+DATA.filter(d=>d[field]===v).length+')</option>')).join('');
+  sel.onchange=()=>{state[field]=sel.value;render();};
+}
 function match(d){
+  if(state.savedView&&!saved.has(d.sku))return false;
   if(state.room!=="All"&&d.room!==state.room)return false;
   if(state.brand!=="All"&&d.brand!==state.brand)return false;
   if(state.style!=="All"&&d.style!==state.style)return false;
@@ -219,7 +223,12 @@ function render(){
   view=DATA.filter(match);
   grid.innerHTML="";
   empty.style.display=view.length?"none":"block";
-  document.getElementById('count').innerHTML="<b>"+view.length+"</b> "+(view.length===1?"set":"sets");
+  if(!view.length){
+    empty.querySelector('h3').textContent=state.savedView?"No saved sets yet.":"No sets match those filters.";
+    empty.querySelector('p').textContent=state.savedView?"Tap the ♥ on any set to save it here for your order.":"Try clearing a filter or searching a different room or style.";
+  }
+  document.getElementById('count').innerHTML="<b>"+view.length+"</b> "+(view.length===1?"set":"sets")+(state.savedView?" saved":"");
+  updateBars();
   view.forEach((d,i)=>{
     const c=document.createElement('div'); c.className='card'; c.style.animationDelay=Math.min(i*12,240)+'ms';
     c.innerHTML=`<div class="ph" data-i="${i}"><button class="save${saved.has(d.sku)?' on':''}" data-sku="${d.sku}" aria-label="Save this set"><svg viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-10a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 11c0 5.5-8 10-8 10z"/></svg></button><img loading="lazy" src="${d.img}" alt="${d.room} styled ${d.style} (${d.sku})"></div>
@@ -231,30 +240,33 @@ function render(){
 }
 // events
 document.getElementById('q').addEventListener('input',e=>{state.q=e.target.value;render();});
-document.getElementById('clear').onclick=()=>{state.room="All";state.brand="All";state.style="All";state.q="";document.getElementById('q').value="";
-  document.querySelectorAll('.frow').forEach(r=>r.querySelectorAll('.chip').forEach((c,idx)=>c.classList.toggle('on',idx===0)));render();};
+document.getElementById('clear').onclick=()=>{state.room="All";state.brand="All";state.style="All";state.q="";state.savedView=false;
+  document.getElementById('q').value="";document.getElementById('fStyle').value="All";document.getElementById('fBrand').value="All";
+  document.querySelectorAll('#fRoom .chip').forEach((c,idx)=>c.classList.toggle('on',idx===0));render();};
 let toastT;
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),1600);}
 function copy(sku){navigator.clipboard&&navigator.clipboard.writeText(sku).then(()=>toast("Copied "+sku)).catch(()=>toast(sku));}
-// saved-for-order
+// saved-for-order (heart on cards → "Saved" view in the toolbar, no floating box)
 let saved=new Set(JSON.parse(localStorage.getItem('bella_saved')||'[]').filter(s=>DATA.some(d=>d.sku===s)));
-const tray=document.getElementById('tray');
+const savedBtn=document.getElementById('savedBtn'), savedBar=document.getElementById('savedBar');
 function persist(){localStorage.setItem('bella_saved',JSON.stringify([...saved]));}
+function updateBars(){
+  document.getElementById('savedN').textContent=saved.size;
+  savedBtn.classList.toggle('on',state.savedView);
+  if(state.savedView && saved.size){
+    savedBar.style.display='flex';
+    document.getElementById('savedInfo').innerHTML='<b>'+saved.size+'</b> saved '+(saved.size===1?'set':'sets')+' — copy the SKUs or send them straight to your order.';
+    document.getElementById('orderSaved').href='bella-order-page.html?skus='+encodeURIComponent([...saved].join(','));
+  } else savedBar.style.display='none';
+}
 function toggleSave(sku){
   const add=!saved.has(sku); add?saved.add(sku):saved.delete(sku); persist();
   document.querySelectorAll('.save[data-sku="'+sku+'"]').forEach(b=>{b.classList.toggle('on',add);if(add){b.classList.add('pop');setTimeout(()=>b.classList.remove('pop'),300);}});
   const lbs=document.getElementById('lbSave'); if(lbs&&lbs.dataset.sku===sku){lbs.classList.toggle('on',add);lbs.textContent=(add?'♥ Saved':'♥ Save');}
-  toast(add?'Saved '+sku:'Removed '+sku); renderTray();
+  toast(add?'Saved '+sku:'Removed '+sku);
+  if(state.savedView) render(); else updateBars();
 }
-function renderTray(){
-  document.getElementById('trayN').textContent=saved.size;
-  tray.classList.toggle('show',saved.size>0); if(!saved.size)tray.classList.remove('open');
-  const list=DATA.filter(d=>saved.has(d.sku));
-  document.getElementById('trayBody').innerHTML=list.map(d=>'<div class="item"><img src="'+d.img+'" alt=""><div class="s">'+d.sku+'<small>'+d.brand+' · '+d.room+'</small></div><button class="rm" data-sku="'+d.sku+'" aria-label="Remove">&times;</button></div>').join('');
-  document.getElementById('orderSaved').href='bella-order-page.html?skus='+encodeURIComponent([...saved].join(','));
-}
-document.getElementById('trayHead').onclick=()=>{if(saved.size)tray.classList.toggle('open');};
-document.getElementById('trayBody').addEventListener('click',e=>{const rm=e.target.closest('.rm');if(rm)toggleSave(rm.dataset.sku);});
+savedBtn.onclick=()=>{ if(!state.savedView && !saved.size){toast('Tap the ♥ on a set to save it');return;} state.savedView=!state.savedView; render(); };
 document.getElementById('copyAll').onclick=()=>{if(!saved.size){toast('No saved sets yet');return;}copy([...saved].join(', '));};
 grid.addEventListener('click',e=>{
   const sv=e.target.closest('.save'); if(sv){e.stopPropagation();toggleSave(sv.dataset.sku);return;}
@@ -276,7 +288,7 @@ document.getElementById('lbNext').onclick=()=>step(1);
 lb.addEventListener('click',e=>{if(e.target===lb)lb.classList.remove('on');});
 document.addEventListener('keydown',e=>{if(!lb.classList.contains('on'))return;if(e.key==="Escape")lb.classList.remove('on');if(e.key==="ArrowLeft")step(-1);if(e.key==="ArrowRight")step(1);});
 // init
-buildChips('fRoom','room',ROOMS);buildChips('fBrand','brand',BRANDS);buildChips('fStyle','style',STYLES);render();renderTray();
+buildChips('fRoom','room',ROOMS);buildSelect('fStyle','style',STYLES);buildSelect('fBrand','brand',BRANDS);render();
 </script>
 </body>
 </html>
