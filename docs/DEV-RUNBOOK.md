@@ -58,6 +58,8 @@ Create these in Payload. **`services` is the single source of truth for pricing.
 | Collection | `faqs` | question, answer (rich text), category, order | FAQ sections + FAQPage JSON-LD |
 | Collection | `posts` | title, slug, excerpt, body (rich text), hero, author, publishedAt, SEO, draft flag | Blog (`/blog/<slug>`) |
 | Collection | `locations` | city, slug, marketData, neighborhoods[], localCaseStudies[], SEO | City pages (must be differentiated — BUILD-SPEC §5.2) |
+| Collection | `catalogSets` | sku (unique), image, room, style, **brand** (relationship → `brands`, null for style-catalogue sets), active | Lookbook grid + the ops catalog database |
+| Collection | `brands` | name, slug, logo, supplierUrl, partnerDiscount, active | Grouping/counting sets by furniture brand |
 | Collection | `media` | (Payload uploads) alt text required | All images |
 | Collection | `users` | email, name, **role** (`admin`/`pm`/`studio`/`client`/`guest`), + auth | Auth for everyone (Phase 2 uses this too) |
 | Collection | `leads` | name, email, phone, source (`free-stage`/`open-house`/`popup`), photo, createdAt | Lead funnel capture (BUILD-SPEC free-stage) |
@@ -82,7 +84,9 @@ Rebuild each mockup as a Next.js route reading from Payload. Page→mockup→URL
 - [ ] Content pages: `/what-is-virtual-staging` (guide), `/ai-vs-professional-virtual-staging` (comparison), `/resources/photo-guide`, `/free-virtual-staging` (lead funnel)
 - [ ] Segment pages `/for-agents|builders|brokerages|photographers`; location pages `/virtual-staging-<city>`
 - [ ] Blog `/blog` + `/blog/<slug>` (migrate 140 Shopify posts into `posts`)
-- [ ] Lookbook: import `bella-catalog/manifest.json` (219 items) into `media`/a `catalogItems` collection.
+- [ ] Lookbook: import the 298 SKU-named tiles in `assets/lookbook/` into `catalogSets` (+ `brands`). `scripts/catalog_data.py` already encodes the SKU grammar `{ROOM}-{COLLECTION}-{###}` and the room/brand/style vocabularies — port it as the importer rather than re-deriving it.
+- [ ] Lookbook: import `bella-catalog/manifest.json` (219 individual furniture items) into `media`/a `catalogItems` collection.
+- [ ] Catalog database (`bella-catalog-db.html`): an internal view counting `catalogSets` grouped by brand and by style, drilling into the sets behind each count. In Payload this is a custom admin view over `catalogSets` — the mockup's counts are all derived, nothing hardcoded, so the real version is a `group by` not a stored tally.
 
 ### 1.4 SEO carry-over (do not skip — BUILD-SPEC §5.2)
 - [ ] Preserve every `<title>`, meta description, H1, and **JSON-LD** (`Service`/`Article`/`FAQPage`/`BreadcrumbList`) already in the mockups.

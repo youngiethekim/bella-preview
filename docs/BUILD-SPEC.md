@@ -19,7 +19,8 @@ projects normally bleed time and money.
 |---|---|
 | Mockups (all pages) | this repo — GitHub `youngiethekim/bella-preview`, live at `https://youngiethekim.github.io/bella-preview/` |
 | 301 redirect map (Shopify → new) | `migration/bella-redirect-map.csv` (198 rows) + `migration/README-redirects.md` |
-| Furniture catalog | `bella-catalog/` — 219 items + `manifest.json` (`{f,r,s}` = furniture/room/style) |
+| Furniture catalog (styled room sets) | `assets/lookbook/` — 298 SKU-named tiles; parsed by `scripts/catalog_data.py`, which drives both `bella-lookbook.html` (client) and `bella-catalog-db.html` (ops) |
+| Furniture catalog (individual items) | `bella-catalog/` — 219 items + `manifest.json` (`{f,r,s}` = furniture/room/style) |
 | Image/asset library | `assets/` (hero before/after, exterior renders, project before/after pairs, hero transform video) |
 | This spec | `docs/BUILD-SPEC.md` |
 
@@ -89,7 +90,8 @@ Environments: `production`, `staging`, `preview` (per-PR). Secrets in env vars, 
 | Virtually staged 3D tours | `bella-service-3d-tour.html` | `/3d-tour` |
 | 3D rendering, Floor plans, Photo editing | **TO BUILD** (clone the service template) | `/3d-rendering`, `/floor-plans`, `/photo-editing` |
 | Pricing | `bella-pricing.html` | `/pricing` |
-| Lookbook (219-item furniture catalog) | `bella-lookbook.html` + `bella-catalog/` | `/lookbook` |
+| Lookbook (298-set furniture catalog) | `bella-lookbook.html` + `assets/lookbook/` | `/lookbook` |
+| Catalog database (internal — sets per brand/style) | `bella-catalog-db.html` | `/admin` view, not public |
 | Resources hub (+ real-estate-marketing SEO section) | `bella-resources.html` | `/resources` |
 | Phone photo guide | `bella-guide-photos.html` | `/resources/photo-guide` |
 | Style quiz | `bella-style-quiz.html` | `/style-quiz` |
