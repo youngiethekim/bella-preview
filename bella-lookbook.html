@@ -328,7 +328,7 @@ document.getElementById('iClose').onclick=()=>imodal.classList.remove('on');
 imodal.addEventListener('click',e=>{if(e.target===imodal)imodal.classList.remove('on');});
 document.addEventListener('keydown',e=>{if(e.key==="Escape")imodal.classList.remove('on');});
 // lightbox
-let lbi=0;
+let lbi=0,lbWheelLock=false,lbTouchY=0;
 const lb=document.getElementById('lb');
 function openLB(i){lbi=i;const d=view[i];document.getElementById('lbImg').src=d.img;document.getElementById('lbImg').alt=d.sku;
   document.getElementById('lbBrand').textContent=d.label;document.getElementById('lbMeta').textContent=d.room+" · "+d.style+" · "+d.sku;
@@ -341,6 +341,11 @@ document.getElementById('lbPrev').onclick=()=>step(-1);
 document.getElementById('lbNext').onclick=()=>step(1);
 lb.addEventListener('click',e=>{if(e.target===lb)lb.classList.remove('on');});
 document.addEventListener('keydown',e=>{if(!lb.classList.contains('on'))return;if(e.key==="Escape")lb.classList.remove('on');if(e.key==="ArrowLeft")step(-1);if(e.key==="ArrowRight")step(1);});
+// scroll / trackpad moves through the sets while enlarged (debounced so one flick = one set)
+lb.addEventListener('wheel',e=>{e.preventDefault();if(lbWheelLock||Math.abs(e.deltaY)<10)return;lbWheelLock=true;step(e.deltaY>0?1:-1);setTimeout(()=>{lbWheelLock=false;},360);},{passive:false});
+// touch swipe on mobile: up = next, down = previous
+lb.addEventListener('touchstart',e=>{lbTouchY=e.touches[0].clientY;},{passive:true});
+lb.addEventListener('touchend',e=>{const dy=e.changedTouches[0].clientY-lbTouchY;if(Math.abs(dy)>40)step(dy<0?1:-1);},{passive:true});
 // init
 buildChips('fRoom','room',ROOMS);buildSelect('fStyle','style',STYLES);buildSelect('fBrand','brand',BRANDS);render();
 </script>
