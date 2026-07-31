@@ -996,10 +996,16 @@
   var state={ proj:null, commercial:false, photos:8, mode:'ready', removal:false, reno:false, renoN:8, floor:false, fpn:1, floor2d:false, fp2dn:1, tour:false, dusk:false, duskN:8, sky:false, skyN:8, pano360:false, pano:3,
               rint:1, rext:1, rfp:1, useInt:true, useExt:true, useFp:true,
               styleMode:'pro', stylePick:null, presetStyle:null, uploads:[], photog:{email:'',notes:'',sent:false}, files:{}, designerAll:true, sourceFurniture:false, marketingKit:true,
-              sel:{reno:[],dusk:[],sky:[]} };
+              savedSkus:[], sel:{reno:[],dusk:[],sky:[]} };
   // pre-select a style when arriving from the style quiz (?style=modern) — we'll stage every photo that way
   (function(){ try{ var q=(new URLSearchParams(location.search)).get('style');
     if(q && ['modern','scandi','coastal','midcentury','farmhouse','contemporary'].indexOf(q)>-1){ state.presetStyle=q; state.designerAll=false; }
+  }catch(e){} })();
+  // saved looks carried from the lookbook (?skus=SKU1,SKU2 or the lookbook's localStorage)
+  (function(){ try{ var sk=(new URLSearchParams(location.search)).get('skus');
+    var arr = sk ? sk.split(',') : JSON.parse(localStorage.getItem('bella_saved')||'[]');
+    state.savedSkus = (arr||[]).map(function(s){return (s||'').trim().toUpperCase();})
+      .filter(function(s){return /^[A-Z]+-[A-Z0-9]+-\d+$/.test(s);}).slice(0,40);
   }catch(e){} })();
 
   // saved lookbook pieces
@@ -1068,6 +1074,7 @@
           +'<div class="up-hint" id="upHint"></div>'
           +photographerBlock()
           +'<div class="preset-note" id="presetNote"></div>'
+          +'<div id="savedNote"></div>'
           +'<label class="dc-row" id="dcRow"><input type="checkbox" id="dcAll" checked><span class="dc-box"></span><span class="dc-t"><b>Let our designers choose the style</b><span>Recommended — we match the look to your buyer. Prefer something specific? Tap a photo to set its own. <a class="linkbtn" href="bella-style-quiz.html">Not sure? Take the 2-min style quiz →</a></span></span></label>'
           +'<div class="removal-row" id="removalRow"><span class="lbl"><b>Furniture removal</b><span>Occupied or cluttered? We clear the room first, then stage it clean.</span></span><span class="freeprice">Included free</span><button class="toggle" data-tog="removal"></button></div>'
         +'</div>'
@@ -1632,6 +1639,18 @@
         +'<span>From your style quiz — we’ll stage every photo <b>'+STYNAME[state.presetStyle]+'</b>. Tap any photo to change it, or tick the box below to let our designers choose instead.</span>';
     } else { el.className='preset-note'; el.innerHTML=''; }
   }
+  function syncSaved(){
+    var el=document.getElementById('savedNote'); if(!el) return;
+    var sk=state.savedSkus||[];
+    if(!sk.length){ el.innerHTML=''; return; }
+    var chips=sk.map(function(s){
+      return '<span style="display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);border-radius:99px;padding:3px 12px 3px 3px;font-size:12px;color:var(--soft)">'
+        +'<img src="assets/lookbook/'+s+'.jpg" alt="" style="width:32px;height:22px;object-fit:cover;object-position:left center;border-radius:99px" onerror="this.remove()">'+s+'</span>';
+    }).join('');
+    el.innerHTML='<div style="background:#FAF8F5;border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin-top:12px">'
+      +'<div style="font-size:13.5px;color:var(--ink)">❤ <b style="font-weight:500">'+sk.length+' look'+(sk.length>1?'s':'')+'</b> saved from the catalog — we’ll match your staging to these.</div>'
+      +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:11px">'+chips+'</div></div>';
+  }
   function sync(){
     // per-photo services: when photos are uploaded, the picked set drives the count; otherwise default to all
     ['reno','dusk','sky'].forEach(function(svc){
@@ -1663,7 +1682,7 @@
     var tot=money(lines().total);
     var r2=document.getElementById('run2'); if(r2) r2.textContent=tot;
     var r2b=document.getElementById('run2b'); if(r2b) r2b.textContent=tot;
-    syncVol(); syncRenderVol(); syncPreset(); syncReqUploads(); if(document.getElementById('upThumbs')) renderUploads(); renderCart();
+    syncVol(); syncRenderVol(); syncPreset(); syncSaved(); syncReqUploads(); if(document.getElementById('upThumbs')) renderUploads(); renderCart();
   }
   // line-item breakdown shown from the footer total
   function renderCart(){
