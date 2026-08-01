@@ -198,6 +198,14 @@
   .core .removal-row .lbl span{font-size:12.5px;color:var(--faint)}
   /* numbered sub-steps within "Let's stage your listing" */
   .stp{background:#F7FAF7;border:1px solid #DDE7DD;padding:20px 22px;margin-bottom:6px}
+  /* collapsible optional section (progressive disclosure) */
+  details.opt>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:9px;font-size:16px;font-weight:500;color:var(--ink)}
+  details.opt>summary::-webkit-details-marker{display:none}
+  details.opt>summary em{font-style:normal;font-weight:400;font-size:13px;color:var(--faint);margin-left:2px}
+  .opt-plus{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:99px;border:1px solid #C9D6C9;color:var(--green,#3E6B4C);font-size:16px;line-height:1;transition:transform .2s}
+  details.opt[open]>summary .opt-plus{transform:rotate(45deg)}
+  details.opt[open]>summary{margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #DDE7DD}
+  .opt-body{display:grid;gap:14px}
   .stp-h{display:flex;align-items:flex-start;gap:13px;margin-bottom:16px}
   #stp1 .stp-h{padding-bottom:16px;margin-bottom:18px;border-bottom:1px solid #DDE7DD}
   .stp-n{flex:none;width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;font-size:13px;display:grid;place-items:center;margin-top:1px;transition:.2s}
@@ -1066,7 +1074,7 @@
         // STAT: NAR 2023 Profile of Home Staging — 82% of buyers' agents said staging made it easier to visualize a property as a future home. Confirm current figure before publishing.
         '<div class="stp core" id="stp1"><div class="stp-h">'+qicon('sofa')+'<div class="stp-t"><b>Virtual staging '+tip('Staging helps buyers picture a home’s full potential, so your listing stands out. 82% of buyers’ agents say it makes a property easier to visualize as their future home. (NAR)')+'</b><span>Designer-furnished rooms · '+money(stageUnit())+' each.'+exLink('stage')+'</span></div></div>'
           +'<div class="core-top"><span class="stp-n">1</span>'
-            +'<span class="lbl"><b>How many photos are we staging?</b><span>A box appears for each one — tap + or − to set the number.</span><span class="pop-note" id="popNote"></span></span>'
+            +'<span class="lbl"><b>How many photos are we staging?</b><span>Tap + or − to set the number.</span><span class="pop-note" id="popNote"></span></span>'
             +stepper('photos')+'</div>'
           +volMeter()
           +'<input type="file" id="upInput" accept="image/*" multiple hidden>'
@@ -1078,13 +1086,12 @@
           +'<label class="dc-row" id="dcRow"><input type="checkbox" id="dcAll" checked><span class="dc-box"></span><span class="dc-t"><b>Let our designers choose the style</b><span>Recommended — we match the look to your buyer. Prefer something specific? Tap a photo to set its own. <a class="linkbtn" href="bella-style-quiz.html">Not sure? Take the 2-min style quiz →</a></span></span></label>'
           +'<div class="removal-row" id="removalRow"><span class="lbl"><b>Furniture removal</b><span>Occupied or cluttered? We clear the room first, then stage it clean.</span></span><span class="freeprice">Included free</span><button class="toggle" data-tog="removal"></button></div>'
         +'</div>'
-        +'<div class="stp" id="stp3"><div class="stp-h"><span class="stp-n">2</span><div class="stp-t"><b>Help us nail the look'+tip('The more we know, the better. References and a floor plan help our designers understand the space, scale the furniture correctly, and match the exact look you’re after — so we represent your home the way you want it.')+'</b><span>References, inspiration &amp; a floor plan — optional, but they really help.</span></div></div>'
-          +'<div class="up-refs"><div class="req-lab" style="color:var(--faint)">References &amp; inspiration — optional</div>'
-          +'<p class="up-refs-note"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1 1 2.5h6c0-1.5.3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg><span><b>The more we know about your project, the better we stage it.</b> Share a look you love, a Pinterest board, or notes on the vibe.</span></p>'
-          +miniUpload('refs','Share a look you love','A Pinterest screenshot, a room you admire, notes on the vibe — anything that helps our designers.')
-          +'<div class="up-refs-fp"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="1"/><path d="M3.5 10h9M12.5 3.5v17M12.5 15h8"/></svg><div><b>Have a floor plan? It really helps.</b> A layout (even a rough sketch or the MLS floor plan) lets our designers scale furniture correctly and stage the whole flow of the home.</div></div>'
-          +miniUpload('floorplan','Upload a floor plan','PDF, JPG or PNG — or a quick sketch with rough dimensions.','.pdf,.jpg,.jpeg,.png,image/*')+'</div>'
-        +'</div>';
+        +'<details class="stp opt" id="stp3"><summary class="opt-sum"><span class="opt-plus">+</span>Add references or a floor plan<em>optional — helps us nail the look</em></summary>'
+          +'<div class="opt-body">'
+          +miniUpload('refs','Share a reference','A room you love, a Pinterest link, or notes on the vibe.')
+          +miniUpload('floorplan','Add a floor plan','PDF, JPG, PNG or a rough sketch — lets us scale the furniture.','.pdf,.jpg,.jpeg,.png,image/*')
+          +'</div>'
+        +'</details>';
       // --- 2b: optional extras (a gentle nudge + the question sections) ---
       // STAT: NAR Profile of Home Buyers & Sellers — ~97% of buyers use the internet to search. Confirm current figure before publishing.
       ex.innerHTML=
@@ -1217,7 +1224,7 @@
   function closePhoto(){ document.getElementById('photoView').classList.remove('open'); }
   // ---- optional inline photo upload (tied to the staging count; never required) ----
   function photographerBlock(){
-    return '<label class="dc-row" id="upLaterRow"><input type="checkbox" id="upLaterCb"><span class="dc-box"></span><span class="dc-t"><b>My photos aren’t ready yet</b><span>Send your photographer or marketing manager a secure link to upload them straight to this order.</span></span></label>'
+    return '<label class="dc-row" id="upLaterRow"><input type="checkbox" id="upLaterCb"><span class="dc-box"></span><span class="dc-t"><b>My photos aren’t ready yet</b><span>We’ll send a secure upload link instead.</span></span></label>'
       +'<div class="up-later-panel" id="upLaterPanel">'
         +'<label>Photographer’s email</label><input type="email" id="photogEmail" placeholder="photographer@studio.com" autocomplete="off">'
         +'<label style="margin-top:12px">Instructions for this shoot <span style="text-transform:none;letter-spacing:0;color:var(--faint)">— edit as needed</span></label><textarea id="photogNotes"></textarea>'
