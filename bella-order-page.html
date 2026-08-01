@@ -89,6 +89,13 @@
   .up-refs-fp svg{width:22px;height:22px;stroke:var(--green);fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;flex:none}
   .up-refs-fp b{color:var(--ink);font-weight:500}
   .config{margin-top:24px;display:grid;gap:5px}
+  .addr-lead{background:#fff;border:1px solid var(--line);border-radius:11px;padding:16px 18px;margin:22px 0 6px}
+  .addr-lead .al-h{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+  .addr-lead .al-h b{font-weight:400;font-size:16px}
+  .al-rec{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);background:#EDF4EE;padding:3px 9px;border-radius:99px}
+  .addr-lead input{width:100%;font-family:inherit;font-size:15px;padding:12px 14px;border:1px solid var(--line);border-radius:9px;color:var(--ink);background:var(--bg)}
+  .addr-lead input:focus{outline:0;border-color:var(--green)}
+  .addr-lead .al-sub{display:block;font-size:12px;color:var(--faint);margin-top:8px;line-height:1.5}
   .proj-details{background:#fff;border:1px solid var(--line);border-radius:11px;padding:20px 22px;margin:24px 0 8px}
   .proj-details .pd-h{margin-bottom:15px}
   .proj-details .pd-h b{font-weight:400;font-size:16px;display:block}
@@ -825,6 +832,11 @@
         <div class="ru"><svg class="ck" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span>Staged by <b>real interior designers</b></span></div>
         <div class="ru"><svg class="ck" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span><b>Unlimited revisions</b>, free for 2 weeks</span></div>
       </div>
+      <div class="addr-lead">
+        <div class="al-h"><b>Property address</b><span class="al-rec">Recommended</span></div>
+        <input id="pdAddr" placeholder="123 Main St, City, ST" autocomplete="off">
+        <span class="al-sub">So we can label your files and match this order to your listing. No address yet? You can add it later — it won't hold up your order.</span>
+      </div>
       <div class="config" id="config"></div>
       <div class="wiz-foot">
         <button class="btn-line" id="back1">← Back</button>
@@ -895,12 +907,9 @@
       </div>
     </div>
     <div class="proj-details">
-      <div class="pd-h"><b>Project details</b><span>So we can label your files and match this order to your listing.</span></div>
-      <div class="pd-grid">
-        <div class="pd-field"><label>Property address</label><input id="pdAddr" placeholder="123 Main St, City, ST" autocomplete="off"></div>
-        <div class="pd-field"><label>Listing agent <span class="opt">optional</span></label><input id="pdAgent" placeholder="Your name" autocomplete="off"></div>
-      </div>
-      <div class="pd-field pd-full"><label>Notes about this project <span class="opt">optional</span></label><textarea id="pdNotes" placeholder="The buyer you're targeting, the vibe, features to highlight…"></textarea></div>
+      <div class="pd-h"><b>Agent &amp; notes</b><span>Optional — helps us brief the design team.</span></div>
+      <div class="pd-field"><label>Listing agent</label><input id="pdAgent" placeholder="Your name" autocomplete="off"></div>
+      <div class="pd-field pd-full"><label>Notes about this project</label><textarea id="pdNotes" placeholder="The buyer you're targeting, the vibe, features to highlight…"></textarea></div>
     </div>
     <div class="reqpanel" id="reqPanel"></div>
     <div class="wiz-foot">
