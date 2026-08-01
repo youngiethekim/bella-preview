@@ -800,11 +800,11 @@
     </div>
     <div class="choices">
       <button class="choice" type="button" data-proj="empty"
-        data-res-t="An empty listing" data-res-d="Vacant rooms that need furniture"
-        data-com-t="An empty business" data-com-d="Vacant office, retail, or suite to fill"><svg class="ico"><use href="#i-empty"/></svg><span><b>An empty listing</b><span>Vacant rooms that need furniture</span></span></button>
+        data-res-t="An empty property" data-res-d="Vacant rooms that need furniture"
+        data-com-t="An empty business" data-com-d="Vacant office, retail, or suite to fill"><svg class="ico"><use href="#i-empty"/></svg><span><b>An empty property</b><span>Vacant rooms that need furniture</span></span></button>
       <button class="choice" type="button" data-proj="occupied"
-        data-res-t="An occupied listing" data-res-d="Furnished or cluttered — we clear it first"
-        data-com-t="A furnished space" data-com-d="In-use or cluttered — we clear it first"><svg class="ico"><use href="#i-sofa"/></svg><span><b>An occupied listing</b><span>Furnished or cluttered — we clear it first</span></span></button>
+        data-res-t="An occupied property" data-res-d="Furnished or cluttered — we clear it first"
+        data-com-t="A furnished space" data-com-d="In-use or cluttered — we clear it first"><svg class="ico"><use href="#i-sofa"/></svg><span><b>An occupied property</b><span>Furnished or cluttered — we clear it first</span></span></button>
       <button class="choice" type="button" data-proj="dated"
         data-res-t="A property that needs renovations" data-res-d="Modernize dated finishes, then stage"
         data-com-t="A space that needs renovations" data-com-d="Modernize dated finishes, then stage"><svg class="ico"><use href="#i-reno"/></svg><span><b>A property that needs renovations</b><span>Modernize dated finishes, then stage</span></span></button>
@@ -824,18 +824,18 @@
     <div id="s2a">
       <div class="step-head">
         <span class="micro">Step 2</span>
-        <h2 id="s2title">Let’s stage your listing.</h2>
+        <h2 id="s2title">Let’s stage your property.</h2>
         <p id="s2sub">The essentials first — how many photos, and the look. Anything extra comes after, only if you want it.</p>
       </div>
       <div class="reassure">
-        <div class="ru"><svg class="ck" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span><b>4.9★</b> loved by agents on thousands of listings</span></div>
+        <div class="ru"><svg class="ck" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span><b>4.9★</b> loved by agents on thousands of properties</span></div>
         <div class="ru"><svg class="ck" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span>Staged by <b>real interior designers</b></span></div>
         <div class="ru"><svg class="ck" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span><b>Unlimited revisions</b>, free for 2 weeks</span></div>
       </div>
       <div class="addr-lead">
         <div class="al-h"><b>Property address</b><span class="al-rec">Recommended</span></div>
         <input id="pdAddr" placeholder="123 Main St, City, ST" autocomplete="off">
-        <span class="al-sub">So we can label your files and match this order to your listing. No address yet? You can add it later — it won't hold up your order.</span>
+        <span class="al-sub">So we can label your files and match this order to your property. No address yet? You can add it later — it won't hold up your order.</span>
       </div>
       <div class="config" id="config"></div>
       <div class="wiz-foot">
@@ -849,7 +849,7 @@
       <div class="step-head">
         <span class="micro">Step 2 · optional</span>
         <h2>Anything else before we start?</h2>
-        <p>Most listings sell on great staging alone. Add only what helps yours — or skip straight to your package.</p>
+        <p>Most properties sell on great staging alone. Add only what helps yours — or skip straight to your package.</p>
       </div>
       <div class="config" id="configExtras"></div>
       <div class="wiz-foot">
@@ -889,7 +889,7 @@
           <div class="mk-t">
             <span class="micro" style="color:var(--green)">Included free</span>
             <b>Your marketing kit — on us</b>
-            <p>A <b>listing brochure</b>, <b>branded catalog</b> and <b>social templates</b> from your staged photos.</p>
+            <p>A <b>property brochure</b>, <b>branded catalog</b> and <b>social templates</b> from your staged photos.</p>
             <label class="mk-check"><input type="checkbox" id="mkCb" checked><span class="mk-box"></span><span>Include my free marketing kit</span></label>
             <div class="mk-done" id="mkDone"></div>
           </div>
@@ -908,7 +908,7 @@
     </div>
     <div class="proj-details">
       <div class="pd-h"><b>Agent &amp; notes</b><span>Optional — helps us brief the design team.</span></div>
-      <div class="pd-field"><label>Listing agent</label><input id="pdAgent" placeholder="Your name" autocomplete="off"></div>
+      <div class="pd-field"><label>Property agent</label><input id="pdAgent" placeholder="Your name" autocomplete="off"></div>
       <div class="pd-field pd-full"><label>Notes about this project</label><textarea id="pdNotes" placeholder="The buyer you're targeting, the vibe, features to highlight…"></textarea></div>
     </div>
     <div class="reqpanel" id="reqPanel"></div>
@@ -1075,9 +1075,9 @@
     if(!p) return 'Your project';
     if(p.path==='build') return 'Pre-Sale Render Pack';
     var extras=(state.floor?1:0)+(state.tour?1:0)+(state.dusk?1:0);
-    if(extras>=2) return 'Complete Listing';
-    if(extras===1) return 'Listing Plus';
-    return 'Listing Staging';
+    if(extras>=2) return 'Complete Property';
+    if(extras===1) return 'Property Plus';
+    return 'Property Staging';
   }
 
   // ---- STEP 2 builder (2a = staging + look, 2b = optional extras) ----
@@ -1087,12 +1087,12 @@
     box.innerHTML=''; ex.innerHTML='';
     hasExtras=(p.path==='listing');
     if(p.path==='listing'){
-      document.getElementById('s2title').textContent='Let’s stage your listing.';
+      document.getElementById('s2title').textContent='Let’s stage your property.';
       (function(){ var s=document.getElementById('s2sub'); s.textContent=''; s.style.display='none'; })();
       // --- 2a: three clear steps — count, upload, style ---
       box.innerHTML=
         // STAT: NAR 2023 Profile of Home Staging — 82% of buyers' agents said staging made it easier to visualize a property as a future home. Confirm current figure before publishing.
-        '<div class="stp core" id="stp1"><div class="stp-h">'+qicon('sofa')+'<div class="stp-t"><b>Virtual staging '+tip('Staging helps buyers picture a home’s full potential, so your listing stands out. 82% of buyers’ agents say it makes a property easier to visualize as their future home. (NAR)')+'</b><span>Designer-furnished rooms · '+money(stageUnit())+' each.'+exLink('stage')+'</span></div></div>'
+        '<div class="stp core" id="stp1"><div class="stp-h">'+qicon('sofa')+'<div class="stp-t"><b>Virtual staging '+tip('Staging helps buyers picture a home’s full potential, so your property stands out. 82% of buyers’ agents say it makes a property easier to visualize as their future home. (NAR)')+'</b><span>Designer-furnished rooms · '+money(stageUnit())+' each.'+exLink('stage')+'</span></div></div>'
           +'<div class="core-top"><span class="stp-n">1</span>'
             +'<span class="lbl"><b>How many photos are we staging?</b><span>Tap + or − to set the number.</span><span class="pop-note" id="popNote"></span></span>'
             +stepper('photos')+'</div>'
@@ -1115,14 +1115,14 @@
       // --- 2b: optional extras (a gentle nudge + the question sections) ---
       // STAT: NAR Profile of Home Buyers & Sellers — ~97% of buyers use the internet to search. Confirm current figure before publishing.
       ex.innerHTML=
-        '<div class="rec-nudge" id="recNudge"><svg class="rn-i"><use href="#i-bolt"/></svg><div class="rn-t"><b>Power up your listing</b><span><strong style="color:var(--ink)">97% of buyers start online.</strong> A floor plan and a twilight exterior are the two add-ons that pull in the most showings.</span></div></div>'
+        '<div class="rec-nudge" id="recNudge"><svg class="rn-i"><use href="#i-bolt"/></svg><div class="rn-t"><b>Power up your property</b><span><strong style="color:var(--ink)">97% of buyers start online.</strong> A floor plan and a twilight exterior are the two add-ons that pull in the most showings.</span></div></div>'
        +'<div class="secs">'
          +section('reno','Do you need to virtually renovate it?','Show the home’s potential — updated floors, cabinets and finishes.',
              subQty('Virtual renovation','Modernize dated finishes, then furnish.','reno','renoN','photos','+'+money(PR.RENO)+' / photo','reno')
             +'<div class="svc-photos" id="svcph_reno"></div>'
             +'<div class="sec-note">Renovate just the dated rooms; stage the rest as-is.</div>'
             +reqUpload('reno','Photos of the rooms to renovate','Current photos of the dated space, in good light'))
-         +section('tour','Do you need a 3D tour?','Keep buyers on your listing; walk it without a showing.',
+         +section('tour','Do you need a 3D tour?','Keep buyers on your property; walk it without a showing.',
              subQty('360° virtual staging','We stitch and stage your 360° photos into one walkable tour','pano360','pano','rooms','+$'+PR.PANO+' / photo','')
               .replace('</span></span><span class="qtywrap"','. <button type="button" class="linkbtn" id="panoExample">See a sample &amp; what we need →</button></span></span><span class="qtywrap"')
             +subRow('360° tour — stitch &amp; host','We stitch your 360° room photos into one walkable, hosted virtual tour.'+tip('Save money — no pricey 3D-camera scan needed. Just ask your photographer to shoot standard 360° photos of each room, and we stitch them into a hosted tour for you.'),'tour','+'+money(PR.TOUR),'tour')
@@ -1164,7 +1164,7 @@
   function qicon(ic){ return ic? '<svg class="qico"><use href="#i-'+ic+'"/></svg>' : ''; }
   function tip(t){ return '<span class="tip" tabindex="0"><svg class="tipi"><use href="#i-info"/></svg><span class="tipbox">'+t+'</span></span>'; }
   function catHead(l,d,tp){ return '<div class="cat-head"><span class="cat-l">'+l+'</span>'+(d?'<span class="cat-d">'+d+'</span>':'')+(tp?tip(tp):'')+'</div>'; }
-  function powerHead(){ return '<div class="power-head"><svg class="pw-i"><use href="#i-bolt"/></svg><div class="pw-txt"><b>Listing power-ups</b><span>Extra services that help your listing reach further and sell.</span></div>'+tip('95% of buyers start their search online. Standing out in the first three photos is what wins the click — these add-ons help your listing get seen and sold.')+'</div>'; }
+  function powerHead(){ return '<div class="power-head"><svg class="pw-i"><use href="#i-bolt"/></svg><div class="pw-txt"><b>Property power-ups</b><span>Extra services that help your property reach further and sell.</span></div>'+tip('95% of buyers start their search online. Standing out in the first three photos is what wins the click — these add-ons help your property get seen and sold.')+'</div>'; }
   function modeChip(k,n,tag){ return '<button type="button" class="modechip" data-mode="'+k+'"><b>'+n+'</b>'+(tag?'<span class="mc-tag">'+tag+'</span>':'')+'</button>'; }
   function freeRow(name,sub,ic){ return '<div class="qrow">'+qicon(ic)+'<span class="lbl"><b>'+name+'</b><span>'+sub+'</span></span><span class="freebadge">Included free</span></div>'; }
   function pkgCard(key,name,desc,delta,rec){ return '<button type="button" class="pkg'+(rec?' rec':'')+'" data-pkg="'+key+'">'+(rec?'<span class="pkg-badge">Most popular</span>':'')+'<b>'+name+'</b><span class="pkg-desc">'+desc+'</span><span class="pkg-price">'+(delta>0?'+'+money(delta):'Base price')+'</span></button>'; }
@@ -1174,7 +1174,9 @@
   function toggleStep(name,sub,tkey,qkey,price,ex,ic){ return '<div class="qrow">'+qicon(ic)+'<span class="lbl"><b>'+name+'</b><span>'+sub+exLink(ex)+'</span></span><span class="stepper" data-step="'+qkey+'"><button data-d="-1">−</button><span class="v" id="v_'+qkey+'"></span><button data-d="1">+</button></span><span class="price">'+price+'</span><button class="toggle" data-tog="'+tkey+'"></button></div>'; }
   // accordion section (question-framed). Click the header to open; choose the service inside.
   function section(key,q,sub,body){
+    var SECICO={reno:'reno',tour:'tour',edit:'sun',floor:'plan'};
     return '<div class="sec" data-sec="'+key+'"><div class="sec-head" data-sechead="'+key+'">'
+      +qicon(SECICO[key]||'')
       +'<span class="sec-q"><b>'+q+'</b><span>'+sub+'</span></span>'
       +'<span class="sec-price" id="sp_'+key+'"></span>'
       +'<svg class="sec-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></div>'
@@ -1326,7 +1328,7 @@
   function syncReqUploads(){ document.querySelectorAll('.req-up[data-requp]').forEach(function(el){ el.classList.toggle('show', secActive(el.getAttribute('data-requp'))); }); }
   // ---- photographer: send a direct upload link + instructions ----
   function photogDefaultNotes(){
-    var n=state.photos, a=(document.getElementById('addr')&&document.getElementById('addr').value)||'this listing';
+    var n=state.photos, a=(document.getElementById('addr')&&document.getElementById('addr').value)||'this property';
     return 'Hi — could you upload '+n+' photo'+(n>1?'s':'')+' for a Bella Virtual staging order.\n\nWhat we need:\n• One clean, wide, level shot per room — chest height, shoot into a corner\n• Blinds up, every light on, rooms tidy\n• JPG or PNG, highest resolution\n• Upload straight to the secure link below — no need to send them to me\n\nFull how-to is in Bella’s virtual staging photo guide, linked with your upload. Thank you!';
   }
   function bindPhotographer(){
@@ -1930,7 +1932,7 @@
     /* PLACEHOLDER stand-in: nearest real Bella image until a true tour sample is supplied */
     tour:{  after:CDN+'Minimal_Scandinavian_Kitchen_2025.jpg'+W, placeholder:true,
             cap:'A virtual house tour links your staged rooms into one walkthrough. Real tour sample coming.',
-            req:['Your finished listing photos, we stitch them together','Photos in shooting order help us sequence the walk'] }
+            req:['Your finished property photos, we stitch them together','Photos in shooting order help us sequence the walk'] }
   };
   (function(){
     var em=document.getElementById('exModal'), img=document.getElementById('exImg'),
