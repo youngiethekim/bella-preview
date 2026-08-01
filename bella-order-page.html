@@ -1792,7 +1792,7 @@
         +(r.up?'<label class="dropz"><input type="file" multiple hidden><svg class="dz-i"><use href="#i-upload"/></svg><span class="dz-t"><b>Upload blueprints, plans or dimensions</b><span class="dz-s">PDF, CAD, JPG or PNG</span></span></label>':'')
         +'</div>';
     }).join('');
-    panel.innerHTML='<div class="req-head"><svg class="req-i"><use href="#i-doc"/></svg><div class="req-ht"><b>What we’ll need from you</b><span>'+(anyUp?'Floor plans and renders are built from your drawings. Upload your blueprints or property dimensions here, or send them right after checkout.':'Have these ready and our team confirms everything once you order.')+'</span></div></div>'
+    panel.innerHTML='<div class="req-head"><svg class="req-i"><use href="#i-doc"/></svg><div class="req-ht"><b>What we’ll need from you</b><span>'+(anyUp?'No need to have these ready now — add your blueprints or dimensions here, or send them after checkout from your project dashboard.':'Have these ready and our team confirms everything once you order.')+'</span></div></div>'
       +'<div class="reqgrid">'+cards+'</div>'
       +(anyUp?'<p class="req-fine">No files handy? You can still order now and upload from your project dashboard. We won’t start floor plans or renders until we have what we need.</p>':'');
     panel.querySelectorAll('.dropz input').forEach(function(inp){
