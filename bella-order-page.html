@@ -809,9 +809,7 @@
       <div class="reassure">
         <div class="ru"><svg class="ck" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span><b>4.9★</b> loved by agents on thousands of listings</span></div>
         <div class="ru"><svg class="ck" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span>Staged by <b>real interior designers</b></span></div>
-        <div class="ru"><svg class="ck" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span>MLS-ready in <b>24–48 hours</b></span></div>
         <div class="ru"><svg class="ck" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span><b>Unlimited revisions</b>, free for 2 weeks</span></div>
-        <div class="ru"><svg class="ck" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span>You <b>approve every photo</b> before it goes live</span></div>
       </div>
       <div class="config" id="config"></div>
       <div class="wiz-foot">
@@ -1083,7 +1081,7 @@
           +photographerBlock()
           +'<div class="preset-note" id="presetNote"></div>'
           +'<div id="savedNote"></div>'
-          +'<label class="dc-row" id="dcRow"><input type="checkbox" id="dcAll" checked><span class="dc-box"></span><span class="dc-t"><b>Let our designers choose the style</b><span>Recommended — we match the look to your buyer. Prefer something specific? Tap a photo to set its own. <a class="linkbtn" href="bella-style-quiz.html">Not sure? Take the 2-min style quiz →</a></span></span></label>'
+          +'<label class="dc-row" id="dcRow"><input type="checkbox" id="dcAll" checked><span class="dc-box"></span><span class="dc-t"><b>Let our designers choose the style</b><span>Recommended. Prefer a specific look? Tap any photo to set it, or <a class="linkbtn" href="bella-style-quiz.html">take the 2-min style quiz →</a></span></span></label>'
           +'<div class="removal-row" id="removalRow"><span class="lbl"><b>Furniture removal</b><span>Occupied or cluttered? We clear the room first, then stage it clean.</span></span><span class="freeprice">Included free</span><button class="toggle" data-tog="removal"></button></div>'
         +'</div>'
         +'<details class="stp opt" id="stp3"><summary class="opt-sum"><span class="opt-plus">+</span>Add references or a floor plan<em>optional — helps us nail the look</em></summary>'
@@ -1210,7 +1208,7 @@
       if(next){
         var addN=next.m-p, nper=photoPrice(next.d), nsaved=base*next.m*(next.d/100);
         msg.innerHTML='<button type="button" class="vol-add" id="volAdd">+ Add '+addN+' photo'+(addN>1?'s':'')+'</button>'
-          +'<span>to unlock <b>'+next.d+'% off</b> — every photo drops to <b>'+money2(nper)+'</b>, saving '+money(nsaved)+' in total.</span>';
+          +'<span>to unlock <b>'+next.d+'% off</b> — save '+money(nsaved)+' more.</span>';
       } else {
         msg.innerHTML='<span class="vol-now">✓ Top tier unlocked — '+money2(per)+'/photo, your best price.</span>';
       }
@@ -1419,7 +1417,7 @@
     wrap.innerHTML=filled+empties;
     var hint=document.getElementById('upHint');
     if(hint){
-      if(!n) hint.innerHTML='<b>'+target+' box'+(target>1?'es':'')+' to fill.</b> Tap a box to upload, or drag your photos straight in. Not ready? Just pick the number now and send them later.';
+      if(!n) hint.innerHTML='<b>'+target+' box'+(target>1?'es':'')+' to fill.</b> Tap one to upload, or drag your photos in.';
       else if(remaining>0) hint.innerHTML='<b>'+n+' of '+target+' uploaded — '+remaining+' to go.</b> Tap a photo to set its style, or leave it to our designers.';
       else hint.innerHTML='<b>All '+target+' uploaded ✓</b> — tap a photo to set its own style, or leave them to our designers.';
     }
