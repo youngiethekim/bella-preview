@@ -626,6 +626,9 @@
   .aside .opt .oname{flex:1}
   .aside .opt .op{font-size:13px;color:var(--faint);white-space:nowrap}
   /* summary line icons + included chips */
+  .rec .lines li .li-p{display:inline-flex;align-items:center;gap:9px;white-space:nowrap}
+  .li-x{width:20px;height:20px;border:0;border-radius:99px;background:var(--line-2);color:var(--soft);font-size:15px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .15s;flex:none}
+  .li-x:hover{background:var(--red,#C4553F);color:#fff}
   .rec .lines li .li-n{display:flex;align-items:center;gap:11px;min-width:0}
   .rec .lines li .li-ic{width:17px;height:17px;stroke:var(--green);fill:none;stroke-width:1.5;flex:none}
   .rec .incl{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:20px}
@@ -649,7 +652,7 @@
   @media(max-width:600px){.furniture-offer{flex-direction:column;gap:14px}}
   .furniture-offer .fo-ic{width:54px;height:54px;border-radius:12px;background:#fff;border:1px solid #EADFC5;display:grid;place-items:center;flex:none}
   .furniture-offer .fo-ic svg{width:27px;height:27px;stroke:var(--gold);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-  .furniture-offer .fo-t b{display:block;font-size:20px;font-weight:400;margin-top:4px;color:var(--ink);letter-spacing:-.01em}
+  .furniture-offer .fo-t>b{display:block;font-size:20px;font-weight:400;margin-top:4px;color:var(--ink);letter-spacing:-.01em}
   .furniture-offer .fo-t p{font-size:13.5px;color:#5b5140;margin-top:8px;line-height:1.55;max-width:66ch}
   .fo-check{display:flex;align-items:center;gap:11px;margin-top:16px;cursor:pointer;font-size:14px;color:var(--ink)}
   .fo-check input{position:absolute;opacity:0;pointer-events:none}
@@ -663,9 +666,18 @@
   @media(max-width:600px){.mkt-kit{flex-direction:column;gap:14px}}
   .mkt-kit .mk-ic{width:54px;height:54px;border-radius:12px;background:#fff;border:1px solid #CFE0D3;display:grid;place-items:center;flex:none}
   .mkt-kit .mk-ic svg{width:27px;height:27px;stroke:var(--green);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-  .mkt-kit .mk-t b{display:block;font-size:20px;font-weight:400;margin-top:4px;color:var(--ink);letter-spacing:-.01em}
+  .mkt-kit .mk-t>b{display:block;font-size:20px;font-weight:400;margin-top:4px;color:var(--ink);letter-spacing:-.01em}
   .mkt-kit .mk-t p{font-size:13.5px;color:#3f5545;margin-top:8px;line-height:1.55;max-width:66ch}
   .mkt-kit .mk-t p b{font-weight:500;color:#2f4433}
+  /* promo column beside the checkout box — compact marketing-kit + furniture-sourcing */
+  .aside{background:transparent;border:0;padding:0;display:flex;flex-direction:column;gap:10px}
+  .aside .mkt-kit,.aside .furniture-offer{margin-top:0;padding:16px 17px;gap:12px;align-items:flex-start}
+  .aside .mk-ic,.aside .fo-ic{width:36px;height:36px;border-radius:9px}
+  .aside .mk-ic svg,.aside .fo-ic svg{width:19px;height:19px}
+  .aside .mk-t b,.aside .fo-t b{font-size:14.5px;margin-top:3px;line-height:1.25}
+  .aside .mk-t p,.aside .fo-t p{font-size:12px;margin-top:5px;line-height:1.5}
+  .aside .mk-check,.aside .fo-check{margin-top:11px;font-size:12.5px}
+  @media(max-width:820px){.aside .mkt-kit,.aside .furniture-offer{flex-direction:row}}
   .mk-check{display:flex;align-items:center;gap:11px;margin-top:16px;cursor:pointer;font-size:14px;color:var(--ink)}
   .mk-check input{position:absolute;opacity:0;pointer-events:none}
   .mk-box{width:22px;height:22px;border:1.5px solid var(--green);border-radius:6px;flex:none;display:grid;place-items:center;transition:.15s;background:#fff}
@@ -857,8 +869,26 @@
         <p class="fine">Real interior designers · you own the final files</p>
       </div>
       <div class="aside">
-        <span class="micro">Add anything else</span>
-        <div id="addonList"></div>
+        <div class="mkt-kit">
+          <div class="mk-ic"><svg viewBox="0 0 24 24"><path d="M6.5 3.5h7l4.5 4.5v12h-11.5z"/><path d="M13.5 3.5V8H18"/><path d="M9 13h6M9 16h4"/></svg></div>
+          <div class="mk-t">
+            <span class="micro" style="color:var(--green)">Included free</span>
+            <b>Your marketing kit — on us</b>
+            <p>A <b>listing brochure</b>, <b>branded catalog</b> and <b>social templates</b> from your staged photos.</p>
+            <label class="mk-check"><input type="checkbox" id="mkCb" checked><span class="mk-box"></span><span>Include my free marketing kit</span></label>
+            <div class="mk-done" id="mkDone"></div>
+          </div>
+        </div>
+        <div class="furniture-offer">
+          <div class="fo-ic"><svg viewBox="0 0 24 24"><path d="M4 11.5V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3.5"/><path d="M2 13.5a2 2 0 0 1 4 0V15h12v-1.5a2 2 0 0 1 4 0V18H2z"/><path d="M5 18v2M19 18v2"/></svg></div>
+          <div class="fo-t">
+            <span class="micro" style="color:var(--gold)">New · Furniture sourcing</span>
+            <b>Love the look? Source the real furniture.</b>
+            <p>A shopping list of the exact pieces — or we order them for you.</p>
+            <label class="fo-check"><input type="checkbox" id="foCb"><span class="fo-box"></span><span>Tell me about sourcing the furniture</span></label>
+            <div class="fo-done" id="foDone"></div>
+          </div>
+        </div>
       </div>
     </div>
     <details class="proj-details opt">
@@ -869,26 +899,6 @@
       </div>
       <div class="pd-field pd-full"><label>Notes about this project</label><textarea id="pdNotes" placeholder="The buyer you're targeting, the vibe, features to highlight…"></textarea></div>
     </details>
-    <div class="mkt-kit">
-      <div class="mk-ic"><svg viewBox="0 0 24 24"><path d="M6.5 3.5h7l4.5 4.5v12h-11.5z"/><path d="M13.5 3.5V8H18"/><path d="M9 13h6M9 16h4"/></svg></div>
-      <div class="mk-t">
-        <span class="micro" style="color:var(--green)">Included free</span>
-        <b>Your marketing kit — on us</b>
-        <p>A <b>listing brochure</b>, <b>branded catalog</b> and <b>social templates</b> from your staged photos. Uncheck to skip.</p>
-        <label class="mk-check"><input type="checkbox" id="mkCb" checked><span class="mk-box"></span><span>Yes, include my free marketing kit</span></label>
-        <div class="mk-done" id="mkDone"></div>
-      </div>
-    </div>
-    <div class="furniture-offer">
-      <div class="fo-ic"><svg viewBox="0 0 24 24"><path d="M4 11.5V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3.5"/><path d="M2 13.5a2 2 0 0 1 4 0V15h12v-1.5a2 2 0 0 1 4 0V18H2z"/><path d="M5 18v2M19 18v2"/></svg></div>
-      <div class="fo-t">
-        <span class="micro" style="color:var(--gold)">New · Furniture sourcing</span>
-        <b>Love the look? We can source the real furniture.</b>
-        <p>We'll build a shopping list of the exact pieces — or order them for you. Great for model homes, flips, or your own move.</p>
-        <label class="fo-check"><input type="checkbox" id="foCb"><span class="fo-box"></span><span>Yes, tell me about sourcing the furniture.</span></label>
-        <div class="fo-done" id="foDone"></div>
-      </div>
-    </div>
     <div class="reqpanel" id="reqPanel"></div>
     <div class="wiz-foot">
       <button class="btn-line" id="back2">← Back</button>
@@ -1030,20 +1040,20 @@
       var stageCost=stageUnit()*state.photos, dStage=stageCost*volDisc(state.photos);
       L.push(['Virtual staging × '+state.photos+' photos', money(stageCost)]); total+=stageCost-dStage; disc+=dStage;
       if(state.removal){ L.push(['Furniture removal', 'Free']); }
-      if(state.reno){ var renoCost=PR.RENO*state.renoN, dReno=renoCost*volDisc(state.renoN); L.push(['Virtual renovation × '+state.renoN, money(renoCost)]); total+=renoCost-dReno; disc+=dReno; }
-      if(state.floor2d){ L.push(['2D floor plan × '+state.fp2dn+(state.fp2dn>1?' floors':' floor'), money(PR.FP2D*state.fp2dn)]); total+=PR.FP2D*state.fp2dn; }
-      if(state.floor){ L.push(['3D floor plan × '+state.fpn+(state.fpn>1?' floors':' floor'), money(fp3d()*state.fpn)]); total+=fp3d()*state.fpn; }
-      if(state.tour){ L.push(['360° tour — stitch & host', money(PR.TOUR)]); total+=PR.TOUR; }
-      if(state.dusk){ var duskCost=PR.DUSK*state.duskN, dDusk=duskCost*volDisc(state.duskN); L.push(['Day-to-dusk edits × '+state.duskN, money(duskCost)]); total+=duskCost-dDusk; disc+=dDusk; }
-      if(state.sky){ var skyCost=PR.SKY*state.skyN, dSky=skyCost*volDisc(state.skyN); L.push(['Sky replacement & retouching × '+state.skyN, money(skyCost)]); total+=skyCost-dSky; disc+=dSky; }
-      if(state.pano360){ var panoCost=PR.PANO*state.pano, dPano=panoCost*volDisc(state.pano); L.push(['360° virtual tour × '+state.pano, money(panoCost)]); total+=panoCost-dPano; disc+=dPano; }
+      if(state.reno){ var renoCost=PR.RENO*state.renoN, dReno=renoCost*volDisc(state.renoN); L.push(['Virtual renovation × '+state.renoN, money(renoCost), 'reno']); total+=renoCost-dReno; disc+=dReno; }
+      if(state.floor2d){ L.push(['2D floor plan × '+state.fp2dn+(state.fp2dn>1?' floors':' floor'), money(PR.FP2D*state.fp2dn), 'floor2d']); total+=PR.FP2D*state.fp2dn; }
+      if(state.floor){ L.push(['3D floor plan × '+state.fpn+(state.fpn>1?' floors':' floor'), money(fp3d()*state.fpn), 'floor']); total+=fp3d()*state.fpn; }
+      if(state.tour){ L.push(['360° tour — stitch & host', money(PR.TOUR), 'tour']); total+=PR.TOUR; }
+      if(state.dusk){ var duskCost=PR.DUSK*state.duskN, dDusk=duskCost*volDisc(state.duskN); L.push(['Day-to-dusk edits × '+state.duskN, money(duskCost), 'dusk']); total+=duskCost-dDusk; disc+=dDusk; }
+      if(state.sky){ var skyCost=PR.SKY*state.skyN, dSky=skyCost*volDisc(state.skyN); L.push(['Sky replacement & retouching × '+state.skyN, money(skyCost), 'sky']); total+=skyCost-dSky; disc+=dSky; }
+      if(state.pano360){ var panoCost=PR.PANO*state.pano, dPano=panoCost*volDisc(state.pano); L.push(['360° virtual tour × '+state.pano, money(panoCost), 'pano360']); total+=panoCost-dPano; disc+=dPano; }
       if(disc) L.push(['Volume discount', '−'+money(disc)]);
       return {L:L,total:total,disc:disc};
     } else {
       var t=0, bdisc=0, rq=renderQty(), rd=volDisc(rq);   // discount scales on the TOTAL render count (a bundle)
-      if(state.useInt){ var ci=rInt()*state.rint, di=ci*rd; L.push([(state.commercial?'Commercial interior render × ':'Interior 3D render × ')+state.rint, money(ci)]); t+=ci-di; bdisc+=di; }
-      if(state.useExt){ var ce=rExt()*state.rext, de=ce*rd; L.push([(state.commercial?'Commercial exterior render × ':'Exterior 3D render × ')+state.rext, money(ce)]); t+=ce-de; bdisc+=de; }
-      if(state.useFp){ var cf=fp3d()*state.rfp, df=cf*rd; L.push(['3D floor plan × '+state.rfp, money(cf)]); t+=cf-df; bdisc+=df; }
+      if(state.useInt){ var ci=rInt()*state.rint, di=ci*rd; L.push([(state.commercial?'Commercial interior render × ':'Interior 3D render × ')+state.rint, money(ci), 'useInt']); t+=ci-di; bdisc+=di; }
+      if(state.useExt){ var ce=rExt()*state.rext, de=ce*rd; L.push([(state.commercial?'Commercial exterior render × ':'Exterior 3D render × ')+state.rext, money(ce), 'useExt']); t+=ce-de; bdisc+=de; }
+      if(state.useFp){ var cf=fp3d()*state.rfp, df=cf*rd; L.push(['3D floor plan × '+state.rfp, money(cf), 'useFp']); t+=cf-df; bdisc+=df; }
       if(bdisc) L.push(['Volume discount · '+Math.round(rd*100)+'% off '+rq+' renders', '−'+money(bdisc)]);
       return {L:L,total:t,disc:bdisc};
     }
@@ -1717,7 +1727,7 @@
   function buildSummary(){
     var r=lines();
     document.getElementById('recName').textContent=packName();
-    document.getElementById('recLines').innerHTML=r.L.map(function(x){return '<li><span class="li-n">'+lineIcon(x[0])+'<span>'+x[0]+'</span></span><span>'+x[1]+'</span></li>';}).join('');
+    document.getElementById('recLines').innerHTML=r.L.map(function(x){return '<li><span class="li-n">'+lineIcon(x[0])+'<span>'+x[0]+'</span></span><span class="li-p">'+x[1]+(x[2]?'<button type="button" class="li-x" data-rm="'+x[2]+'" aria-label="Remove '+x[0]+'" title="Remove">×</button>':'')+'</span></li>';}).join('');
     var fo=document.getElementById('foCb');
     if(fo){ fo.checked=!!state.sourceFurniture; fo.onchange=function(){ state.sourceFurniture=fo.checked; document.getElementById('foDone').textContent = fo.checked? '✓ Noted — our design team will reach out about furniture sourcing after you place the order.' : ''; }; }
     var mk=document.getElementById('mkCb');
@@ -1736,9 +1746,11 @@
       if(!state.useExt) opts.push(['Add exterior renders','useExt','+'+money(rExt())]);
     }
     var box=document.getElementById('addonList');
-    box.innerHTML = opts.length ? opts.map(function(o){return '<div class="opt"><span class="oname">'+o[0]+'</span><span class="op">'+o[2]+'</span><button class="toggle" data-tog3="'+o[1]+'"></button></div>';}).join('')
-      : '<div class="opt"><span class="oname">Everything is in your package.</span></div>';
-    box.querySelectorAll('.toggle').forEach(function(t){ t.onclick=function(){ var k=t.getAttribute('data-tog3'); state[k]=!state[k]; buildSummary(); }; });
+    if(box){
+      box.innerHTML = opts.length ? opts.map(function(o){return '<div class="opt"><span class="oname">'+o[0]+'</span><span class="op">'+o[2]+'</span><button class="toggle" data-tog3="'+o[1]+'"></button></div>';}).join('')
+        : '<div class="opt"><span class="oname">Everything is in your package.</span></div>';
+      box.querySelectorAll('.toggle').forEach(function(t){ t.onclick=function(){ var k=t.getAttribute('data-tog3'); state[k]=!state[k]; buildSummary(); }; });
+    }
     buildReqs();
   }
 
@@ -1842,6 +1854,11 @@
     };
   });
   document.getElementById('to2').onclick=function(){ if(state.proj) goStep(2); };
+  // remove a line item directly from the checkout/package review
+  function removeLine(k){ if(!k) return; if(state.hasOwnProperty(k)) state[k]=false;
+    if(k==='reno') state.sel.reno=[]; if(k==='dusk') state.sel.dusk=[]; if(k==='sky') state.sel.sky=[];
+    reMode(); sync(); buildSummary(); }
+  document.getElementById('recLines').addEventListener('click',function(e){ var b=e.target.closest('.li-x'); if(b){ e.preventDefault(); removeLine(b.getAttribute('data-rm')); } });
   document.getElementById('back1').onclick=function(){ goStep(1); };
   // 2a "Continue": listings go to the optional extras screen; renders skip straight to the package
   document.getElementById('toExtras').onclick=function(){ if(hasExtras) showS2('b'); else goStep(3); };
