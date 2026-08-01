@@ -99,20 +99,20 @@ HTML = r'''<!DOCTYPE html>
   .search svg{width:16px;height:16px;stroke:var(--faint);fill:none;stroke-width:1.6}
   .search input{border:0;outline:0;font-family:inherit;font-size:14.5px;width:100%;color:var(--ink);background:transparent}
   .sel{flex:0 0 auto;font-family:inherit;font-size:13.5px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;cursor:pointer;min-width:132px;transition:border-color .15s}
-  .sel:hover{border-color:var(--ink)}.sel:focus{outline:0;border-color:var(--ink)}
+  .sel:hover{border-color:var(--green)}.sel:focus{outline:0;border-color:var(--green)}
   .savedbtn{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:13.5px;border:1px solid var(--line);background:#fff;color:var(--soft);padding:10px 15px;border-radius:10px;cursor:pointer;transition:all .15s}
   .savedbtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.7}
-  .savedbtn:hover{border-color:var(--ink);color:var(--ink)}
+  .savedbtn:hover{border-color:var(--green);color:var(--ink)}
   .savedbtn .n{background:var(--line-2);color:var(--soft);border-radius:99px;padding:0 8px;font-size:12px;font-weight:500;min-width:20px;text-align:center}
-  .savedbtn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-  .savedbtn.on svg{fill:var(--red);stroke:var(--red)}
+  .savedbtn.on{background:var(--green);color:#fff;border-color:var(--green)}
+  .savedbtn.on svg{fill:#fff;stroke:#fff}
   .savedbtn.on .n{background:rgba(255,255,255,.2);color:#fff}
   .bar-bot{display:flex;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap}
   .rooms{display:flex;gap:8px;flex-wrap:wrap}
   .bar-bot .right{margin-left:auto;display:flex;align-items:center;gap:16px}
   .chip{flex:0 0 auto;font-family:inherit;font-size:13px;border:1px solid var(--line);background:#fff;color:var(--soft);padding:7px 15px;border-radius:99px;cursor:pointer;white-space:nowrap;transition:all .15s}
-  .chip:hover{border-color:var(--ink);color:var(--ink)}
-  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .chip:hover{border-color:var(--green);color:var(--ink)}
+  .chip.on{background:var(--green);color:#fff;border-color:var(--green)}
   .chip .c{opacity:.5;font-size:11.5px;margin-left:5px}
   .count{font-size:13px;color:var(--soft)}.count b{color:var(--ink);font-weight:500}
   .clear{font-size:12.5px;letter-spacing:.06em;color:var(--green);background:0;border:0;cursor:pointer;font-family:inherit}
@@ -135,7 +135,7 @@ HTML = r'''<!DOCTYPE html>
   .save{position:absolute;right:10px;bottom:10px;width:34px;height:34px;border-radius:99px;border:0;background:rgba(255,255,255,.85);backdrop-filter:blur(4px);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s,background .15s;z-index:2}
   .save:hover{transform:scale(1.09)}
   .save svg{width:17px;height:17px;stroke:var(--ink);fill:none;stroke-width:1.7;transition:all .2s}
-  .save.on svg{fill:var(--red);stroke:var(--red)}
+  .save.on svg{fill:var(--green);stroke:var(--green)}
   .save.pop{animation:pop .3s ease}
   @keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.3)}100%{transform:scale(1)}}
   .card .body{padding:9px 12px 10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
@@ -186,7 +186,7 @@ HTML = r'''<!DOCTYPE html>
   .lb .arrow.prev{left:20px}.lb .arrow.next{right:20px}
   .lb .arrow:hover,.lb .x:hover{background:rgba(255,255,255,.24)}
   .lb .cap button.saveb{border-color:#4a4640}
-  .lb .cap button.saveb.on{background:var(--red);border-color:var(--red);color:#fff}
+  .lb .cap button.saveb.on{background:var(--green);border-color:var(--green);color:#fff}
   /* toast */
   .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-size:13.5px;padding:12px 20px;border-radius:99px;opacity:0;transition:all .25s;z-index:300;pointer-events:none}
   .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
