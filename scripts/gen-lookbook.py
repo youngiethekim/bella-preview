@@ -7,7 +7,8 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 LB = ROOT/"assets"/"lookbook"
 
 ROOM = {"LR":"Living Room","DR":"Dining Room","BDR":"Bedroom","BR":"Bedroom","BD":"Bedroom",
-        "KI":"Kitchen","KT":"Kitchen","OF":"Office","EX":"Exterior"}
+        "KI":"Kitchen","KT":"Kitchen","OF":"Office","EX":"Exterior",
+        "SA":"Living Room","LIB":"Office"}
 ROOM_ORDER = ["Living Room","Dining Room","Bedroom","Kitchen","Office","Exterior"]
 # branded SKUs: {ROOM}-{BRAND}-###
 BRAND = {"ROVE":"Rove Concepts","SUNDAYS":"Sundays","MOB":"Mobital","GUS":"Gus*",
@@ -29,7 +30,7 @@ items=[]
 for f in sorted(os.listdir(LB)):
     if not f.lower().endswith(".jpg"): continue
     sku=f[:-4]
-    m=re.match(r'^(LR|DR|BDR|BD|BR|KI|KT|OF|EX)-([A-Z]+)-([A-Z]?)(\d{2,4})$', sku)
+    m=re.match(r'^(LR|DR|BDR|BD|BR|KI|KT|OF|EX|SA|LIB)-([A-Z]+)-([A-Z]?)(\d{2,4})$', sku)
     if not m: print("SKIP (unparsed):",sku); continue
     room,mid,_pfx,num=m.group(1),m.group(2),m.group(3),int(m.group(4))
     it={"sku":sku,"img":f"assets/lookbook/{f}","room":ROOM.get(room,room),"num":num}
