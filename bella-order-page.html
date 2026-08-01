@@ -1095,17 +1095,17 @@
       ex.innerHTML=
         '<div class="rec-nudge" id="recNudge"><svg class="rn-i"><use href="#i-bolt"/></svg><div class="rn-t"><b>Power up your listing</b><span><strong style="color:var(--ink)">97% of buyers start online.</strong> A floor plan and a twilight exterior are the two add-ons that pull in the most showings.</span></div><button class="btn-line" id="rnAdd" type="button">Add both power-ups</button></div>'
        +'<div class="secs">'
-         +section('reno','Do you need to virtually renovate it?','See what a modern renovation would look like — updated floors, cabinets and finishes — to show buyers the home’s full potential.',
-             subQty('Virtual renovation','Modernize the dated finishes, then furnish. Pick which photos to renovate.','reno','renoN','photos','+'+money(PR.RENO)+' / photo','reno')
+         +section('reno','Do you need to virtually renovate it?','Show the home’s potential — updated floors, cabinets and finishes.',
+             subQty('Virtual renovation','Modernize dated finishes, then furnish.','reno','renoN','photos','+'+money(PR.RENO)+' / photo','reno')
             +'<div class="svc-photos" id="svcph_reno"></div>'
-            +'<div class="sec-note">Not every photo needs it — renovate just the dated rooms (like a tired kitchen or bath) and stage the rest as-is. You provide photos of the space.</div>'
+            +'<div class="sec-note">Renovate just the dated rooms; stage the rest as-is.</div>'
             +reqUpload('reno','Photos of the rooms to renovate','Current photos of the dated space, in good light'))
-         +section('tour','Do you need a 3D tour?','Keep buyers on your listing longer; out-of-town buyers can walk it without a showing.',
+         +section('tour','Do you need a 3D tour?','Keep buyers on your listing; walk it without a showing.',
              subQty('360° virtual staging','We stitch and stage your 360° photos into one walkable tour','pano360','pano','rooms','+$'+PR.PANO+' / photo','')
               .replace('</span></span><span class="qtywrap"','. <button type="button" class="linkbtn" id="panoExample">See a sample &amp; what we need →</button></span></span><span class="qtywrap"')
             +subRow('360° tour — stitch &amp; host','We stitch your 360° room photos into one walkable, hosted virtual tour.'+tip('Save money — no pricey 3D-camera scan needed. Just ask your photographer to shoot standard 360° photos of each room, and we stitch them into a hosted tour for you.'),'tour','+'+money(PR.TOUR),'tour')
             +reqUpload('tour','Your 360° photos','Equirectangular 360° shots — one per room you want walkable'))
-         +section('edit','Do you need photo editing?','Small edits, big first impression — brighter, warmer, more clicks online.',
+         +section('edit','Do you need photo editing?','Brighter, warmer — more clicks online.',
              subQty('Day-to-dusk edits','Turn a daytime exterior into a twilight hero shot. Pick which photos.','dusk','duskN','photos','+'+money(PR.DUSK)+' / photo','dusk')
             +'<div class="svc-photos" id="svcph_dusk"></div>'
             +subQty('Sky replacement &amp; retouching','Swap grey skies, clean up blemishes. Pick which photos.','sky','skyN','photos','+'+money(PR.SKY)+' / photo','')
