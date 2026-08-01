@@ -842,12 +842,12 @@
       <p>Everything you picked, in one place. Review it and start your order.</p>
     </div>
     <div class="proj-details">
-      <div class="pd-h"><b>Project details</b><span>So we can label your files and brief the design team.</span></div>
+      <div class="pd-h"><b>Project details</b><span>So we can label your files and brief the team.</span></div>
       <div class="pd-grid">
         <div class="pd-field"><label>Property address</label><input id="pdAddr" placeholder="123 Main St, City, ST" autocomplete="off"></div>
         <div class="pd-field"><label>Listing agent</label><input id="pdAgent" placeholder="Your name" autocomplete="off"></div>
       </div>
-      <div class="pd-field pd-full"><label>Notes about this project <span class="opt">optional</span></label><textarea id="pdNotes" placeholder="Anything the team should know — the buyer you're targeting, the vibe, timing, features to highlight or keep…"></textarea></div>
+      <div class="pd-field pd-full"><label>Notes about this project <span class="opt">optional</span></label><textarea id="pdNotes" placeholder="The buyer you're targeting, the vibe, features to highlight…"></textarea></div>
     </div>
     <div class="summary">
       <div class="rec">
@@ -874,7 +874,7 @@
       <div class="mk-t">
         <span class="micro" style="color:var(--green)">Included free</span>
         <b>Your marketing kit — on us</b>
-        <p>From your staged photos we'll build a <b>listing brochure</b>, a <b>branded catalog</b>, and ready-to-post <b>social media templates</b> — yours to download at no extra cost. Don't need it? Just unselect and we'll skip it.</p>
+        <p>A <b>listing brochure</b>, <b>branded catalog</b> and <b>social templates</b> from your staged photos. Uncheck to skip.</p>
         <label class="mk-check"><input type="checkbox" id="mkCb" checked><span class="mk-box"></span><span>Yes, include my free marketing kit</span></label>
         <div class="mk-done" id="mkDone"></div>
       </div>
@@ -884,8 +884,8 @@
       <div class="fo-t">
         <span class="micro" style="color:var(--gold)">New · Furniture sourcing</span>
         <b>Love the look? We can source the real furniture.</b>
-        <p>Our designers can build a shopping list of the exact pieces we stage with — or handle the ordering for you. Perfect for model homes, flips, or a home you're moving into yourself.</p>
-        <label class="fo-check"><input type="checkbox" id="foCb"><span class="fo-box"></span><span>Yes, I'm interested — have your team reach out about sourcing the furniture.</span></label>
+        <p>We'll build a shopping list of the exact pieces — or order them for you. Great for model homes, flips, or your own move.</p>
+        <label class="fo-check"><input type="checkbox" id="foCb"><span class="fo-box"></span><span>Yes, tell me about sourcing the furniture.</span></label>
         <div class="fo-done" id="foDone"></div>
       </div>
     </div>
@@ -1093,7 +1093,7 @@
       // --- 2b: optional extras (a gentle nudge + the question sections) ---
       // STAT: NAR Profile of Home Buyers & Sellers — ~97% of buyers use the internet to search. Confirm current figure before publishing.
       ex.innerHTML=
-        '<div class="rec-nudge" id="recNudge"><svg class="rn-i"><use href="#i-bolt"/></svg><div class="rn-t"><b>Power up your listing</b><span><strong style="color:var(--ink)">97% of buyers start their home search online</strong> — and the listings with the most to show pull in the most clicks. A floor plan and a twilight exterior are the two power-ups that get more buyers booking a showing.</span></div><button class="btn-line" id="rnAdd" type="button">Add both power-ups</button></div>'
+        '<div class="rec-nudge" id="recNudge"><svg class="rn-i"><use href="#i-bolt"/></svg><div class="rn-t"><b>Power up your listing</b><span><strong style="color:var(--ink)">97% of buyers start online.</strong> A floor plan and a twilight exterior are the two add-ons that pull in the most showings.</span></div><button class="btn-line" id="rnAdd" type="button">Add both power-ups</button></div>'
        +'<div class="secs">'
          +section('reno','Do you need to virtually renovate it?','See what a modern renovation would look like — updated floors, cabinets and finishes — to show buyers the home’s full potential.',
              subQty('Virtual renovation','Modernize the dated finishes, then furnish. Pick which photos to renovate.','reno','renoN','photos','+'+money(PR.RENO)+' / photo','reno')
