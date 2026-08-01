@@ -204,6 +204,12 @@ HTML = r'''<!DOCTYPE html>
   .lb .arrow:hover,.lb .x:hover{background:rgba(255,255,255,.24)}
   .lb .cap button.saveb{border-color:#4a4640}
   .lb .cap button.saveb.on{background:var(--green);border-color:var(--green);color:#fff}
+  .lb .cap button.on{background:var(--green);border-color:var(--green);color:#fff}
+  .lb .lb3d{display:none;flex-direction:column;gap:12px;align-items:center;width:100%}
+  .lb.show3d #lbImg{display:none}
+  .lb.show3d .lb3d{display:flex}
+  .lb .lb3d .v3d{width:100%;max-width:1100px;height:min(62vh,560px);border-radius:8px}
+  .lb .lb3d-cap{color:#B7B0A8;font-size:12.5px;letter-spacing:.03em;text-align:center}
   /* toast */
   .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-size:13.5px;padding:12px 20px;border-radius:99px;opacity:0;transition:all .25s;z-index:300;pointer-events:none}
   .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -268,8 +274,9 @@ HTML = r'''<!DOCTYPE html>
   <button class="arrow next" id="lbNext" aria-label="Next">&#8250;</button>
   <figure>
     <img id="lbImg" src="" alt="">
+    <div class="lb3d"><div class="v3d" id="lbV3d"><div class="v3d-obj"><span class="f front"></span><span class="f back"></span><span class="f right"></span><span class="f left"></span><span class="f top"></span><span class="f bottom"></span></div><span class="v3d-hint">Drag to rotate · real 3D models coming soon</span></div><div class="lb3d-cap">3D preview · sample — spin to inspect the grain &amp; texture. Use ‹ › to move through the set.</div></div>
     <div class="cap"><div class="l"><b id="lbBrand"></b> &nbsp;<span id="lbMeta"></span></div>
-      <div class="r"><button class="saveb" id="lbSave">♥ Save</button><button class="pri" id="lbCopy">Copy SKU</button><a class="pri" style="text-decoration:none" href="bella-order-page.html">Order this look</a></div></div>
+      <div class="r"><button id="lb3d">◈ 3D</button><button id="lbInfo">ⓘ Info</button><button class="saveb" id="lbSave">♥ Save</button><button class="pri" id="lbCopy">Copy SKU</button><a class="pri" style="text-decoration:none" href="bella-order-page.html">Order this look</a></div></div>
   </figure>
 </div>
 
@@ -423,11 +430,15 @@ function openLB(i){lbi=i;const d=view[i];document.getElementById('lbImg').src=d.
   const lbs=document.getElementById('lbSave');lbs.dataset.sku=d.sku;lbs.classList.toggle('on',saved.has(d.sku));lbs.textContent=(saved.has(d.sku)?'♥ Saved':'♥ Save');lbs.onclick=()=>toggleSave(d.sku);
   lb.classList.add('on');}
 function step(n){lbi=(lbi+n+view.length)%view.length;openLB(lbi);}
-document.getElementById('lbX').onclick=()=>lb.classList.remove('on');
+const lb3dBtn=document.getElementById('lb3d'),lbInfoBtn=document.getElementById('lbInfo');
+lb3dBtn.onclick=()=>{const on=lb.classList.toggle('show3d');lb3dBtn.classList.toggle('on',on);lb3dBtn.textContent=on?'◈ Photo':'◈ 3D';if(on)initV3d(document.getElementById('lbV3d'));};
+lbInfoBtn.onclick=()=>openInfo(view[lbi]);
+function closeLB(){lb.classList.remove('on','show3d');lb3dBtn.classList.remove('on');lb3dBtn.textContent='◈ 3D';}
+document.getElementById('lbX').onclick=closeLB;
 document.getElementById('lbPrev').onclick=()=>step(-1);
 document.getElementById('lbNext').onclick=()=>step(1);
-lb.addEventListener('click',e=>{if(e.target===lb)lb.classList.remove('on');});
-document.addEventListener('keydown',e=>{if(!lb.classList.contains('on'))return;if(e.key==="Escape")lb.classList.remove('on');if(e.key==="ArrowLeft")step(-1);if(e.key==="ArrowRight")step(1);});
+lb.addEventListener('click',e=>{if(e.target===lb)closeLB();});
+document.addEventListener('keydown',e=>{if(!lb.classList.contains('on'))return;if(e.key==="Escape")closeLB();if(e.key==="ArrowLeft")step(-1);if(e.key==="ArrowRight")step(1);});
 // scroll / trackpad moves through the sets while enlarged (debounced so one flick = one set)
 lb.addEventListener('wheel',e=>{e.preventDefault();if(lbWheelLock||Math.abs(e.deltaY)<10)return;lbWheelLock=true;step(e.deltaY>0?1:-1);setTimeout(()=>{lbWheelLock=false;},360);},{passive:false});
 // touch swipe on mobile: up = next, down = previous
