@@ -841,14 +841,6 @@
       <h2>Here's your package.</h2>
       <p>Everything you picked, in one place. Review it and start your order.</p>
     </div>
-    <div class="proj-details">
-      <div class="pd-h"><b>Project details</b><span>So we can label your files and brief the team.</span></div>
-      <div class="pd-grid">
-        <div class="pd-field"><label>Property address</label><input id="pdAddr" placeholder="123 Main St, City, ST" autocomplete="off"></div>
-        <div class="pd-field"><label>Listing agent</label><input id="pdAgent" placeholder="Your name" autocomplete="off"></div>
-      </div>
-      <div class="pd-field pd-full"><label>Notes about this project <span class="opt">optional</span></label><textarea id="pdNotes" placeholder="The buyer you're targeting, the vibe, features to highlight…"></textarea></div>
-    </div>
     <div class="summary">
       <div class="rec">
         <span class="micro">Recommended for you</span>
@@ -869,6 +861,14 @@
         <div id="addonList"></div>
       </div>
     </div>
+    <details class="proj-details opt">
+      <summary class="opt-sum"><span class="opt-plus">+</span>Add property details<em>optional — helps us label files &amp; brief the team</em></summary>
+      <div class="pd-grid">
+        <div class="pd-field"><label>Property address</label><input id="pdAddr" placeholder="123 Main St, City, ST" autocomplete="off"></div>
+        <div class="pd-field"><label>Listing agent</label><input id="pdAgent" placeholder="Your name" autocomplete="off"></div>
+      </div>
+      <div class="pd-field pd-full"><label>Notes about this project</label><textarea id="pdNotes" placeholder="The buyer you're targeting, the vibe, features to highlight…"></textarea></div>
+    </details>
     <div class="mkt-kit">
       <div class="mk-ic"><svg viewBox="0 0 24 24"><path d="M6.5 3.5h7l4.5 4.5v12h-11.5z"/><path d="M13.5 3.5V8H18"/><path d="M9 13h6M9 16h4"/></svg></div>
       <div class="mk-t">
@@ -1837,6 +1837,8 @@
       document.querySelectorAll('.choice').forEach(function(x){x.classList.remove('on');});
       c.classList.add('on'); state.proj=c.getAttribute('data-proj');
       document.getElementById('to2').disabled=false;
+      // auto-advance to step 2 (brief pause so the selection registers)
+      setTimeout(function(){ if(state.proj) goStep(2); }, 200);
     };
   });
   document.getElementById('to2').onclick=function(){ if(state.proj) goStep(2); };
