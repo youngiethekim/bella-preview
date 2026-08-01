@@ -318,9 +318,10 @@ function openInfo(d){
   }else{
     h+='<div class="shop"><b>Curated by a Bella designer.</b> Send us this SKU and we\'ll stage your photos in this exact look.</div>';
   }
-  h+='<div class="ifoot"><button class="cp" id="iCopy">Copy SKU</button><a class="od" href="bella-order-page.html?skus='+d.sku+'">Order this look →</a></div>';
+  h+='<div class="ifoot"><button class="cp" id="iCopy">Copy SKU</button><button class="od" id="iDisc">Get the discount →</button></div>';
   document.getElementById('iBody').innerHTML=h;
   document.getElementById('iCopy').onclick=()=>copy(d.sku);
+  document.getElementById('iDisc').onclick=()=>toast(d.brand? "We'll send your Bella Catalog link to shop these "+d.brand+" pieces at 15–65% off":"We'll send your Bella Catalog link to shop these pieces at a partner discount");
   imodal.classList.add('on');
 }
 const imodal=document.getElementById('imodal');
