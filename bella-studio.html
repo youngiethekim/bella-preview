@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#FBFAF8;--ink:#232120;--soft:#5E5A56;--faint:#9C978F;--line:#E8E4DE;--line-2:#F0EDE8;--dark:#1C1A18;--green:#3E6B4C;--gold:#B8985A;--blue:#3E6076;--amber:#B5892F;--purple:#6B4E86;--red:#C4553F;--top:60px}
+  :root{--bg:#FBFAF8;--ink:#232120;--soft:#5E5A56;--faint:#9C978F;--line:#E8E4DE;--line-2:#F0EDE8;--dark:#1C1A18;--green:#3E6B4C;--gold:#3E6B4C;--blue:#3E6076;--amber:#B5892F;--purple:#6B4E86;--red:#C4553F;--top:60px}
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
   body{background:var(--bg);color:var(--ink);font-family:"Jost",system-ui,sans-serif;font-weight:300;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow:hidden}
@@ -147,7 +147,7 @@
   .f-track span{display:block;height:100%;background:linear-gradient(90deg,var(--green),#7fbf94);border-radius:99px;transition:width .4s cubic-bezier(.5,1.6,.4,1)}
   .f-dots{display:flex;gap:6px}
   .f-dot{width:26px;height:26px;border-radius:8px;border:1px solid rgba(255,255,255,.16);display:grid;place-items:center;font-size:11px;color:#9FB0C4;cursor:pointer;transition:.15s;background:rgba(255,255,255,.03)}
-  .f-dot.cur{border-color:var(--gold);color:#fff;box-shadow:0 0 0 2px rgba(184,152,90,.3)}
+  .f-dot.cur{border-color:var(--gold);color:#fff;box-shadow:0 0 0 2px rgba(62,107,76,.3)}
   .f-dot.done{background:var(--green);border-color:var(--green);color:#fff}
   .f-count{font-size:12.5px;color:#9FB0C4;white-space:nowrap}
 
@@ -156,7 +156,7 @@
   .f-visual{position:relative;border-radius:14px;overflow:hidden;background:#0d0f13 center/contain no-repeat;min-height:0;border:1px solid rgba(255,255,255,.08);display:grid;place-items:center}
   .f-visual img{max-width:100%;max-height:100%;object-fit:contain;display:block}
   .f-pin{position:absolute;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50% 50% 50% 3px;background:var(--gold);color:#1c1a18;font-size:15px;font-weight:500;display:grid;place-items:center;border:3px solid #fff;box-shadow:0 4px 14px rgba(0,0,0,.5);animation:pinpulse 1.6s ease-in-out infinite}
-  @keyframes pinpulse{0%,100%{box-shadow:0 4px 14px rgba(0,0,0,.5),0 0 0 0 rgba(184,152,90,.5)}50%{box-shadow:0 4px 14px rgba(0,0,0,.5),0 0 0 12px rgba(184,152,90,0)}}
+  @keyframes pinpulse{0%,100%{box-shadow:0 4px 14px rgba(0,0,0,.5),0 0 0 0 rgba(62,107,76,.5)}50%{box-shadow:0 4px 14px rgba(0,0,0,.5),0 0 0 12px rgba(62,107,76,0)}}
   .f-tag{position:absolute;top:12px;left:12px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:rgba(0,0,0,.55);color:#fff;padding:5px 11px;border-radius:99px}
 
   .f-side{display:flex;flex-direction:column;min-height:0}
@@ -211,7 +211,7 @@
   .vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:12px}
   .vcard{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;transition:box-shadow .2s}
   .vcard.levelup{animation:vlevel .8s ease}
-  @keyframes vlevel{0%{box-shadow:0 0 0 0 rgba(184,152,90,.65)}100%{box-shadow:0 0 0 16px rgba(184,152,90,0)}}
+  @keyframes vlevel{0%{box-shadow:0 0 0 0 rgba(62,107,76,.65)}100%{box-shadow:0 0 0 16px rgba(62,107,76,0)}}
   .vc-stage{position:relative;aspect-ratio:4/3;background:#14161c;overflow:hidden;user-select:none}
   .vc-img,.vc-orig{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
   .vc-orig{display:none;z-index:2}
@@ -868,7 +868,7 @@
     var was=fDone[fIdx]; fDone[fIdx]=true; renderFocus(); if(!was) burst();
     setTimeout(function(){ if(fDone.every(Boolean)){ showComplete(); return; } fIdx=nextUndone(); renderFocus(); }, 680);
   }
-  var CONF=['#B8985A','#3E6B4C','#7fbf94','#E7C36A','#fff','#3E6076'];
+  var CONF=['#3E6B4C','#3E6B4C','#7fbf94','#3E6B4C','#fff','#3E6076'];
   function showComplete(){
     var c=$('fComplete');
     $('fcMsg').textContent='All '+fTasks.length+' task'+(fTasks.length>1?'s':'')+' done for '+fJob.addr+'. Nice work — that’s +'+(fTasks.length*10)+' XP.';

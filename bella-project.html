@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 <style>
-  :root{--bg:#FDFCFA;--ink:#232120;--soft:#6E6A66;--faint:#9C978F;--line:#E8E4DE;--line-2:#F0EDE8;--dark:#1C1A18;--green:#3E6B4C;--gold:#E7C36A;--amber:#B5892F;--red:#C4553F;--wash:#FAF8F5;--pad:44px}
+  :root{--bg:#FDFCFA;--ink:#232120;--soft:#6E6A66;--faint:#9C978F;--line:#E8E4DE;--line-2:#F0EDE8;--dark:#1C1A18;--green:#3E6B4C;--gold:#3E6B4C;--amber:#B5892F;--red:#C4553F;--wash:#FAF8F5;--pad:44px}
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{background:var(--bg);color:var(--ink);font-family:"Jost",system-ui,sans-serif;font-weight:300;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
@@ -53,7 +53,7 @@
   .blk .hd{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:16px}
   .blk .hd h2{font-size:17px}
   .blk .hd .micro{margin-left:auto}
-  .flag{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(231,195,106,.55);padding:2px 7px;border-radius:99px}
+  .flag{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(62,107,76,.55);padding:2px 7px;border-radius:99px}
 
   /* delivered files */
   .files{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
@@ -281,7 +281,7 @@
   .sm-head .smpr{font-size:14px;color:var(--soft);margin-top:6px}
   .sm-head .smpr s{color:var(--faint);margin-right:7px}
   .sm-body{padding:22px 28px 26px}
-  .sm-code{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#FAF7EF;border:1px dashed rgba(231,195,106,.7);padding:13px 16px;margin-bottom:8px}
+  .sm-code{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#FAF7EF;border:1px dashed rgba(62,107,76,.7);padding:13px 16px;margin-bottom:8px}
   .sm-code .lab{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
   .sm-code .code{font-size:16px;letter-spacing:.06em;color:var(--ink)}
   .sm-code button{font-family:inherit;font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:var(--ink);color:#fff;border:0;padding:8px 12px;cursor:pointer;transition:background .2s}
@@ -3241,7 +3241,7 @@ var qrcode = function() {
   function burstConfetti(el){
     if(!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     var r=el.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2;
-    var colors=['#3E6B4C','#B8985A','#C4553F','#3E6076','#B5892F'];
+    var colors=['#3E6B4C','#3E6B4C','#C4553F','#3E6076','#B5892F'];
     for(var i=0;i<16;i++){
       (function(i){
         var d=document.createElement('div'); d.className='confetti';
