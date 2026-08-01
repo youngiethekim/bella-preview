@@ -23,7 +23,7 @@
   .btn:hover{background:var(--green);color:#fff}
   .btn-ghost{background:transparent;border:1px solid var(--ink);color:var(--ink)}.btn-ghost:hover{background:var(--ink);color:#fff}
   header{border-bottom:1px solid var(--line-2)}
-  .nav{display:flex;align-items:center;height:64px;padding:0 var(--pad);max-width:1080px;margin:0 auto}
+  .nav{display:flex;align-items:center;gap:34px;height:64px;padding:0 var(--pad);max-width:1080px;margin:0 auto}
   .mark{font-size:15px;letter-spacing:.5em}.nav .sp{margin-left:auto}
   .nav a.lnk{font-size:12.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--soft)}
   .stage{max-width:760px;margin:0 auto;padding:52px var(--pad) 80px;min-height:70vh}
@@ -32,6 +32,8 @@
   .prog .bar{flex:1;height:6px;background:var(--line-2);border-radius:99px;overflow:hidden}
   .prog .bar i{display:block;height:100%;background:var(--green);border-radius:99px;transition:width .35s cubic-bezier(.2,.8,.2,1);width:0}
   .prog .lab{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
+  .prog .quit{background:0;border:0;font-family:inherit;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);cursor:pointer;padding:6px 2px;white-space:nowrap}
+  .prog .quit:hover{color:var(--ink)}
   /* intro */
   .intro h1{font-size:clamp(32px,5vw,50px);max-width:16ch;margin:14px 0 16px}
   .intro h1 em{font-style:normal;color:var(--green)}
@@ -212,10 +214,10 @@
   function renderQ(i){
     var Q=QUESTIONS[i];
     var pct=Math.round(i/QUESTIONS.length*100);
-    stage.innerHTML='<div class="prog"><div class="bar"><i style="width:'+pct+'%"></i></div><span class="lab">'+(i+1)+' of '+QUESTIONS.length+'</span></div>'
+    stage.innerHTML='<div class="prog"><div class="bar"><i style="width:'+pct+'%"></i></div><span class="lab">'+(i+1)+' of '+QUESTIONS.length+'</span><button class="quit" id="quit" type="button">✕ Cancel</button></div>'
       +'<div class="q fade"><span class="micro">Question '+(i+1)+'</span><h2>'+Q.q+'</h2><p class="qsub">'+Q.sub+'</p>'
       +'<div class="opts">'+Q.opts.map(function(o,oi){ return '<button class="opt" data-oi="'+oi+'"><span class="oi">'+svg(o.ic)+'</span><span><b>'+o.t+'</b><span>'+o.s+'</span></span></button>'; }).join('')+'</div>'
-      +(i>0?'<button class="back" id="back">← Back</button>':'')+'</div>';
+      +'<button class="back" id="back" type="button">'+(i>0?'← Back':'← Back to start')+'</button></div>';
     stage.querySelectorAll('.opt').forEach(function(btn){
       btn.onclick=function(){
         var o=Q.opts[+btn.getAttribute('data-oi')];
@@ -224,9 +226,13 @@
       };
     });
     var back=document.getElementById('back'); if(back) back.onclick=function(){
+      if(i===0){ step=-1; render(); return; }            // first question → back to the intro
       // undo previous question's score
       var prev=QUESTIONS[i-1]; if(prev&&prev.picked){ Object.keys(prev.picked.w).forEach(function(k){ scores[k]-=prev.picked.w[k]; }); prev.picked=null; }
       step--; render();
+    };
+    var quit=document.getElementById('quit'); if(quit) quit.onclick=function(){
+      if(history.length>1){ history.back(); } else { location.href='bella-resources.html'; }
     };
   }
   function ranked(){
