@@ -629,6 +629,8 @@
   .rec .lines li .li-p{display:inline-flex;align-items:center;gap:9px;white-space:nowrap}
   .li-x{width:20px;height:20px;border:0;border-radius:99px;background:var(--line-2);color:var(--soft);font-size:15px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .15s;flex:none}
   .li-x:hover{background:var(--red,#C4553F);color:#fff}
+  .rec .add-svc{background:0;border:0;font-family:inherit;font-size:13px;color:var(--green);cursor:pointer;padding:12px 0 0;letter-spacing:.02em}
+  .rec .add-svc:hover{color:var(--ink)}
   .rec .lines li .li-n{display:flex;align-items:center;gap:11px;min-width:0}
   .rec .lines li .li-ic{width:17px;height:17px;stroke:var(--green);fill:none;stroke-width:1.5;flex:none}
   .rec .incl{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:20px}
@@ -858,6 +860,7 @@
         <span class="micro">Recommended for you</span>
         <h3 id="recName">Your project</h3>
         <ul class="lines" id="recLines"></ul>
+        <button type="button" class="add-svc" id="addSvc">+ Add a service</button>
         <div class="tot"><span class="micro" style="color:#9B958C">Total</span><div style="text-align:right"><b id="recTotal">$0</b><div class="save" id="recSave"></div></div></div>
         <div class="incl">
           <span><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>MLS-ready in 24–48h</span>
@@ -1859,6 +1862,9 @@
     if(k==='reno') state.sel.reno=[]; if(k==='dusk') state.sel.dusk=[]; if(k==='sky') state.sel.sky=[];
     reMode(); sync(); buildSummary(); }
   document.getElementById('recLines').addEventListener('click',function(e){ var b=e.target.closest('.li-x'); if(b){ e.preventDefault(); removeLine(b.getAttribute('data-rm')); } });
+  // jump back to Step 2's add-on services from the checkout review
+  var addSvc=document.getElementById('addSvc');
+  if(addSvc) addSvc.onclick=function(){ goStep(2); if(hasExtras) showS2('b'); setTimeout(function(){ var t=document.querySelector('.secs')||document.getElementById('config'); if(t) t.scrollIntoView({behavior:'smooth',block:'start'}); }, 130); };
   document.getElementById('back1').onclick=function(){ goStep(1); };
   // 2a "Continue": listings go to the optional extras screen; renders skip straight to the package
   document.getElementById('toExtras').onclick=function(){ if(hasExtras) showS2('b'); else goStep(3); };
