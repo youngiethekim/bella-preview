@@ -79,6 +79,8 @@ HTML = r'''<!DOCTYPE html>
   .wrap{max-width:1400px;margin:0 auto;padding:0 var(--pad)}
   .btn{display:inline-block;background:var(--ink);color:#fff;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;padding:13px 22px;cursor:pointer;border:0;font-family:inherit;transition:background .2s}
   .btn:hover{background:var(--green)}
+  /* unified green focus ring (keyboard) — high-end accessibility polish */
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--green);outline-offset:2px}
   header{position:sticky;top:0;z-index:70;background:rgba(253,252,250,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line-2)}
   .nav{display:flex;align-items:center;gap:34px;height:64px;padding:0 var(--pad);max-width:1400px;margin:0 auto}
   .mark{font-size:15px;letter-spacing:.5em;font-weight:400}.nav .sp{margin-left:auto}
