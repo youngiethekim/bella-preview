@@ -171,6 +171,24 @@
   .pr-stage{position:relative;max-width:100%;user-select:none;line-height:0}
   .pr-stage img{max-width:100%;max-height:62vh;display:block;border-radius:4px}
   .pr-stage.pinning{cursor:crosshair}.pr-stage.drawing{cursor:crosshair}
+  /* 3D furniture viewer (placeholder) */
+  .v3dwrap{display:none;flex-direction:column;align-items:center;gap:12px}
+  .pr-stage-scroll.show3d .pr-stage{display:none}
+  .pr-stage-scroll.show3d .v3dwrap{display:flex}
+  .v3d{position:relative;width:min(520px,80vw);height:300px;background:radial-gradient(circle at 50% 38%,#F8F5F0,#EAE4DB);border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:grab;perspective:900px;touch-action:none;display:flex;align-items:center;justify-content:center}
+  .v3d:active{cursor:grabbing}
+  .v3d-obj{position:relative;width:150px;height:88px;transform-style:preserve-3d;transform:rotateX(-16deg) rotateY(26deg);will-change:transform}
+  .v3d-obj .f{position:absolute;inset:0;border:1px solid rgba(70,48,24,.28);box-shadow:inset 0 0 30px rgba(60,40,20,.16);background:repeating-linear-gradient(88deg,#b48a56,#b48a56 3px,#a57942 3px,#a57942 7px)}
+  .v3d-obj .front{transform:translateZ(25px)}
+  .v3d-obj .back{transform:rotateY(180deg) translateZ(25px)}
+  .v3d-obj .right{width:50px;left:50px;transform:rotateY(90deg) translateZ(75px);filter:brightness(.88)}
+  .v3d-obj .left{width:50px;left:50px;transform:rotateY(-90deg) translateZ(75px);filter:brightness(.8)}
+  .v3d-obj .top{height:50px;top:19px;transform:rotateX(90deg) translateZ(44px);background:repeating-linear-gradient(2deg,#c39a66,#c39a66 3px,#b4894e 3px,#b4894e 7px);filter:brightness(1.06)}
+  .v3d-obj .bottom{height:50px;top:19px;transform:rotateX(-90deg) translateZ(44px);filter:brightness(.68)}
+  .v3d-hint{position:absolute;bottom:10px;left:0;right:0;text-align:center;font-size:11px;letter-spacing:.05em;color:var(--faint);pointer-events:none}
+  .v3d-cap{font-size:12.5px;color:var(--soft);display:flex;align-items:center;gap:10px}
+  .v3d-cap .tag{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--green);background:#EDF4EE;padding:2px 8px;border-radius:99px}
+  .v3d-cap button{font-family:inherit;font-size:12px;color:var(--ink);background:var(--wash,#FAF8F5);border:1px solid var(--line);border-radius:7px;padding:6px 12px;cursor:pointer}
   .pr-draw{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
   .pr-draw.live{pointer-events:auto}
   .pr-pins{position:absolute;inset:0}
@@ -628,9 +646,10 @@
           <span id="prSwatches"></span>
           <button class="pr-tool" id="prUndo" type="button" title="Undo"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10H9"/></svg></button>
           <button class="pr-tool" id="prClear" type="button" title="Clear all"><svg viewBox="0 0 24 24"><path d="M6 7h12M9 7V5h6v2M8 7l1 12h6l1-12"/></svg></button>
+          <button class="pr-tool" id="pr3dBtn" type="button" title="Inspect furniture in 3D"><svg viewBox="0 0 24 24"><path d="M12 2.5l8.5 4.9v9.2L12 21.5l-8.5-4.9V7.4z"/><path d="M12 11.7l8.5-4.8M12 11.7v9.8M12 11.7L3.5 6.9"/></svg></button>
           <span class="pr-tip" id="prTip">Click the photo where you'd like a change, then write what you want.</span>
         </div>
-        <div class="pr-stage-scroll"><div class="pr-stage" id="prStage"><img id="prImg" alt=""><svg class="pr-draw" id="prDraw" viewBox="0 0 100 100" preserveAspectRatio="none"></svg><div class="pr-pins" id="prPins"></div></div></div>
+        <div class="pr-stage-scroll" id="prStageScroll"><div class="pr-stage" id="prStage"><img id="prImg" alt=""><svg class="pr-draw" id="prDraw" viewBox="0 0 100 100" preserveAspectRatio="none"></svg><div class="pr-pins" id="prPins"></div></div><div class="v3dwrap"><div class="v3d" id="pr3dViewer"><div class="v3d-obj"><span class="f front"></span><span class="f back"></span><span class="f right"></span><span class="f left"></span><span class="f top"></span><span class="f bottom"></span></div><span class="v3d-hint">Drag to rotate · real 3D models coming soon</span></div><div class="v3d-cap"><span class="tag">3D preview · sample</span> Spin to inspect the grain &amp; texture <button type="button" id="pr3dBack">← Back to photo</button></div></div></div>
       </div>
       <div class="pr-side">
         <div class="pr-side-h">Your change requests</div>
@@ -3256,7 +3275,7 @@ var qrcode = function() {
     {c:'#3C3F42',n:'Wrought Iron · 2124-10'}
   ];
   function reqsFor(i){ reviews[i]=reviews[i]||[]; return reviews[i]; }
-  function openReview(i){ prIdx=i; prTool='pin'; prLive={down:false,shape:null}; document.getElementById('prImg').src=PHOTOS[i]; renderPR(); document.getElementById('photoReview').classList.add('open'); }
+  function openReview(i){ prIdx=i; prTool='pin'; prLive={down:false,shape:null}; document.getElementById('prImg').src=PHOTOS[i]; var sc=document.getElementById('prStageScroll'); if(sc) sc.classList.remove('show3d'); var b3=document.getElementById('pr3dBtn'); if(b3) b3.classList.remove('on'); renderPR(); document.getElementById('photoReview').classList.add('open'); }
   function closeReview(){ document.getElementById('photoReview').classList.remove('open'); var m=pendingMove; pendingMove=null; animatedRender(m); }
   function prShape(sh){ var NS='http://www.w3.org/2000/svg', el; if(sh.type==='free'){ el=document.createElementNS(NS,'polyline'); el.setAttribute('points',sh.pts.map(function(p){return p[0]+','+p[1];}).join(' ')); el.setAttribute('fill','none'); } if(!el) return null; el.setAttribute('stroke',sh.color); el.setAttribute('stroke-width','1.3'); el.setAttribute('vector-effect','non-scaling-stroke'); el.setAttribute('stroke-linecap','round'); el.setAttribute('stroke-linejoin','round'); return el; }
   function renderPR(){
@@ -3321,9 +3340,22 @@ var qrcode = function() {
     else { send.style.display=''; send.textContent='Request revisions'; appr.style.display=''; appr.disabled=false; appr.textContent='✓ Mark as done'; }
   }
   function prPct(e){ var r=document.getElementById('prStage').getBoundingClientRect(); return {x:Math.max(0,Math.min(100,(e.clientX-r.left)/r.width*100)), y:Math.max(0,Math.min(100,(e.clientY-r.top)/r.height*100))}; }
+  function initV3d(v){
+    if(!v||v.dataset.on) return; v.dataset.on='1';
+    var obj=v.querySelector('.v3d-obj'); if(!obj) return;
+    var rx=-16, ry=26, drag=false, px=0, py=0;
+    function apply(){ obj.style.transform='rotateX('+rx+'deg) rotateY('+ry+'deg)'; }
+    apply();
+    v.addEventListener('pointerdown',function(e){ drag=true; px=e.clientX; py=e.clientY; try{v.setPointerCapture(e.pointerId);}catch(_){} });
+    v.addEventListener('pointermove',function(e){ if(!drag) return; ry+=(e.clientX-px)*0.6; rx-=(e.clientY-py)*0.6; rx=Math.max(-85,Math.min(85,rx)); px=e.clientX; py=e.clientY; apply(); });
+    window.addEventListener('pointerup',function(){ drag=false; });
+  }
   (function(){
     var stg=document.getElementById('prStage'); if(!stg) return;
     document.getElementById('prClose').onclick=closeReview;
+    var sc=document.getElementById('prStageScroll'), b3=document.getElementById('pr3dBtn'), bb=document.getElementById('pr3dBack');
+    if(b3) b3.onclick=function(){ sc.classList.add('show3d'); b3.classList.add('on'); initV3d(document.getElementById('pr3dViewer')); };
+    if(bb) bb.onclick=function(){ sc.classList.remove('show3d'); if(b3) b3.classList.remove('on'); };
     document.getElementById('photoReview').addEventListener('click',function(e){ if(e.target===this) closeReview(); });
     window.addEventListener('keydown',function(e){ if(e.key==='Escape'&&document.getElementById('photoReview').classList.contains('open')) closeReview(); });
     document.querySelectorAll('#photoReview [data-prtool]').forEach(function(b){ b.onclick=function(){ prTool=b.getAttribute('data-prtool'); renderPR(); }; });
