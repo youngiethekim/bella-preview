@@ -420,6 +420,8 @@
   .up-th:hover .up-set{opacity:1}
   .up-hint{font-size:12.5px;color:var(--soft);margin-top:12px;line-height:1.5}
   .up-hint b{color:var(--ink);font-weight:500}
+  .count-nudge{font-size:13px;color:var(--soft);margin:11px 0 2px;line-height:1.5}
+  .vol-anchor{font-size:12px;color:var(--faint);margin-top:10px;line-height:1.45}
   .up-th.empty{border:1.5px dashed var(--line);background:#fff;display:grid;place-items:center;cursor:pointer;color:var(--faint);padding:0;transition:.14s}
   .up-th.empty:hover{border-color:var(--green);color:var(--green);background:#F7FAF7}
   .up-th.empty svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.7}
@@ -1096,6 +1098,7 @@
           +'<div class="core-top"><span class="stp-n">1</span>'
             +'<span class="lbl"><b>How many photos are we staging?</b><span>Tap + or − to set the number.</span><span class="pop-note" id="popNote"></span></span>'
             +stepper('photos')+'</div>'
+          +'<div class="count-nudge">Stage every room a buyer will scroll. One empty room beside styled ones is the room they notice.</div>'
           +volMeter()
           +'<input type="file" id="upInput" accept="image/*" multiple hidden>'
           +'<div class="up-thumbs" id="upThumbs"></div>'
@@ -1199,6 +1202,7 @@
     return '<div class="vol">'
       +'<div class="vol-econ" id="volEcon"></div>'
       +'<div class="vol-msg" id="volMsg"></div>'
+      +'<div class="vol-anchor">Physical staging runs $2,000–5,000 a month. This is yours once.</div>'
       +'<button type="button" class="vol-tiers-toggle" id="volTiersToggle">See all volume discounts</button>'
       +'<div class="vol-tiers" id="volTiers">'+VTIERS.map(function(t){
           return '<button type="button" class="vt" data-min="'+t.m+'"><b>'+t.m+'+</b><span class="vt-off">'+t.d+'% off</span></button>';
@@ -1232,7 +1236,7 @@
       if(next){
         var addN=next.m-p, nper=photoPrice(next.d), nsaved=base*next.m*(next.d/100);
         msg.innerHTML='<button type="button" class="vol-add" id="volAdd">+ Add '+addN+' photo'+(addN>1?'s':'')+'</button>'
-          +'<span>to unlock <b>'+next.d+'% off</b> — save '+money(nsaved)+' more.</span>';
+          +'<span>to unlock <b>'+next.d+'% off</b> — that\'s '+money(nsaved)+' back, and every photo drops to '+money2(nper)+'.</span>';
       } else {
         msg.innerHTML='<span class="vol-now">✓ Top tier unlocked — '+money2(per)+'/photo, your best price.</span>';
       }
@@ -1445,7 +1449,7 @@
     wrap.innerHTML=filled+empties;
     var hint=document.getElementById('upHint');
     if(hint){
-      if(!n) hint.innerHTML='<b>'+target+' box'+(target>1?'es':'')+' to fill.</b> Tap one to upload, or drag your photos in.';
+      if(!n) hint.innerHTML='<b>'+target+' room'+(target>1?'s':'')+' ready to transform.</b> Tap one to upload, or drag your photos in.';
       else if(remaining>0) hint.innerHTML='<b>'+n+' of '+target+' uploaded — '+remaining+' to go.</b> Tap a photo to set its style, or leave it to our designers.';
       else hint.innerHTML='<b>All '+target+' uploaded ✓</b> — tap a photo to set its own style, or leave them to our designers.';
     }
