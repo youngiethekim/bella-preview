@@ -1246,8 +1246,9 @@
   function photographerBlock(){
     return '<label class="dc-row" id="upLaterRow"><input type="checkbox" id="upLaterCb"><span class="dc-box"></span><span class="dc-t"><b>My photos aren’t ready yet</b><span>We’ll send a secure upload link instead.</span></span></label>'
       +'<div class="up-later-panel" id="upLaterPanel">'
-        +'<label>Photographer’s email</label><input type="email" id="photogEmail" placeholder="photographer@studio.com" autocomplete="off">'
-        +'<label style="margin-top:12px">Instructions for this shoot <span style="text-transform:none;letter-spacing:0;color:var(--faint)">— edit as needed</span></label><textarea id="photogNotes"></textarea>'
+        +'<label>Email the upload link to</label><input type="email" id="photogEmail" placeholder="name@email.com" autocomplete="off">'
+        +'<span style="display:block;font-size:12px;color:var(--faint);margin-top:5px">Send it to yourself, your photographer, or an assistant who has the photos.</span>'
+        +'<label style="margin-top:12px">Upload instructions <span style="text-transform:none;letter-spacing:0;color:var(--faint)">— edit as needed</span></label><textarea id="photogNotes"></textarea>'
         +'<div class="up-later-row"><button type="button" id="photogSend" style="background:var(--ink);color:#fff;border:0;font-family:inherit;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:11px 17px;cursor:pointer;border-radius:6px">Send upload link</button><span style="font-size:12px;color:var(--faint)">They get a secure link to upload straight to this order — you don’t relay files.</span></div>'
         +'<div class="up-later-sent" id="photogSent"></div>'
       +'</div>';
@@ -1326,7 +1327,7 @@
   // ---- photographer: send a direct upload link + instructions ----
   function photogDefaultNotes(){
     var n=state.photos, a=(document.getElementById('addr')&&document.getElementById('addr').value)||'this listing';
-    return 'Hi — could you shoot and upload '+n+' photo'+(n>1?'s':'')+' for a Bella Virtual staging order.\n\nWhat we need:\n• One clean, wide, level shot per room — chest height, shoot into a corner\n• Blinds up, every light on, rooms tidy\n• JPG or PNG, highest resolution\n• Upload straight to the secure link below — no need to send them to me\n\nFull shot list: bellavirtual.com/resources (phone photo guide). Thank you!';
+    return 'Hi — could you upload '+n+' photo'+(n>1?'s':'')+' for a Bella Virtual staging order.\n\nWhat we need:\n• One clean, wide, level shot per room — chest height, shoot into a corner\n• Blinds up, every light on, rooms tidy\n• JPG or PNG, highest resolution\n• Upload straight to the secure link below — no need to send them to me\n\nFull shot list: bellavirtual.com/resources (phone photo guide). Thank you!';
   }
   function bindPhotographer(){
     var mt=document.getElementById('moreToggle');
@@ -1335,11 +1336,14 @@
     var panel=document.getElementById('upLaterPanel'), notes=document.getElementById('photogNotes'), email=document.getElementById('photogEmail'), send=document.getElementById('photogSend'), sent=document.getElementById('photogSent');
     if(state.photog.email) email.value=state.photog.email;
     notes.value=state.photog.notes||photogDefaultNotes();
-    if(state.photog.sent){ cb.checked=true; panel.classList.add('show'); sent.textContent='✓ Upload link sent to '+state.photog.email+' (demo). They can upload straight to this order.'; }
-    cb.onchange=function(){ panel.classList.toggle('show',cb.checked); if(cb.checked&&!notes.value) notes.value=photogDefaultNotes(); };
+    // when "photos aren't ready" is on, the upload boxes are irrelevant — hide them
+    var upT=document.getElementById('upThumbs'), upH=document.getElementById('upHint');
+    function toggleBoxes(hide){ if(upT) upT.style.display=hide?'none':''; if(upH) upH.style.display=hide?'none':''; }
+    if(state.photog.sent){ cb.checked=true; panel.classList.add('show'); toggleBoxes(true); sent.textContent='✓ Upload link sent to '+state.photog.email+' (demo). They can upload straight to this order.'; }
+    cb.onchange=function(){ panel.classList.toggle('show',cb.checked); toggleBoxes(cb.checked); if(cb.checked&&!notes.value) notes.value=photogDefaultNotes(); };
     send.onclick=function(){
       var em=(email.value||'').trim();
-      if(!em||em.indexOf('@')<1){ sent.style.color='var(--amber)'; sent.textContent='Enter the photographer’s email first.'; return; }
+      if(!em||em.indexOf('@')<1){ sent.style.color='var(--amber)'; sent.textContent='Enter an email address first.'; return; }
       state.photog={email:em,notes:notes.value,sent:true};
       sent.style.color='var(--green)'; sent.textContent='✓ Upload link + instructions sent to '+em+' (demo). They can upload straight to this order.';
       var s1=document.getElementById('stp1'); if(s1) s1.classList.add('done');
