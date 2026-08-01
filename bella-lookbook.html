@@ -112,6 +112,21 @@
   .icard .ifoot button,.icard .ifoot a{flex:1;text-align:center;font-family:inherit;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;padding:11px;border-radius:8px;text-decoration:none;cursor:pointer;border:0}
   .icard .ifoot .cp{background:var(--wash);border:1px solid var(--line);color:var(--ink)}.icard .ifoot .cp:hover{border-color:var(--ink)}
   .icard .ifoot .od{background:var(--ink);color:#fff}.icard .ifoot .od:hover{background:var(--green)}
+  /* 3D furniture viewer (placeholder) */
+  .v3d-sec{margin-top:16px}
+  .v3d-lab{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:8px;display:flex;align-items:center;gap:9px}
+  .v3d-lab .tag{color:var(--green);background:#EDF4EE;padding:2px 8px;border-radius:99px;letter-spacing:.06em}
+  .v3d{position:relative;height:210px;background:radial-gradient(circle at 50% 38%,#F8F5F0,#EAE4DB);border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:grab;perspective:820px;touch-action:none;display:flex;align-items:center;justify-content:center}
+  .v3d:active{cursor:grabbing}
+  .v3d-obj{position:relative;width:130px;height:76px;transform-style:preserve-3d;transform:rotateX(-16deg) rotateY(26deg);will-change:transform}
+  .v3d-obj .f{position:absolute;inset:0;border:1px solid rgba(70,48,24,.28);box-shadow:inset 0 0 26px rgba(60,40,20,.16);background:repeating-linear-gradient(88deg,#b48a56,#b48a56 3px,#a57942 3px,#a57942 7px)}
+  .v3d-obj .front{transform:translateZ(22px)}
+  .v3d-obj .back{transform:rotateY(180deg) translateZ(22px)}
+  .v3d-obj .right{width:44px;left:43px;transform:rotateY(90deg) translateZ(65px);filter:brightness(.88)}
+  .v3d-obj .left{width:44px;left:43px;transform:rotateY(-90deg) translateZ(65px);filter:brightness(.8)}
+  .v3d-obj .top{height:44px;top:16px;transform:rotateX(90deg) translateZ(38px);background:repeating-linear-gradient(2deg,#c39a66,#c39a66 3px,#b4894e 3px,#b4894e 7px);filter:brightness(1.06)}
+  .v3d-obj .bottom{height:44px;top:16px;transform:rotateX(-90deg) translateZ(38px);filter:brightness(.68)}
+  .v3d-hint{position:absolute;bottom:9px;left:0;right:0;text-align:center;font-size:10.5px;letter-spacing:.05em;color:var(--faint);pointer-events:none}
   .empty{text-align:center;padding:80px 20px;color:var(--soft)}
   .empty h3{font-size:22px;color:var(--ink);margin-bottom:8px}
   /* lightbox */
@@ -304,6 +319,15 @@ grid.addEventListener('click',e=>{
 });
 // per-set furniture details — populate PIECES[sku]=[{name,type,price}] when piece data exists
 const PIECES={};
+var V3D_HTML='<div class="v3d"><div class="v3d-obj"><span class="f front"></span><span class="f back"></span><span class="f right"></span><span class="f left"></span><span class="f top"></span><span class="f bottom"></span></div><span class="v3d-hint">Drag to rotate · real 3D models coming soon</span></div>';
+function initV3d(v){
+  if(!v) return; var obj=v.querySelector('.v3d-obj'); if(!obj||v.dataset.on) return; v.dataset.on='1';
+  var rx=-16, ry=26, drag=false, px=0, py=0;
+  function apply(){ obj.style.transform='rotateX('+rx+'deg) rotateY('+ry+'deg)'; }
+  v.addEventListener('pointerdown',function(e){ drag=true; px=e.clientX; py=e.clientY; try{v.setPointerCapture(e.pointerId);}catch(_){} });
+  v.addEventListener('pointermove',function(e){ if(!drag) return; ry+=(e.clientX-px)*0.6; rx-=(e.clientY-py)*0.6; rx=Math.max(-85,Math.min(85,rx)); px=e.clientX; py=e.clientY; apply(); });
+  window.addEventListener('pointerup',function(){ drag=false; });
+}
 function openInfo(d){
   if(!d)return;
   const im=document.getElementById('iImg'); im.src=d.img; im.alt=d.sku;
@@ -320,8 +344,10 @@ function openInfo(d){
   }else{
     h+='<div class="shop"><b>Curated by a Bella designer.</b> Send us this SKU and we\'ll stage your photos in this exact look.</div>';
   }
+  h+='<div class="v3d-sec"><div class="v3d-lab">Spin the furniture <span class="tag">3D preview · sample</span></div>'+V3D_HTML+'</div>';
   h+='<div class="ifoot"><button class="cp" id="iCopy">Copy SKU</button><button class="od" id="iDisc">Get the discount →</button></div>';
   document.getElementById('iBody').innerHTML=h;
+  initV3d(document.querySelector('#iBody .v3d'));
   document.getElementById('iCopy').onclick=()=>copy(d.sku);
   document.getElementById('iDisc').onclick=()=>toast(d.brand? "We'll send your Bella Catalog link to shop these "+d.brand+" pieces at 15–65% off":"We'll send your Bella Catalog link to shop these pieces at a partner discount");
   imodal.classList.add('on');
