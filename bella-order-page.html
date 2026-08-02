@@ -638,6 +638,10 @@
   .rec .lines li .li-p{display:inline-flex;align-items:center;gap:9px;white-space:nowrap}
   .li-x{width:20px;height:20px;border:0;border-radius:99px;background:var(--line-2);color:var(--soft);font-size:15px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .15s;flex:none}
   .li-x:hover{background:var(--red,#C4553F);color:#fff}
+  .li-qty{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:6px;overflow:hidden;flex:none}
+  .li-qty button{width:24px;height:24px;border:0;background:#fff;color:var(--soft);font-size:15px;line-height:1;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;transition:all .12s}
+  .li-qty button:hover{background:var(--green);color:#fff}
+  .li-qty button:first-child{border-right:1px solid var(--line)}
   .rec .add-svc{background:0;border:0;font-family:inherit;font-size:13px;color:var(--green);cursor:pointer;padding:12px 0 0;letter-spacing:.02em}
   .rec .add-svc:hover{color:var(--ink)}
   .rec .lines li .li-n{display:flex;align-items:center;gap:11px;min-width:0}
@@ -916,7 +920,7 @@
     <div class="reqpanel" id="reqPanel"></div>
     <div class="wiz-foot">
       <button class="btn-line" id="back2">← Back</button>
-      <span class="running">You can adjust quantities on the previous step.</span>
+      <span class="running">Adjust quantities right here with − / +, or remove anything with ×.</span>
       <span></span>
     </div>
   </section>
@@ -1052,22 +1056,22 @@
     if(p.path==='listing'){
       var total=0, disc=0;
       var stageCost=stageUnit()*state.photos, dStage=stageCost*volDisc(state.photos);
-      L.push(['Virtual staging × '+state.photos+' photos', money(stageCost)]); total+=stageCost-dStage; disc+=dStage;
+      L.push(['Virtual staging × '+state.photos+' photos', money(stageCost),null,'photos']); total+=stageCost-dStage; disc+=dStage;
       if(state.removal){ L.push(['Furniture removal', 'Free']); }
-      if(state.reno){ var renoCost=PR.RENO*state.renoN, dReno=renoCost*volDisc(state.renoN); L.push(['Virtual renovation × '+state.renoN, money(renoCost), 'reno']); total+=renoCost-dReno; disc+=dReno; }
-      if(state.floor2d){ L.push(['2D floor plan × '+state.fp2dn+(state.fp2dn>1?' floors':' floor'), money(PR.FP2D*state.fp2dn), 'floor2d']); total+=PR.FP2D*state.fp2dn; }
-      if(state.floor){ L.push(['3D floor plan × '+state.fpn+(state.fpn>1?' floors':' floor'), money(fp3d()*state.fpn), 'floor']); total+=fp3d()*state.fpn; }
+      if(state.reno){ var renoCost=PR.RENO*state.renoN, dReno=renoCost*volDisc(state.renoN); L.push(['Virtual renovation × '+state.renoN, money(renoCost), 'reno', 'renoN']); total+=renoCost-dReno; disc+=dReno; }
+      if(state.floor2d){ L.push(['2D floor plan × '+state.fp2dn+(state.fp2dn>1?' floors':' floor'), money(PR.FP2D*state.fp2dn), 'floor2d', 'fp2dn']); total+=PR.FP2D*state.fp2dn; }
+      if(state.floor){ L.push(['3D floor plan × '+state.fpn+(state.fpn>1?' floors':' floor'), money(fp3d()*state.fpn), 'floor', 'fpn']); total+=fp3d()*state.fpn; }
       if(state.tour){ L.push(['360° tour — stitch & host', money(PR.TOUR), 'tour']); total+=PR.TOUR; }
-      if(state.dusk){ var duskCost=PR.DUSK*state.duskN, dDusk=duskCost*volDisc(state.duskN); L.push(['Day-to-dusk edits × '+state.duskN, money(duskCost), 'dusk']); total+=duskCost-dDusk; disc+=dDusk; }
-      if(state.sky){ var skyCost=PR.SKY*state.skyN, dSky=skyCost*volDisc(state.skyN); L.push(['Sky replacement & retouching × '+state.skyN, money(skyCost), 'sky']); total+=skyCost-dSky; disc+=dSky; }
-      if(state.pano360){ var panoCost=PR.PANO*state.pano, dPano=panoCost*volDisc(state.pano); L.push(['360° virtual tour × '+state.pano, money(panoCost), 'pano360']); total+=panoCost-dPano; disc+=dPano; }
+      if(state.dusk){ var duskCost=PR.DUSK*state.duskN, dDusk=duskCost*volDisc(state.duskN); L.push(['Day-to-dusk edits × '+state.duskN, money(duskCost), 'dusk', 'duskN']); total+=duskCost-dDusk; disc+=dDusk; }
+      if(state.sky){ var skyCost=PR.SKY*state.skyN, dSky=skyCost*volDisc(state.skyN); L.push(['Sky replacement & retouching × '+state.skyN, money(skyCost), 'sky', 'skyN']); total+=skyCost-dSky; disc+=dSky; }
+      if(state.pano360){ var panoCost=PR.PANO*state.pano, dPano=panoCost*volDisc(state.pano); L.push(['360° virtual tour × '+state.pano, money(panoCost), 'pano360', 'pano']); total+=panoCost-dPano; disc+=dPano; }
       if(disc) L.push(['Volume discount', '−'+money(disc)]);
       return {L:L,total:total,disc:disc};
     } else {
       var t=0, bdisc=0, rq=renderQty(), rd=volDisc(rq);   // discount scales on the TOTAL render count (a bundle)
-      if(state.useInt){ var ci=rInt()*state.rint, di=ci*rd; L.push([(state.commercial?'Commercial interior render × ':'Interior 3D render × ')+state.rint, money(ci), 'useInt']); t+=ci-di; bdisc+=di; }
-      if(state.useExt){ var ce=rExt()*state.rext, de=ce*rd; L.push([(state.commercial?'Commercial exterior render × ':'Exterior 3D render × ')+state.rext, money(ce), 'useExt']); t+=ce-de; bdisc+=de; }
-      if(state.useFp){ var cf=fp3d()*state.rfp, df=cf*rd; L.push(['3D floor plan × '+state.rfp, money(cf), 'useFp']); t+=cf-df; bdisc+=df; }
+      if(state.useInt){ var ci=rInt()*state.rint, di=ci*rd; L.push([(state.commercial?'Commercial interior render × ':'Interior 3D render × ')+state.rint, money(ci), 'useInt', 'rint']); t+=ci-di; bdisc+=di; }
+      if(state.useExt){ var ce=rExt()*state.rext, de=ce*rd; L.push([(state.commercial?'Commercial exterior render × ':'Exterior 3D render × ')+state.rext, money(ce), 'useExt', 'rext']); t+=ce-de; bdisc+=de; }
+      if(state.useFp){ var cf=fp3d()*state.rfp, df=cf*rd; L.push(['3D floor plan × '+state.rfp, money(cf), 'useFp', 'rfp']); t+=cf-df; bdisc+=df; }
       if(bdisc) L.push(['Volume discount · '+Math.round(rd*100)+'% off '+rq+' renders', '−'+money(bdisc)]);
       return {L:L,total:t,disc:bdisc};
     }
@@ -1749,7 +1753,7 @@
   function buildSummary(){
     var r=lines();
     document.getElementById('recName').textContent=packName();
-    document.getElementById('recLines').innerHTML=r.L.map(function(x){return '<li><span class="li-n">'+lineIcon(x[0])+'<span>'+x[0]+'</span></span><span class="li-p">'+x[1]+(x[2]?'<button type="button" class="li-x" data-rm="'+x[2]+'" aria-label="Remove '+x[0]+'" title="Remove">×</button>':'')+'</span></li>';}).join('');
+    document.getElementById('recLines').innerHTML=r.L.map(function(x){var q=x[3]?'<span class="li-qty" data-qk="'+x[3]+'"><button type="button" data-d="-1" aria-label="Fewer">−</button><button type="button" data-d="1" aria-label="More">+</button></span>':'';return '<li><span class="li-n">'+lineIcon(x[0])+'<span>'+x[0]+'</span></span><span class="li-p">'+q+x[1]+(x[2]?'<button type="button" class="li-x" data-rm="'+x[2]+'" aria-label="Remove '+x[0]+'" title="Remove">×</button>':'')+'</span></li>';}).join('');
     var fo=document.getElementById('foCb');
     if(fo){ fo.checked=!!state.sourceFurniture; fo.onchange=function(){ state.sourceFurniture=fo.checked; document.getElementById('foDone').textContent = fo.checked? '✓ Noted — our design team will reach out about furniture sourcing after you place the order.' : ''; }; }
     var mk=document.getElementById('mkCb');
@@ -1880,7 +1884,16 @@
   function removeLine(k){ if(!k) return; if(state.hasOwnProperty(k)) state[k]=false;
     if(k==='reno') state.sel.reno=[]; if(k==='dusk') state.sel.dusk=[]; if(k==='sky') state.sel.sky=[];
     reMode(); sync(); buildSummary(); }
-  document.getElementById('recLines').addEventListener('click',function(e){ var b=e.target.closest('.li-x'); if(b){ e.preventDefault(); removeLine(b.getAttribute('data-rm')); } });
+  // adjust a line's quantity from the checkout review (mirrors the Step 2 stepper bounds)
+  function bumpQty(key,d){ if(!key) return;
+    var perPhoto=(key==='renoN'||key==='duskN'||key==='skyN');
+    var min=(key==='photos')?Math.max(1,state.uploads.length):1;   // a line that exists stays at 1+; use × to remove
+    var nv=(state[key]||0)+d;
+    if(perPhoto) nv=Math.min(nv,state.photos);   // can't edit more photos than you're staging
+    state[key]=Math.max(min,nv); sync(); buildSummary(); }
+  document.getElementById('recLines').addEventListener('click',function(e){
+    var q=e.target.closest('.li-qty button'); if(q){ e.preventDefault(); bumpQty(q.closest('.li-qty').getAttribute('data-qk'), +q.getAttribute('data-d')); return; }
+    var b=e.target.closest('.li-x'); if(b){ e.preventDefault(); removeLine(b.getAttribute('data-rm')); } });
   // jump back to Step 2's add-on services from the checkout review
   var addSvc=document.getElementById('addSvc');
   if(addSvc) addSvc.onclick=function(){ goStep(2); if(hasExtras) showS2('b'); setTimeout(function(){ var t=document.querySelector('.secs')||document.getElementById('config'); if(t) t.scrollIntoView({behavior:'smooth',block:'start'}); }, 130); };
