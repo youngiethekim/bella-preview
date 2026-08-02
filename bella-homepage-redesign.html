@@ -1579,21 +1579,36 @@ document.querySelectorAll('.compare').forEach(function(el){
     <div class="fs-body">
       <button class="fs-x" id="fsX" aria-label="Close">&times;</button>
       <div id="fsForm">
-        <div class="fs-eyebrow">Free · No card · 24 hours</div>
+        <div class="fs-eyebrow">For real estate pros · Free · 24 hours</div>
         <h3>See one room <em>staged free.</em></h3>
         <p class="sub">Send us one listing photo of an empty or dated room. Our designers stage it and email it back within 24 hours — watermark-free, MLS-ready. See the quality before you spend a dollar.</p>
         <form id="fsFm">
-          <input class="fs-field" type="email" id="fsEmail" placeholder="Your email" required>
+          <input class="fs-field" type="email" id="fsEmail" placeholder="Work email" required>
+          <select class="fs-field" id="fsRole" required aria-label="I'm a…">
+            <option value="" disabled selected>I'm a…</option>
+            <option value="agent">Real estate agent</option>
+            <option value="broker">Broker / team lead</option>
+            <option value="builder">Home builder / developer</option>
+            <option value="photographer">Real estate photographer</option>
+            <option value="notpro">Not a real estate professional</option>
+          </select>
+          <input class="fs-field" type="text" id="fsBrokerage" placeholder="Brokerage / company" required>
           <label class="fs-file"><input type="file" id="fsPhoto" accept="image/*"><span id="fsFileLbl">📷 Attach one room photo (optional — you can also send it after)</span></label>
           <button class="fs-sub" type="submit">Stage my room free →</button>
         </form>
-        <p class="fs-fine">One free room per agent. We'll never share your email. Full listing staging is just $45/photo.</p>
+        <p class="fs-fine">Reserved for real estate professionals. One free room each. We'll never share your email. Full listing staging is just $45/photo.</p>
       </div>
       <div class="fs-ok" id="fsOk" style="display:none">
         <div class="chk">✓</div>
         <h3>You're in.</h3>
         <p>Check your inbox — we'll confirm and send your free staged room within 24 hours. Ready to do the whole listing at $45/photo?</p>
         <a class="go" href="bella-order-page.html">Stage my whole listing →</a>
+      </div>
+      <div class="fs-ok" id="fsGate" style="display:none">
+        <div class="chk">🏠</div>
+        <h3>This free room is for real estate pros.</h3>
+        <p>Selling your own home? Your listing agent can claim the free room for you. Or stage your listing directly — real designer staging from $45 a photo.</p>
+        <a class="go" href="bella-order-page.html">Stage a listing → $45/photo</a>
       </div>
     </div>
   </div>
@@ -1621,7 +1636,13 @@ document.querySelectorAll('.compare').forEach(function(el){
   document.getElementById('fsPhoto').onchange=function(){ if(this.files[0]) lbl.textContent='📷 '+this.files[0].name; };
   document.getElementById('fsFm').onsubmit=function(e){ e.preventDefault();
     var email=document.getElementById('fsEmail').value.trim(); if(!email)return;
-    // BACKEND: POST {email, photo} to your lead endpoint / email tool here.
+    var role=document.getElementById('fsRole').value; if(!role) return;
+    if(role==='notpro'){   // free room is a sales tool for pros only — redirect homeowners, don't burn a free stage
+      document.getElementById('fsForm').style.display='none';
+      document.getElementById('fsGate').style.display='block';
+      return;
+    }
+    // BACKEND: POST {email, role, brokerage, photo} to your lead endpoint / email tool here.
     localStorage.setItem(KEY,'done');
     document.getElementById('fsForm').style.display='none';
     document.getElementById('fsOk').style.display='block';
