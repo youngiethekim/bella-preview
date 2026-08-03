@@ -106,11 +106,10 @@
             <option value="photographer">Real estate photographer</option>
             <option value="notpro">Not a real estate professional</option>
           </select>
-          <input class="fld" type="text" id="brokerage" placeholder="Brokerage / company" required>
           <label class="file"><input type="file" id="photo" accept="image/*"><span id="lbl">📷 Attach one room photo (optional; send it after)</span></label>
           <button class="sub" type="submit">Stage my room free →</button>
         </form>
-        <p class="fine">Reserved for real estate professionals. We'll never share your email. Unsubscribe anytime.</p>
+        <p class="fine">This promotion is for real estate professionals only; we reserve the right to verify eligibility or decline. We'll never share your email. Unsubscribe anytime.</p>
       </div>
       <div class="ok" id="ok" style="display:none">
         <div class="chk">✓</div>
@@ -169,7 +168,7 @@
       window.scrollTo({top:0,behavior:'smooth'});
       return;
     }
-    // BACKEND: POST {name, email, role, brokerage, photo} to your lead endpoint / email tool, then trigger the nurture sequence.
+    // BACKEND: POST {name, email, role, photo} to your lead endpoint / email tool, then trigger the nurture sequence.
     document.getElementById('form').style.display='none';
     document.getElementById('ok').style.display='block';
     window.scrollTo({top:0,behavior:'smooth'});

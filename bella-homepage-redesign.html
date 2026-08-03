@@ -1592,11 +1592,10 @@ document.querySelectorAll('.compare').forEach(function(el){
             <option value="photographer">Real estate photographer</option>
             <option value="notpro">Not a real estate professional</option>
           </select>
-          <input class="fs-field" type="text" id="fsBrokerage" placeholder="Brokerage / company" required>
           <label class="fs-file"><input type="file" id="fsPhoto" accept="image/*"><span id="fsFileLbl">📷 Attach one room photo (optional — you can also send it after)</span></label>
           <button class="fs-sub" type="submit">Stage my room free →</button>
         </form>
-        <p class="fs-fine">Reserved for real estate professionals. One free room each. We'll never share your email. Full listing staging is just $45/photo.</p>
+        <p class="fs-fine">This promotion is for real estate professionals only; we reserve the right to verify eligibility or decline. One free room each. We'll never share your email. Full listing staging is just $45/photo.</p>
       </div>
       <div class="fs-ok" id="fsOk" style="display:none">
         <div class="chk">✓</div>
@@ -1642,7 +1641,7 @@ document.querySelectorAll('.compare').forEach(function(el){
       document.getElementById('fsGate').style.display='block';
       return;
     }
-    // BACKEND: POST {email, role, brokerage, photo} to your lead endpoint / email tool here.
+    // BACKEND: POST {email, role, photo} to your lead endpoint / email tool here.
     localStorage.setItem(KEY,'done');
     document.getElementById('fsForm').style.display='none';
     document.getElementById('fsOk').style.display='block';
