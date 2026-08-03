@@ -248,5 +248,20 @@
   </div>
 </footer>
 
+
+<style id="bv-anim">
+/* Bella site-wide button shimmer — light sweeps across buttons. Safe: pseudo-element only, no layout shift, motion-safe. */
+@media (prefers-reduced-motion: no-preference){
+  a.btn,button.btn,.sub,.fs-sub,.go,.pri{position:relative;overflow:hidden}
+  a.btn::after,button.btn::after,.sub::after,.fs-sub::after,.go::after,.pri::after{
+    content:"";position:absolute;top:-60%;left:-80%;width:48%;height:220%;
+    background:linear-gradient(100deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.40) 50%,rgba(255,255,255,0) 100%);
+    transform:skewX(-18deg);pointer-events:none;animation:bvShine 5.5s ease-in-out infinite}
+  .btn-ghost::after,.btn-line::after{display:none!important}
+  .btn-wht::after,.pri::after{background:linear-gradient(100deg,rgba(62,107,76,0) 0%,rgba(62,107,76,.22) 50%,rgba(62,107,76,0) 100%)}
+  @keyframes bvShine{0%,15%{left:-80%}55%,100%{left:150%}}
+}
+</style>
+
 </body>
 </html>
