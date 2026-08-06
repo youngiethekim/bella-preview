@@ -240,7 +240,7 @@ HTML = r'''<!DOCTYPE html>
   <p class="micro eyebrow">Lookbook 2025 · Brand furniture</p>
   <h1>The Bella furniture catalog.</h1>
   <p>Every set below is a real room styled by our designers with furniture from a leading brand. Browse by room, style or brand — then, when a look feels right for your listing, copy its SKU and send it with your order.</p>
-  <div class="tip"><span>🔖</span><span><b>How to order a look:</b> hover a set, hit <b>Copy SKU</b>, and paste it into your order notes. We'll stage your photos in that exact style.</span></div>
+  <div class="tip"><span>ð</span><span><b>How to order a look:</b> tap <b>♥ Save</b> on the ones you love to build your list, or hit <b>Copy SKU</b> and paste it into your order notes. Either way, we’ll stage your photos in that exact style.</span></div>
 </div></section>
 
 <div class="bar"><div class="bar-in">
