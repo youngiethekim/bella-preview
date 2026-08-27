@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project Brief — improved (mockup)</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap');
+:root{--bg:#FDFCFA;--ink:#232120;--soft:#6E6A66;--faint:#9C978F;--line:#E8E4DE;--line2:#F0EDE8;--green:#3E6B4C;--wash:#FAF8F5;--amber:#B5892F;--red:#C4553F}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Jost',system-ui,sans-serif;font-weight:300;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+button{font-family:inherit;cursor:pointer;color:inherit}
+.micro{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:16px 30px;background:rgba(253,252,250,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.mark{font-size:15px;letter-spacing:.5em}
+.saved{font-size:12px;color:var(--green);display:flex;gap:6px;align-items:center;opacity:0;transition:opacity .3s}
+.saved.on{opacity:1}
+.wrap{max-width:1080px;margin:0 auto;padding:34px 30px 140px;display:grid;grid-template-columns:210px 1fr;gap:44px}
+/* sidebar */
+.nav{position:sticky;top:84px;align-self:start}
+.nav .oid{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:14px}
+.nav a{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:14px;color:var(--soft);text-decoration:none}
+.nav a .dot{width:16px;height:16px;border-radius:5px;border:1.5px solid var(--line);flex:none;display:grid;place-items:center;font-size:11px;color:#fff}
+.nav a.done .dot{background:var(--green);border-color:var(--green)}
+.nav a.done{color:var(--ink)}
+.nav .prog{margin-top:16px;font-size:12px;color:var(--faint)}
+/* main */
+h1{font-weight:300;font-size:34px;letter-spacing:-.01em}h1 em{font-style:italic;color:var(--green)}
+.lede{color:var(--soft);margin-top:6px;font-size:15px}
+.ordbar{display:grid;grid-template-columns:1fr 1fr;gap:14px 28px;margin:22px 0 8px;padding:18px 20px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.ordbar div span{display:block}
+.sec{padding:30px 0;border-top:1px solid var(--line2)}
+.sec h2{font-weight:400;font-size:20px;display:flex;align-items:center;gap:10px}
+.sec h2 .ck{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--line);display:grid;place-items:center;font-size:12px;color:#fff}
+.sec h2.done .ck{background:var(--green);border-color:var(--green)}
+.sec .why{font-size:13.5px;color:var(--soft);margin:8px 0 16px;max-width:64ch}
+.lbl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);display:block;margin:0 0 8px}
+.inp{width:100%;font-family:inherit;font-size:15px;padding:13px 15px;border:1px solid var(--line);border-radius:9px;color:var(--ink);background:#fff}
+.inp:focus{outline:0;border-color:var(--green)}
+.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+@media(max-width:560px){.opts{grid-template-columns:1fr 1fr}}
+.opt{font-family:inherit;font-size:13px;letter-spacing:.04em;text-transform:uppercase;padding:16px 10px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--soft);text-align:center;transition:.15s}
+.opt:hover{border-color:var(--green)}
+.opt.on{background:var(--ink);border-color:var(--ink);color:#fff}
+/* completeness banner (NEW) */
+.pbanner{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:11px;margin:2px 0 4px;font-size:14px;border:1px solid}
+.pbanner.warn{background:#FBF6EC;border-color:#EAD9B4;color:#6b5320}
+.pbanner.ok{background:#EEF5EF;border-color:#CFE3D4;color:#2f4a37}
+.pbanner b{font-weight:500}
+.pbanner .bar{flex:1;height:7px;background:#fff;border-radius:99px;overflow:hidden;min-width:80px}
+.pbanner .bar i{display:block;height:100%;background:var(--green);transition:width .4s}
+/* photo upload */
+.drop{border:1.5px dashed #C9D6CB;border-radius:11px;padding:22px;text-align:center;background:#fff;margin-top:6px}
+.drop b{font-weight:500;color:var(--green)}
+.drop small{display:block;color:var(--faint);font-size:12.5px;margin-top:4px}
+.addbtn{margin-top:12px;background:var(--ink);color:#fff;border:0;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:11px 18px;border-radius:8px}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:16px}
+.thumb{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+.thumb .im{aspect-ratio:4/3;background:var(--wash);position:relative}
+.thumb .im img{width:100%;height:100%;object-fit:cover}
+.thumb .fn{font-size:11.5px;color:var(--soft);padding:8px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* room labeling (NEW: thumbnail + auto-detect) */
+.rooms{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.roomrow{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:11px;padding:10px 12px;background:#fff}
+.roomrow .rim{width:76px;height:58px;border-radius:7px;object-fit:cover;flex:none;background:var(--wash)}
+.roomrow .rmid{flex:1;min-width:0}
+.roomrow .rfn{font-size:13px;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.roomrow .autotag{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--green);background:#EEF5EF;border-radius:99px;padding:3px 8px;margin-top:5px}
+.roomrow select{font-family:inherit;font-size:14px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);flex:0 0 190px}
+@media(max-width:560px){.roomrow{flex-wrap:wrap}.roomrow select{flex:1 1 100%}}
+/* look */
+.looks{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+@media(max-width:560px){.looks{grid-template-columns:1fr 1fr}}
+.look{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;cursor:pointer;transition:.15s}
+.look.on{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
+.look .lim{aspect-ratio:1;object-fit:cover;width:100%}
+.look span{display:block;font-size:12px;text-align:center;padding:8px;letter-spacing:.06em;text-transform:uppercase;color:var(--soft)}
+.look.on span{color:var(--ink)}
+textarea.inp{min-height:90px;resize:vertical}
+/* sticky send bar (NEW: state-aware) */
+.sendbar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(253,252,250,.96);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:14px 30px}
+.sendin{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.sendin .ttl{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.sendin .reason{font-size:13.5px;color:var(--amber);flex:1;min-width:160px}
+.sendin .reason.ready{color:var(--green)}
+.sendbtn{background:var(--green);color:#fff;border:0;font-size:13px;letter-spacing:.12em;text-transform:uppercase;padding:15px 26px;border-radius:9px;transition:.2s}
+.sendbtn[disabled]{background:#D6D2CC;color:#fff;cursor:not-allowed}
+.hint{font-size:12px;color:var(--faint);width:100%}
+.flag{display:inline-block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);background:#EEF5EF;border:1px solid #CFE3D4;border-radius:99px;padding:2px 8px;margin-left:8px;vertical-align:middle}
+/* developer handoff panel (not part of the product UI) */
+.devnote{background:#1C1A18;color:#EDEAE5;font-family:'Jost',system-ui,sans-serif}
+.devnote summary{cursor:pointer;padding:14px 30px;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:#CBB894;list-style:none}
+.devnote summary::-webkit-details-marker{display:none}
+.devnote .dn-body{padding:0 30px 24px;font-size:13.5px;line-height:1.62;max-width:940px}
+.devnote .dn-body ol{margin:8px 0 12px 18px;display:flex;flex-direction:column;gap:9px}
+.devnote .dn-body b{color:#fff;font-weight:500}
+.devnote .dn-body i{color:#AEA79E;font-style:italic}
+.devnote .dn-map{background:#262320;border:1px solid #3a352f;border-radius:8px;padding:12px 14px;margin-top:6px;color:#D8D2C9;font-size:13px}
+.devnote a{color:#9BC7A6}
+/* pick from lookbook */
+.pickbtn{margin-top:16px;display:inline-flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--green);color:var(--green);font-family:inherit;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:12px 18px;border-radius:9px}
+.pickbtn:hover{background:var(--green);color:#fff}
+.picked{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.pchip{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:10px;padding:6px 10px 6px 6px;background:#fff;font-size:13px}
+.pchip img{width:40px;height:32px;object-fit:cover;border-radius:5px}
+.pchip b{font-weight:500}
+.pchip .rm{border:0;background:var(--line2);color:var(--soft);width:20px;height:20px;border-radius:99px;font-size:14px;line-height:1;margin-left:2px}
+.pchip .rm:hover{background:var(--red);color:#fff}
+.lbmodal{position:fixed;inset:0;z-index:40;background:rgba(20,18,16,.6);display:none;align-items:flex-end;justify-content:center}
+.lbmodal.on{display:flex}
+.lbpanel{background:var(--bg);width:100%;max-width:1000px;max-height:88vh;border-radius:16px 16px 0 0;display:flex;flex-direction:column;overflow:hidden}
+@media(min-width:700px){.lbmodal{align-items:center}.lbpanel{border-radius:16px;max-height:82vh}}
+.lbhead{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.lbhead h3{font-weight:400;font-size:19px;margin-right:auto}
+.lbhead .lbx{border:0;background:var(--line2);width:34px;height:34px;border-radius:99px;font-size:20px;color:var(--soft)}
+.lbfilters{display:flex;gap:8px;flex-wrap:wrap;padding:12px 22px;border-bottom:1px solid var(--line2)}
+.lbchip{font-family:inherit;font-size:12.5px;border:1px solid var(--line);background:#fff;color:var(--soft);border-radius:99px;padding:7px 13px}
+.lbchip.on{background:var(--green);border-color:var(--green);color:#fff}
+.lbgrid{overflow-y:auto;padding:18px 22px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:800px){.lbgrid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:520px){.lbgrid{grid-template-columns:repeat(2,1fr)}}
+.lbcard{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;cursor:pointer;position:relative;transition:.15s}
+.lbcard:hover{border-color:var(--green)}
+.lbcard.sel{border-color:var(--green);box-shadow:inset 0 0 0 2px var(--green)}
+.lbcard .ci{aspect-ratio:4/3;object-fit:cover;width:100%;background:var(--wash)}
+.lbcard .cx{padding:8px 10px}
+.lbcard .cx b{font-weight:400;font-size:13px;display:block}
+.lbcard .cx span{font-size:11px;color:var(--faint);display:block}
+.lbcard .tick{position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:99px;background:var(--green);color:#fff;display:none;place-items:center;font-size:14px}
+.lbcard.sel .tick{display:grid}
+.lbfoot{padding:14px 22px;border-top:1px solid var(--line);display:flex;align-items:center;gap:14px}
+.lbfoot .cnt{font-size:13.5px;color:var(--soft);margin-right:auto}
+.lbdone{background:var(--ink);color:#fff;border:0;font-size:13px;letter-spacing:.1em;text-transform:uppercase;padding:13px 22px;border-radius:9px}
+</style>
+</head>
+<body>
+<details class="devnote" open>
+  <summary>▸ For the developer — what to build (click to collapse)</summary>
+  <div class="dn-body">
+    <p><b>Context.</b> Improved version of the live Project Brief (delivery.bellavirtualstaging.com/preview-brief). The page below is a clickable front-end mockup. Keep the existing structure, copy voice and brand (single-font Jost, cream/ink/green); these are targeted UX fixes, not a redesign.</p>
+    <ol>
+      <li><b>Thumbnails + auto-detect in "Which room is which?"</b> Show each uploaded photo's thumbnail beside its room dropdown, and pre-select the room by matching keywords in the filename (map below). Tag it "auto-detected" and clear the tag when the user edits it. <i>Done when: every row shows its image and rooms come pre-filled and editable.</i></li>
+      <li><b>Photo-completeness banner + gating.</b> Show "X of N photos uploaded" (N = ordered count) with a progress bar; the section only completes at N of N. <i>Done when: the banner reflects the real upload count.</i></li>
+      <li><b>State-aware "Send to the studio".</b> Disabled with a reason until all N photos are uploaded and every photo has a room. Reasons cascade: "Upload X more photos" then "Label your rooms" then enabled. <i>Done when: a brief can't be sent with missing photos or unlabeled rooms.</i></li>
+      <li><b>Pick exact looks from the lookbook.</b> In "The look", a "Browse the lookbook" button opens a filterable grid of real sets; the client multi-selects the SKUs they like and they attach to the brief as chips. <i>Wire the grid to the real lookbook data; store selected SKUs on the order. (Optional field — does not gate Send.)</i></li>
+      <li><b>Polish.</b> "✓ Saved" flash on each edit; optional fields labeled "optional"; mobile-responsive; after Send, show confirmation + "photos back by {date}".</li>
+    </ol>
+    <div class="dn-map"><b>Filename → room keyword map</b> (case-insensitive, first match wins): great/living → Living room · primary/master → Primary bedroom · bed → Bedroom · kitchen → Kitchen · dining → Dining room · family/rec → Family room · office/study → Office · bath → Bathroom · basement → Basement · entry/foyer → Entry · patio/deck/yard/outdoor → Outdoor · (no match → leave "Choose a room")</div>
+  </div>
+</details>
+<header>
+  <span class="mark">BELLA</span>
+  <span class="saved" id="saved">✓ Saved</span>
+</header>
+
+<div class="wrap">
+  <!-- sidebar -->
+  <nav class="nav" id="nav">
+    <div class="oid">Order #4821</div>
+    <a href="#s-prop" class="done"><span class="dot">✓</span>The property</a>
+    <a href="#s-buyer" class="done"><span class="dot">✓</span>Who is this home for?</a>
+    <a href="#s-photos" id="n-photos"><span class="dot"></span>Your photos</a>
+    <a href="#s-rooms" id="n-rooms"><span class="dot"></span>Which room is which?</a>
+    <a href="#s-look" class="done"><span class="dot">✓</span>The look</a>
+    <a href="#s-else"><span class="dot"></span>Anything else?</a>
+    <div class="prog" id="prog">4 of 6 complete</div>
+  </nav>
+
+  <!-- main -->
+  <main>
+    <h1>Project <em>brief.</em></h1>
+    <p class="lede">Everything below saves as you type. Finish now or come back with this same link.</p>
+
+    <div class="ordbar">
+      <div><span class="micro">Order</span>#4821</div>
+      <div><span class="micro">Service</span>Virtual staging · 7 photos</div>
+      <div><span class="micro">Placed</span>August 19, 2026</div>
+      <div><span class="micro">Photos back by</span>August 20, 2026</div>
+    </div>
+
+    <!-- property -->
+    <section class="sec" id="s-prop">
+      <h2 class="done"><span class="ck">✓</span>The property</h2>
+      <label class="lbl">Address</label>
+      <input class="inp" value="7954 Spivey Rd., Jonesboro">
+      <label class="lbl" style="margin-top:16px">Property type</label>
+      <div class="opts" data-single>
+        <button class="opt on">House</button><button class="opt">Condo</button><button class="opt">Town</button>
+        <button class="opt">New build</button><button class="opt">Commercial</button><button class="opt">Land</button>
+      </div>
+    </section>
+
+    <!-- buyer -->
+    <section class="sec" id="s-buyer">
+      <h2 class="done"><span class="ck">✓</span>Who is this home for?</h2>
+      <p class="why">This sets furniture scale and finish level. It is the most useful answer on this page.</p>
+      <div class="opts" data-single>
+        <button class="opt">First-time buyer</button><button class="opt on">Young professional</button><button class="opt">Family</button>
+        <button class="opt">Downsizer</button><button class="opt">Luxury</button><button class="opt">Investor</button>
+      </div>
+      <label class="lbl" style="margin-top:16px">Price range <span style="text-transform:none;letter-spacing:0;color:var(--faint)">— optional</span></label>
+      <select class="inp" style="max-width:260px"><option>Choose a range</option><option>Under $500K</option><option>$500K – $1M</option><option>$1M – $2M</option><option>$2M – $5M</option><option>Over $5M</option></select>
+    </section>
+
+    <!-- photos -->
+    <section class="sec" id="s-photos">
+      <h2 id="h-photos"><span class="ck"></span>Your photos <span class="flag">Now shows what's left</span></h2>
+      <div class="pbanner warn" id="pbanner">
+        <div class="bar"><i id="pbar" style="width:57%"></i></div>
+        <span id="ptext"><b>4 of 7 photos uploaded</b> — 3 more to go before this can go to the studio.</span>
+      </div>
+      <div class="drop">
+        <b>Drag photos here, or tap to add</b>
+        <small>JPG, PNG or HEIC. Straight from your phone is fine.</small>
+        <button class="addbtn" id="addBtn">+ Add the last 3 photos</button>
+      </div>
+      <div class="thumbs" id="thumbs"></div>
+    </section>
+
+    <!-- rooms -->
+    <section class="sec" id="s-rooms">
+      <h2 id="h-rooms"><span class="ck"></span>Which room is which? <span class="flag">Thumbnails + auto-detect</span></h2>
+      <p class="why">Photos of the same room get the same furniture in every angle. We pre-filled each one from its file name — just check it's right.</p>
+      <div class="rooms" id="rooms"></div>
+    </section>
+
+    <!-- look -->
+    <section class="sec" id="s-look">
+      <h2 class="done"><span class="ck">✓</span>The look</h2>
+      <p class="why">Every picture below is a real Bella project. <span style="color:var(--faint)">Not sure? Leave it and our designers pick what sells to your buyer.</span></p>
+      <div class="looks" id="looks">
+        <div class="look on"><img class="lim" src="https://youngiethekim.github.io/bella-preview/assets/lookbook/LR-ROVE-100.jpg" alt=""><span>Modern</span></div>
+        <div class="look"><img class="lim" src="https://youngiethekim.github.io/bella-preview/assets/lookbook/LR-ROVE-110.jpg" alt=""><span>Scandinavian</span></div>
+        <div class="look"><img class="lim" src="https://youngiethekim.github.io/bella-preview/assets/lookbook/LR-ROVE-120.jpg" alt=""><span>Transitional</span></div>
+        <div class="look"><img class="lim" src="https://youngiethekim.github.io/bella-preview/assets/lookbook/LR-ROVE-130.jpg" alt=""><span>Farmhouse</span></div>
+      </div>
+      <button class="pickbtn" id="pickBtn">＋ Browse the lookbook &amp; pick exact looks <span class="flag">New</span></button>
+      <div class="picked" id="picked"></div>
+    </section>
+
+    <!-- else -->
+    <section class="sec" id="s-else">
+      <h2 id="h-else"><span class="ck"></span>Anything else?</h2>
+      <p class="why">Features to highlight, a deadline, a room to leave empty — anything that helps.</p>
+      <textarea class="inp" id="notes" placeholder="e.g. Please leave the sunroom empty. Highlight the fireplace."></textarea>
+    </section>
+  </main>
+</div>
+
+<!-- state-aware send bar -->
+<div class="sendbar">
+  <div class="sendin">
+    <span class="ttl">24-hour turnaround</span>
+    <span class="reason" id="reason">Upload 3 more photos to send.</span>
+    <button class="sendbtn" id="sendBtn" disabled>Send to the studio</button>
+    <span class="hint">The studio starts the moment this arrives. You can come back to this link any time — it's saved.</span>
+  </div>
+</div>
+
+<div class="lbmodal" id="lbmodal">
+  <div class="lbpanel">
+    <div class="lbhead"><h3>Pick the looks you love</h3><span class="micro">Tap any set to select · we'll stage in that exact style</span><button class="lbx" id="lbx">&times;</button></div>
+    <div class="lbfilters" id="lbfilters"></div>
+    <div class="lbgrid" id="lbgrid"></div>
+    <div class="lbfoot"><span class="cnt" id="lbcnt">0 selected</span><button class="lbdone" id="lbdone">Add to brief</button></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var IMG='https://youngiethekim.github.io/bella-preview/assets/lookbook/';
+  var ROOMS=['Living room','Primary bedroom','Bedroom','Kitchen','Dining room','Family room','Office','Basement','Bathroom','Outdoor','Entry','Other'];
+  // start: 4 uploaded, order needs 7
+  var photos=[
+    {fn:'great room.jpg', img:IMG+'LR-ROVE-100.jpg', room:'Family room', auto:true},
+    {fn:'dining.jpg',      img:IMG+'DR-ROVE-100.jpg', room:'Dining room', auto:true},
+    {fn:'primary bed.jpg', img:IMG+'BDR-ROVE-100.jpg',room:'Primary bedroom', auto:true},
+    {fn:'living 2.jpg',    img:IMG+'LR-ROVE-110.jpg', room:'Living room', auto:true}
+  ];
+  var NEED=7;
+  var saved=document.getElementById('saved');
+  function flashSaved(){ saved.classList.add('on'); clearTimeout(flashSaved._t); flashSaved._t=setTimeout(function(){saved.classList.remove('on');},1400); }
+
+  function opt(sel){ // single-select button groups
+    document.querySelectorAll(sel+' .opt').forEach(function(b){ b.onclick=function(){
+      b.parentNode.querySelectorAll('.opt').forEach(function(x){x.classList.remove('on');}); b.classList.add('on'); flashSaved();
+    };});
+  }
+  document.querySelectorAll('.opts[data-single]').forEach(function(g,i){ g.id=g.id||('optg'+i); opt('#'+g.id); });
+  document.querySelectorAll('.look').forEach(function(l){ l.onclick=function(){ document.querySelectorAll('.look').forEach(function(x){x.classList.remove('on');}); l.classList.add('on'); flashSaved(); };});
+
+  function roomSelect(p,idx){
+    var s='<select data-i="'+idx+'"><option value="">Choose a room</option>'+ROOMS.map(function(r){return '<option'+(r===p.room?' selected':'')+'>'+r+'</option>';}).join('')+'</select>';
+    return s;
+  }
+  function renderThumbs(){
+    document.getElementById('thumbs').innerHTML=photos.map(function(p){
+      return '<div class="thumb"><div class="im"><img src="'+p.img+'" alt=""></div><div class="fn">'+p.fn+'</div></div>';
+    }).join('');
+  }
+  function renderRooms(){
+    document.getElementById('rooms').innerHTML=photos.map(function(p,i){
+      return '<div class="roomrow"><img class="rim" src="'+p.img+'" alt=""><div class="rmid"><div class="rfn">'+p.fn+'</div>'
+        +(p.auto&&p.room?'<span class="autotag">✓ Auto-detected · check it</span>':'')+'</div>'+roomSelect(p,i)+'</div>';
+    }).join('');
+    document.querySelectorAll('#rooms select').forEach(function(sel){ sel.onchange=function(){
+      var i=+sel.getAttribute('data-i'); photos[i].room=sel.value; photos[i].auto=false; renderRooms(); flashSaved(); update();
+    };});
+  }
+  function update(){
+    var have=photos.length, pct=Math.min(100,Math.round(have/NEED*100));
+    document.getElementById('pbar').style.width=pct+'%';
+    var pb=document.getElementById('pbanner'), pt=document.getElementById('ptext');
+    var labeled=photos.every(function(p){return p.room;});
+    if(have<NEED){ pb.className='pbanner warn'; pt.innerHTML='<b>'+have+' of '+NEED+' photos uploaded</b> — '+(NEED-have)+' more to go before this can go to the studio.'; }
+    else { pb.className='pbanner ok'; pt.innerHTML='<b>All '+NEED+' photos in.</b> '+(labeled?'Rooms labeled — you\'re ready.':'Just label each room below.'); }
+    // section checks
+    document.getElementById('h-photos').classList.toggle('done', have>=NEED);
+    document.getElementById('n-photos').classList.toggle('done', have>=NEED);
+    document.getElementById('h-photos').querySelector('.ck').textContent = have>=NEED?'✓':'';
+    document.getElementById('n-photos').querySelector('.dot').textContent = have>=NEED?'✓':'';
+    var roomsDone = have>=NEED && labeled;
+    document.getElementById('h-rooms').classList.toggle('done', roomsDone);
+    document.getElementById('n-rooms').classList.toggle('done', roomsDone);
+    document.getElementById('h-rooms').querySelector('.ck').textContent = roomsDone?'✓':'';
+    document.getElementById('n-rooms').querySelector('.dot').textContent = roomsDone?'✓':'';
+    // progress count
+    var done=document.querySelectorAll('#nav a.done').length;
+    document.getElementById('prog').textContent=done+' of 6 complete';
+    // send button state
+    var btn=document.getElementById('sendBtn'), rs=document.getElementById('reason');
+    if(have<NEED){ btn.disabled=true; rs.className='reason'; rs.textContent='Upload '+(NEED-have)+' more photo'+((NEED-have)>1?'s':'')+' to send.'; }
+    else if(!labeled){ btn.disabled=true; rs.className='reason'; rs.textContent='Label your rooms to send.'; }
+    else { btn.disabled=false; rs.className='reason ready'; rs.textContent='✓ Everything the studio needs is in.'; }
+  }
+  document.getElementById('addBtn').onclick=function(){
+    var add=[
+      {fn:'kitchen.jpg', img:IMG+'DR-ROVE-110.jpg', room:'Kitchen', auto:true},
+      {fn:'office.jpg',  img:IMG+'LR-ROVE-120.jpg', room:'Office', auto:true},
+      {fn:'entry.jpg',   img:IMG+'LR-ROVE-130.jpg', room:'Entry', auto:true}
+    ];
+    photos=photos.concat(add); this.textContent='Photos added ✓'; this.disabled=true;
+    renderThumbs(); renderRooms(); update(); flashSaved();
+  };
+  document.getElementById('sendBtn').onclick=function(){ alert('Sent to the studio ✓\n\nPhotos back by August 20. We\'ll email you the link.\n(This is a mockup.)'); };
+  document.getElementById('notes').oninput=flashSaved;
+  document.querySelector('#s-prop .inp').oninput=flashSaved;
+
+  /* ---- pick exact looks from the lookbook (wire to real lookbook data in prod) ---- */
+  function set(sku,room,label){return {sku:sku,room:room,label:label,img:IMG+sku+'.jpg'};}
+  var LOOK=[
+    set('LR-ROVE-100','Living Room','Rove Concepts'),set('LR-ROVE-110','Living Room','Rove Concepts'),set('LR-ROVE-120','Living Room','Rove Concepts'),
+    set('LR-ROVE-130','Living Room','Rove Concepts'),set('LR-ROVE-140','Living Room','Rove Concepts'),set('LR-ROVE-150','Living Room','Rove Concepts'),
+    set('LR-SUNDAYS-100','Living Room','Sundays'),set('LR-GUS-100','Living Room','Gus*'),set('LR-EM-100','Living Room','Eternity Modern'),
+    set('DR-ROVE-100','Dining Room','Rove Concepts'),set('DR-ROVE-110','Dining Room','Rove Concepts'),set('DR-ROVE-120','Dining Room','Rove Concepts'),
+    set('DR-ROVE-130','Dining Room','Rove Concepts'),set('DR-ROVE-140','Dining Room','Rove Concepts'),set('DR-SUNDAYS-100','Dining Room','Sundays'),
+    set('BDR-ROVE-100','Bedroom','Rove Concepts'),set('BDR-ROVE-110','Bedroom','Rove Concepts'),set('BDR-ROVE-120','Bedroom','Rove Concepts'),
+    set('BDR-ROVE-130','Bedroom','Rove Concepts'),set('BDR-ROVE-140','Bedroom','Rove Concepts'),set('BDR-SUNDAYS-120','Bedroom','Sundays')
+  ];
+  var LR=['All','Living Room','Dining Room','Bedroom'], lroom='All', chosen={};
+  var modal=document.getElementById('lbmodal'), lbgrid=document.getElementById('lbgrid'), lbcnt=document.getElementById('lbcnt');
+  document.getElementById('lbfilters').innerHTML=LR.map(function(r){return '<button class="lbchip'+(r==='All'?' on':'')+'" data-r="'+r+'">'+r+'</button>';}).join('');
+  function drawGrid(){
+    lbgrid.innerHTML=LOOK.filter(function(d){return lroom==='All'||d.room===lroom;}).map(function(d){
+      return '<div class="lbcard'+(chosen[d.sku]?' sel':'')+'" data-sku="'+d.sku+'"><span class="tick">✓</span><img class="ci" loading="lazy" src="'+d.img+'" alt=""><div class="cx"><b>'+d.sku+'</b><span>'+d.room+' · '+d.label+'</span></div></div>';
+    }).join('');
+  }
+  function cnt(){var n=Object.keys(chosen).length;lbcnt.textContent=n+' selected';}
+  document.getElementById('lbfilters').addEventListener('click',function(e){var b=e.target.closest('.lbchip');if(!b)return;
+    document.querySelectorAll('.lbchip').forEach(function(x){x.classList.remove('on');});b.classList.add('on');lroom=b.getAttribute('data-r');drawGrid();});
+  lbgrid.addEventListener('click',function(e){var c=e.target.closest('.lbcard');if(!c)return;var sku=c.getAttribute('data-sku');
+    if(chosen[sku])delete chosen[sku];else chosen[sku]=LOOK.filter(function(x){return x.sku===sku;})[0];c.classList.toggle('sel');cnt();});
+  function renderPicked(){
+    var arr=Object.keys(chosen).map(function(k){return chosen[k];});
+    document.getElementById('picked').innerHTML=arr.map(function(d){
+      return '<span class="pchip" data-sku="'+d.sku+'"><img src="'+d.img+'"><b>'+d.sku+'</b><button class="rm" title="Remove">×</button></span>';
+    }).join('');
+    document.querySelectorAll('#picked .rm').forEach(function(b){b.onclick=function(){delete chosen[b.parentNode.getAttribute('data-sku')];renderPicked();flashSaved();};});
+  }
+  document.getElementById('pickBtn').onclick=function(){drawGrid();cnt();modal.classList.add('on');};
+  document.getElementById('lbx').onclick=function(){modal.classList.remove('on');};
+  modal.addEventListener('click',function(e){if(e.target===modal)modal.classList.remove('on');});
+  document.getElementById('lbdone').onclick=function(){modal.classList.remove('on');renderPicked();flashSaved();};
+
+  renderThumbs(); renderRooms(); update();
+})();
+</script>
+</body>
+</html>
